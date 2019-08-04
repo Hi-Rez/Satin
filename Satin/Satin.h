@@ -6,7 +6,7 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for Satin.
 FOUNDATION_EXPORT double SatinVersionNumber;
@@ -15,5 +15,3 @@ FOUNDATION_EXPORT double SatinVersionNumber;
 FOUNDATION_EXPORT const unsigned char SatinVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Satin/PublicHeader.h>
-
-
