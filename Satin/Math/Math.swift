@@ -46,7 +46,7 @@ public func translate(_ v: simd_double3) -> matrix_double4x4
 
 public func translate(_ x: Float, _ y: Float, _ z: Float) -> matrix_float4x4
 {
-    var result = matrix_identity_float4x4;
+    var result = matrix_identity_float4x4
     result[3].x = x
     result[3].y = y
     result[3].z = z
@@ -73,7 +73,7 @@ public func scale(_ x: Double, _ y: Double, _ z: Double) -> matrix_double4x4
     return result
 }
 
-public func scale(_ v: simd_double3 ) -> matrix_double4x4
+public func scale(_ v: simd_double3) -> matrix_double4x4
 {
     var result = matrix_identity_double4x4
     result[0].x = v.x
@@ -93,7 +93,7 @@ public func scale(_ x: Float, _ y: Float, _ z: Float) -> matrix_float4x4
     return result
 }
 
-public func scale(_ v: simd_float3 ) -> matrix_float4x4
+public func scale(_ v: simd_float3) -> matrix_float4x4
 {
     var result = matrix_identity_float4x4
     result[0].x = v.x
@@ -102,64 +102,122 @@ public func scale(_ v: simd_float3 ) -> matrix_float4x4
     return result
 }
 
-// MARK: - Rotate (Double)
+// MARK: - Frustum (Float)
 
-public func rotate(_ angle: Float, _ x: Float, _ y: Float, _ z: Float) -> matrix_float4x4
+public func frustum(_ horizontalFov: Float, _ verticalFov: Float, _ near: Float, _ far: Float) -> matrix_float4x4
 {
-    let result = matrix_identity_float4x4;
-    
-    let a = angle * 1.0 / 180.0;
-    let c = 0.0
-    let s = 0.0
+    let width = 1.0 / tan(degToRad(0.5 * horizontalFov))
+    let height = 1.0 / tan(degToRad(0.5 * verticalFov))
+    let depth = far / (far - near)
 
-    
-    return result;
+    var result = matrix_identity_float4x4
+
+    result[0].x = width
+    result[1].y = height
+    result[3].z = depth
+    result[4].z = -depth * near
+
+    return result
 }
 
-// MARK: - Rotate (Float)
+public func frustum(_ left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ near: Float, _ far: Float) -> matrix_float4x4
+{
+    let width = right - left
+    let height = top - bottom
+    let depth = far / (far - near)
 
+    var result = matrix_identity_float4x4
 
+    result[0].x = width
+    result[1].y = height
+    result[3].z = depth
+    result[4].z = -depth * near
 
+    return result
+}
 
-+ (matrix_float4x4)rotate:(float)angle axis:(simd_float3)axis {
-    float a = RZARadiansOverPi(angle);
-    float c = 0.0f;
-    float s = 0.0f;
-    
-    // Computes the sine and cosine of pi times angle (measured in radians)
-    // faster and gives exact results for angle = 90, 180, 270, etc.
-    __sincospif(a, &s, &c);
-    
-    float k = 1.0f - c;
-    simd_float3 u = simd_normalize(axis);
-    simd_float3 v = s * u;
-    simd_float3 w = k * u;
-    
-    simd_float4 P;
-    simd_float4 Q;
-    simd_float4 R;
-    simd_float4 S;
-    
-    P.x = w.x * u.x + c;
-    P.y = w.x * u.y + v.z;
-    P.z = w.x * u.z - v.y;
-    P.w = 0.0f;
-    
-    Q.x = w.x * u.y - v.z;
-    Q.y = w.y * u.y + c;
-    Q.z = w.y * u.z + v.x;
-    Q.w = 0.0f;
-    
-    R.x = w.x * u.z + v.y;
-    R.y = w.y * u.z - v.x;
-    R.z = w.z * u.z + c;
-    R.w = 0.0f;
-    
-    S.x = 0.0f;
-    S.y = 0.0f;
-    S.z = 0.0f;
-    S.w = 1.0f;
-    
-    matrix_float4x4 result = { P, Q, R, S };
-    return result;
+// MARK: - LookAt (Float)
+
+public func lookAt(_ eye: simd_float3, _ center: simd_float3, _ up: simd_float3) -> matrix_float4x4
+{
+    let zAxis = simd_normalize(center - eye)
+    let xAxis = -simd_normalize(simd_cross(up, zAxis))
+    let yAxis = -simd_cross(zAxis, xAxis)
+
+    var result = matrix_identity_float4x4
+
+    result[0].x = xAxis.x
+    result[0].y = yAxis.x
+    result[0].z = zAxis.x
+
+    result[1].x = xAxis.y
+    result[1].y = yAxis.y
+    result[1].z = zAxis.y
+
+    result[2].x = xAxis.z
+    result[2].y = yAxis.z
+    result[2].z = zAxis.z
+
+    result[3].x = -simd_dot(xAxis, eye)
+    result[3].y = -simd_dot(yAxis, eye)
+    result[3].z = -simd_dot(zAxis, eye)
+
+    return result
+}
+
+// MARK: - Perspective (Float)
+
+public func perspective(width: Float, height: Float, near: Float, far: Float) -> matrix_float4x4
+{
+    let zNear = 2.0 * near
+    let zFar = far / (far - near)
+
+    var result = matrix_identity_float4x4
+
+    result[0].x = zNear / width
+    result[1].y = zNear / height
+    result[2].z = zFar
+    result[2].w = 1.0
+    result[3].z = -near * zFar
+    result[3].w = 0.0
+
+    return result
+}
+
+public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> matrix_float4x4
+{
+    let angle = degToRad(0.5 * fov)
+
+    let sy = 1.0 / tan(angle)
+    let sx = sy / aspect
+    let sz = far / (far - near)
+
+    var result = matrix_identity_float4x4
+
+    result[0].x = sx
+    result[1].y = sy
+    result[2].z = sz
+    result[2].w = 1.0
+    result[3].z = -near * sz
+    result[3].w = 0.0
+
+    return result
+}
+
+// MARK: - Orthographic (Float)
+
+public func orthographic(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) -> matrix_float4x4
+{
+    let length = 1.0 / (right - left)
+    let height = 1.0 / (top - bottom)
+    let depth = 1.0 / (far - near)
+
+    var result = matrix_identity_float4x4
+
+    result[0].x = 2.0 * length
+    result[1].y = 2.0 * height
+    result[2].z = depth
+    result[3].z = -near * depth
+
+    return result
 }

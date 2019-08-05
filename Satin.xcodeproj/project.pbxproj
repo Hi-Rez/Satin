@@ -12,6 +12,8 @@
 		E13C969422E6482C00D6FEB0 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E159A34222E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
 		E159A34322E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
+		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
+		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C122E7CB6500A43BB4 /* Object.swift */; };
 		E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C822E7CC2200A43BB4 /* Vertex.swift */; };
@@ -46,6 +48,7 @@
 		E13C969222E6482C00D6FEB0 /* Satin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Satin.h; sourceTree = "<group>"; };
 		E13C969322E6482C00D6FEB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E159A34122E8F04400909A28 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
+		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
 		E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		E19FA5C122E7CB6500A43BB4 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		E19FA5C822E7CC2200A43BB4 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
@@ -155,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				E19FA5CE22E7CCA400A43BB4 /* Camera.swift */,
+				E188243022F8E391001DC5E9 /* OrthographicCamera.swift */,
 			);
 			path = Cameras;
 			sourceTree = "<group>";
@@ -305,6 +309,7 @@
 			files = (
 				E159A34222E8F04400909A28 /* Material.swift in Sources */,
 				E19FA5DB22E7D56000A43BB4 /* Pipeline.swift in Sources */,
+				E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */,
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
@@ -325,6 +330,7 @@
 			files = (
 				E159A34322E8F04400909A28 /* Material.swift in Sources */,
 				E19FA62E22E8B6F400A43BB4 /* Pipeline.swift in Sources */,
+				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
 				E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */,
 				E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */,

@@ -21,7 +21,6 @@ struct VertexUniforms {
 
 let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
 
-
 open class Mesh: Object, GeometryDelegate {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
@@ -31,6 +30,9 @@ open class Mesh: Object, GeometryDelegate {
     
     var uniformBufferIndex: Int = 0
     var uniformBufferOffset: Int = 0
+    
+    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
+    public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
     public var geometry: Geometry = Geometry() {
         didSet {
@@ -72,14 +74,19 @@ open class Mesh: Object, GeometryDelegate {
         self.material = material
     }
     
-    func updateUniforms()
+    func updateUniforms(camera: Camera)
     {
         if vertexUniforms != nil {
-            vertexUniforms[0].modelMatrix = matrix_identity_float4x4
-            vertexUniforms[0].viewMatrix = matrix_identity_float4x4
-            vertexUniforms[0].modelViewMatrix = matrix_identity_float4x4
-            vertexUniforms[0].projectionMatrix = matrix_identity_float4x4
-            vertexUniforms[0].normalMatrix = matrix_identity_float3x3
+            vertexUniforms[0].modelMatrix = self.worldMatrix
+            vertexUniforms[0].viewMatrix = camera.viewMatrix
+            vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix);
+            vertexUniforms[0].projectionMatrix = camera.projectionMatrix
+            let n = vertexUniforms[0].modelViewMatrix.inverse.transpose
+            vertexUniforms[0].normalMatrix = simd_matrix(
+                simd_make_float3(n[0].x, n[0].y, n[0].z),
+                simd_make_float3(n[1].x, n[1].y, n[1].z),
+                simd_make_float3(n[2].x, n[2].y, n[2].z)
+            )            
         }
     }
     
@@ -93,8 +100,8 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     public func update(camera: Camera) {
+        updateUniforms(camera: camera)
         updateUniformsBuffer()
-        updateUniforms()
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder) {
@@ -105,6 +112,7 @@ open class Mesh: Object, GeometryDelegate {
             if !geometry.vertexData.isEmpty {
                 let verticesSize = geometry.vertexData.count * MemoryLayout.size(ofValue: geometry.vertexData[0])
                 vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
+                vertexBuffer?.label = "Vertices"
             }
             else {
                 vertexBuffer = nil
@@ -119,6 +127,7 @@ open class Mesh: Object, GeometryDelegate {
             if !geometry.indexData.isEmpty {
                 let indicesSize = geometry.indexData.count * MemoryLayout.size(ofValue: geometry.indexData[0])
                 indexBuffer = device.makeBuffer(bytes: geometry.indexData, length: indicesSize, options: [])
+                indexBuffer?.label = "Indices"
             }
             else {
                 indexBuffer = nil
@@ -134,7 +143,7 @@ open class Mesh: Object, GeometryDelegate {
             let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
             guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
             vertexUniformsBuffer = buffer
-            vertexUniformsBuffer.label = "VertexUniforms"
+            vertexUniformsBuffer.label = "Vertex Uniforms"
             vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
             updateUniformBuffer = false
         }
@@ -149,6 +158,8 @@ open class Mesh: Object, GeometryDelegate {
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard visible, let vertexBuffer = vertexBuffer else { return }
+        
+        preDraw?(renderEncoder)
         
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
@@ -166,6 +177,8 @@ open class Mesh: Object, GeometryDelegate {
         else {
             renderEncoder.drawPrimitives(type: geometry.primitiveType, vertexStart: 0, vertexCount: geometry.vertexData.count)
         }
+        
+        postDraw?(renderEncoder)
     }
     
     deinit {

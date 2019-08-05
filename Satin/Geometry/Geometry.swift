@@ -8,8 +8,7 @@
 
 import Metal
 
-protocol GeometryDelegate: AnyObject
-{
+protocol GeometryDelegate: AnyObject {
     func vertexDataUpdated()
     func indexDataUpdated()
 }
@@ -20,23 +19,19 @@ open class Geometry {
     public var indexType: MTLIndexType
     weak var delegate: GeometryDelegate?
     
-    public var vertexData : [Vertex] = [] {
-        didSet
-        {
+    public var vertexData: [Vertex] = [] {
+        didSet {
             delegate?.vertexDataUpdated()
         }
     }
     
-    public var indexData : [UInt32] = [] {
-        didSet
-        {
+    public var indexData: [UInt32] = [] {
+        didSet {
             delegate?.indexDataUpdated()
         }
-        
     }
     
-    public init()
-    {
+    public init() {
         primitiveType = .triangle
         windingOrder = .counterClockwise
         indexType = .uint32

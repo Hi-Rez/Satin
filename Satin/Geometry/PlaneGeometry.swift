@@ -9,7 +9,6 @@
 import Foundation
 
 open class PlaneGeometry: Geometry {
-    
     public override init() {
         super.init()
         self.setup(width: 2, height: 2, resX: 1, resY: 1, center: true)
