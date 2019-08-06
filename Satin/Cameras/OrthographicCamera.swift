@@ -46,6 +46,7 @@ open class OrthographicCamera: Camera
     {
         if updateProjectionMatrix
         {
+            print("Updated Projection Matrix")
             _projectionMatrix = orthographic(left: left, right: right, bottom: bottom, top: top, near: near, far: far)
             updateProjectionMatrix = false
         }
@@ -59,6 +60,22 @@ open class OrthographicCamera: Camera
     
     public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) {
         super.init()
+        self.left = left
+        self.right = right
+        self.bottom = bottom
+        self.top = top
+        self.near = near
+        self.far = far
+    }
+    
+    public func update(left: Float, right: Float, bottom: Float, top: Float) {
+        self.left = left
+        self.right = right
+        self.bottom = bottom
+        self.top = top
+    }
+    
+    public func update(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) {
         self.left = left
         self.right = right
         self.bottom = bottom

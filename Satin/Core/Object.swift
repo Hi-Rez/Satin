@@ -61,7 +61,7 @@ open class Object {
     
     public var children: [Object] = []
     
-    public var update: (() -> ())?
+    public var onUpdate: (() -> ())?
     
     private var updateMatrix: Bool = true
     
@@ -94,16 +94,19 @@ open class Object {
     
     public init() {}
     
-    public func _update() {
-        update?()
+    public func update() {
+        onUpdate?()
         
         for child in children {
-            child._update()
+            child.update()
         }
     }
     
     public func addChild(_ child: Object) {
-        children.append(child)
+        if !children.contains(child) {
+            child.parent = self
+            children.append(child)
+        }        
     }
     
     public func removeChild(_ child: Object) {

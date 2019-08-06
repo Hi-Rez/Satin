@@ -25,6 +25,8 @@ open class Mesh: Object, GeometryDelegate {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
     
+    public var instanceCount: Int = 1
+    
     var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
     var vertexUniformsBuffer: MTLBuffer!
     
@@ -62,6 +64,12 @@ open class Mesh: Object, GeometryDelegate {
     var updateIndexBuffer: Bool = true
     var updateUniformBuffer: Bool = true
     var updateMaterial: Bool = false
+    
+    public override init() {
+        super.init()
+        print("Setup Mesh Empty")
+        setup(Geometry(), Material())
+    }
     
     public init(geometry: Geometry, material: Material) {
         super.init()
@@ -153,7 +161,7 @@ open class Mesh: Object, GeometryDelegate {
             updateMaterial = false
         }
         
-        draw(renderEncoder: renderEncoder, instanceCount: 1)
+        draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
@@ -172,10 +180,22 @@ open class Mesh: Object, GeometryDelegate {
         // Do uniform binds here
         
         if let indexBuffer = indexBuffer {
-            renderEncoder.drawIndexedPrimitives(type: geometry.primitiveType, indexCount: geometry.indexData.count, indexType: geometry.indexType, indexBuffer: indexBuffer, indexBufferOffset: 0)
+            renderEncoder.drawIndexedPrimitives(
+                type: geometry.primitiveType,
+                indexCount: geometry.indexData.count,
+                indexType: geometry.indexType,
+                indexBuffer: indexBuffer,
+                indexBufferOffset: 0,
+                instanceCount: instanceCount
+            )
         }
         else {
-            renderEncoder.drawPrimitives(type: geometry.primitiveType, vertexStart: 0, vertexCount: geometry.vertexData.count)
+            renderEncoder.drawPrimitives(
+                type: geometry.primitiveType,
+                vertexStart: 0,
+                vertexCount: geometry.vertexData.count,
+                instanceCount: instanceCount
+            )
         }
         
         postDraw?(renderEncoder)
