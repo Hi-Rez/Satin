@@ -44,7 +44,6 @@ open class Geometry {
     }
     
     deinit {
-        print("Destroy Geometry")
         delegate = nil
     }
 }

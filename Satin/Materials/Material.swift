@@ -9,18 +9,11 @@
 open class Material {
     public var pipeline: Pipeline = Pipeline()
     
-    public init()
-    {
-        print("Setup Material")
-    }
+    public init() {}
     
-    public init(_ pipeline: Pipeline)
-    {
-        print("Setup Material")
+    public init(_ pipeline: Pipeline) {
         self.pipeline = pipeline
     }
     
-    deinit {
-        print("Destroy Material")
-    }
+    deinit {}
 }

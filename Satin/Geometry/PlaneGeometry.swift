@@ -88,7 +88,6 @@ open class PlaneGeometry: Geometry {
     }
     
     deinit {
-        print("Destroy Plane Geometry")
         indexData = []
         vertexData = []
     }

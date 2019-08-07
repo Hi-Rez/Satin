@@ -15,10 +15,7 @@ open class Renderer
     
     public var viewport: MTLViewport = MTLViewport()
     
-    public init()
-    {
-        print("Renderer Setup")
-    }
+    public init() {}
     
     public init(scene: Object, camera: Camera)
     {

@@ -67,13 +67,11 @@ open class Mesh: Object, GeometryDelegate {
     
     public override init() {
         super.init()
-        print("Setup Mesh Empty")
         setup(Geometry(), Material())
     }
     
     public init(geometry: Geometry, material: Material) {
         super.init()
-        print("Setup Mesh")
         setup(geometry, material)
     }
     
@@ -82,24 +80,22 @@ open class Mesh: Object, GeometryDelegate {
         self.material = material
     }
     
-    func updateUniforms(camera: Camera)
-    {
+    func updateUniforms(camera: Camera) {
         if vertexUniforms != nil {
-            vertexUniforms[0].modelMatrix = self.worldMatrix
+            vertexUniforms[0].modelMatrix = worldMatrix
             vertexUniforms[0].viewMatrix = camera.viewMatrix
-            vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix);
+            vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].projectionMatrix = camera.projectionMatrix
             let n = vertexUniforms[0].modelViewMatrix.inverse.transpose
             vertexUniforms[0].normalMatrix = simd_matrix(
                 simd_make_float3(n[0].x, n[0].y, n[0].z),
                 simd_make_float3(n[1].x, n[1].y, n[1].z),
                 simd_make_float3(n[2].x, n[2].y, n[2].z)
-            )            
+            )
         }
     }
     
-    func updateUniformsBuffer()
-    {
+    func updateUniformsBuffer() {
         if vertexUniformsBuffer != nil {
             uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
             uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
@@ -114,7 +110,6 @@ open class Mesh: Object, GeometryDelegate {
     
     public func draw(renderEncoder: MTLRenderCommandEncoder) {
         if updateVertexBuffer {
-            print("updateVertexBuffer")
             let device = renderEncoder.device
             
             if !geometry.vertexData.isEmpty {
@@ -129,7 +124,6 @@ open class Mesh: Object, GeometryDelegate {
         }
         
         if updateIndexBuffer {
-            print("updateIndexBuffer")
             let device = renderEncoder.device
             
             if !geometry.indexData.isEmpty {
@@ -145,7 +139,6 @@ open class Mesh: Object, GeometryDelegate {
         }
         
         if updateUniformBuffer {
-            print("updateUniformBuffer")
             let device = renderEncoder.device
             
             let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
@@ -157,7 +150,6 @@ open class Mesh: Object, GeometryDelegate {
         }
         
         if updateMaterial {
-            print("updateMaterial")
             updateMaterial = false
         }
         
@@ -173,7 +165,7 @@ open class Mesh: Object, GeometryDelegate {
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset:uniformBufferOffset, index:1)
+        renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: 1)
         
         // Do material binds here
         
@@ -202,7 +194,6 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     deinit {
-        print("Destroy Mesh")
         vertexBuffer = nil
         indexBuffer = nil
     }
@@ -211,14 +202,12 @@ open class Mesh: Object, GeometryDelegate {
     
     func indexDataUpdated() {
         if !geometry.indexData.isEmpty {
-            print("Index Data Updated")
             updateIndexBuffer = true
         }
     }
     
     func vertexDataUpdated() {
         if !geometry.vertexData.isEmpty {
-            print("Vertex Data Updated")
             updateVertexBuffer = true
         }
     }

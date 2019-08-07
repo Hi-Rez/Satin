@@ -7,6 +7,5 @@
 //
 
 public func map(_ input: Float, _ inMin: Float, _ inMax: Float, _ outMin: Float, _ outMax: Float) -> Float {
-    return ((input - inMin) / (inMax - inMin) * (outMax - outMin)) + outMin;
+    return ((input - inMin) / (inMax - inMin) * (outMax - outMin)) + outMin
 }
-

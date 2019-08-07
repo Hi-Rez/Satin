@@ -106,7 +106,7 @@ open class Object {
         if !children.contains(child) {
             child.parent = self
             children.append(child)
-        }        
+        }
     }
     
     public func removeChild(_ child: Object) {

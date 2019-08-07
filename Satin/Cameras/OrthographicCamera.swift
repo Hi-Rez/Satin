@@ -10,6 +10,22 @@ import simd
 
 open class OrthographicCamera: Camera
 {
+    public override var scale: simd_float3
+    {
+        didSet
+        {
+            updateViewMatrix = true
+        }
+    }
+    
+    public override var position: simd_float3
+    {
+        didSet
+        {
+            updateViewMatrix = true
+        }
+    }
+    
     public var left: Float = -1.0
     {
         didSet
@@ -17,7 +33,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-
+    
     public var right: Float = 1.0
     {
         didSet
@@ -25,7 +41,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-
+    
     public var top: Float = 1.0
     {
         didSet
@@ -33,7 +49,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-
+    
     public var bottom: Float = -1.0
     {
         didSet
@@ -41,24 +57,31 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-
+    
     public override var projectionMatrix: matrix_float4x4
     {
         if updateProjectionMatrix
         {
-            print("Updated Projection Matrix")
             _projectionMatrix = orthographic(left: left, right: right, bottom: bottom, top: top, near: near, far: far)
             updateProjectionMatrix = false
         }
         return _projectionMatrix
     }
     
-    public override init()
+    public override var viewMatrix: matrix_float4x4
     {
-        
+        if updateViewMatrix
+        {
+            _viewMatrix = worldMatrix.inverse
+            updateViewMatrix = false
+        }
+        return _viewMatrix
     }
     
-    public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) {
+    public override init() {}
+    
+    public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
+    {
         super.init()
         self.left = left
         self.right = right
@@ -68,14 +91,16 @@ open class OrthographicCamera: Camera
         self.far = far
     }
     
-    public func update(left: Float, right: Float, bottom: Float, top: Float) {
+    public func update(left: Float, right: Float, bottom: Float, top: Float)
+    {
         self.left = left
         self.right = right
         self.bottom = bottom
         self.top = top
     }
     
-    public func update(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) {
+    public func update(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
+    {
         self.left = left
         self.right = right
         self.bottom = bottom

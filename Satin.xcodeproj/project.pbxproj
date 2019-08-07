@@ -14,6 +14,8 @@
 		E159A34322E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
 		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
+		E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
+		E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
 		E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C122E7CB6500A43BB4 /* Object.swift */; };
 		E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C822E7CC2200A43BB4 /* Vertex.swift */; };
@@ -49,6 +51,7 @@
 		E13C969322E6482C00D6FEB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E159A34122E8F04400909A28 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
+		E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFileCompiler.swift; sourceTree = "<group>"; };
 		E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		E19FA5C122E7CB6500A43BB4 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		E19FA5C822E7CC2200A43BB4 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
@@ -102,7 +105,11 @@
 		E13C969122E6482C00D6FEB0 /* Satin */ = {
 			isa = PBXGroup;
 			children = (
+				E13C969322E6482C00D6FEB0 /* Info.plist */,
 				E13C969222E6482C00D6FEB0 /* Satin.h */,
+				E1350A3022E7C43000C45050 /* Assets */,
+				E1350A2E22E7C41100C45050 /* Pipelines */,
+				E188243622F9F216001DC5E9 /* Utilities */,
 				E19FA60622E822F900A43BB4 /* Materials */,
 				E19FA5D922E7D54E00A43BB4 /* Pipeline */,
 				E19FA5D422E7CCE800A43BB4 /* Math */,
@@ -111,9 +118,6 @@
 				E19FA5C622E7CB8C00A43BB4 /* Types */,
 				E19FA5C022E7CB5100A43BB4 /* Core */,
 				E19FA5BF22E7CB4600A43BB4 /* Geometry */,
-				E13C969322E6482C00D6FEB0 /* Info.plist */,
-				E1350A3022E7C43000C45050 /* Assets */,
-				E1350A2E22E7C41100C45050 /* Pipelines */,
 			);
 			path = Satin;
 			sourceTree = "<group>";
@@ -124,6 +128,14 @@
 				E19FA5FF22E7D89600A43BB4 /* Renderer.swift */,
 			);
 			path = Renderer;
+			sourceTree = "<group>";
+		};
+		E188243622F9F216001DC5E9 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		E19FA5BF22E7CB4600A43BB4 /* Geometry */ = {
@@ -317,6 +329,7 @@
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
 				E19FA5D122E7CCB800A43BB4 /* Defines.swift in Sources */,
 				E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */,
+				E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */,
 				E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */,
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
@@ -338,6 +351,7 @@
 				E19FA63322E8B6F400A43BB4 /* Defines.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
+				E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,

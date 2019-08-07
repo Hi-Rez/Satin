@@ -10,12 +10,8 @@ import Metal
 
 open class Pipeline {
     public var pipelineState: MTLRenderPipelineState?
-    
-    init() {
-        print("Setup Pipeline")
-    }
-    
-    deinit {
-        print("Destroy Pipeline")
-    }
+
+    init() {}
+
+    deinit {}
 }
