@@ -12,6 +12,10 @@
 		E13C969422E6482C00D6FEB0 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E159A34222E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
 		E159A34322E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
+		E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
+		E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
+		E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */; };
+		E15B219123062C4C00A7038E /* PerspectiveCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */; };
 		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
@@ -50,6 +54,8 @@
 		E13C969222E6482C00D6FEB0 /* Satin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Satin.h; sourceTree = "<group>"; };
 		E13C969322E6482C00D6FEB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E159A34122E8F04400909A28 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
+		E15B218B23061F4500A7038E /* PerspectiveCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveCamera.swift; sourceTree = "<group>"; };
+		E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveCameraController.swift; sourceTree = "<group>"; };
 		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
 		E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFileCompiler.swift; sourceTree = "<group>"; };
 		E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
@@ -134,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
+				E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -171,6 +178,7 @@
 			children = (
 				E19FA5CE22E7CCA400A43BB4 /* Camera.swift */,
 				E188243022F8E391001DC5E9 /* OrthographicCamera.swift */,
+				E15B218B23061F4500A7038E /* PerspectiveCamera.swift */,
 			);
 			path = Cameras;
 			sourceTree = "<group>";
@@ -324,6 +332,7 @@
 				E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */,
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
+				E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
@@ -333,6 +342,7 @@
 				E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */,
 				E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */,
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
+				E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */,
 				E19FA60222E7D8A400A43BB4 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -346,6 +356,7 @@
 				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
 				E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */,
+				E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */,
 				E19FA63222E8B6F400A43BB4 /* Renderer.swift in Sources */,
 				E19FA63322E8B6F400A43BB4 /* Defines.swift in Sources */,
@@ -355,6 +366,7 @@
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
+				E15B219123062C4C00A7038E /* PerspectiveCameraController.swift in Sources */,
 				E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

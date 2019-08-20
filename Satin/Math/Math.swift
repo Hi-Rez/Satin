@@ -143,7 +143,7 @@ public func lookAt(_ eye: simd_float3, _ center: simd_float3, _ up: simd_float3)
     let zAxis = simd_normalize(center - eye)
     let xAxis = -simd_normalize(simd_cross(up, zAxis))
     let yAxis = -simd_cross(zAxis, xAxis)
-
+    
     var result = matrix_identity_float4x4
 
     result[0].x = xAxis.x
