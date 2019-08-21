@@ -19,9 +19,9 @@ struct VertexUniforms {
     var normalMatrix: matrix_float3x3
 }
 
-let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
-
 open class Mesh: Object, GeometryDelegate {
+    let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
+    
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
     
@@ -48,7 +48,7 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    public var material: Material = Material() {
+    public var material: Material? {
         didSet {
             updateMaterial = true
         }
@@ -64,11 +64,6 @@ open class Mesh: Object, GeometryDelegate {
     var updateIndexBuffer: Bool = true
     var updateUniformBuffer: Bool = true
     var updateMaterial: Bool = false
-    
-    public override init() {
-        super.init()
-        setup(Geometry(), Material())
-    }
     
     public init(geometry: Geometry, material: Material) {
         super.init()
@@ -101,6 +96,13 @@ open class Mesh: Object, GeometryDelegate {
             uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
             vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents() + uniformBufferOffset).bindMemory(to: VertexUniforms.self, capacity: 1)
         }
+    }
+    
+    public override func update() {        
+        if let material = self.material {
+            material.update()
+        }
+        super.update()
     }
     
     public func update(camera: Camera) {
@@ -157,7 +159,7 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard visible, let vertexBuffer = vertexBuffer else { return }
+        guard visible, let vertexBuffer = vertexBuffer, let material = self.material else { return }
         
         preDraw?(renderEncoder)
         
@@ -167,7 +169,7 @@ open class Mesh: Object, GeometryDelegate {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: 1)
         
-        // Do material binds here
+        material.bind(renderEncoder)
         
         // Do uniform binds here
         

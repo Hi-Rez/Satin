@@ -51,7 +51,7 @@ open class PerspectiveCameraController {
             panVelocity *= damping
         }
         
-        if zoomVelocity > Float.ulpOfOne {
+        if abs(zoomVelocity) > Float.ulpOfOne {
             camera.position += camera.forwardDirection * zoomVelocity
             zoomVelocity *= damping
         }

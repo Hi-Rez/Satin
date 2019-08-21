@@ -27,13 +27,11 @@
 		E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CC22E7CC7900A43BB4 /* VertexUniforms.swift */; };
 		E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CE22E7CCA400A43BB4 /* Camera.swift */; };
 		E19FA5D122E7CCB800A43BB4 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5D022E7CCB800A43BB4 /* Defines.swift */; };
-		E19FA5DB22E7D56000A43BB4 /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5DA22E7D56000A43BB4 /* Pipeline.swift */; };
 		E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5FF22E7D89600A43BB4 /* Renderer.swift */; };
 		E19FA60222E7D8A400A43BB4 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60122E7D8A400A43BB4 /* Math.swift */; };
 		E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */; };
 		E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60722E8A9E200A43BB4 /* Map.swift */; };
 		E19FA62D22E8B6DE00A43BB4 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E19FA62E22E8B6F400A43BB4 /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5DA22E7D56000A43BB4 /* Pipeline.swift */; };
 		E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60122E7D8A400A43BB4 /* Math.swift */; };
 		E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60722E8A9E200A43BB4 /* Map.swift */; };
 		E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CE22E7CCA400A43BB4 /* Camera.swift */; };
@@ -65,7 +63,6 @@
 		E19FA5CC22E7CC7900A43BB4 /* VertexUniforms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexUniforms.swift; sourceTree = "<group>"; };
 		E19FA5CE22E7CCA400A43BB4 /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		E19FA5D022E7CCB800A43BB4 /* Defines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
-		E19FA5DA22E7D56000A43BB4 /* Pipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
 		E19FA5FF22E7D89600A43BB4 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E19FA60122E7D8A400A43BB4 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneGeometry.swift; sourceTree = "<group>"; };
@@ -117,7 +114,6 @@
 				E1350A2E22E7C41100C45050 /* Pipelines */,
 				E188243622F9F216001DC5E9 /* Utilities */,
 				E19FA60622E822F900A43BB4 /* Materials */,
-				E19FA5D922E7D54E00A43BB4 /* Pipeline */,
 				E19FA5D422E7CCE800A43BB4 /* Math */,
 				E19FA5C722E7CC0900A43BB4 /* Cameras */,
 				E177FC2022E6B75A004DAA38 /* Renderer */,
@@ -190,14 +186,6 @@
 				E19FA60722E8A9E200A43BB4 /* Map.swift */,
 			);
 			path = Math;
-			sourceTree = "<group>";
-		};
-		E19FA5D922E7D54E00A43BB4 /* Pipeline */ = {
-			isa = PBXGroup;
-			children = (
-				E19FA5DA22E7D56000A43BB4 /* Pipeline.swift */,
-			);
-			path = Pipeline;
 			sourceTree = "<group>";
 		};
 		E19FA60622E822F900A43BB4 /* Materials */ = {
@@ -328,7 +316,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E159A34222E8F04400909A28 /* Material.swift in Sources */,
-				E19FA5DB22E7D56000A43BB4 /* Pipeline.swift in Sources */,
 				E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */,
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
@@ -352,7 +339,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E159A34322E8F04400909A28 /* Material.swift in Sources */,
-				E19FA62E22E8B6F400A43BB4 /* Pipeline.swift in Sources */,
 				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
 				E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */,
