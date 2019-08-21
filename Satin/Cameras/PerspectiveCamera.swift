@@ -73,7 +73,7 @@ open class PerspectiveCamera: Camera
     public override init()
     {
         super.init()
-        orientation = simd_quaternion(Float.pi, simd_make_float3(0,1,0))
+        orientation = simd_quaternion(Float.pi, simd_make_float3(0, 1, 0))
         position = simd_make_float3(0.0, 0.0, 1.0)
     }
 }
