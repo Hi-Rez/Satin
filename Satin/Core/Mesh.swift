@@ -65,12 +65,12 @@ open class Mesh: Object, GeometryDelegate {
     var updateUniformBuffer: Bool = true
     var updateMaterial: Bool = false
     
-    public init(geometry: Geometry, material: Material) {
+    public init(geometry: Geometry, material: Material?) {
         super.init()
         setup(geometry, material)
     }
     
-    func setup(_ geometry: Geometry, _ material: Material) {
+    func setup(_ geometry: Geometry, _ material: Material?) {
         self.geometry = geometry
         self.material = material
     }
