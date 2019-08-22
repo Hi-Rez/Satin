@@ -15,7 +15,6 @@
 		E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
 		E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
 		E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */; };
-		E15B219123062C4C00A7038E /* PerspectiveCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */; };
 		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
@@ -43,6 +42,30 @@
 		E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CA22E7CC3E00A43BB4 /* Mesh.swift */; };
 		E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */; };
+		E1E11E17230E616B00E86791 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E1E11E18230E618000E86791 /* Pipelines in Resources */ = {isa = PBXBuildFile; fileRef = E1350A2E22E7C41100C45050 /* Pipelines */; };
+		E1E11E19230E618000E86791 /* Pipelines in Resources */ = {isa = PBXBuildFile; fileRef = E1350A2E22E7C41100C45050 /* Pipelines */; };
+		E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
+		E1E11E1B230E618F00E86791 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
+		E1E11E1C230E619500E86791 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60122E7D8A400A43BB4 /* Math.swift */; };
+		E1E11E1D230E619500E86791 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60722E8A9E200A43BB4 /* Map.swift */; };
+		E1E11E1E230E619900E86791 /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CE22E7CCA400A43BB4 /* Camera.swift */; };
+		E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
+		E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
+		E1E11E21230E619D00E86791 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5FF22E7D89600A43BB4 /* Renderer.swift */; };
+		E1E11E22230E61A200E86791 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5D022E7CCB800A43BB4 /* Defines.swift */; };
+		E1E11E23230E61A200E86791 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C822E7CC2200A43BB4 /* Vertex.swift */; };
+		E1E11E24230E61A200E86791 /* VertexUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CC22E7CC7900A43BB4 /* VertexUniforms.swift */; };
+		E1E11E25230E61A800E86791 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C122E7CB6500A43BB4 /* Object.swift */; };
+		E1E11E26230E61A800E86791 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CA22E7CC3E00A43BB4 /* Mesh.swift */; };
+		E1E11E27230E61AC00E86791 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
+		E1E11E28230E61AC00E86791 /* PlaneGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */; };
+		E1E11E2C230E62F700E86791 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E2A230E62F700E86791 /* Metal.framework */; };
+		E1E11E2D230E62F700E86791 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E2B230E62F700E86791 /* MetalKit.framework */; };
+		E1E11E30230E630000E86791 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E2E230E630000E86791 /* Metal.framework */; };
+		E1E11E31230E630000E86791 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E2F230E630000E86791 /* MetalKit.framework */; };
+		E1E11E34230E630A00E86791 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E32230E630A00E86791 /* MetalKit.framework */; };
+		E1E11E35230E630A00E86791 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E33230E630A00E86791 /* Metal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +91,13 @@
 		E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneGeometry.swift; sourceTree = "<group>"; };
 		E19FA60722E8A9E200A43BB4 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		E19FA62522E8B65000A43BB4 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1E11E0F230E60B900E86791 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1E11E2A230E62F700E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.4.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		E1E11E2B230E62F700E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.4.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
+		E1E11E2E230E630000E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.4.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		E1E11E2F230E630000E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.4.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
+		E1E11E32230E630A00E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		E1E11E33230E630A00E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E11E34230E630A00E86791 /* MetalKit.framework in Frameworks */,
+				E1E11E35230E630A00E86791 /* Metal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +114,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E11E30230E630000E86791 /* Metal.framework in Frameworks */,
+				E1E11E31230E630000E86791 /* MetalKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1E11E0C230E60B900E86791 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1E11E2C230E62F700E86791 /* Metal.framework in Frameworks */,
+				E1E11E2D230E62F700E86791 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +136,7 @@
 			children = (
 				E13C969122E6482C00D6FEB0 /* Satin */,
 				E13C969022E6482C00D6FEB0 /* Products */,
+				E1E11E29230E62F700E86791 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,6 +145,7 @@
 			children = (
 				E13C968F22E6482C00D6FEB0 /* Satin.framework */,
 				E19FA62522E8B65000A43BB4 /* Satin.framework */,
+				E1E11E0F230E60B900E86791 /* Satin.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -196,6 +241,19 @@
 			path = Materials;
 			sourceTree = "<group>";
 		};
+		E1E11E29230E62F700E86791 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1E11E33230E630A00E86791 /* Metal.framework */,
+				E1E11E32230E630A00E86791 /* MetalKit.framework */,
+				E1E11E2E230E630000E86791 /* Metal.framework */,
+				E1E11E2F230E630000E86791 /* MetalKit.framework */,
+				E1E11E2A230E62F700E86791 /* Metal.framework */,
+				E1E11E2B230E62F700E86791 /* MetalKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -215,12 +273,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1E11E0A230E60B900E86791 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1E11E17230E616B00E86791 /* Satin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		E13C968E22E6482C00D6FEB0 /* Satin */ = {
+		E13C968E22E6482C00D6FEB0 /* Satin-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E13C969722E6482C00D6FEB0 /* Build configuration list for PBXNativeTarget "Satin" */;
+			buildConfigurationList = E13C969722E6482C00D6FEB0 /* Build configuration list for PBXNativeTarget "Satin-macOS" */;
 			buildPhases = (
 				E13C968A22E6482C00D6FEB0 /* Headers */,
 				E13C968B22E6482C00D6FEB0 /* Sources */,
@@ -231,7 +297,7 @@
 			);
 			dependencies = (
 			);
-			name = Satin;
+			name = "Satin-macOS";
 			productName = Satin;
 			productReference = E13C968F22E6482C00D6FEB0 /* Satin.framework */;
 			productType = "com.apple.product-type.framework";
@@ -254,6 +320,24 @@
 			productReference = E19FA62522E8B65000A43BB4 /* Satin.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		E1E11E0E230E60B900E86791 /* Satin-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1E11E16230E60B900E86791 /* Build configuration list for PBXNativeTarget "Satin-tvOS" */;
+			buildPhases = (
+				E1E11E0A230E60B900E86791 /* Headers */,
+				E1E11E0B230E60B900E86791 /* Sources */,
+				E1E11E0C230E60B900E86791 /* Frameworks */,
+				E1E11E0D230E60B900E86791 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Satin-tvOS";
+			productName = "Satin-tvOS";
+			productReference = E1E11E0F230E60B900E86791 /* Satin.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -270,6 +354,9 @@
 					E19FA62422E8B65000A43BB4 = {
 						CreatedOnToolsVersion = 11.0;
 					};
+					E1E11E0E230E60B900E86791 = {
+						CreatedOnToolsVersion = 10.3;
+					};
 				};
 			};
 			buildConfigurationList = E13C968922E6482C00D6FEB0 /* Build configuration list for PBXProject "Satin" */;
@@ -285,8 +372,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E13C968E22E6482C00D6FEB0 /* Satin */,
+				E13C968E22E6482C00D6FEB0 /* Satin-macOS */,
 				E19FA62422E8B65000A43BB4 /* Satin-iOS */,
+				E1E11E0E230E60B900E86791 /* Satin-tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -305,6 +393,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E11E18230E618000E86791 /* Pipelines in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1E11E0D230E60B900E86791 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1E11E19230E618000E86791 /* Pipelines in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,8 +449,29 @@
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
-				E15B219123062C4C00A7038E /* PerspectiveCameraController.swift in Sources */,
 				E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1E11E0B230E60B900E86791 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1E11E21230E619D00E86791 /* Renderer.swift in Sources */,
+				E1E11E27230E61AC00E86791 /* Geometry.swift in Sources */,
+				E1E11E26230E61A800E86791 /* Mesh.swift in Sources */,
+				E1E11E24230E61A200E86791 /* VertexUniforms.swift in Sources */,
+				E1E11E1B230E618F00E86791 /* Material.swift in Sources */,
+				E1E11E1E230E619900E86791 /* Camera.swift in Sources */,
+				E1E11E28230E61AC00E86791 /* PlaneGeometry.swift in Sources */,
+				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
+				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
+				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
+				E1E11E22230E61A200E86791 /* Defines.swift in Sources */,
+				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
+				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,
+				E1E11E25230E61A800E86791 /* Object.swift in Sources */,
+				E1E11E1C230E619500E86791 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,7 +617,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.syedrezaali.Satin;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Satin;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -526,7 +644,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.syedrezaali.Satin;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Satin;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -585,6 +703,61 @@
 			};
 			name = Release;
 		};
+		E1E11E14230E60B900E86791 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Satin/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.syedrezaali.Satin-tvOS";
+				PRODUCT_NAME = Satin;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
+			};
+			name = Debug;
+		};
+		E1E11E15230E60B900E86791 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Satin/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.syedrezaali.Satin-tvOS";
+				PRODUCT_NAME = Satin;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -597,7 +770,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E13C969722E6482C00D6FEB0 /* Build configuration list for PBXNativeTarget "Satin" */ = {
+		E13C969722E6482C00D6FEB0 /* Build configuration list for PBXNativeTarget "Satin-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E13C969822E6482C00D6FEB0 /* Debug */,
@@ -611,6 +784,15 @@
 			buildConfigurations = (
 				E19FA62B22E8B65000A43BB4 /* Debug */,
 				E19FA62C22E8B65000A43BB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1E11E16230E60B900E86791 /* Build configuration list for PBXNativeTarget "Satin-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1E11E14230E60B900E86791 /* Debug */,
+				E1E11E15230E60B900E86791 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

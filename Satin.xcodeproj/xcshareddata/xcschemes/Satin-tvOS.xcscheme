@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E13C968E22E6482C00D6FEB0"
+               BlueprintIdentifier = "E1E11E0E230E60B900E86791"
                BuildableName = "Satin.framework"
-               BlueprintName = "Satin"
+               BlueprintName = "Satin-tvOS"
                ReferencedContainer = "container:Satin.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,9 +50,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E13C968E22E6482C00D6FEB0"
+            BlueprintIdentifier = "E1E11E0E230E60B900E86791"
             BuildableName = "Satin.framework"
-            BlueprintName = "Satin"
+            BlueprintName = "Satin-tvOS"
             ReferencedContainer = "container:Satin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
