@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name                   = "Satin"
   spec.version                = "0.0.3"
-  spec.summary                = "Satin is a swift based creative coding toolkit built on top of Metal"
+  spec.summary                = "Satin is a Swift based creative coding toolkit built on top of Metal"
   spec.description            = <<-DESC
   Satin is a swift based creative coding toolkit built on top of Metal. Satin contains classes & helpers that make create graphics with Metal fun and fast!
                    DESC
@@ -16,9 +16,8 @@ Pod::Spec.new do |spec|
   spec.tvos.deployment_target = "12.4"
 
   spec.source_files           = "Satin/*.h", "Satin/**/*.{h,m,swift}"
-  spec.exclude_files          = "Resources/Pipelines/**/*.metal"
-  spec.resource               = "Resources/**/**/*"
-
+  spec.exclude_files          = "Pipelines/**/**/*.metal"
+  spec.resources              = "Pipelines"
   spec.frameworks             = "Metal", "MetalKit"
   spec.module_name            = "Satin"
   spec.swift_version          = "5.1"
