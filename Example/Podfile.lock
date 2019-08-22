@@ -1,0 +1,23 @@
+PODS:
+  - Forge (0.0.3)
+  - Satin (0.0.4)
+
+DEPENDENCIES:
+  - Forge (= 0.0.3)
+  - Satin (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Forge
+
+EXTERNAL SOURCES:
+  Satin:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Forge: fb15c420f37f60bb1976240cae1379587ae04580
+  Satin: 30976ce8ae351ad90dd8f4d91c6886a87f4f2c88
+
+PODFILE CHECKSUM: 1661eb521858cd4f968a86ba658d7f1744bfd4fa
+
+COCOAPODS: 1.7.5
