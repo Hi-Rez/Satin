@@ -6,6 +6,8 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+#if os(macOS)
+
 import Cocoa
 import simd
 
@@ -186,3 +188,5 @@ open class PerspectiveCameraController {
         disable()
     }
 }
+
+#endif
