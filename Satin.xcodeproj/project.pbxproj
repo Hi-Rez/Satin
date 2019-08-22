@@ -131,9 +131,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E13B54A6230F2B81009E143D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E1350A3022E7C43000C45050 /* Assets */,
+				E1350A2E22E7C41100C45050 /* Pipelines */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		E13C968522E6482C00D6FEB0 = {
 			isa = PBXGroup;
 			children = (
+				E13B54A6230F2B81009E143D /* Resources */,
 				E13C969122E6482C00D6FEB0 /* Satin */,
 				E13C969022E6482C00D6FEB0 /* Products */,
 				E1E11E29230E62F700E86791 /* Frameworks */,
@@ -155,8 +165,6 @@
 			children = (
 				E13C969322E6482C00D6FEB0 /* Info.plist */,
 				E13C969222E6482C00D6FEB0 /* Satin.h */,
-				E1350A3022E7C43000C45050 /* Assets */,
-				E1350A2E22E7C41100C45050 /* Pipelines */,
 				E188243622F9F216001DC5E9 /* Utilities */,
 				E19FA60622E822F900A43BB4 /* Materials */,
 				E19FA5D422E7CCE800A43BB4 /* Math */,
