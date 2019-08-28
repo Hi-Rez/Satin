@@ -20,6 +20,9 @@
 		E190D679230F430B00034600 /* Pipelines in Resources */ = {isa = PBXBuildFile; fileRef = E190D678230F430B00034600 /* Pipelines */; };
 		E190D67A230F430B00034600 /* Pipelines in Resources */ = {isa = PBXBuildFile; fileRef = E190D678230F430B00034600 /* Pipelines */; };
 		E190D67B230F430B00034600 /* Pipelines in Resources */ = {isa = PBXBuildFile; fileRef = E190D678230F430B00034600 /* Pipelines */; };
+		E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B695F2315E1D10001B1A8 /* FileWatcher.swift */; };
+		E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B695F2315E1D10001B1A8 /* FileWatcher.swift */; };
+		E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B695F2315E1D10001B1A8 /* FileWatcher.swift */; };
 		E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C122E7CB6500A43BB4 /* Object.swift */; };
 		E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5C822E7CC2200A43BB4 /* Vertex.swift */; };
@@ -77,6 +80,7 @@
 		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
 		E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFileCompiler.swift; sourceTree = "<group>"; };
 		E190D678230F430B00034600 /* Pipelines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Pipelines; sourceTree = "<group>"; };
+		E19B695F2315E1D10001B1A8 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		E19FA5C122E7CB6500A43BB4 /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		E19FA5C822E7CC2200A43BB4 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
@@ -179,6 +183,7 @@
 			children = (
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
 				E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */,
+				E19B695F2315E1D10001B1A8 /* FileWatcher.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -414,6 +419,7 @@
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
 				E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
+				E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
 				E19FA5D122E7CCB800A43BB4 /* Defines.swift in Sources */,
@@ -441,6 +447,7 @@
 				E19FA63322E8B6F400A43BB4 /* Defines.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
+				E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
@@ -463,6 +470,7 @@
 				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
 				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
 				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
+				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E1E11E22230E61A200E86791 /* Defines.swift in Sources */,
 				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
 				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,

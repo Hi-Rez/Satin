@@ -16,12 +16,15 @@ public enum MetalFileCompilerError: Error
 open class MetalFileCompiler
 {
     var files: [URL] = []
+    var watchers: [FileWatcher] = []
+    public var onUpdate: (() -> ())?
     
     public init() {}
     
     public func parse(_ fileURL: URL) throws -> String
     {
         files = []
+        watchers = []
         return try _parse(fileURL)
     }
     
@@ -30,6 +33,11 @@ open class MetalFileCompiler
         let fileURLResolved = fileURL.resolvingSymlinksInPath()
         if !files.contains(fileURLResolved)
         {
+            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
+            watcher.onUpdate = { [unowned self] in
+                self.onUpdate?()
+            }
+            watchers.append(watcher)
             files.append(fileURLResolved)
             let baseURL = fileURL.deletingLastPathComponent()
             
@@ -69,5 +77,10 @@ open class MetalFileCompiler
             return content
         }
         return ""
+    }
+    
+    deinit {
+        files = []
+        watchers = [] 
     }
 }

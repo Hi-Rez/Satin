@@ -20,7 +20,7 @@ class Renderer: Forge.Renderer {
     var scene: Object!
     
     var perspCamera = PerspectiveCamera()
-//    var cameraController: PerspectiveCameraController!
+    var cameraController: PerspectiveCameraController!
     var renderer = Satin.Renderer()
     
     required init?(metalKitView: MTKView) {
@@ -73,7 +73,7 @@ class Renderer: Forge.Renderer {
     
     func setupCamera() {
         perspCamera.position.z = 9.0
-//        cameraController = PerspectiveCameraController(perspCamera)
+        cameraController = PerspectiveCameraController(perspCamera)
     }
     
     func setupRenderer() {
@@ -81,7 +81,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func update() {
-//        cameraController.update()
+        cameraController.update()
         renderer.update()
     }
     
