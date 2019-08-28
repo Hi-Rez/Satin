@@ -25,7 +25,6 @@ open class FileWatcher
     {
         self.filePath = filePath
         self.timeInterval = timeInterval
-        print("Trying File: \(self.filePath)")
         if FileManager.default.fileExists(atPath: self.filePath)
         {
             do
@@ -91,7 +90,6 @@ open class FileWatcher
 
     deinit
     {
-        print("removing file watcher: \(filePath)")
         unwatch()
     }
 }
