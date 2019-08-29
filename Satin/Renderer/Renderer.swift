@@ -41,7 +41,8 @@ open class Renderer
     public var clearStencil: UInt32 = 0
     
     public var sampleCount: Int = 1 {
-        didSet{
+        didSet
+        {
             updateColorTexture = true
             updateDepthTexture = true
             updateStencilTexture = true
@@ -130,9 +131,10 @@ open class Renderer
         
         if sampleCount > 1 {
             renderPassDescriptor.colorAttachments[0].texture = colorTexture
-                                
-        } else {
-            renderPassDescriptor.colorAttachments[0].resolveTexture = nil;
+        }
+        else
+        {
+            renderPassDescriptor.colorAttachments[0].resolveTexture = nil
         }
         
         renderPassDescriptor.colorAttachments[0].storeAction = sampleCount > 1 ? .storeAndMultisampleResolve : .store
@@ -143,19 +145,7 @@ open class Renderer
             renderPassDescriptor.depthAttachment.loadAction = depthLoadAction
             renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
             renderPassDescriptor.depthAttachment.clearDepth = clearDepth
-            #if os(macOS)
-            if depthPixelFormat == .depth32Float_stencil8 || depthPixelFormat == .depth24Unorm_stencil8
-            {
-                renderPassDescriptor.stencilAttachment.texture = depthTexture
-            }
-            else if let stencilTexture = self.stencilTexture
-            {
-                renderPassDescriptor.stencilAttachment.texture = stencilTexture
-                renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
-                renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
-                renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
-            }
-            #elseif os(iOS) || os(tvOS)
+#if os(macOS)
             if depthPixelFormat == .depth32Float_stencil8
             {
                 renderPassDescriptor.stencilAttachment.texture = depthTexture
@@ -167,7 +157,19 @@ open class Renderer
                 renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
                 renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
             }
-            #endif
+#elseif os(iOS) || os(tvOS)
+            if depthPixelFormat == .depth32Float_stencil8
+            {
+                renderPassDescriptor.stencilAttachment.texture = depthTexture
+            }
+            else if let stencilTexture = self.stencilTexture
+            {
+                renderPassDescriptor.stencilAttachment.texture = stencilTexture
+                renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
+                renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
+                renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
+            }
+#endif
         }
         
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
@@ -214,7 +216,8 @@ open class Renderer
     
     public func setupDepthStencilState(_ device: MTLDevice)
     {
-        if depthPixelFormat != .invalid {
+        if depthPixelFormat != .invalid
+        {
             let depthStateDesciptor = MTLDepthStencilDescriptor()
             depthStateDesciptor.depthCompareFunction = MTLCompareFunction.less
             depthStateDesciptor.isDepthWriteEnabled = true
@@ -279,7 +282,8 @@ open class Renderer
             descriptor.resourceOptions = .storageModePrivate
             colorTexture = device.makeTexture(descriptor: descriptor)
         }
-        else {
+        else
+        {
             colorTexture = nil
         }
     }
