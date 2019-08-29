@@ -45,5 +45,7 @@ open class Geometry {
     
     deinit {
         delegate = nil
+        indexData = []
+        vertexData = []
     }
 }

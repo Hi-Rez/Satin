@@ -86,9 +86,4 @@ open class PlaneGeometry: Geometry {
             }
         }
     }
-    
-    deinit {
-        indexData = []
-        vertexData = []
-    }
 }

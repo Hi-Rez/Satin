@@ -30,6 +30,7 @@ open class Material {
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.sampleCount = sampleCount
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = stencilPixelFormat

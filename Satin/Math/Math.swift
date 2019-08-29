@@ -188,7 +188,7 @@ public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> m
 {
     let angle = degToRad(0.5 * fov)
 
-    let sy = 1.0 / tan(angle)
+    let sy = 1.0 / tanf(angle)
     let sx = sy / aspect
     let sz = far / (far - near)
 
