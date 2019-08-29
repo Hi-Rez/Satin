@@ -143,6 +143,7 @@ open class Renderer
             renderPassDescriptor.depthAttachment.loadAction = depthLoadAction
             renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
             renderPassDescriptor.depthAttachment.clearDepth = clearDepth
+            #if os(macOS)
             if depthPixelFormat == .depth32Float_stencil8 || depthPixelFormat == .depth24Unorm_stencil8
             {
                 renderPassDescriptor.stencilAttachment.texture = depthTexture
@@ -154,6 +155,19 @@ open class Renderer
                 renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
                 renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
             }
+            #elseif os(iOS) || os(tvOS)
+            if depthPixelFormat == .depth32Float_stencil8
+            {
+                renderPassDescriptor.stencilAttachment.texture = depthTexture
+            }
+            else if let stencilTexture = self.stencilTexture
+            {
+                renderPassDescriptor.stencilAttachment.texture = stencilTexture
+                renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
+                renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
+                renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
+            }
+            #endif
         }
         
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
