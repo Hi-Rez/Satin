@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
+		E13A6447231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
+		E13A6448231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
 		E13C969422E6482C00D6FEB0 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E13F425B2316686900D94603 /* BoxGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F425A2316686900D94603 /* BoxGeometry.swift */; };
 		E13F425C2316686900D94603 /* BoxGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13F425A2316686900D94603 /* BoxGeometry.swift */; };
@@ -74,6 +77,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E13A6445231C25E90021CF4F /* SphereGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SphereGeometry.swift; sourceTree = "<group>"; };
 		E13C968F22E6482C00D6FEB0 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E13C969222E6482C00D6FEB0 /* Satin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Satin.h; sourceTree = "<group>"; };
 		E13C969322E6482C00D6FEB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -198,6 +202,7 @@
 				E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */,
 				E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */,
 				E13F425A2316686900D94603 /* BoxGeometry.swift */,
+				E13A6445231C25E90021CF4F /* SphereGeometry.swift */,
 			);
 			path = Geometry;
 			sourceTree = "<group>";
@@ -426,6 +431,7 @@
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
 				E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
+				E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
 				E13F425B2316686900D94603 /* BoxGeometry.swift in Sources */,
 				E19FA5D122E7CCB800A43BB4 /* Defines.swift in Sources */,
@@ -457,6 +463,7 @@
 				E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
+				E13A6447231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
 				E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */,
@@ -481,6 +488,7 @@
 				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E1E11E22230E61A200E86791 /* Defines.swift in Sources */,
 				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
+				E13A6448231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,
 				E1E11E25230E61A800E86791 /* Object.swift in Sources */,
 				E1E11E1C230E619500E86791 /* Math.swift in Sources */,
