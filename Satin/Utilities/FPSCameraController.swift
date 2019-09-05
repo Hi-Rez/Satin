@@ -170,9 +170,13 @@ open class FPSCameraController {
         case "w":
             moveForward = true
             moveBackwards = false
+            moveUp = false
+            moveDown = false
         case "s":
             moveForward = false
             moveBackwards = true
+            moveUp = false
+            moveDown = false
         case "a":
             moveLeft = true
             moveRight = false
@@ -180,9 +184,13 @@ open class FPSCameraController {
             moveLeft = false
             moveRight = true
         case "W":
+            moveForward = false
+            moveBackwards = false
             moveUp = true
             moveDown = false
         case "S":
+            moveForward = false
+            moveBackwards = false
             moveUp = false
             moveDown = true
         default:
@@ -194,15 +202,19 @@ open class FPSCameraController {
         switch event.characters {
         case "w":
             moveForward = false
+            moveUp = false
         case "s":
             moveBackwards = false
+            moveDown = false
         case "a":
             moveLeft = false
         case "d":
             moveRight = false
         case "W":
+            moveForward = false
             moveUp = false
         case "S":
+            moveBackwards = false
             moveDown = false
         default:
             return
