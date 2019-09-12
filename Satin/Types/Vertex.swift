@@ -9,9 +9,9 @@
 import simd
 
 public struct Vertex {
-    let position: simd_float4
-    let uv: simd_float2
-    let normal: simd_float3
+    var position: simd_float4
+    var uv: simd_float2
+    var normal: simd_float3
 
     public init() {
         position = simd_make_float4(0.0, 0.0, 0.0, 1.0)

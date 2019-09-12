@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E13610312329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
+		E13610322329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
+		E13610332329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
+		E136103723299A0F00A01AFF /* CapsuleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103623299A0F00A01AFF /* CapsuleGeometry.swift */; };
+		E136103823299A0F00A01AFF /* CapsuleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103623299A0F00A01AFF /* CapsuleGeometry.swift */; };
+		E136103923299A0F00A01AFF /* CapsuleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103623299A0F00A01AFF /* CapsuleGeometry.swift */; };
+		E136103B2329B6A600A01AFF /* ParametricGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103A2329B6A600A01AFF /* ParametricGeometry.swift */; };
+		E136103C2329B6A600A01AFF /* ParametricGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103A2329B6A600A01AFF /* ParametricGeometry.swift */; };
+		E136103D2329B6A600A01AFF /* ParametricGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136103A2329B6A600A01AFF /* ParametricGeometry.swift */; };
 		E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
 		E13A6447231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
 		E13A6448231C25E90021CF4F /* SphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13A6445231C25E90021CF4F /* SphereGeometry.swift */; };
@@ -74,9 +83,31 @@
 		E1E11E31230E630000E86791 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E2F230E630000E86791 /* MetalKit.framework */; };
 		E1E11E34230E630A00E86791 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E32230E630A00E86791 /* MetalKit.framework */; };
 		E1E11E35230E630A00E86791 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E11E33230E630A00E86791 /* Metal.framework */; };
+		E1F3751C23222B9F00048102 /* FPSCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3751B23222B9F00048102 /* FPSCameraController.swift */; };
+		E1F3751E2323120E00048102 /* CircleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3751D2323120E00048102 /* CircleGeometry.swift */; };
+		E1F3751F2323120E00048102 /* CircleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3751D2323120E00048102 /* CircleGeometry.swift */; };
+		E1F375202323120E00048102 /* CircleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3751D2323120E00048102 /* CircleGeometry.swift */; };
+		E1F375222323185700048102 /* TriangleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F375212323185700048102 /* TriangleGeometry.swift */; };
+		E1F375232323185700048102 /* TriangleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F375212323185700048102 /* TriangleGeometry.swift */; };
+		E1F375242323185700048102 /* TriangleGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F375212323185700048102 /* TriangleGeometry.swift */; };
+		E1F3752623232FC300048102 /* ArcGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752523232FC300048102 /* ArcGeometry.swift */; };
+		E1F3752723232FC300048102 /* ArcGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752523232FC300048102 /* ArcGeometry.swift */; };
+		E1F3752823232FC300048102 /* ArcGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752523232FC300048102 /* ArcGeometry.swift */; };
+		E1F3752C23256A7500048102 /* CylinderGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752B23256A7500048102 /* CylinderGeometry.swift */; };
+		E1F3752D23256A7500048102 /* CylinderGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752B23256A7500048102 /* CylinderGeometry.swift */; };
+		E1F3752E23256A7500048102 /* CylinderGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752B23256A7500048102 /* CylinderGeometry.swift */; };
+		E1F375302326137D00048102 /* TorusGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752F2326137D00048102 /* TorusGeometry.swift */; };
+		E1F375312326137D00048102 /* TorusGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752F2326137D00048102 /* TorusGeometry.swift */; };
+		E1F375322326137D00048102 /* TorusGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3752F2326137D00048102 /* TorusGeometry.swift */; };
+		E1F3753423261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
+		E1F3753523261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
+		E1F3753623261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E13610302329834000A01AFF /* IcoSphereGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IcoSphereGeometry.swift; sourceTree = "<group>"; };
+		E136103623299A0F00A01AFF /* CapsuleGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleGeometry.swift; sourceTree = "<group>"; };
+		E136103A2329B6A600A01AFF /* ParametricGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametricGeometry.swift; sourceTree = "<group>"; };
 		E13A6445231C25E90021CF4F /* SphereGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SphereGeometry.swift; sourceTree = "<group>"; };
 		E13C968F22E6482C00D6FEB0 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E13C969222E6482C00D6FEB0 /* Satin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Satin.h; sourceTree = "<group>"; };
@@ -108,6 +139,13 @@
 		E1E11E2F230E630000E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.4.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
 		E1E11E32230E630A00E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		E1E11E33230E630A00E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		E1F3751B23222B9F00048102 /* FPSCameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPSCameraController.swift; sourceTree = "<group>"; };
+		E1F3751D2323120E00048102 /* CircleGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleGeometry.swift; sourceTree = "<group>"; };
+		E1F375212323185700048102 /* TriangleGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleGeometry.swift; sourceTree = "<group>"; };
+		E1F3752523232FC300048102 /* ArcGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcGeometry.swift; sourceTree = "<group>"; };
+		E1F3752B23256A7500048102 /* CylinderGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CylinderGeometry.swift; sourceTree = "<group>"; };
+		E1F3752F2326137D00048102 /* TorusGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorusGeometry.swift; sourceTree = "<group>"; };
+		E1F3753323261B3500048102 /* ConeGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConeGeometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +227,7 @@
 		E188243622F9F216001DC5E9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E1F3751B23222B9F00048102 /* FPSCameraController.swift */,
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
 				E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */,
 				E19B695F2315E1D10001B1A8 /* FileWatcher.swift */,
@@ -203,6 +242,15 @@
 				E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */,
 				E13F425A2316686900D94603 /* BoxGeometry.swift */,
 				E13A6445231C25E90021CF4F /* SphereGeometry.swift */,
+				E1F3751D2323120E00048102 /* CircleGeometry.swift */,
+				E1F375212323185700048102 /* TriangleGeometry.swift */,
+				E1F3752523232FC300048102 /* ArcGeometry.swift */,
+				E1F3752B23256A7500048102 /* CylinderGeometry.swift */,
+				E1F3753323261B3500048102 /* ConeGeometry.swift */,
+				E1F3752F2326137D00048102 /* TorusGeometry.swift */,
+				E13610302329834000A01AFF /* IcoSphereGeometry.swift */,
+				E136103623299A0F00A01AFF /* CapsuleGeometry.swift */,
+				E136103A2329B6A600A01AFF /* ParametricGeometry.swift */,
 			);
 			path = Geometry;
 			sourceTree = "<group>";
@@ -428,13 +476,22 @@
 				E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */,
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
 				E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
+				E136103723299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
+				E136103B2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
+				E1F3751C23222B9F00048102 /* FPSCameraController.swift in Sources */,
 				E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
+				E1F3752623232FC300048102 /* ArcGeometry.swift in Sources */,
 				E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
+				E1F3753423261B3500048102 /* ConeGeometry.swift in Sources */,
 				E13F425B2316686900D94603 /* BoxGeometry.swift in Sources */,
+				E1F375302326137D00048102 /* TorusGeometry.swift in Sources */,
 				E19FA5D122E7CCB800A43BB4 /* Defines.swift in Sources */,
+				E1F375222323185700048102 /* TriangleGeometry.swift in Sources */,
+				E13610312329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E1F3751E2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */,
 				E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */,
@@ -442,6 +499,7 @@
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
 				E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */,
 				E19FA60222E7D8A400A43BB4 /* Math.swift in Sources */,
+				E1F3752C23256A7500048102 /* CylinderGeometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,10 +509,12 @@
 			files = (
 				E159A34322E8F04400909A28 /* Material.swift in Sources */,
 				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
+				E1F3751F2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
 				E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */,
 				E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */,
+				E136103823299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
 				E19FA63222E8B6F400A43BB4 /* Renderer.swift in Sources */,
 				E19FA63322E8B6F400A43BB4 /* Defines.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
@@ -462,7 +522,14 @@
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
 				E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
+				E1F3753523261B3500048102 /* ConeGeometry.swift in Sources */,
+				E13610322329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E136103C2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
+				E1F3752723232FC300048102 /* ArcGeometry.swift in Sources */,
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
+				E1F375232323185700048102 /* TriangleGeometry.swift in Sources */,
+				E1F3752D23256A7500048102 /* CylinderGeometry.swift in Sources */,
+				E1F375312326137D00048102 /* TorusGeometry.swift in Sources */,
 				E13A6447231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
@@ -476,10 +543,12 @@
 			files = (
 				E1E11E21230E619D00E86791 /* Renderer.swift in Sources */,
 				E1E11E27230E61AC00E86791 /* Geometry.swift in Sources */,
+				E1F375202323120E00048102 /* CircleGeometry.swift in Sources */,
 				E1E11E26230E61A800E86791 /* Mesh.swift in Sources */,
 				E1E11E24230E61A200E86791 /* VertexUniforms.swift in Sources */,
 				E1E11E1B230E618F00E86791 /* Material.swift in Sources */,
 				E1E11E1E230E619900E86791 /* Camera.swift in Sources */,
+				E136103923299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
 				E1E11E28230E61AC00E86791 /* PlaneGeometry.swift in Sources */,
 				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
 				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
@@ -487,7 +556,14 @@
 				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
 				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E1E11E22230E61A200E86791 /* Defines.swift in Sources */,
+				E1F3753623261B3500048102 /* ConeGeometry.swift in Sources */,
+				E13610332329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E136103D2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
+				E1F3752823232FC300048102 /* ArcGeometry.swift in Sources */,
 				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
+				E1F375242323185700048102 /* TriangleGeometry.swift in Sources */,
+				E1F3752E23256A7500048102 /* CylinderGeometry.swift in Sources */,
+				E1F375322326137D00048102 /* TorusGeometry.swift in Sources */,
 				E13A6448231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,
 				E1E11E25230E61A800E86791 /* Object.swift in Sources */,

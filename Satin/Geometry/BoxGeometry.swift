@@ -6,7 +6,7 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import Foundation
+import simd
 
 open class BoxGeometry: Geometry {
     public override init() {
