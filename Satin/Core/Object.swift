@@ -10,63 +10,63 @@ import simd
 
 open class Object {
     public var id: String = UUID().uuidString
-    
+
     public var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     public var orientation = simd_quaternion(0, simd_make_float3(0, 0, 1)) {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     public var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     public var translationMatrix: matrix_float4x4 {
         return Satin.translate(position)
     }
-    
+
     public var scaleMatrix: matrix_float4x4 {
         return Satin.scale(scale)
     }
-    
+
     public var rotationMatrix: matrix_float4x4 {
         return matrix_float4x4(orientation)
     }
-    
+
     public var forwardDirection: simd_float3 {
         return simd_matrix3x3(orientation) * worldForwardDirection
     }
-    
+
     public var upDirection: simd_float3 {
         return simd_matrix3x3(orientation) * worldUpDirection
     }
-    
+
     public var rightDirection: simd_float3 {
         return simd_matrix3x3(orientation) * worldRightDirection
     }
-    
+
     public weak var parent: Object? {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     public var children: [Object] = []
-    
+
     public var onUpdate: (() -> ())?
-    
+
     private var updateMatrix: Bool = true
-    
+
     private var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+
     public var localMatrix: matrix_float4x4 {
         if updateMatrix {
             _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
@@ -74,9 +74,9 @@ open class Object {
         }
         return _localMatrix
     }
-    
+
     private var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+
     public var worldMatrix: matrix_float4x4 {
         if updateMatrix {
             if let parent = self.parent {
@@ -91,24 +91,24 @@ open class Object {
         }
         return _worldMatrix
     }
-    
+
     public init() {}
-    
+
     public func update() {
         onUpdate?()
-        
+
         for child in children {
             child.update()
         }
     }
-    
+
     public func addChild(_ child: Object) {
         if !children.contains(child) {
             child.parent = self
             children.append(child)
         }
     }
-    
+
     public func removeChild(_ child: Object) {
         for (index, object) in children.enumerated() {
             if object == child {

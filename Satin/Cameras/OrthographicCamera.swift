@@ -17,7 +17,7 @@ open class OrthographicCamera: Camera
             updateViewMatrix = true
         }
     }
-    
+
     public override var position: simd_float3
     {
         didSet
@@ -25,7 +25,7 @@ open class OrthographicCamera: Camera
             updateViewMatrix = true
         }
     }
-    
+
     public var left: Float = -1.0
     {
         didSet
@@ -33,7 +33,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public var right: Float = 1.0
     {
         didSet
@@ -41,7 +41,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public var top: Float = 1.0
     {
         didSet
@@ -49,7 +49,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public var bottom: Float = -1.0
     {
         didSet
@@ -57,7 +57,7 @@ open class OrthographicCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public override var projectionMatrix: matrix_float4x4
     {
         if updateProjectionMatrix
@@ -67,7 +67,7 @@ open class OrthographicCamera: Camera
         }
         return _projectionMatrix
     }
-    
+
     public override var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix
@@ -77,9 +77,9 @@ open class OrthographicCamera: Camera
         }
         return _viewMatrix
     }
-    
+
     public override init() {}
-    
+
     public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
     {
         super.init()
@@ -90,7 +90,7 @@ open class OrthographicCamera: Camera
         self.near = near
         self.far = far
     }
-    
+
     public func update(left: Float, right: Float, bottom: Float, top: Float)
     {
         self.left = left
@@ -98,7 +98,7 @@ open class OrthographicCamera: Camera
         self.bottom = bottom
         self.top = top
     }
-    
+
     public func update(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
     {
         self.left = left

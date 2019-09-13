@@ -13,7 +13,7 @@ open class TriangleGeometry: Geometry {
         super.init()
         self.setup()
     }
-    
+
     func setup() {
         let twoPi: Float = Float.pi * 2.0
         var angle: Float = 0.0
@@ -24,7 +24,7 @@ open class TriangleGeometry: Geometry {
                 normalize(simd_make_float3(0.0, 0.0, 1.0))
             )
         )
-        
+
         angle = twoPi / 3.0
         vertexData.append(
             Vertex(
@@ -33,7 +33,7 @@ open class TriangleGeometry: Geometry {
                 normalize(simd_make_float3(0.0, 0.0, 1.0))
             )
         )
-        
+
         angle = 2.0 * twoPi / 3.0
         vertexData.append(
             Vertex(
@@ -42,7 +42,7 @@ open class TriangleGeometry: Geometry {
                 normalize(simd_make_float3(0.0, 0.0, 1.0))
             )
         )
-        
+
         indexData.append(UInt32(0))
         indexData.append(UInt32(2))
         indexData.append(UInt32(1))

@@ -21,21 +21,21 @@ struct VertexUniforms {
 
 open class Mesh: Object, GeometryDelegate {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
-    
+
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
-    
+
     public var instanceCount: Int = 1
-    
+
     var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
     var vertexUniformsBuffer: MTLBuffer!
-    
+
     var uniformBufferIndex: Int = 0
     var uniformBufferOffset: Int = 0
-    
+
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
-    
+
     public var geometry: Geometry = Geometry() {
         didSet {
             geometry.delegate = self
@@ -47,34 +47,34 @@ open class Mesh: Object, GeometryDelegate {
             }
         }
     }
-    
+
     public var material: Material? {
         didSet {
             updateMaterial = true
         }
     }
-    
+
     public var visible: Bool = true
-    
+
     public var uniformBuffer: MTLBuffer?
     public var vertexBuffer: MTLBuffer?
     public var indexBuffer: MTLBuffer?
-    
+
     var updateVertexBuffer: Bool = true
     var updateIndexBuffer: Bool = true
     var updateUniformBuffer: Bool = true
     var updateMaterial: Bool = false
-    
+
     public init(geometry: Geometry, material: Material?) {
         super.init()
         setup(geometry, material)
     }
-    
+
     func setup(_ geometry: Geometry, _ material: Material?) {
         self.geometry = geometry
         self.material = material
     }
-    
+
     func updateUniforms(camera: Camera) {
         if vertexUniforms != nil {
             vertexUniforms[0].modelMatrix = worldMatrix
@@ -89,7 +89,7 @@ open class Mesh: Object, GeometryDelegate {
             )
         }
     }
-    
+
     func updateUniformsBuffer() {
         if vertexUniformsBuffer != nil {
             uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
@@ -97,23 +97,23 @@ open class Mesh: Object, GeometryDelegate {
             vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents() + uniformBufferOffset).bindMemory(to: VertexUniforms.self, capacity: 1)
         }
     }
-    
-    public override func update() {        
+
+    public override func update() {
         if let material = self.material {
             material.update()
         }
         super.update()
     }
-    
+
     public func update(camera: Camera) {
         updateUniforms(camera: camera)
         updateUniformsBuffer()
     }
-    
+
     public func draw(renderEncoder: MTLRenderCommandEncoder) {
         if updateVertexBuffer {
             let device = renderEncoder.device
-            
+
             if !geometry.vertexData.isEmpty {
                 let verticesSize = geometry.vertexData.count * MemoryLayout.size(ofValue: geometry.vertexData[0])
                 vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
@@ -124,10 +124,10 @@ open class Mesh: Object, GeometryDelegate {
             }
             updateVertexBuffer = false
         }
-        
+
         if updateIndexBuffer {
             let device = renderEncoder.device
-            
+
             if !geometry.indexData.isEmpty {
                 let indicesSize = geometry.indexData.count * MemoryLayout.size(ofValue: geometry.indexData[0])
                 indexBuffer = device.makeBuffer(bytes: geometry.indexData, length: indicesSize, options: [])
@@ -136,13 +136,13 @@ open class Mesh: Object, GeometryDelegate {
             else {
                 indexBuffer = nil
             }
-            
+
             updateIndexBuffer = false
         }
-        
+
         if updateUniformBuffer {
             let device = renderEncoder.device
-            
+
             let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
             guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
             vertexUniformsBuffer = buffer
@@ -150,29 +150,29 @@ open class Mesh: Object, GeometryDelegate {
             vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
             updateUniformBuffer = false
         }
-        
+
         if updateMaterial {
             updateMaterial = false
         }
-        
+
         draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
-    
+
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard visible, let vertexBuffer = vertexBuffer, let material = self.material else { return }
-        
+
         preDraw?(renderEncoder)
-        
+
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: 1)
-        
+
         material.bind(renderEncoder)
-        
+
         // Do uniform binds here
-        
+
         if let indexBuffer = indexBuffer {
             renderEncoder.drawIndexedPrimitives(
                 type: geometry.primitiveType,
@@ -191,23 +191,23 @@ open class Mesh: Object, GeometryDelegate {
                 instanceCount: instanceCount
             )
         }
-        
+
         postDraw?(renderEncoder)
     }
-    
+
     deinit {
         vertexBuffer = nil
         indexBuffer = nil
     }
-    
+
     // MARK: - GeometryDelegate Conformance
-    
+
     func indexDataUpdated() {
         if !geometry.indexData.isEmpty {
             updateIndexBuffer = true
         }
     }
-    
+
     func vertexDataUpdated() {
         if !geometry.vertexData.isEmpty {
             updateVertexBuffer = true

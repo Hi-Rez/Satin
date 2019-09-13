@@ -18,16 +18,16 @@ open class MetalFileCompiler
     var files: [URL] = []
     var watchers: [FileWatcher] = []
     public var onUpdate: (() -> ())?
-    
+
     public init() {}
-    
+
     public func parse(_ fileURL: URL) throws -> String
     {
         files = []
         watchers = []
         return try _parse(fileURL)
     }
-    
+
     func _parse(_ fileURL: URL) throws -> String
     {
         let fileURLResolved = fileURL.resolvingSymlinksInPath()
@@ -40,7 +40,7 @@ open class MetalFileCompiler
             watchers.append(watcher)
             files.append(fileURLResolved)
             let baseURL = fileURL.deletingLastPathComponent()
-            
+
             var content = ""
             do
             {
@@ -50,12 +50,12 @@ open class MetalFileCompiler
             {
                 throw MetalFileCompilerError.invalidFile(fileURLResolved)
             }
-            
+
             let pattern = #"#include +\"(.*)\"\n"#
             let regex = try NSRegularExpression(pattern: pattern, options: [])
             let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
             var matches = regex.matches(in: content, options: [], range: nsrange)
-            
+
             while !matches.isEmpty
             {
                 let match = matches[0]
@@ -78,9 +78,9 @@ open class MetalFileCompiler
         }
         return ""
     }
-    
+
     deinit {
         files = []
-        watchers = [] 
+        watchers = []
     }
 }

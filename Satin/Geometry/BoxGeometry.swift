@@ -52,7 +52,7 @@ open class BoxGeometry: Geometry {
         let dx = width / bx
         let dy = height / by
         let dz = depth / bz
-        
+
         //XYZ+ Front Face
         var indexOffset = 0
         for y in 0...ry {
@@ -84,7 +84,7 @@ open class BoxGeometry: Geometry {
                 }
             }
         }
-        
+
         indexOffset = vertexData.count
         //XYZ- Back Face
         for y in 0...ry {
@@ -98,7 +98,7 @@ open class BoxGeometry: Geometry {
                         SIMD3<Float>(0.0, 0.0, -1.0)
                     )
                 )
-                
+
                 let perRow = rx + 1
                 let index = indexOffset + x + y * perRow
                 let bl = index
@@ -110,14 +110,14 @@ open class BoxGeometry: Geometry {
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(br))
                     indexData.append(UInt32(tl))
-                                        
+
                     indexData.append(UInt32(br))
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(tl))
                 }
             }
         }
-        
+
         indexOffset = vertexData.count
         //XY+Z Top Face
         for z in 0...rz {

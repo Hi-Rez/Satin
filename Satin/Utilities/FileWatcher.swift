@@ -73,7 +73,7 @@ open class FileWatcher
         if timer != nil {
             unwatch()
         }
-                
+
         timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { [weak self] _ in
             self?.checkFile()
         })

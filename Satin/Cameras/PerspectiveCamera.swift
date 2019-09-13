@@ -17,7 +17,7 @@ open class PerspectiveCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public var aspect: Float = 1
     {
         didSet
@@ -25,7 +25,7 @@ open class PerspectiveCamera: Camera
             updateProjectionMatrix = true
         }
     }
-    
+
     public override var scale: simd_float3
     {
         didSet
@@ -33,7 +33,7 @@ open class PerspectiveCamera: Camera
             updateViewMatrix = true
         }
     }
-    
+
     public override var position: simd_float3
     {
         didSet
@@ -41,7 +41,7 @@ open class PerspectiveCamera: Camera
             updateViewMatrix = true
         }
     }
-    
+
     public override var orientation: simd_quatf
     {
         didSet
@@ -49,7 +49,7 @@ open class PerspectiveCamera: Camera
             updateViewMatrix = true
         }
     }
-    
+
     public override var projectionMatrix: matrix_float4x4
     {
         if updateProjectionMatrix
@@ -59,7 +59,7 @@ open class PerspectiveCamera: Camera
         }
         return _projectionMatrix
     }
-    
+
     public override var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix
@@ -69,7 +69,7 @@ open class PerspectiveCamera: Camera
         }
         return _viewMatrix
     }
-    
+
     public override init()
     {
         super.init()

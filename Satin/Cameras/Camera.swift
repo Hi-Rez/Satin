@@ -12,7 +12,7 @@ open class Camera: Object
 {
     var _viewMatrix: matrix_float4x4 = matrix_identity_float4x4
     var _projectionMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+
     public var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix
@@ -22,7 +22,7 @@ open class Camera: Object
         }
         return _viewMatrix
     }
-    
+
     public var projectionMatrix: matrix_float4x4
     {
         if updateProjectionMatrix
@@ -32,7 +32,7 @@ open class Camera: Object
         }
         return _projectionMatrix
     }
-    
+
     public var near: Float = 0.1
     {
         didSet
@@ -40,7 +40,7 @@ open class Camera: Object
             updateProjectionMatrix = true
         }
     }
-    
+
     public var far: Float = 1.0
     {
         didSet
@@ -48,10 +48,10 @@ open class Camera: Object
             updateProjectionMatrix = true
         }
     }
-    
+
     var updateProjectionMatrix: Bool = true
     var updateViewMatrix: Bool = true
-    
+
     public override init()
     {}
 }
