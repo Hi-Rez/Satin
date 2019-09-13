@@ -219,7 +219,7 @@ open class Renderer
         if depthPixelFormat != .invalid
         {
             let depthStateDesciptor = MTLDepthStencilDescriptor()
-            depthStateDesciptor.depthCompareFunction = MTLCompareFunction.less
+            depthStateDesciptor.depthCompareFunction = .less
             depthStateDesciptor.isDepthWriteEnabled = true
             guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
             depthStencilState = state

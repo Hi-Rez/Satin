@@ -52,13 +52,10 @@ open class FileWatcher
             {
                 let result = try FileManager.default.attributesOfItem(atPath: filePath)
                 let currentModifiedDate = result[.modificationDate] as? Date
-                if let current = currentModifiedDate, let last = lastModifiedDate
+                if let current = currentModifiedDate, let last = lastModifiedDate, current > last
                 {
-                    if current > last
-                    {
-                        lastModifiedDate = current
-                        onUpdate?()
-                    }
+                    lastModifiedDate = current
+                    onUpdate?()
                 }
             }
             catch
@@ -81,10 +78,7 @@ open class FileWatcher
 
     open func unwatch()
     {
-        if let timer = self.timer
-        {
-            timer.invalidate()
-        }
+        timer?.invalidate()
         timer = nil
     }
 

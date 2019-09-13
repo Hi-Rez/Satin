@@ -69,7 +69,7 @@ open class Object {
 
     public var localMatrix: matrix_float4x4 {
         if updateMatrix {
-            _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
+            _localMatrix = translationMatrix * rotationMatrix * scaleMatrix
             updateMatrix = false
         }
         return _localMatrix
@@ -80,7 +80,7 @@ open class Object {
     public var worldMatrix: matrix_float4x4 {
         if updateMatrix {
             if let parent = self.parent {
-                _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
+                _worldMatrix = parent.worldMatrix * localMatrix
             } else {
                 _worldMatrix = localMatrix
             }
