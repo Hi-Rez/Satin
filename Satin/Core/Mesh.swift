@@ -70,6 +70,10 @@ open class Mesh: Object, GeometryDelegate {
         setup(geometry, material)
     }
     
+    required public init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
     func setup(_ geometry: Geometry, _ material: Material?) {
         self.geometry = geometry
         self.material = material
@@ -98,7 +102,7 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    public override func update() {        
+    public override func update() {
         if let material = self.material {
             material.update()
         }
@@ -169,27 +173,27 @@ open class Mesh: Object, GeometryDelegate {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: 1)
         
-        material.bind(renderEncoder)
-        
-        // Do uniform binds here
-        
-        if let indexBuffer = indexBuffer {
-            renderEncoder.drawIndexedPrimitives(
-                type: geometry.primitiveType,
-                indexCount: geometry.indexData.count,
-                indexType: geometry.indexType,
-                indexBuffer: indexBuffer,
-                indexBufferOffset: 0,
-                instanceCount: instanceCount
-            )
-        }
-        else {
-            renderEncoder.drawPrimitives(
-                type: geometry.primitiveType,
-                vertexStart: 0,
-                vertexCount: geometry.vertexData.count,
-                instanceCount: instanceCount
-            )
+        if material.bind(renderEncoder) {
+            // Do uniform binds here
+            
+            if let indexBuffer = indexBuffer {
+                renderEncoder.drawIndexedPrimitives(
+                    type: geometry.primitiveType,
+                    indexCount: geometry.indexData.count,
+                    indexType: geometry.indexType,
+                    indexBuffer: indexBuffer,
+                    indexBufferOffset: 0,
+                    instanceCount: instanceCount
+                )
+            }
+            else {
+                renderEncoder.drawPrimitives(
+                    type: geometry.primitiveType,
+                    vertexStart: 0,
+                    vertexCount: geometry.vertexData.count,
+                    instanceCount: instanceCount
+                )
+            }
         }
         
         postDraw?(renderEncoder)

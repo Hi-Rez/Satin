@@ -53,5 +53,29 @@ open class Camera: Object
     var updateViewMatrix: Bool = true
     
     public override init()
-    {}
+    {
+        super.init()
+    }
+    
+    public required init(from decoder: Decoder) throws
+    {
+        try super.init(from: decoder)
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        near = try values.decode(Float.self, forKey: .near)
+        far = try values.decode(Float.self, forKey: .far)
+    }
+    
+    open override func encode(to encoder: Encoder) throws
+    {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(near, forKey: .near)
+        try container.encode(far, forKey: .far)
+    }
+    
+    private enum CodingKeys: String, CodingKey
+    {
+        case near
+        case far
+    }
 }

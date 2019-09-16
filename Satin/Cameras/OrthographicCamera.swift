@@ -78,7 +78,10 @@ open class OrthographicCamera: Camera
         return _viewMatrix
     }
     
-    public override init() {}
+    public override init()
+    {
+        super.init()
+    }
     
     public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
     {
@@ -107,5 +110,39 @@ open class OrthographicCamera: Camera
         self.top = top
         self.near = near
         self.far = far
+    }
+    
+    public required init(from decoder: Decoder) throws
+    {
+        try super.init(from: decoder)
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        left = try values.decode(Float.self, forKey: .left)
+        right = try values.decode(Float.self, forKey: .right)
+        bottom = try values.decode(Float.self, forKey: .bottom)
+        top = try values.decode(Float.self, forKey: .top)
+        near = try values.decode(Float.self, forKey: .near)
+        far = try values.decode(Float.self, forKey: .far)
+    }
+    
+    open override func encode(to encoder: Encoder) throws
+    {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(left, forKey: .left)
+        try container.encode(right, forKey: .right)
+        try container.encode(bottom, forKey: .bottom)
+        try container.encode(top, forKey: .top)
+        try container.encode(near, forKey: .near)
+        try container.encode(far, forKey: .far)
+    }
+    
+    private enum CodingKeys: String, CodingKey
+    {
+        case left
+        case right
+        case bottom
+        case top
+        case near
+        case far
     }
 }

@@ -14,7 +14,7 @@ open class Material {
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
-    public init(library: MTLLibrary,
+    public init(library: MTLLibrary?,
                 vertex: String,
                 fragment: String,
                 label: String,
@@ -22,22 +22,20 @@ open class Material {
                 colorPixelFormat: MTLPixelFormat,
                 depthPixelFormat: MTLPixelFormat,
                 stencilPixelFormat: MTLPixelFormat) {
-        let device = library.device
-        
-        let vertexProgram = library.makeFunction(name: vertex)
-        let fragmentProgram = library.makeFunction(name: fragment)
-        
-        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        pipelineStateDescriptor.vertexFunction = vertexProgram
-        pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.sampleCount = sampleCount
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
-        pipelineStateDescriptor.depthAttachmentPixelFormat = depthPixelFormat
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = stencilPixelFormat
-        
-        pipeline = try! device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
-        
-        setup(device: device)
+        if let device = library?.device {
+            do {
+                pipeline = try makeRenderPipeline(library: library, vertex: vertex, fragment: fragment, label: label, sampleCount: sampleCount, colorPixelFormat: colorPixelFormat, depthPixelFormat: depthPixelFormat, stencilPixelFormat: stencilPixelFormat)
+            }
+            catch {
+                print(error)
+            }
+            setup(device: device)
+        }
+    }
+    
+    public init(pipeline: MTLRenderPipelineState) {
+        self.pipeline = pipeline
+        setup(device: pipeline.device)
     }
     
     func setup(device: MTLDevice) {}
@@ -46,11 +44,11 @@ open class Material {
         onUpdate?()
     }
     
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        guard let pipeline = self.pipeline else { return }
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) -> Bool {
+        guard let pipeline = self.pipeline else { return false }
         renderEncoder.setRenderPipelineState(pipeline)
         onBind?(renderEncoder)
-        
+        return true
     }
     
     deinit {}

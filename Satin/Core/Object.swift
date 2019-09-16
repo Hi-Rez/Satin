@@ -8,7 +8,22 @@
 
 import simd
 
-open class Object {
+open class Object: Codable {
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        position = try values.decode(simd_float3.self, forKey: .position)
+        scale = try values.decode(simd_float3.self, forKey: .scale)
+        orientation = try values.decode(simd_quatf.self, forKey: .orientation)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case position
+        case orientation
+        case scale
+    }
+    
     public var id: String = UUID().uuidString
     
     public var position = simd_make_float3(0, 0, 0) {

@@ -39,8 +39,9 @@ open class MetalFileCompiler
             }
             watchers.append(watcher)
             files.append(fileURLResolved)
-            let baseURL = fileURL.deletingLastPathComponent()
             
+            
+            let baseURL = fileURL.deletingLastPathComponent()
             var content = ""
             do
             {
@@ -55,7 +56,6 @@ open class MetalFileCompiler
             let regex = try NSRegularExpression(pattern: pattern, options: [])
             let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
             var matches = regex.matches(in: content, options: [], range: nsrange)
-            
             while !matches.isEmpty
             {
                 let match = matches[0]
@@ -63,7 +63,7 @@ open class MetalFileCompiler
                 {
                     let includeURL = URL(fileURLWithPath: String(content[r1]), relativeTo: baseURL)
                     do
-                    {
+                    {                        
                         let includeContent = try _parse(includeURL)
                         content.replaceSubrange(r0, with: includeContent + "\n")
                     }
@@ -72,10 +72,13 @@ open class MetalFileCompiler
                         throw MetalFileCompilerError.invalidFile(includeURL)
                     }
                 }
+                let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
                 matches = regex.matches(in: content, options: [], range: nsrange)
             }
+            
             return content
         }
+        
         return ""
     }
     
