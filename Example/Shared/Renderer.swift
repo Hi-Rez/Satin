@@ -20,15 +20,16 @@ class Renderer: Forge.Renderer {
     var scene: Object!
     
     var perspCamera = PerspectiveCamera()
-    var cameraController: PerspectiveCameraController!
-    var renderer = Satin.Renderer()
+    var cameraController: GesturalCameraController!
+    var renderer: Satin.Renderer!
     
     required init?(metalKitView: MTKView) {
         super.init(metalKitView: metalKitView)
     }
-
+    
     override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.depthStencilPixelFormat = .invalid
+        metalKitView.depthStencilPixelFormat = .depth32Float_stencil8
+        metalKitView.sampleCount = 4
     }
     
     override func setup() {
@@ -41,11 +42,13 @@ class Renderer: Forge.Renderer {
         setupRenderer()
     }
     
-    func setupLibrary() {        
+    func setupLibrary() {
         library = device.makeDefaultLibrary()
     }
     
     func setupMaterial() {
+        print(sampleCount)
+        
         material = Material(
             library: library,
             vertex: "basic_vertex",
@@ -53,8 +56,8 @@ class Renderer: Forge.Renderer {
             label: "basic",
             sampleCount: sampleCount,
             colorPixelFormat: colorPixelFormat,
-            depthPixelFormat: .invalid,
-            stencilPixelFormat: .invalid
+            depthPixelFormat: depthPixelFormat,
+            stencilPixelFormat: stencilPixelFormat
         )
     }
     
@@ -68,16 +71,22 @@ class Renderer: Forge.Renderer {
     
     func setupScene() {
         scene = Object()
-        scene.addChild(mesh)
+        scene.add(mesh)
     }
     
     func setupCamera() {
         perspCamera.position.z = 9.0
-        cameraController = PerspectiveCameraController(perspCamera)
+        perspCamera.far = 100.0
+        cameraController = GesturalCameraController(perspCamera)
     }
     
     func setupRenderer() {
-        renderer = Satin.Renderer(scene: scene, camera: perspCamera)
+        renderer = Satin.Renderer(scene: scene,
+                                  camera: perspCamera,
+                                  sampleCount: sampleCount,
+                                  colorPixelFormat: colorPixelFormat,
+                                  depthPixelFormat: depthPixelFormat,
+                                  stencilPixelFormat: stencilPixelFormat)
     }
     
     override func update() {

@@ -61,8 +61,6 @@ open class Renderer
     
     public var viewport: MTLViewport = MTLViewport()
     
-    public init() {}
-    
     public init(scene: Object,
                 camera: Camera,
                 sampleCount: Int = 1,

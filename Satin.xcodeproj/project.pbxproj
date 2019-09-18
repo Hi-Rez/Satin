@@ -27,7 +27,13 @@
 		E159A34322E8F04400909A28 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
 		E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
 		E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218B23061F4500A7038E /* PerspectiveCamera.swift */; };
-		E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */; };
+		E1670B8A2331C04F00107129 /* GesturalCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B892331C04F00107129 /* GesturalCameraController.swift */; };
+		E1670B8C2331C1C800107129 /* Pipelines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B8B2331C1C800107129 /* Pipelines.swift */; };
+		E1670B8D2331C1C800107129 /* Pipelines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B8B2331C1C800107129 /* Pipelines.swift */; };
+		E1670B8E2331C1C800107129 /* Pipelines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B8B2331C1C800107129 /* Pipelines.swift */; };
+		E1670B9A2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
+		E1670B9B2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
+		E1670B9C2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
 		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
@@ -115,7 +121,9 @@
 		E13F425A2316686900D94603 /* BoxGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxGeometry.swift; sourceTree = "<group>"; };
 		E159A34122E8F04400909A28 /* Material.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Material.swift; sourceTree = "<group>"; };
 		E15B218B23061F4500A7038E /* PerspectiveCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveCamera.swift; sourceTree = "<group>"; };
-		E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveCameraController.swift; sourceTree = "<group>"; };
+		E1670B892331C04F00107129 /* GesturalCameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GesturalCameraController.swift; sourceTree = "<group>"; };
+		E1670B8B2331C1C800107129 /* Pipelines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipelines.swift; sourceTree = "<group>"; };
+		E1670B992331C77E00107129 /* Simd+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Simd+Extensions.swift"; sourceTree = "<group>"; };
 		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
 		E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFileCompiler.swift; sourceTree = "<group>"; };
 		E190D678230F430B00034600 /* Pipelines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Pipelines; sourceTree = "<group>"; };
@@ -204,6 +212,7 @@
 			children = (
 				E13C969322E6482C00D6FEB0 /* Info.plist */,
 				E13C969222E6482C00D6FEB0 /* Satin.h */,
+				E1670B982331C77E00107129 /* Extensions */,
 				E188243622F9F216001DC5E9 /* Utilities */,
 				E19FA60622E822F900A43BB4 /* Materials */,
 				E19FA5D422E7CCE800A43BB4 /* Math */,
@@ -214,6 +223,14 @@
 				E19FA5BF22E7CB4600A43BB4 /* Geometry */,
 			);
 			path = Satin;
+			sourceTree = "<group>";
+		};
+		E1670B982331C77E00107129 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E1670B992331C77E00107129 /* Simd+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		E177FC2022E6B75A004DAA38 /* Renderer */ = {
@@ -227,9 +244,10 @@
 		E188243622F9F216001DC5E9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E1670B8B2331C1C800107129 /* Pipelines.swift */,
+				E1670B892331C04F00107129 /* GesturalCameraController.swift */,
 				E1F3751B23222B9F00048102 /* FPSCameraController.swift */,
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
-				E15B218F23062C4C00A7038E /* PerspectiveCameraController.swift */,
 				E19B695F2315E1D10001B1A8 /* FileWatcher.swift */,
 			);
 			path = Utilities;
@@ -482,6 +500,7 @@
 				E1F3751C23222B9F00048102 /* FPSCameraController.swift in Sources */,
 				E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
+				E1670B8C2331C1C800107129 /* Pipelines.swift in Sources */,
 				E1F3752623232FC300048102 /* ArcGeometry.swift in Sources */,
 				E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
@@ -497,8 +516,9 @@
 				E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */,
 				E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */,
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
-				E15B219023062C4C00A7038E /* PerspectiveCameraController.swift in Sources */,
+				E1670B9A2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E19FA60222E7D8A400A43BB4 /* Math.swift in Sources */,
+				E1670B8A2331C04F00107129 /* GesturalCameraController.swift in Sources */,
 				E1F3752C23256A7500048102 /* CylinderGeometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -518,6 +538,7 @@
 				E19FA63222E8B6F400A43BB4 /* Renderer.swift in Sources */,
 				E19FA63322E8B6F400A43BB4 /* Defines.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
+				E1670B8D2331C1C800107129 /* Pipelines.swift in Sources */,
 				E13F425C2316686900D94603 /* BoxGeometry.swift in Sources */,
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
 				E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */,
@@ -525,6 +546,7 @@
 				E1F3753523261B3500048102 /* ConeGeometry.swift in Sources */,
 				E13610322329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
 				E136103C2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
+				E1670B9B2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E1F3752723232FC300048102 /* ArcGeometry.swift in Sources */,
 				E19FA63622E8B6F400A43BB4 /* Object.swift in Sources */,
 				E1F375232323185700048102 /* TriangleGeometry.swift in Sources */,
@@ -552,6 +574,7 @@
 				E1E11E28230E61AC00E86791 /* PlaneGeometry.swift in Sources */,
 				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
 				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
+				E1670B8E2331C1C800107129 /* Pipelines.swift in Sources */,
 				E13F425D2316686900D94603 /* BoxGeometry.swift in Sources */,
 				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
 				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,
@@ -559,6 +582,7 @@
 				E1F3753623261B3500048102 /* ConeGeometry.swift in Sources */,
 				E13610332329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
 				E136103D2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
+				E1670B9C2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E1F3752823232FC300048102 /* ArcGeometry.swift in Sources */,
 				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
 				E1F375242323185700048102 /* TriangleGeometry.swift in Sources */,

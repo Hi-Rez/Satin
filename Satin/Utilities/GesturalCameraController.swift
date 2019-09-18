@@ -1,5 +1,5 @@
 //
-//  PerspectiveCameraController.swift
+//  GesturalCameraController.swift
 //  Satin
 //
 //  Created by Reza Ali on 8/15/19.
@@ -11,7 +11,7 @@
 import Cocoa
 import simd
 
-open class PerspectiveCameraController {
+open class GesturalCameraController {
     public weak var camera: PerspectiveCamera!
     
     var leftMouseDownHandler: Any?

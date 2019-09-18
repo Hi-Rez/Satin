@@ -41,7 +41,7 @@ open class Camera: Object
         }
     }
     
-    public var far: Float = 1.0
+    public var far: Float = 100.0
     {
         didSet
         {

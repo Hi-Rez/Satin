@@ -117,14 +117,14 @@ open class Object: Codable {
         }
     }
     
-    public func addChild(_ child: Object) {
+    public func add(_ child: Object) {
         if !children.contains(child) {
             child.parent = self
             children.append(child)
         }
     }
     
-    public func removeChild(_ child: Object) {
+    public func remove(_ child: Object) {
         for (index, object) in children.enumerated() {
             if object == child {
                 children.remove(at: index)
