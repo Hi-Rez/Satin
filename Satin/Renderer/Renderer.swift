@@ -23,9 +23,6 @@ open class Renderer
     public var colorPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     public var colorTexture: MTLTexture?
     
-    public var updateDepthStencilState: Bool = true
-    public var depthStencilState: MTLDepthStencilState?
-    
     public var updateDepthTexture: Bool = true
     public var depthPixelFormat: MTLPixelFormat = .depth32Float_stencil8
     public var depthTexture: MTLTexture?
@@ -64,9 +61,9 @@ open class Renderer
     public init(scene: Object,
                 camera: Camera,
                 sampleCount: Int = 1,
-                colorPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb,
-                depthPixelFormat: MTLPixelFormat = .depth32Float_stencil8,
-                stencilPixelFormat: MTLPixelFormat = .depth32Float_stencil8)
+                colorPixelFormat: MTLPixelFormat,
+                depthPixelFormat: MTLPixelFormat,
+                stencilPixelFormat: MTLPixelFormat)
     {
         self.sampleCount = sampleCount
         self.colorPixelFormat = colorPixelFormat
@@ -85,12 +82,6 @@ open class Renderer
         {
             setupColorTexture(device)
             updateColorTexture = false
-        }
-        
-        if updateDepthStencilState
-        {
-            setupDepthStencilState(device)
-            updateDepthStencilState = false
         }
         
         if updateDepthTexture
@@ -172,11 +163,6 @@ open class Renderer
         
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         
-        if let depthStencilState = self.depthStencilState
-        {
-            renderEncoder.setDepthStencilState(depthStencilState)
-        }
-        
         renderEncoder.setViewport(viewport)
         
         preDraw?(renderEncoder)
@@ -210,18 +196,6 @@ open class Renderer
         let height = Double(size.height)
         
         viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
-    }
-    
-    public func setupDepthStencilState(_ device: MTLDevice)
-    {
-        if depthPixelFormat != .invalid
-        {
-            let depthStateDesciptor = MTLDepthStencilDescriptor()
-            depthStateDesciptor.depthCompareFunction = MTLCompareFunction.less
-            depthStateDesciptor.isDepthWriteEnabled = true
-            guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
-            depthStencilState = state
-        }
     }
     
     public func setupDepthTexture(_ device: MTLDevice)

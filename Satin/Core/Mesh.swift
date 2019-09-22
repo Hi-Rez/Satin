@@ -30,6 +30,22 @@ open class Mesh: Object, GeometryDelegate {
     var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
     var vertexUniformsBuffer: MTLBuffer!
     
+    public var depthStencilState: MTLDepthStencilState?
+    public var depthCompareFunction: MTLCompareFunction = .less {
+        didSet{
+            if depthCompareFunction != oldValue {
+                updateDepthStencilState = true
+            }
+        }
+    }
+    public var depthWriteEnabled: Bool = true {
+        didSet{
+            if depthWriteEnabled != oldValue {
+                updateDepthStencilState = true
+            }
+        }
+    }
+    
     var uniformBufferIndex: Int = 0
     var uniformBufferOffset: Int = 0
     
@@ -63,6 +79,7 @@ open class Mesh: Object, GeometryDelegate {
     var updateVertexBuffer: Bool = true
     var updateIndexBuffer: Bool = true
     var updateUniformBuffer: Bool = true
+    var updateDepthStencilState: Bool = true
     var updateMaterial: Bool = false
     
     public init(geometry: Geometry, material: Material?) {
@@ -70,7 +87,7 @@ open class Mesh: Object, GeometryDelegate {
         setup(geometry, material)
     }
     
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
     
@@ -110,8 +127,8 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     public func update(camera: Camera) {
-        updateUniforms(camera: camera)
         updateUniformsBuffer()
+        updateUniforms(camera: camera)        
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder) {
@@ -155,6 +172,15 @@ open class Mesh: Object, GeometryDelegate {
             updateUniformBuffer = false
         }
         
+        if updateDepthStencilState {
+            let device = renderEncoder.device
+            let depthStateDesciptor = MTLDepthStencilDescriptor()
+            depthStateDesciptor.depthCompareFunction = depthCompareFunction
+            depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
+            guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
+            depthStencilState = state
+        }
+        
         if updateMaterial {
             updateMaterial = false
         }
@@ -163,10 +189,12 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard visible, let vertexBuffer = vertexBuffer, let material = self.material else { return }
+        guard visible, let vertexBuffer = vertexBuffer, let material = self.material, let depthStencilState = self.depthStencilState else { return }
         
         preDraw?(renderEncoder)
         
+        
+        renderEncoder.setDepthStencilState(depthStencilState)
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
