@@ -6,4 +6,12 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import Foundation
+import simd
+
+struct VertexUniforms {
+    var modelMatrix: matrix_float4x4
+    var viewMatrix: matrix_float4x4
+    var modelViewMatrix: matrix_float4x4
+    var projectionMatrix: matrix_float4x4
+    var normalMatrix: matrix_float3x3
+}

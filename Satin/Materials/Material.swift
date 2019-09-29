@@ -8,47 +8,50 @@
 
 import Metal
 
+protocol MaterialDelegate: AnyObject {
+    func materialUpdated()
+}
+
 open class Material {
+    weak var delegate: MaterialDelegate?
     var pipeline: MTLRenderPipelineState?
+    var context: Context? {
+        didSet {
+            setup()
+        }
+    }
     
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
+    
+    init() {}
     
     public init(library: MTLLibrary?,
                 vertex: String,
                 fragment: String,
                 label: String,
-                sampleCount: Int,
-                colorPixelFormat: MTLPixelFormat,
-                depthPixelFormat: MTLPixelFormat,
-                stencilPixelFormat: MTLPixelFormat) {
-        if let device = library?.device {
-            do {
-                pipeline = try makeRenderPipeline(library: library, vertex: vertex, fragment: fragment, label: label, sampleCount: sampleCount, colorPixelFormat: colorPixelFormat, depthPixelFormat: depthPixelFormat, stencilPixelFormat: stencilPixelFormat)
-            }
-            catch {
-                print(error)
-            }
-            setup(device: device)
+                context: Context) {
+        do {
+            pipeline = try makeRenderPipeline(library: library, vertex: vertex, fragment: fragment, label: label, context: context)
         }
+        catch {
+            print(error)
+        }
+        self.context = context
     }
     
     public init(pipeline: MTLRenderPipelineState) {
         self.pipeline = pipeline
-        setup(device: pipeline.device)
     }
     
-    func setup(device: MTLDevice) {}
+    func setup() {}
     
     func update() {
         onUpdate?()
     }
     
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) -> Bool {
-        guard let pipeline = self.pipeline else { return false }
-        renderEncoder.setRenderPipelineState(pipeline)
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         onBind?(renderEncoder)
-        return true
     }
     
     deinit {}

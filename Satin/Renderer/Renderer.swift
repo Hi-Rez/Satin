@@ -15,36 +15,37 @@ open class Renderer
     
     public var scene: Object = Object()
     public var camera: Camera = Camera()
+    public var context: Context?
+    {
+        didSet
+        {
+            updateColorTexture = true
+            updateDepthTexture = true
+            updateStencilTexture = true
+            if let context = self.context
+            {
+                scene.context = context
+            }
+        }
+    }
     
     public var autoClearColor: Bool = true
     public var clearColor: MTLClearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
     
     public var updateColorTexture: Bool = true
-    public var colorPixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     public var colorTexture: MTLTexture?
     
     public var updateDepthTexture: Bool = true
-    public var depthPixelFormat: MTLPixelFormat = .depth32Float_stencil8
     public var depthTexture: MTLTexture?
     public var depthLoadAction: MTLLoadAction = .clear
     public var depthStoreAction: MTLStoreAction = .store
     public var clearDepth: Double = 1.0
     
     public var updateStencilTexture: Bool = true
-    public var stencilPixelFormat: MTLPixelFormat = .depth32Float_stencil8
     public var stencilTexture: MTLTexture?
     public var stencilLoadAction: MTLLoadAction = .clear
     public var stencilStoreAction: MTLStoreAction = .store
     public var clearStencil: UInt32 = 0
-    
-    public var sampleCount: Int = 1 {
-        didSet
-        {
-            updateColorTexture = true
-            updateDepthTexture = true
-            updateStencilTexture = true
-        }
-    }
     
     public var size: (width: Float, height: Float) = (0, 0)
     {
@@ -58,54 +59,34 @@ open class Renderer
     
     public var viewport: MTLViewport = MTLViewport()
     
-    public init(scene: Object,
-                camera: Camera,
-                sampleCount: Int = 1,
-                colorPixelFormat: MTLPixelFormat,
-                depthPixelFormat: MTLPixelFormat,
-                stencilPixelFormat: MTLPixelFormat)
+    public init(context: Context,
+                scene: Object,
+                camera: Camera)
     {
-        self.sampleCount = sampleCount
-        self.colorPixelFormat = colorPixelFormat
-        self.depthPixelFormat = depthPixelFormat
-        self.stencilPixelFormat = stencilPixelFormat
-        
+        self.context = context
         self.scene = scene
         self.camera = camera
-    }
-    
-    public func update(_ commandBuffer: MTLCommandBuffer)
-    {
-        let device = commandBuffer.device
-        
-        if updateColorTexture
-        {
-            setupColorTexture(device)
-            updateColorTexture = false
-        }
-        
-        if updateDepthTexture
-        {
-            setupDepthTexture(device)
-            updateDepthTexture = false
-        }
-        
-        if updateStencilTexture
-        {
-            setupStencilTexture(device)
-            updateStencilTexture = false
-        }
+        self.scene.context = context
     }
     
     public func update()
     {
+        setupColorTexture()
+        
+        setupDepthTexture()
+        
+        setupStencilTexture()
+        
         scene.update()
         camera.update()
     }
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
     {
-        update(commandBuffer)
+        guard let context = self.context else { return }
+        
+        let sampleCount = context.sampleCount
+        let depthPixelFormat = context.depthPixelFormat
         
         renderPassDescriptor.colorAttachments[0].clearColor = clearColor
         
@@ -161,30 +142,31 @@ open class Renderer
 #endif
         }
         
-        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         
-        renderEncoder.setViewport(viewport)
+        draw(parellelRenderEncoder: parellelRenderEncoder, renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, object: scene)
         
-        preDraw?(renderEncoder)
-        
-        draw(renderEncoder: renderEncoder, commandBuffer: commandBuffer, object: scene)
-        
-        postDraw?(renderEncoder)
-        
-        renderEncoder.endEncoding()
+        parellelRenderEncoder.endEncoding()
     }
     
-    public func draw(renderEncoder: MTLRenderCommandEncoder, commandBuffer: MTLCommandBuffer, object: Object)
+    public func draw(parellelRenderEncoder: MTLParallelRenderCommandEncoder, renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, object: Object)
     {
+        guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
+        renderEncoder.setViewport(viewport)
+        
         if object is Mesh, let mesh = object as? Mesh
         {
+            preDraw?(renderEncoder)
             mesh.update(camera: camera)
             mesh.draw(renderEncoder: renderEncoder)
+            postDraw?(renderEncoder)
         }
+        
+        renderEncoder.endEncoding()
         
         for child in object.children
         {
-            draw(renderEncoder: renderEncoder, commandBuffer: commandBuffer, object: child)
+            draw(parellelRenderEncoder: parellelRenderEncoder, renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, object: child)
         }
     }
     
@@ -198,8 +180,11 @@ open class Renderer
         viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
     }
     
-    public func setupDepthTexture(_ device: MTLDevice)
+    public func setupDepthTexture()
     {
+        guard let context = self.context, updateDepthTexture else { return }
+        let sampleCount = context.sampleCount
+        let depthPixelFormat = context.depthPixelFormat
         if depthPixelFormat != .invalid, size.width > 1, size.height > 1
         {
             let descriptor = MTLTextureDescriptor()
@@ -211,7 +196,8 @@ open class Renderer
             descriptor.usage = [.renderTarget, .shaderRead]
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
-            depthTexture = device.makeTexture(descriptor: descriptor)
+            depthTexture = context.device.makeTexture(descriptor: descriptor)
+            updateDepthTexture = false
         }
         else
         {
@@ -219,8 +205,11 @@ open class Renderer
         }
     }
     
-    public func setupStencilTexture(_ device: MTLDevice)
+    public func setupStencilTexture()
     {
+        guard let context = self.context, updateStencilTexture else { return }
+        let sampleCount = context.sampleCount
+        let stencilPixelFormat = context.stencilPixelFormat
         if stencilPixelFormat != .invalid, size.width > 1, size.height > 1
         {
             let descriptor = MTLTextureDescriptor()
@@ -232,7 +221,8 @@ open class Renderer
             descriptor.usage = [.renderTarget, .shaderRead]
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
-            stencilTexture = device.makeTexture(descriptor: descriptor)
+            stencilTexture = context.device.makeTexture(descriptor: descriptor)
+            updateStencilTexture = false
         }
         else
         {
@@ -240,8 +230,11 @@ open class Renderer
         }
     }
     
-    public func setupColorTexture(_ device: MTLDevice)
+    public func setupColorTexture()
     {
+        guard let context = self.context, updateColorTexture else { return }
+        let sampleCount = context.sampleCount
+        let colorPixelFormat = context.colorPixelFormat
         if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1 {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = colorPixelFormat
@@ -252,7 +245,8 @@ open class Renderer
             descriptor.usage = [.renderTarget, .shaderRead]
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
-            colorTexture = device.makeTexture(descriptor: descriptor)
+            colorTexture = context.device.makeTexture(descriptor: descriptor)
+            updateColorTexture = false
         }
         else
         {

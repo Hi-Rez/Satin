@@ -11,42 +11,35 @@ public func makeRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
                                label: String,
-                               sampleCount: Int,
-                               colorPixelFormat: MTLPixelFormat,
-                               depthPixelFormat: MTLPixelFormat,
-                               stencilPixelFormat: MTLPixelFormat) throws -> MTLRenderPipelineState? {
+                               context: Context) throws -> MTLRenderPipelineState? {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.sampleCount = sampleCount
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
-        pipelineStateDescriptor.depthAttachmentPixelFormat = depthPixelFormat
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = stencilPixelFormat
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
         return try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
     }
     return nil
 }
 
-
 public func makeAlphaRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
                                label: String,
-                               sampleCount: Int,
-                               colorPixelFormat: MTLPixelFormat,
-                               depthPixelFormat: MTLPixelFormat,
-                               stencilPixelFormat: MTLPixelFormat) throws -> MTLRenderPipelineState? {
+                               context: Context) throws -> MTLRenderPipelineState? {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.sampleCount = sampleCount
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
-        pipelineStateDescriptor.depthAttachmentPixelFormat = depthPixelFormat
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = stencilPixelFormat
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
         
         if let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
             colorAttachment.isBlendingEnabled = true
@@ -68,19 +61,16 @@ public func makeAdditiveRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
                                label: String,
-                               sampleCount: Int,
-                               colorPixelFormat: MTLPixelFormat,
-                               depthPixelFormat: MTLPixelFormat,
-                               stencilPixelFormat: MTLPixelFormat) throws -> MTLRenderPipelineState? {
+                               context: Context) throws -> MTLRenderPipelineState? {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.sampleCount = sampleCount
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = colorPixelFormat
-        pipelineStateDescriptor.depthAttachmentPixelFormat = depthPixelFormat
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = stencilPixelFormat
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
         
         if let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
             colorAttachment.isBlendingEnabled = true

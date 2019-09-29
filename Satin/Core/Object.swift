@@ -17,6 +17,14 @@ open class Object: Codable {
         orientation = try values.decode(simd_quatf.self, forKey: .orientation)
     }
     
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(position, forKey: .position)
+        try container.encode(orientation, forKey: .orientation)
+        try container.encode(scale, forKey: .scale)
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case id
         case position
@@ -25,6 +33,21 @@ open class Object: Codable {
     }
     
     public var id: String = UUID().uuidString
+    
+    var context: Context? {
+        didSet {
+            setup()
+            if let context = self.context {
+                for child in self.children {
+                    setupContext(context: context, object: child)
+                }
+            }
+        }
+    }
+    
+    func setupContext(context: Context, object: Object) {
+        object.context = context        
+    }
     
     public var position = simd_make_float3(0, 0, 0) {
         didSet {
@@ -109,6 +132,8 @@ open class Object: Codable {
     
     public init() {}
     
+    func setup() {}
+    
     public func update() {
         onUpdate?()
         
@@ -120,6 +145,7 @@ open class Object: Codable {
     public func add(_ child: Object) {
         if !children.contains(child) {
             child.parent = self
+            child.context = context
             children.append(child)
         }
     }

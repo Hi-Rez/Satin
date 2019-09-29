@@ -4,18 +4,18 @@ install! 'cocoapods',
 
 target 'Example iOS' do
   use_frameworks!
-  pod 'Forge', '0.0.7'
+  pod 'Forge', '0.0.8'
   pod 'Satin', :path => "../"
 end
 
 target 'Example macOS' do
   use_frameworks!
-  pod 'Forge', '0.0.7'
+  pod 'Forge', '0.0.8'
   pod 'Satin', :path => "../"
 end
 
 target 'Example tvOS' do
   use_frameworks!
-  pod 'Forge', '0.0.7'
+  pod 'Forge', '0.0.8'
   pod 'Satin', :path => "../"
 end

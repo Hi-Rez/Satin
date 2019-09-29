@@ -9,17 +9,17 @@
 import Metal
 import simd
 
-// The 256 byte aligned size of our uniform structure
-
-struct VertexUniforms {
-    var modelMatrix: matrix_float4x4
-    var viewMatrix: matrix_float4x4
-    var modelViewMatrix: matrix_float4x4
-    var projectionMatrix: matrix_float4x4
-    var normalMatrix: matrix_float3x3
-}
-
-open class Mesh: Object, GeometryDelegate {
+open class Mesh: Object, GeometryDelegate, MaterialDelegate {
+    open override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode("Mesh", forKey: .type)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+    }
+    
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
     public var triangleFillMode: MTLTriangleFillMode = .fill
@@ -27,27 +27,27 @@ open class Mesh: Object, GeometryDelegate {
     
     public var instanceCount: Int = 1
     
+    var uniformBufferIndex: Int = 0
+    var uniformBufferOffset: Int = 0
     var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
     var vertexUniformsBuffer: MTLBuffer!
     
     public var depthStencilState: MTLDepthStencilState?
     public var depthCompareFunction: MTLCompareFunction = .less {
-        didSet{
+        didSet {
             if depthCompareFunction != oldValue {
-                updateDepthStencilState = true
-            }
-        }
-    }
-    public var depthWriteEnabled: Bool = true {
-        didSet{
-            if depthWriteEnabled != oldValue {
-                updateDepthStencilState = true
+                setupDepthStencilState()
             }
         }
     }
     
-    var uniformBufferIndex: Int = 0
-    var uniformBufferOffset: Int = 0
+    public var depthWriteEnabled: Bool = true {
+        didSet {
+            if depthWriteEnabled != oldValue {
+                setupDepthStencilState()
+            }
+        }
+    }
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
@@ -55,18 +55,17 @@ open class Mesh: Object, GeometryDelegate {
     public var geometry: Geometry = Geometry() {
         didSet {
             geometry.delegate = self
-            if !geometry.vertexData.isEmpty {
-                updateVertexBuffer = true
-            }
-            if !geometry.indexData.isEmpty {
-                updateIndexBuffer = true
-            }
+            setupVertexBuffer()
+            setupIndexBuffer()
         }
     }
     
     public var material: Material? {
         didSet {
-            updateMaterial = true
+            if let material = self.material {
+                material.delegate = self
+            }
+            setupMaterial()
         }
     }
     
@@ -76,24 +75,73 @@ open class Mesh: Object, GeometryDelegate {
     public var vertexBuffer: MTLBuffer?
     public var indexBuffer: MTLBuffer?
     
-    var updateVertexBuffer: Bool = true
-    var updateIndexBuffer: Bool = true
-    var updateUniformBuffer: Bool = true
-    var updateDepthStencilState: Bool = true
-    var updateMaterial: Bool = false
-    
     public init(geometry: Geometry, material: Material?) {
         super.init()
-        setup(geometry, material)
+        self.geometry = geometry
+        self.material = material
     }
     
     public required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
     
-    func setup(_ geometry: Geometry, _ material: Material?) {
-        self.geometry = geometry
-        self.material = material
+    override func setup() {
+        setupVertexBuffer()
+        setupIndexBuffer()
+        setupUniformBuffer()
+        setupDepthStencilState()
+        setupMaterial()
+    }
+    
+    func setupVertexBuffer() {
+        guard let context = self.context else { return }
+        let device = context.device
+        if !geometry.vertexData.isEmpty {
+            let verticesSize = geometry.vertexData.count * MemoryLayout.size(ofValue: geometry.vertexData[0])
+            vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
+            vertexBuffer?.label = "Vertices"
+        }
+        else {
+            vertexBuffer = nil
+        }
+    }
+    
+    func setupIndexBuffer() {
+        guard let context = self.context else { return }
+        let device = context.device
+        if !geometry.indexData.isEmpty {
+            let indicesSize = geometry.indexData.count * MemoryLayout.size(ofValue: geometry.indexData[0])
+            indexBuffer = device.makeBuffer(bytes: geometry.indexData, length: indicesSize, options: [])
+            indexBuffer?.label = "Indices"
+        }
+        else {
+            indexBuffer = nil
+        }
+    }
+    
+    func setupUniformBuffer() {
+        guard let context = self.context else { return }
+        let device = context.device
+        let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
+        guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
+        vertexUniformsBuffer = buffer
+        vertexUniformsBuffer.label = "Vertex Uniforms"
+        vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
+    }
+    
+    func setupDepthStencilState() {
+        guard let context = self.context else { return }
+        let device = context.device
+        let depthStateDesciptor = MTLDepthStencilDescriptor()
+        depthStateDesciptor.depthCompareFunction = depthCompareFunction
+        depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
+        guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
+        depthStencilState = state
+    }
+    
+    func setupMaterial() {
+        guard let context = self.context, let material = self.material else { return }
+        material.context = context
     }
     
     func updateUniforms(camera: Camera) {
@@ -128,72 +176,19 @@ open class Mesh: Object, GeometryDelegate {
     
     public func update(camera: Camera) {
         updateUniformsBuffer()
-        updateUniforms(camera: camera)        
+        updateUniforms(camera: camera)
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder) {
-        if updateVertexBuffer {
-            let device = renderEncoder.device
-            
-            if !geometry.vertexData.isEmpty {
-                let verticesSize = geometry.vertexData.count * MemoryLayout.size(ofValue: geometry.vertexData[0])
-                vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
-                vertexBuffer?.label = "Vertices"
-            }
-            else {
-                vertexBuffer = nil
-            }
-            updateVertexBuffer = false
-        }
-        
-        if updateIndexBuffer {
-            let device = renderEncoder.device
-            
-            if !geometry.indexData.isEmpty {
-                let indicesSize = geometry.indexData.count * MemoryLayout.size(ofValue: geometry.indexData[0])
-                indexBuffer = device.makeBuffer(bytes: geometry.indexData, length: indicesSize, options: [])
-                indexBuffer?.label = "Indices"
-            }
-            else {
-                indexBuffer = nil
-            }
-            
-            updateIndexBuffer = false
-        }
-        
-        if updateUniformBuffer {
-            let device = renderEncoder.device
-            
-            let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
-            guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
-            vertexUniformsBuffer = buffer
-            vertexUniformsBuffer.label = "Vertex Uniforms"
-            vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
-            updateUniformBuffer = false
-        }
-        
-        if updateDepthStencilState {
-            let device = renderEncoder.device
-            let depthStateDesciptor = MTLDepthStencilDescriptor()
-            depthStateDesciptor.depthCompareFunction = depthCompareFunction
-            depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
-            guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
-            depthStencilState = state
-        }
-        
-        if updateMaterial {
-            updateMaterial = false
-        }
-        
         draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard visible, let vertexBuffer = vertexBuffer, let material = self.material, let depthStencilState = self.depthStencilState else { return }
-        
+        guard visible, let vertexBuffer = vertexBuffer, let material = self.material, let pipeline = material.pipeline, let depthStencilState = self.depthStencilState else { return }
+
         preDraw?(renderEncoder)
         
-        
+        renderEncoder.setRenderPipelineState(pipeline)
         renderEncoder.setDepthStencilState(depthStencilState)
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
@@ -201,27 +196,25 @@ open class Mesh: Object, GeometryDelegate {
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: 1)
         
-        if material.bind(renderEncoder) {
-            // Do uniform binds here
-            
-            if let indexBuffer = indexBuffer {
-                renderEncoder.drawIndexedPrimitives(
-                    type: geometry.primitiveType,
-                    indexCount: geometry.indexData.count,
-                    indexType: geometry.indexType,
-                    indexBuffer: indexBuffer,
-                    indexBufferOffset: 0,
-                    instanceCount: instanceCount
-                )
-            }
-            else {
-                renderEncoder.drawPrimitives(
-                    type: geometry.primitiveType,
-                    vertexStart: 0,
-                    vertexCount: geometry.vertexData.count,
-                    instanceCount: instanceCount
-                )
-            }
+        material.bind(renderEncoder)
+        
+        if let indexBuffer = indexBuffer {
+            renderEncoder.drawIndexedPrimitives(
+                type: geometry.primitiveType,
+                indexCount: geometry.indexData.count,
+                indexType: geometry.indexType,
+                indexBuffer: indexBuffer,
+                indexBufferOffset: 0,
+                instanceCount: instanceCount
+            )
+        }
+        else {
+            renderEncoder.drawPrimitives(
+                type: geometry.primitiveType,
+                vertexStart: 0,
+                vertexCount: geometry.vertexData.count,
+                instanceCount: instanceCount
+            )
         }
         
         postDraw?(renderEncoder)
@@ -235,14 +228,16 @@ open class Mesh: Object, GeometryDelegate {
     // MARK: - GeometryDelegate Conformance
     
     func indexDataUpdated() {
-        if !geometry.indexData.isEmpty {
-            updateIndexBuffer = true
-        }
+        setupIndexBuffer()
     }
     
     func vertexDataUpdated() {
-        if !geometry.vertexData.isEmpty {
-            updateVertexBuffer = true
-        }
+        setupVertexBuffer()
+    }
+    
+    // MARK: - MaterialDelegate Conformance
+    
+    func materialUpdated() {
+        setupMaterial()
     }
 }

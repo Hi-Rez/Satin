@@ -18,11 +18,12 @@ class Renderer: Forge.Renderer {
     var geometry: Geometry!
     var mesh: Mesh!
     var scene: Object!
+    var context: Context!
     
     var perspCamera = PerspectiveCamera()
-#if os(macOS)
+    #if os(macOS)
     var cameraController: GesturalCameraController!
-#endif
+    #endif
     var renderer: Satin.Renderer!
     
     required init?(metalKitView: MTKView) {
@@ -35,6 +36,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
+        setupContext()
         setupLibrary()
         setupMaterial()
         setupGeometry()
@@ -42,6 +44,10 @@ class Renderer: Forge.Renderer {
         setupScene()
         setupCamera()
         setupRenderer()
+    }
+    
+    func setupContext() {
+        context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }
     
     func setupLibrary() {
@@ -56,10 +62,7 @@ class Renderer: Forge.Renderer {
             vertex: "basic_vertex",
             fragment: "basic_fragment",
             label: "basic",
-            sampleCount: sampleCount,
-            colorPixelFormat: colorPixelFormat,
-            depthPixelFormat: depthPixelFormat,
-            stencilPixelFormat: stencilPixelFormat
+            context: context
         )
     }
     
@@ -85,18 +88,15 @@ class Renderer: Forge.Renderer {
     }
     
     func setupRenderer() {
-        renderer = Satin.Renderer(scene: scene,
-                                  camera: perspCamera,
-                                  sampleCount: sampleCount,
-                                  colorPixelFormat: colorPixelFormat,
-                                  depthPixelFormat: depthPixelFormat,
-                                  stencilPixelFormat: stencilPixelFormat)
+        renderer = Satin.Renderer(context: context,
+                                  scene: scene,
+                                  camera: perspCamera)
     }
     
     override func update() {
         #if os(macOS)
         cameraController.update()
-        #endif        
+        #endif
         renderer.update()
     }
     
