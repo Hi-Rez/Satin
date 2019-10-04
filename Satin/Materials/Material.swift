@@ -21,6 +21,8 @@ open class Material {
         }
     }
     
+    public var shadowTexture: MTLTexture?
+    
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
@@ -51,6 +53,7 @@ open class Material {
     }
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setFragmentTexture(shadowTexture, index: 0)
         onBind?(renderEncoder)
     }
     

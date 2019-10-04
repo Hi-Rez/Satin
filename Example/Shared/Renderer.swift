@@ -67,7 +67,7 @@ class Renderer: Forge.Renderer {
     }
     
     func setupGeometry() {
-        geometry = PlaneGeometry()
+        geometry = BoxGeometry(size: 2)
     }
     
     func setupMesh() {

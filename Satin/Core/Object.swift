@@ -33,6 +33,7 @@ open class Object: Codable {
     }
     
     public var id: String = UUID().uuidString
+    public var label: String = "Object"
     
     var context: Context? {
         didSet {
@@ -157,6 +158,10 @@ open class Object: Codable {
                 return
             }
         }
+    }
+    
+    public func lookat(_ target: simd_float3) {        
+        orientation = simd_quatf(from: simd_make_float3(0.0, 0.0, 1.0), to: target)
     }
 }
 

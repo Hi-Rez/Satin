@@ -3,6 +3,3 @@
 #include "Uniforms.metal"
 
 #include "Vertex.metal"
-
-#include "Fragment.metal"
-

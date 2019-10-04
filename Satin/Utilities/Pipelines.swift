@@ -56,6 +56,24 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
     return nil
 }
 
+public func makeShadowRenderPipeline(library: MTLLibrary?,
+                               vertex: String,
+                               label: String,
+                               context: Context) throws -> MTLRenderPipelineState? {
+    if let library = library, let vertexProgram = library.makeFunction(name: vertex) {
+        let device = library.device
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.vertexFunction = vertexProgram
+        pipelineStateDescriptor.fragmentFunction = nil
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
+        return try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
+    }
+    return nil
+}
+
 
 public func makeAdditiveRenderPipeline(library: MTLLibrary?,
                                vertex: String,

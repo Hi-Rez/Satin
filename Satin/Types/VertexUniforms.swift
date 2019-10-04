@@ -9,9 +9,9 @@
 import simd
 
 struct VertexUniforms {
-    var modelMatrix: matrix_float4x4
-    var viewMatrix: matrix_float4x4
-    var modelViewMatrix: matrix_float4x4
-    var projectionMatrix: matrix_float4x4
-    var normalMatrix: matrix_float3x3
+    var modelMatrix: float4x4
+    var viewMatrix: float4x4
+    var modelViewMatrix: float4x4
+    var projectionMatrix: float4x4
+    var normalMatrix: float3x3
 }
