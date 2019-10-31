@@ -10,6 +10,9 @@
 		E12625152344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
 		E12625162344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
 		E12625172344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
+		E12625272346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */; };
+		E12625282346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */; };
+		E12625292346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */; };
 		E13610312329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
 		E13610322329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
 		E13610332329834000A01AFF /* IcoSphereGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13610302329834000A01AFF /* IcoSphereGeometry.swift */; };
@@ -82,6 +85,9 @@
 		E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CA22E7CC3E00A43BB4 /* Mesh.swift */; };
 		E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */; };
+		E1D25E1E235A3235008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
+		E1D25E23235A8706008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
+		E1D25E24235A8995008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
 		E1E11E17230E616B00E86791 /* Satin.h in Headers */ = {isa = PBXBuildFile; fileRef = E13C969222E6482C00D6FEB0 /* Satin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
 		E1E11E1B230E618F00E86791 /* Material.swift in Sources */ = {isa = PBXBuildFile; fileRef = E159A34122E8F04400909A28 /* Material.swift */; };
@@ -127,6 +133,7 @@
 
 /* Begin PBXFileReference section */
 		E12625142344BF94007DB8C6 /* ShadowUniforms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowUniforms.swift; sourceTree = "<group>"; };
+		E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcballPerspectiveCamera.swift; sourceTree = "<group>"; };
 		E13610302329834000A01AFF /* IcoSphereGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IcoSphereGeometry.swift; sourceTree = "<group>"; };
 		E136103623299A0F00A01AFF /* CapsuleGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleGeometry.swift; sourceTree = "<group>"; };
 		E136103A2329B6A600A01AFF /* ParametricGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametricGeometry.swift; sourceTree = "<group>"; };
@@ -160,6 +167,7 @@
 		E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneGeometry.swift; sourceTree = "<group>"; };
 		E19FA60722E8A9E200A43BB4 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		E19FA62522E8B65000A43BB4 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1D25E1D235A3235008F294A /* ArcballCameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcballCameraController.swift; sourceTree = "<group>"; };
 		E1E11E0F230E60B900E86791 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E11E2A230E62F700E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.4.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		E1E11E2B230E62F700E86791 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.4.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -232,6 +240,7 @@
 			children = (
 				E13C969322E6482C00D6FEB0 /* Info.plist */,
 				E13C969222E6482C00D6FEB0 /* Satin.h */,
+				E1A84D5C2358E45800A02B6B /* CameraControllers */,
 				E1670B982331C77E00107129 /* Extensions */,
 				E188243622F9F216001DC5E9 /* Utilities */,
 				E19FA60622E822F900A43BB4 /* Materials */,
@@ -265,8 +274,6 @@
 			isa = PBXGroup;
 			children = (
 				E1670B8B2331C1C800107129 /* Pipelines.swift */,
-				E1670B892331C04F00107129 /* GesturalCameraController.swift */,
-				E1F3751B23222B9F00048102 /* FPSCameraController.swift */,
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
 				E19B695F2315E1D10001B1A8 /* FileWatcher.swift */,
 				E1936999233BCC5200955737 /* Paths.swift */,
@@ -321,6 +328,7 @@
 				E19FA5CE22E7CCA400A43BB4 /* Camera.swift */,
 				E188243022F8E391001DC5E9 /* OrthographicCamera.swift */,
 				E15B218B23061F4500A7038E /* PerspectiveCamera.swift */,
+				E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */,
 			);
 			path = Cameras;
 			sourceTree = "<group>";
@@ -342,6 +350,24 @@
 				E19369CE2342590500955737 /* ShadowMaterial.swift */,
 			);
 			path = Materials;
+			sourceTree = "<group>";
+		};
+		E1A84D592357D13900A02B6B /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				E1670B892331C04F00107129 /* GesturalCameraController.swift */,
+				E1F3751B23222B9F00048102 /* FPSCameraController.swift */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		E1A84D5C2358E45800A02B6B /* CameraControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E1D25E1D235A3235008F294A /* ArcballCameraController.swift */,
+				E1A84D592357D13900A02B6B /* macOS */,
+			);
+			path = CameraControllers;
 			sourceTree = "<group>";
 		};
 		E1E11E29230E62F700E86791 /* Frameworks */ = {
@@ -519,8 +545,10 @@
 				E19FA5CF22E7CCA400A43BB4 /* Camera.swift in Sources */,
 				E1936994233BC62400955737 /* BasicColorMaterial.swift in Sources */,
 				E19FA5CB22E7CC3E00A43BB4 /* Mesh.swift in Sources */,
+				E12625272346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */,
 				E15B218C23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E136103723299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
+				E1D25E1E235A3235008F294A /* ArcballCameraController.swift in Sources */,
 				E136103B2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
 				E19369CF2342590500955737 /* ShadowMaterial.swift in Sources */,
@@ -567,8 +595,10 @@
 				E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E193699B233BCC5200955737 /* Paths.swift in Sources */,
 				E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */,
+				E1D25E23235A8706008F294A /* ArcballCameraController.swift in Sources */,
 				E136103823299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
 				E19FA63222E8B6F400A43BB4 /* Renderer.swift in Sources */,
+				E12625282346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */,
 				E19FA63322E8B6F400A43BB4 /* Constants.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
 				E193699F233BE4A500955737 /* Context.swift in Sources */,
@@ -610,6 +640,7 @@
 				E1E11E1E230E619900E86791 /* Camera.swift in Sources */,
 				E136103923299A0F00A01AFF /* CapsuleGeometry.swift in Sources */,
 				E1E11E28230E61AC00E86791 /* PlaneGeometry.swift in Sources */,
+				E12625292346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */,
 				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
 				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
 				E19369A0233BE4A500955737 /* Context.swift in Sources */,
@@ -625,6 +656,7 @@
 				E1670B9C2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E1F3752823232FC300048102 /* ArcGeometry.swift in Sources */,
 				E1E11E1D230E619500E86791 /* Map.swift in Sources */,
+				E1D25E24235A8995008F294A /* ArcballCameraController.swift in Sources */,
 				E1F375242323185700048102 /* TriangleGeometry.swift in Sources */,
 				E1F3752E23256A7500048102 /* CylinderGeometry.swift in Sources */,
 				E1F375322326137D00048102 /* TorusGeometry.swift in Sources */,
@@ -761,6 +793,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -778,6 +811,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.syedrezaali.Satin;
 				PRODUCT_NAME = Satin;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -788,6 +822,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -805,6 +840,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.syedrezaali.Satin;
 				PRODUCT_NAME = Satin;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -813,6 +849,7 @@
 		E19FA62B22E8B65000A43BB4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CC7PU3PUHS;
@@ -839,6 +876,7 @@
 		E19FA62C22E8B65000A43BB4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CC7PU3PUHS;

@@ -1,7 +1,7 @@
 vertex VertexData basicColorVertex( uint vertexID [[vertex_id]],
-                                   constant Vertex *vertices [[buffer( 0 )]],
-                                   constant VertexUniforms &vertexUniforms [[buffer( 1 )]],
-                                   constant ShadowUniforms &shadowUniforms [[buffer( 2 )]])
+                                   constant Vertex *vertices [[buffer( VertexBufferVertices )]],
+                                   constant VertexUniforms &vertexUniforms [[buffer( VertexBufferVertexUniforms )]],
+                                   constant ShadowUniforms &shadowUniforms [[buffer( VertexBufferShadowUniforms )]])
 {
     const float4 position = vertices[vertexID].position;
 	VertexData out;
@@ -11,3 +11,4 @@ vertex VertexData basicColorVertex( uint vertexID [[vertex_id]],
     out.shadowPosition = shadowUniforms.shadowMatrix * vertexUniforms.modelMatrix * position;
 	return out;
 }
+

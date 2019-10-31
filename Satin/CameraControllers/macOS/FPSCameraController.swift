@@ -26,7 +26,7 @@ open class FPSCameraController {
     var moveUp: Bool = false
     var moveDown: Bool = false
     
-    var mouse: simd_float2 = simd_make_float2(0.0)
+    var hitPoint: simd_float2 = simd_make_float2(0.0)
     
     open var damping: Float = 0.875
     open var rotateScalar: Float = 0.5
@@ -162,17 +162,17 @@ open class FPSCameraController {
         }
         else {
             guard let window = event.window else { return }
-            mouse = normalizeMouse(event.locationInWindow, window.frame.size)
+            hitPoint = normalizeMouse(event.locationInWindow, window.frame.size)
         }
     }
     
     open func mouseDragged(with event: NSEvent) {
         guard let window = event.window else { return }
         let currMouse = normalizeMouse(event.locationInWindow, window.frame.size)
-        let deltaMouse = currMouse - mouse
+        let deltaMouse = currMouse - hitPoint
         rotateVelocity.x = deltaMouse.x
         rotateVelocity.y = deltaMouse.y
-        mouse = currMouse
+        hitPoint = currMouse
     }
     
     open func keyDown(with event: NSEvent) {

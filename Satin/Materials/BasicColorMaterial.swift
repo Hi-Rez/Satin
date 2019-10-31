@@ -86,7 +86,7 @@ open class BasicColorMaterial: Material {
     }
 
     open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setFragmentBuffer(uniformsBuffer, offset: uniformBufferOffset, index: 0)
+        renderEncoder.setFragmentBuffer(uniformsBuffer, offset: uniformBufferOffset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
         super.bind(renderEncoder)
     }
 }

@@ -9,12 +9,12 @@
 import Metal
 
 protocol MaterialDelegate: AnyObject {
-    func materialUpdated()
+    func materialUpdated(material: Material)
 }
 
 open class Material {
     weak var delegate: MaterialDelegate?
-    var pipeline: MTLRenderPipelineState?
+    public var pipeline: MTLRenderPipelineState?
     var context: Context? {
         didSet {
             setup()
@@ -52,8 +52,7 @@ open class Material {
         onUpdate?()
     }
     
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setFragmentTexture(shadowTexture, index: 0)
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {     
         onBind?(renderEncoder)
     }
     

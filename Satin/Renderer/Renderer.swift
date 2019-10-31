@@ -7,8 +7,6 @@
 //
 
 import Metal
-import MetalPerformanceShaders
-
 import simd
 
 open class Renderer
@@ -87,13 +85,13 @@ open class Renderer
     public var updateDepthTexture: Bool = true
     public var depthTexture: MTLTexture?
     public var depthLoadAction: MTLLoadAction = .clear
-    public var depthStoreAction: MTLStoreAction = .store
+    public var depthStoreAction: MTLStoreAction = .dontCare
     public var clearDepth: Double = 1.0
     
     public var updateStencilTexture: Bool = true
     public var stencilTexture: MTLTexture?
     public var stencilLoadAction: MTLLoadAction = .clear
-    public var stencilStoreAction: MTLStoreAction = .store
+    public var stencilStoreAction: MTLStoreAction = .dontCare
     public var clearStencil: UInt32 = 0
     
     public var viewport: MTLViewport = MTLViewport()
@@ -177,9 +175,19 @@ open class Renderer
     
     public func drawShadows(parellelRenderEncoder: MTLParallelRenderCommandEncoder, object: Object)
     {
-        if object is Mesh, let mesh = object as? Mesh, let material = shadowMaterial, let pipeline = material.pipeline
-        {        
+        if object is Mesh, let mesh = object as? Mesh, let material = shadowMaterial
+        {
             guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
+            
+            var pipeline: MTLRenderPipelineState!
+            if let meshShadowMaterial = mesh.shadowMaterial, let shadowPipeline = meshShadowMaterial.pipeline
+            {
+                pipeline = shadowPipeline
+            }
+            else if let shadowPipeline = material.pipeline
+            {
+                pipeline = shadowPipeline
+            }
             
             let label = mesh.label
             
@@ -195,7 +203,7 @@ open class Renderer
             
             renderEncoder.setDepthBias(0.01, slopeScale: 1.0, clamp: 0.01)
             renderEncoder.setCullMode(.front)
-            renderEncoder.setVertexBuffer(shadowUniformsBuffer, offset: uniformBufferOffset, index: 2)
+            renderEncoder.setVertexBuffer(shadowUniformsBuffer, offset: uniformBufferOffset, index: VertexBufferIndex.ShadowUniforms.rawValue)
             
             mesh.draw(renderEncoder: renderEncoder)
             
@@ -302,26 +310,34 @@ open class Renderer
     {
         if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
         {
-            guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
-            let label = mesh.label
-            
-            renderEncoder.pushDebugGroup(label)
-            renderEncoder.label = label
-            renderEncoder.setViewport(viewport)
-            
             mesh.update(camera: camera)
             
-            renderEncoder.setRenderPipelineState(pipeline)
-            
-            material.shadowTexture = shadowTexture
-            material.bind(renderEncoder)
-            
-            renderEncoder.setVertexBuffer(shadowUniformsBuffer, offset: uniformBufferOffset, index: 2)
-            
-            mesh.draw(renderEncoder: renderEncoder)
-            
-            renderEncoder.popDebugGroup()
-            renderEncoder.endEncoding()
+            if mesh.visible
+            {
+                guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
+                let label = mesh.label
+                
+                renderEncoder.pushDebugGroup(label)
+                renderEncoder.label = label
+                renderEncoder.setViewport(viewport)
+                
+                renderEncoder.setRenderPipelineState(pipeline)
+                
+                if enableShadows
+                {
+                    material.shadowTexture = shadowTexture
+                    renderEncoder.setFragmentTexture(shadowTexture, index: FragmentTextureIndex.Shadow.rawValue)
+                }
+                
+                material.bind(renderEncoder)
+                
+                renderEncoder.setVertexBuffer(shadowUniformsBuffer, offset: uniformBufferOffset, index: VertexBufferIndex.ShadowUniforms.rawValue)
+                
+                mesh.draw(renderEncoder: renderEncoder)
+                
+                renderEncoder.popDebugGroup()
+                renderEncoder.endEncoding()
+            }
         }
         
         for child in object.children

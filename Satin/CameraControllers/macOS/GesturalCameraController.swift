@@ -94,20 +94,25 @@ open class GesturalCameraController {
     }
     
     open func disable() {
-        guard let leftMouseDownHandler = self.leftMouseDownHandler else { return }
-        NSEvent.removeMonitor(leftMouseDownHandler)
+        if let leftMouseDownHandler = self.leftMouseDownHandler {
+            NSEvent.removeMonitor(leftMouseDownHandler)
+        }
         
-        guard let leftMouseDraggedHandler = self.leftMouseDraggedHandler else { return }
-        NSEvent.removeMonitor(leftMouseDraggedHandler)
+        if let leftMouseDraggedHandler = self.leftMouseDraggedHandler {
+            NSEvent.removeMonitor(leftMouseDraggedHandler)
+        }
         
-        guard let scrollWheelHandler = self.scrollWheelHandler else { return }
-        NSEvent.removeMonitor(scrollWheelHandler)
+        if let scrollWheelHandler = self.scrollWheelHandler {
+            NSEvent.removeMonitor(scrollWheelHandler)
+        }
         
-        guard let magnifyHandler = self.magnifyHandler else { return }
-        NSEvent.removeMonitor(magnifyHandler)
+        if let magnifyHandler = self.magnifyHandler {
+            NSEvent.removeMonitor(magnifyHandler)
+        }
         
-        guard let rotateHandler = self.rotateHandler else { return }
-        NSEvent.removeMonitor(rotateHandler)
+        if let rotateHandler = self.rotateHandler {
+            NSEvent.removeMonitor(rotateHandler)
+        }
     }
     
     func normalizeMouse(_ point: NSPoint, _ size: CGSize) -> simd_float2 {
