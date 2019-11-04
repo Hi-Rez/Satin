@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10E4F21236F909700073EE4 /* ParameterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F20236F909700073EE4 /* ParameterParser.swift */; };
+		E10E4F22236F909700073EE4 /* ParameterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F20236F909700073EE4 /* ParameterParser.swift */; };
+		E10E4F23236F909700073EE4 /* ParameterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F20236F909700073EE4 /* ParameterParser.swift */; };
+		E10E4F2C236FACC700073EE4 /* UniformBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F2B236FACC700073EE4 /* UniformBuffer.swift */; };
+		E10E4F2D236FACC700073EE4 /* UniformBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F2B236FACC700073EE4 /* UniformBuffer.swift */; };
+		E10E4F2E236FACC700073EE4 /* UniformBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E4F2B236FACC700073EE4 /* UniformBuffer.swift */; };
 		E12625152344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
 		E12625162344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
 		E12625172344BF94007DB8C6 /* ShadowUniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12625142344BF94007DB8C6 /* ShadowUniforms.swift */; };
@@ -85,6 +91,30 @@
 		E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5CA22E7CC3E00A43BB4 /* Mesh.swift */; };
 		E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA5BD22E7CB3E00A43BB4 /* Geometry.swift */; };
 		E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */; };
+		E1B552BE236F860000BAF96D /* BoolParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B6236F860000BAF96D /* BoolParameter.swift */; };
+		E1B552BF236F860000BAF96D /* BoolParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B6236F860000BAF96D /* BoolParameter.swift */; };
+		E1B552C0236F860000BAF96D /* BoolParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B6236F860000BAF96D /* BoolParameter.swift */; };
+		E1B552C1236F860000BAF96D /* Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B7236F860000BAF96D /* Parameter.swift */; };
+		E1B552C2236F860000BAF96D /* Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B7236F860000BAF96D /* Parameter.swift */; };
+		E1B552C3236F860000BAF96D /* Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B7236F860000BAF96D /* Parameter.swift */; };
+		E1B552C4236F860000BAF96D /* DoubleParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B8236F860000BAF96D /* DoubleParameter.swift */; };
+		E1B552C5236F860000BAF96D /* DoubleParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B8236F860000BAF96D /* DoubleParameter.swift */; };
+		E1B552C6236F860000BAF96D /* DoubleParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B8236F860000BAF96D /* DoubleParameter.swift */; };
+		E1B552C7236F860000BAF96D /* AnyParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B9236F860000BAF96D /* AnyParameter.swift */; };
+		E1B552C8236F860000BAF96D /* AnyParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B9236F860000BAF96D /* AnyParameter.swift */; };
+		E1B552C9236F860000BAF96D /* AnyParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552B9236F860000BAF96D /* AnyParameter.swift */; };
+		E1B552CA236F860000BAF96D /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BA236F860000BAF96D /* StringParameter.swift */; };
+		E1B552CB236F860000BAF96D /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BA236F860000BAF96D /* StringParameter.swift */; };
+		E1B552CC236F860000BAF96D /* StringParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BA236F860000BAF96D /* StringParameter.swift */; };
+		E1B552CD236F860000BAF96D /* ParameterGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BB236F860000BAF96D /* ParameterGroup.swift */; };
+		E1B552CE236F860000BAF96D /* ParameterGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BB236F860000BAF96D /* ParameterGroup.swift */; };
+		E1B552CF236F860000BAF96D /* ParameterGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BB236F860000BAF96D /* ParameterGroup.swift */; };
+		E1B552D0236F860000BAF96D /* FloatParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BC236F860000BAF96D /* FloatParameter.swift */; };
+		E1B552D1236F860000BAF96D /* FloatParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BC236F860000BAF96D /* FloatParameter.swift */; };
+		E1B552D2236F860000BAF96D /* FloatParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BC236F860000BAF96D /* FloatParameter.swift */; };
+		E1B552D3236F860000BAF96D /* IntParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BD236F860000BAF96D /* IntParameter.swift */; };
+		E1B552D4236F860000BAF96D /* IntParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BD236F860000BAF96D /* IntParameter.swift */; };
+		E1B552D5236F860000BAF96D /* IntParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B552BD236F860000BAF96D /* IntParameter.swift */; };
 		E1D25E1E235A3235008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
 		E1D25E23235A8706008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
 		E1D25E24235A8995008F294A /* ArcballCameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D25E1D235A3235008F294A /* ArcballCameraController.swift */; };
@@ -132,6 +162,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E10E4F20236F909700073EE4 /* ParameterParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterParser.swift; sourceTree = "<group>"; };
+		E10E4F2B236FACC700073EE4 /* UniformBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniformBuffer.swift; sourceTree = "<group>"; };
 		E12625142344BF94007DB8C6 /* ShadowUniforms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowUniforms.swift; sourceTree = "<group>"; };
 		E12625262346C897007DB8C6 /* ArcballPerspectiveCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcballPerspectiveCamera.swift; sourceTree = "<group>"; };
 		E13610302329834000A01AFF /* IcoSphereGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IcoSphereGeometry.swift; sourceTree = "<group>"; };
@@ -167,6 +199,14 @@
 		E19FA60322E7D8FB00A43BB4 /* PlaneGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaneGeometry.swift; sourceTree = "<group>"; };
 		E19FA60722E8A9E200A43BB4 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		E19FA62522E8B65000A43BB4 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1B552B6236F860000BAF96D /* BoolParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoolParameter.swift; sourceTree = "<group>"; };
+		E1B552B7236F860000BAF96D /* Parameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parameter.swift; sourceTree = "<group>"; };
+		E1B552B8236F860000BAF96D /* DoubleParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleParameter.swift; sourceTree = "<group>"; };
+		E1B552B9236F860000BAF96D /* AnyParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyParameter.swift; sourceTree = "<group>"; };
+		E1B552BA236F860000BAF96D /* StringParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringParameter.swift; sourceTree = "<group>"; };
+		E1B552BB236F860000BAF96D /* ParameterGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterGroup.swift; sourceTree = "<group>"; };
+		E1B552BC236F860000BAF96D /* FloatParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatParameter.swift; sourceTree = "<group>"; };
+		E1B552BD236F860000BAF96D /* IntParameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntParameter.swift; sourceTree = "<group>"; };
 		E1D25E1D235A3235008F294A /* ArcballCameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArcballCameraController.swift; sourceTree = "<group>"; };
 		E1E11E0F230E60B900E86791 /* Satin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Satin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E11E2A230E62F700E86791 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.4.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
@@ -238,8 +278,9 @@
 		E13C969122E6482C00D6FEB0 /* Satin */ = {
 			isa = PBXGroup;
 			children = (
-				E13C969322E6482C00D6FEB0 /* Info.plist */,
 				E13C969222E6482C00D6FEB0 /* Satin.h */,
+				E13C969322E6482C00D6FEB0 /* Info.plist */,
+				E1B552B5236F860000BAF96D /* Parameters */,
 				E1A84D5C2358E45800A02B6B /* CameraControllers */,
 				E1670B982331C77E00107129 /* Extensions */,
 				E188243622F9F216001DC5E9 /* Utilities */,
@@ -273,6 +314,8 @@
 		E188243622F9F216001DC5E9 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E10E4F20236F909700073EE4 /* ParameterParser.swift */,
+				E10E4F2B236FACC700073EE4 /* UniformBuffer.swift */,
 				E1670B8B2331C1C800107129 /* Pipelines.swift */,
 				E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */,
 				E19B695F2315E1D10001B1A8 /* FileWatcher.swift */,
@@ -368,6 +411,21 @@
 				E1A84D592357D13900A02B6B /* macOS */,
 			);
 			path = CameraControllers;
+			sourceTree = "<group>";
+		};
+		E1B552B5236F860000BAF96D /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				E1B552B6236F860000BAF96D /* BoolParameter.swift */,
+				E1B552B7236F860000BAF96D /* Parameter.swift */,
+				E1B552B8236F860000BAF96D /* DoubleParameter.swift */,
+				E1B552B9236F860000BAF96D /* AnyParameter.swift */,
+				E1B552BA236F860000BAF96D /* StringParameter.swift */,
+				E1B552BB236F860000BAF96D /* ParameterGroup.swift */,
+				E1B552BC236F860000BAF96D /* FloatParameter.swift */,
+				E1B552BD236F860000BAF96D /* IntParameter.swift */,
+			);
+			path = Parameters;
 			sourceTree = "<group>";
 		};
 		E1E11E29230E62F700E86791 /* Frameworks */ = {
@@ -551,12 +609,18 @@
 				E1D25E1E235A3235008F294A /* ArcballCameraController.swift in Sources */,
 				E136103B2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
 				E19FA60422E7D8FB00A43BB4 /* PlaneGeometry.swift in Sources */,
+				E1B552C1236F860000BAF96D /* Parameter.swift in Sources */,
 				E19369CF2342590500955737 /* ShadowMaterial.swift in Sources */,
 				E1F3751C23222B9F00048102 /* FPSCameraController.swift in Sources */,
 				E19B69602315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E19FA5C222E7CB6500A43BB4 /* Object.swift in Sources */,
+				E1B552CA236F860000BAF96D /* StringParameter.swift in Sources */,
 				E1670B8C2331C1C800107129 /* Pipelines.swift in Sources */,
 				E1F3752623232FC300048102 /* ArcGeometry.swift in Sources */,
+				E1B552C4236F860000BAF96D /* DoubleParameter.swift in Sources */,
+				E1B552D0236F860000BAF96D /* FloatParameter.swift in Sources */,
+				E1B552D3236F860000BAF96D /* IntParameter.swift in Sources */,
+				E10E4F2C236FACC700073EE4 /* UniformBuffer.swift in Sources */,
 				E13A6446231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E193699A233BCC5200955737 /* Paths.swift in Sources */,
 				E19FA5BE22E7CB3E00A43BB4 /* Geometry.swift in Sources */,
@@ -566,7 +630,9 @@
 				E1F375302326137D00048102 /* TorusGeometry.swift in Sources */,
 				E19FA5D122E7CCB800A43BB4 /* Constants.swift in Sources */,
 				E1F375222323185700048102 /* TriangleGeometry.swift in Sources */,
+				E1B552CD236F860000BAF96D /* ParameterGroup.swift in Sources */,
 				E13610312329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E1B552BE236F860000BAF96D /* BoolParameter.swift in Sources */,
 				E1F3751E2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */,
 				E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
@@ -575,7 +641,9 @@
 				E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */,
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
 				E1670B9A2331C77E00107129 /* Simd+Extensions.swift in Sources */,
+				E1B552C7236F860000BAF96D /* AnyParameter.swift in Sources */,
 				E19FA60222E7D8A400A43BB4 /* Math.swift in Sources */,
+				E10E4F21236F909700073EE4 /* ParameterParser.swift in Sources */,
 				E1670B8A2331C04F00107129 /* GesturalCameraController.swift in Sources */,
 				E1F3752C23256A7500048102 /* CylinderGeometry.swift in Sources */,
 			);
@@ -587,11 +655,15 @@
 			files = (
 				E159A34322E8F04400909A28 /* Material.swift in Sources */,
 				E1936995233BC62400955737 /* BasicColorMaterial.swift in Sources */,
+				E1B552BF236F860000BAF96D /* BoolParameter.swift in Sources */,
 				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E1F3751F2323120E00048102 /* CircleGeometry.swift in Sources */,
+				E1B552D4236F860000BAF96D /* IntParameter.swift in Sources */,
 				E12625162344BF94007DB8C6 /* ShadowUniforms.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
+				E1B552CE236F860000BAF96D /* ParameterGroup.swift in Sources */,
 				E19FA63022E8B6F400A43BB4 /* Map.swift in Sources */,
+				E1B552C5236F860000BAF96D /* DoubleParameter.swift in Sources */,
 				E15B218D23061F4500A7038E /* PerspectiveCamera.swift in Sources */,
 				E193699B233BCC5200955737 /* Paths.swift in Sources */,
 				E19FA63122E8B6F400A43BB4 /* Camera.swift in Sources */,
@@ -600,15 +672,19 @@
 				E19FA63222E8B6F400A43BB4 /* Renderer.swift in Sources */,
 				E12625282346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */,
 				E19FA63322E8B6F400A43BB4 /* Constants.swift in Sources */,
+				E1B552D1236F860000BAF96D /* FloatParameter.swift in Sources */,
 				E19FA63422E8B6F400A43BB4 /* Vertex.swift in Sources */,
 				E193699F233BE4A500955737 /* Context.swift in Sources */,
 				E1670B8D2331C1C800107129 /* Pipelines.swift in Sources */,
+				E1B552CB236F860000BAF96D /* StringParameter.swift in Sources */,
 				E13F425C2316686900D94603 /* BoxGeometry.swift in Sources */,
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
+				E1B552C8236F860000BAF96D /* AnyParameter.swift in Sources */,
 				E19369D02342590500955737 /* ShadowMaterial.swift in Sources */,
 				E19B69612315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E188243522F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
 				E1F3753523261B3500048102 /* ConeGeometry.swift in Sources */,
+				E1B552C2236F860000BAF96D /* Parameter.swift in Sources */,
 				E13610322329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
 				E136103C2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
 				E1670B9B2331C77E00107129 /* Simd+Extensions.swift in Sources */,
@@ -617,6 +693,8 @@
 				E1F375232323185700048102 /* TriangleGeometry.swift in Sources */,
 				E1F3752D23256A7500048102 /* CylinderGeometry.swift in Sources */,
 				E1F375312326137D00048102 /* TorusGeometry.swift in Sources */,
+				E10E4F2D236FACC700073EE4 /* UniformBuffer.swift in Sources */,
+				E10E4F22236F909700073EE4 /* ParameterParser.swift in Sources */,
 				E13A6447231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
@@ -630,11 +708,15 @@
 			files = (
 				E1E11E21230E619D00E86791 /* Renderer.swift in Sources */,
 				E1936996233BC62400955737 /* BasicColorMaterial.swift in Sources */,
+				E1B552C0236F860000BAF96D /* BoolParameter.swift in Sources */,
 				E1E11E27230E61AC00E86791 /* Geometry.swift in Sources */,
 				E1F375202323120E00048102 /* CircleGeometry.swift in Sources */,
+				E1B552D5236F860000BAF96D /* IntParameter.swift in Sources */,
 				E12625172344BF94007DB8C6 /* ShadowUniforms.swift in Sources */,
 				E1E11E26230E61A800E86791 /* Mesh.swift in Sources */,
+				E1B552CF236F860000BAF96D /* ParameterGroup.swift in Sources */,
 				E1E11E24230E61A200E86791 /* VertexUniforms.swift in Sources */,
+				E1B552C6236F860000BAF96D /* DoubleParameter.swift in Sources */,
 				E1E11E1B230E618F00E86791 /* Material.swift in Sources */,
 				E193699C233BCC5200955737 /* Paths.swift in Sources */,
 				E1E11E1E230E619900E86791 /* Camera.swift in Sources */,
@@ -643,15 +725,19 @@
 				E12625292346C897007DB8C6 /* ArcballPerspectiveCamera.swift in Sources */,
 				E1E11E23230E61A200E86791 /* Vertex.swift in Sources */,
 				E1E11E20230E619900E86791 /* PerspectiveCamera.swift in Sources */,
+				E1B552D2236F860000BAF96D /* FloatParameter.swift in Sources */,
 				E19369A0233BE4A500955737 /* Context.swift in Sources */,
 				E1670B8E2331C1C800107129 /* Pipelines.swift in Sources */,
 				E13F425D2316686900D94603 /* BoxGeometry.swift in Sources */,
+				E1B552CC236F860000BAF96D /* StringParameter.swift in Sources */,
 				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
 				E19369D12342590500955737 /* ShadowMaterial.swift in Sources */,
+				E1B552C9236F860000BAF96D /* AnyParameter.swift in Sources */,
 				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,
 				E1E11E22230E61A200E86791 /* Constants.swift in Sources */,
 				E1F3753623261B3500048102 /* ConeGeometry.swift in Sources */,
 				E13610332329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E1B552C3236F860000BAF96D /* Parameter.swift in Sources */,
 				E136103D2329B6A600A01AFF /* ParametricGeometry.swift in Sources */,
 				E1670B9C2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E1F3752823232FC300048102 /* ArcGeometry.swift in Sources */,
@@ -660,6 +746,8 @@
 				E1F375242323185700048102 /* TriangleGeometry.swift in Sources */,
 				E1F3752E23256A7500048102 /* CylinderGeometry.swift in Sources */,
 				E1F375322326137D00048102 /* TorusGeometry.swift in Sources */,
+				E10E4F2E236FACC700073EE4 /* UniformBuffer.swift in Sources */,
+				E10E4F23236F909700073EE4 /* ParameterParser.swift in Sources */,
 				E13A6448231C25E90021CF4F /* SphereGeometry.swift in Sources */,
 				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,
 				E1E11E25230E61A800E86791 /* Object.swift in Sources */,

@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40C9E406AB560C37EC9539BD /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1A9888FF9CA72677C1410C7 /* Pods_Example_macOS.framework */; };
 		A10D20A982880718152EB84D /* Pods_Example_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA3AF82615EE2E049F243C5 /* Pods_Example_iOS.framework */; };
 		B29AA492038E3EB741979AC7 /* Pods_Example_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9934B2846424651EE0124E /* Pods_Example_tvOS.framework */; };
+		E10E4F0C236F8C4F00073EE4 /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10E4F0B236F8C4F00073EE4 /* Pods_Example_macOS.framework */; };
 		E13B5565230F3D44009E143D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13B5564230F3D44009E143D /* AppDelegate.swift */; };
 		E13B5567230F3D44009E143D /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13B5566230F3D44009E143D /* GameViewController.swift */; };
 		E13B556A230F3D44009E143D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E13B5568230F3D44009E143D /* Main.storyboard */; };
@@ -38,6 +38,7 @@
 		949723D86A6724A6E6B9DE81 /* Pods-Example tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example tvOS/Pods-Example tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C7EEA462B31A3D3CFD0A828C /* Pods-Example tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Example tvOS/Pods-Example tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CAC7DE9A9F5DA25ED8E40C20 /* Pods-Example macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example macOS/Pods-Example macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		E10E4F0B236F8C4F00073EE4 /* Pods_Example_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Example_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E13B5559230F3D42009E143D /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		E13B555A230F3D42009E143D /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E13B5561230F3D44009E143D /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40C9E406AB560C37EC9539BD /* Pods_Example_macOS.framework in Frameworks */,
+				E10E4F0C236F8C4F00073EE4 /* Pods_Example_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +92,7 @@
 		9E58469676EB2E6F14C21A65 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E10E4F0B236F8C4F00073EE4 /* Pods_Example_macOS.framework */,
 				1BA3AF82615EE2E049F243C5 /* Pods_Example_iOS.framework */,
 				F1A9888FF9CA72677C1410C7 /* Pods_Example_macOS.framework */,
 				7F9934B2846424651EE0124E /* Pods_Example_tvOS.framework */,

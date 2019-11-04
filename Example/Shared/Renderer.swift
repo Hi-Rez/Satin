@@ -13,6 +13,7 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
+    var paramTest: IntParameter!
     var library: MTLLibrary!
     var material: Material!
     var geometry: Geometry!
@@ -80,7 +81,7 @@ class Renderer: Forge.Renderer {
     }
     
     func setupCamera() {
-        perspCamera.position.z = 9.0
+        perspCamera.position = simd_make_float3(0.0, 0.0, 9.0)
         perspCamera.far = 100.0
         #if os(macOS)
         cameraController = GesturalCameraController(perspCamera)
