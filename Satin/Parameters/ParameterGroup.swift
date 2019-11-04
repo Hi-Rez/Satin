@@ -95,3 +95,10 @@ open class ParameterGroup: Codable {
         }
     }
 }
+
+extension ParameterGroup: Equatable {
+    public static func == (lhs: ParameterGroup, rhs: ParameterGroup) -> Bool {
+        return lhs.label == rhs.label
+    }
+}
+
