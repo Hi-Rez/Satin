@@ -59,8 +59,6 @@ open class ParameterGroup: Codable {
                     if let mp = paramsMap[label] {
                         let mfp = mp as! FloatParameter
                         mfp.value = p.value
-                        mfp.min = p.min
-                        mfp.max = p.max
                     }
                 }
                 else if param is IntParameter {
@@ -68,8 +66,6 @@ open class ParameterGroup: Codable {
                     if let mp = paramsMap[label] {
                         let mip = mp as! IntParameter
                         mip.value = p.value
-                        mip.min = p.min
-                        mip.max = p.max
                     }
                 }
                 else if param is DoubleParameter {
@@ -77,8 +73,6 @@ open class ParameterGroup: Codable {
                     if let mp = paramsMap[label] {
                         let mdp = mp as! DoubleParameter
                         mdp.value = p.value
-                        mdp.min = p.min
-                        mdp.max = p.max
                     }
                 }
                 else if param is BoolParameter {

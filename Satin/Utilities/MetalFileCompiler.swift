@@ -21,6 +21,11 @@ open class MetalFileCompiler
     
     public init() {}
     
+    public func touch()
+    {
+        self.onUpdate?()
+    }
+    
     public func parse(_ fileURL: URL) throws -> String
     {
         files = []
@@ -52,7 +57,7 @@ open class MetalFileCompiler
                 throw MetalFileCompilerError.invalidFile(fileURLResolved)
             }
             
-            let pattern = #"#include +\"(.*)\"\n"#
+            let pattern = #"#include +\"(.*)\""#
             let regex = try NSRegularExpression(pattern: pattern, options: [])
             let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
             var matches = regex.matches(in: content, options: [], range: nsrange)

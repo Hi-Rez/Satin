@@ -20,15 +20,16 @@ open class Renderer
     {
         didSet
         {
-            updateColorTexture = true
-            updateDepthTexture = true
-            updateStencilTexture = true
-            updateShadowTexture = true
             if let context = self.context
             {
                 scene.context = context
             }
-            setupShadowMaterial()
+            
+            updateColorTexture = true
+            updateDepthTexture = true
+            updateStencilTexture = true
+            updateShadowTexture = true
+            updateShadowMaterial = true
         }
     }
     
@@ -36,6 +37,10 @@ open class Renderer
     {
         didSet
         {
+            let width = Double(size.width)
+            let height = Double(size.height)
+            viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
+            
             updateColorTexture = true
             updateDepthTexture = true
             updateStencilTexture = true
@@ -64,6 +69,7 @@ open class Renderer
     }
     
     var shadowMatrix: matrix_float4x4 = matrix_identity_float4x4
+    var updateShadowMaterial = true
     var shadowMaterial: ShadowMaterial?
     public var enableShadows: Bool = true
     var updateShadowTexture: Bool = true
@@ -166,6 +172,7 @@ open class Renderer
         setupDepthTexture()
         setupStencilTexture()
         setupShadowTexture()
+        setupShadowMaterial()
         
         scene.update()
         camera.update()
@@ -214,6 +221,24 @@ open class Renderer
         for child in object.children
         {
             drawShadows(parellelRenderEncoder: parellelRenderEncoder, object: child)
+        }
+    }
+    
+    public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
+    {
+        if let context = self.context, context.sampleCount > 1
+        {
+            let resolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
+            renderPassDescriptor.colorAttachments[0].resolveTexture = renderTarget
+            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+            renderPassDescriptor.colorAttachments[0].resolveTexture = resolveTexture
+        }
+        else
+        {
+            let renderTexture = renderPassDescriptor.colorAttachments[0].texture
+            renderPassDescriptor.colorAttachments[0].texture = renderTarget
+            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+            renderPassDescriptor.colorAttachments[0].texture = renderTexture
         }
     }
     
@@ -349,11 +374,6 @@ open class Renderer
     public func resize(_ size: (width: Float, height: Float))
     {
         self.size = size
-        
-        let width = Double(size.width)
-        let height = Double(size.height)
-        
-        viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
     }
     
     public func setupDepthTexture()
@@ -435,10 +455,14 @@ open class Renderer
     
     public func setupShadowMaterial()
     {
-        guard let context = self.context else { return }
-        let shadowMaterial = ShadowMaterial(simd_make_float4(0.0, 0.0, 0.0, 1.0))
-        shadowMaterial.context = Context(context.device, context.sampleCount, .invalid, context.depthPixelFormat, .invalid)
-        self.shadowMaterial = shadowMaterial
+        if updateShadowMaterial, enableShadows
+        {
+            guard let context = self.context else { return }
+            let shadowMaterial = ShadowMaterial(simd_make_float4(0.0, 0.0, 0.0, 1.0))
+            shadowMaterial.context = Context(context.device, context.sampleCount, .invalid, context.depthPixelFormat, .invalid)
+            self.shadowMaterial = shadowMaterial
+            updateShadowMaterial = false
+        }
     }
     
     public func setupShadowTexture()

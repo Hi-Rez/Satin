@@ -21,4 +21,11 @@ open class FloatParameter: NSObject, Parameter {
         self.min = min
         self.max = max
     }
+    
+    public init(_ label: String, _ value: Float) {
+        self.label = label
+        self.value = value
+        self.min = 0.0
+        self.max = 1.0
+    }
 }

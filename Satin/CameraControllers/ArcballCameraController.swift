@@ -29,8 +29,12 @@ open class ArcballCameraController {
     var leftMouseDownHandler: Any?
     var leftMouseDraggedHandler: Any?
     var leftMouseUpHandler: Any?
+    var rightMouseDownHandler: Any?
+    var rightMouseDraggedHandler: Any?
+    var rightMouseUpHandler: Any?
+    
     var scrollWheelHandler: Any?
-
+    
     var magnification: Float = 1.0
     var magnifyGestureRecognizer: NSMagnificationGestureRecognizer!
     var rollGestureRecognizer: NSRotationGestureRecognizer!
@@ -137,11 +141,26 @@ open class ArcballCameraController {
             return $0
         }
         
+        rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] in
+            self.rightMouseDown(with: $0)
+            return $0
+        }
+        
+        rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] in
+            self.rightMouseDragged(with: $0)
+            return $0
+        }
+        
+        rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] in
+            self.rightMouseUp(with: $0)
+            return $0
+        }
+        
         scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] in
             self.scrollWheel(with: $0)
             return $0
         }
-                
+        
         magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))
         view.addGestureRecognizer(magnifyGestureRecognizer)
         
@@ -201,6 +220,18 @@ open class ArcballCameraController {
             NSEvent.removeMonitor(leftMouseUpHandler)
         }
         
+        if let rightMouseDownHandler = self.rightMouseDownHandler {
+            NSEvent.removeMonitor(rightMouseDownHandler)
+        }
+        
+        if let rightMouseDraggedHandler = self.rightMouseDraggedHandler {
+            NSEvent.removeMonitor(rightMouseDraggedHandler)
+        }
+        
+        if let rightMouseUpHandler = self.rightMouseUpHandler {
+            NSEvent.removeMonitor(rightMouseUpHandler)
+        }
+        
         if let scrollWheelHandler = self.scrollWheelHandler {
             NSEvent.removeMonitor(scrollWheelHandler)
         }
@@ -223,7 +254,7 @@ open class ArcballCameraController {
     
     #if os(macOS)
     
-    @objc func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {        
+    @objc func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -293,19 +324,59 @@ open class ArcballCameraController {
         }
     }
     
+    func rightMouseDown(with event: NSEvent) {
+        if event.window == view.window {}
+    }
+    
+    func rightMouseDragged(with event: NSEvent) {
+        if event.window == view.window {
+            if abs(event.deltaX) > abs(event.deltaY) {
+                state = .rolling
+                let roll = simd_quatf(angle: -Float(event.deltaX / (0.5 * view.frame.width)), axis: camera.forwardDirection)
+                camera.orientation = simd_mul(roll, camera.orientation)
+            }
+            else {
+                state = .zooming
+                let cameraDistance = max(length(camera.position) * 0.25, 1.0)
+                translationVelocity.z += 2.5 * Float(event.deltaY / (0.5 * view.frame.height)) * translationScalar * cameraDistance
+                translationVelocity.z /= 2.0
+            }
+        }
+    }
+    
+    func rightMouseUp(with event: NSEvent) {
+        if event.window == view.window {
+            state = .inactive
+        }
+    }
+    
     func scrollWheel(with event: NSEvent) {
-        
         if event.window == view.window {
             if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
                 state = .inactive
             }
             else if event.phase == .changed {
-                state = .panning
-                let cameraDistance = max(length(camera.position) * 0.5, 1.0)
-                translationVelocity.x += Float(event.deltaX / 100.0) * translationScalar * cameraDistance
-                translationVelocity.y += Float(event.deltaY / 100.0) * translationScalar * cameraDistance
-                translationVelocity.x /= 2.0
-                translationVelocity.y /= 2.0
+                if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
+                    if abs(event.deltaX) > abs(event.deltaY) {
+                        state = .rolling
+                        let roll = simd_quatf(angle: -Float(event.deltaX / 200.0), axis: camera.forwardDirection)
+                        camera.orientation = simd_mul(roll, camera.orientation)
+                    }
+                    else {
+                        state = .zooming
+                        let cameraDistance = max(length(camera.position) * 0.25, 1.0)
+                        translationVelocity.z += 2.5 * Float(event.deltaY / 100.0) * translationScalar * cameraDistance
+                        translationVelocity.z /= 2.0
+                    }
+                }
+                else if event.phase == .changed {
+                    state = .panning
+                    let cameraDistance = max(length(camera.position) * 0.5, 1.0)
+                    translationVelocity.x += Float(event.deltaX / 100.0) * translationScalar * cameraDistance
+                    translationVelocity.y += Float(event.deltaY / 100.0) * translationScalar * cameraDistance
+                    translationVelocity.x /= 2.0
+                    translationVelocity.y /= 2.0
+                }
             }
         }
     }

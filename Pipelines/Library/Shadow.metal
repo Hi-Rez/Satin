@@ -22,7 +22,7 @@ float calculateShadow( float4 shadowPosition, float4 position, depth2d<float> sh
 	}
 	shadow_sample /= float( total );
 	if( current_sample > shadow_sample ) {
-		lightFactor *= 0.5;
+		lightFactor *= 0.0;
 	}
 	return lightFactor;
 }
