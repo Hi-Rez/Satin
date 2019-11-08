@@ -15,7 +15,7 @@ open class ParameterGroup: Codable {
 
     public init(_ label: String) {
         self.label = label
-    }    
+    }
 
     public func append(_ param: Parameter) {
         params.append(param)
@@ -26,7 +26,7 @@ open class ParameterGroup: Codable {
         case params, title
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.params = try container.decode([AnyParameter].self, forKey: .params).map { $0.base }
     }
@@ -57,29 +57,33 @@ open class ParameterGroup: Codable {
                 if param is FloatParameter {
                     let p = param as! FloatParameter
                     if let mp = paramsMap[label] {
-                        let mfp = mp as! FloatParameter
-                        mfp.value = p.value
+                        if let mfp = mp as? FloatParameter {
+                            mfp.value = p.value
+                        }
                     }
                 }
                 else if param is IntParameter {
                     let p = param as! IntParameter
                     if let mp = paramsMap[label] {
-                        let mip = mp as! IntParameter
-                        mip.value = p.value
+                        if let mip = mp as? IntParameter {
+                            mip.value = p.value
+                        }
                     }
                 }
                 else if param is DoubleParameter {
                     let p = param as! DoubleParameter
                     if let mp = paramsMap[label] {
-                        let mdp = mp as! DoubleParameter
-                        mdp.value = p.value
+                        if let mdp = mp as? DoubleParameter {
+                            mdp.value = p.value
+                        }
                     }
                 }
                 else if param is BoolParameter {
                     let p = param as! BoolParameter
                     if let mp = paramsMap[label] {
-                        let mbp = mp as! BoolParameter
-                        mbp.value = p.value
+                        if let mbp = mp as? BoolParameter { 
+                            mbp.value = p.value
+                        }
                     }
                 }
             }
@@ -95,4 +99,3 @@ extension ParameterGroup: Equatable {
         return lhs.label == rhs.label
     }
 }
-

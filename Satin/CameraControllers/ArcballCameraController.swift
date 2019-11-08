@@ -512,7 +512,7 @@ open class ArcballCameraController {
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
         #if os(macOS)
         return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
-        #elseif os(iOS)
+        #else
         return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
         #endif
     }
