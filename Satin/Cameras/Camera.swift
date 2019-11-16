@@ -33,7 +33,7 @@ open class Camera: Object
         return _projectionMatrix
     }
     
-    public var near: Float = 0.0
+    public var near: Float = 0.01
     {
         didSet
         {
