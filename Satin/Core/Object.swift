@@ -114,6 +114,8 @@ open class Object: Codable {
         return _localMatrix
     }
     
+    // make world position & scale & rotation
+    
     private var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var worldMatrix: matrix_float4x4 {
