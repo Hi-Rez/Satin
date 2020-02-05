@@ -14,7 +14,7 @@ public protocol Parameter: Codable {
 }
 
 public enum ParameterType: String, Codable {
-    case float, bool, int, double, string
+    case float, float2, float3, float4, bool, int, double, string
 
     var metatype: Parameter.Type {
         switch self {
@@ -24,6 +24,12 @@ public enum ParameterType: String, Codable {
             return IntParameter.self
         case .float:
             return FloatParameter.self
+        case .float2:
+            return Float2Parameter.self
+        case .float3:
+            return Float3Parameter.self
+        case .float4:
+            return Float4Parameter.self
         case .double:
             return DoubleParameter.self        
         case .string:

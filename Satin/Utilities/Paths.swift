@@ -24,7 +24,6 @@ public func getResourcePath(_ path: String) -> String?
     return nil
 }
 
-
 public func getPipelinesPath() -> String?
 {
     if let pipelinesPath = getResourcePath("Pipelines") {

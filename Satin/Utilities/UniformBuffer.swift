@@ -8,6 +8,7 @@
 
 import Foundation
 import Metal
+import simd
 
 open class UniformBuffer {
     public var index: Int = 0
@@ -26,7 +27,6 @@ open class UniformBuffer {
         if let parameters = self.parameters {
             var pointerOffset: Int = 0
             for param in parameters.params {
-                
                 var size: Int = 0
                 var alignment: Int = 0
                 if param is BoolParameter {
@@ -40,6 +40,18 @@ open class UniformBuffer {
                 else if param is FloatParameter {
                     size = MemoryLayout<Float>.size
                     alignment = MemoryLayout<Float>.alignment
+                }
+                else if param is Float2Parameter {
+                    size = MemoryLayout<simd_float2>.size
+                    alignment = MemoryLayout<simd_float2>.alignment
+                }
+                else if param is Float3Parameter {
+                    size = MemoryLayout<simd_float3>.size
+                    alignment = MemoryLayout<simd_float3>.alignment
+                }
+                else if param is Float4Parameter {
+                    size = MemoryLayout<simd_float4>.size
+                    alignment = MemoryLayout<simd_float4>.alignment
                 }
                 let rem = pointerOffset % alignment
                 if rem > 0 {
@@ -121,6 +133,71 @@ open class UniformBuffer {
                     
                     pointer.storeBytes(of: floatParam.value, as: Float.self)
                     pointer += size
+                    pointerOffset += size
+                }
+                else if param is Float2Parameter {
+                    let floatParam = param as! Float2Parameter
+                    let size = MemoryLayout<simd_float2>.size
+                    let alignment = MemoryLayout<simd_float2>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let fsize = MemoryLayout<Float>.size
+                    pointer.storeBytes(of: floatParam.x, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.y, as: Float.self)
+                    pointer += fsize
+                    pointerOffset += size
+                }
+                else if param is Float3Parameter {
+                    let floatParam = param as! Float3Parameter
+                    let size = MemoryLayout<simd_float3>.size
+                    let alignment = MemoryLayout<simd_float3>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let fsize = MemoryLayout<Float>.size
+                    pointer.storeBytes(of: floatParam.x, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.y, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.z, as: Float.self)
+                    pointer += fsize
+                    // because alignment is 16 not 12
+                    pointer += fsize
+                    pointerOffset += size
+                }
+                else if param is Float4Parameter {
+                    let floatParam = param as! Float4Parameter
+                    let size = MemoryLayout<simd_float4>.size
+                    let alignment = MemoryLayout<simd_float4>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let fsize = MemoryLayout<Float>.size
+                    pointer.storeBytes(of: floatParam.x, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.y, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.z, as: Float.self)
+                    pointer += fsize
+                    pointer.storeBytes(of: floatParam.w, as: Float.self)
+                    pointer += fsize
                     pointerOffset += size
                 }
             }

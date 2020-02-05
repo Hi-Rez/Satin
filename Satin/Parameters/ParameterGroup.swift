@@ -62,6 +62,36 @@ open class ParameterGroup: Codable {
                         }
                     }
                 }
+                else if param is Float2Parameter {
+                    let p = param as! Float2Parameter
+                    if let mp = paramsMap[label] {
+                        if let mfp = mp as? Float2Parameter {
+                            mfp.x = p.x
+                            mfp.y = p.y
+                        }
+                    }
+                }
+                else if param is Float3Parameter {
+                    let p = param as! Float3Parameter
+                    if let mp = paramsMap[label] {
+                        if let mfp = mp as? Float3Parameter {
+                            mfp.x = p.x
+                            mfp.y = p.y
+                            mfp.z = p.z
+                        }
+                    }
+                }
+                else if param is Float4Parameter {
+                    let p = param as! Float4Parameter
+                    if let mp = paramsMap[label] {
+                        if let mfp = mp as? Float4Parameter {
+                            mfp.x = p.x
+                            mfp.y = p.y
+                            mfp.z = p.z
+                            mfp.w = p.w
+                        }
+                    }
+                }
                 else if param is IntParameter {
                     let p = param as! IntParameter
                     if let mp = paramsMap[label] {
@@ -81,7 +111,7 @@ open class ParameterGroup: Codable {
                 else if param is BoolParameter {
                     let p = param as! BoolParameter
                     if let mp = paramsMap[label] {
-                        if let mbp = mp as? BoolParameter { 
+                        if let mbp = mp as? BoolParameter {
                             mbp.value = p.value
                         }
                     }
