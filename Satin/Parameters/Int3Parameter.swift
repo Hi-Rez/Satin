@@ -1,20 +1,21 @@
 //
-//  Int2Parameter.swift
+//  Int3Parameter.swift
 //  Satin
 //
-//  Created by Reza Ali on 2/5/20.
+//  Created by Reza Ali on 2/10/20.
 //  Copyright © 2020 Reza Ali. All rights reserved.
 //
 
 import Foundation
 import simd
 
-open class Int2Parameter: NSObject, Parameter {
-    public static var type = ParameterType.int2
+open class Int3Parameter: NSObject, Parameter {
+    public static var type = ParameterType.int3
     public let label: String
     
     @objc dynamic var x: Int32
     @objc dynamic var y: Int32
+    @objc dynamic var z: Int32
     
     @objc dynamic var minX: Int32
     @objc dynamic var maxX: Int32
@@ -22,60 +23,73 @@ open class Int2Parameter: NSObject, Parameter {
     @objc dynamic var minY: Int32
     @objc dynamic var maxY: Int32
     
-    public var value: simd_int2 {
+    @objc dynamic var minZ: Int32
+    @objc dynamic var maxZ: Int32
+    
+    public var value: simd_int3 {
         get {
-            return simd_make_int2(x, y)
+            return simd_make_int3(x, y, z)
         }
         set(newValue) {
             x = newValue.x
             y = newValue.y
+            z = newValue.z
         }
     }
     
-    public var min: simd_int2 {
+    public var min: simd_int3 {
         get {
-            return simd_make_int2(minX, minY)
+            return simd_make_int3(minX, minY, minZ)
         }
         set(newValue) {
             minX = newValue.x
             minY = newValue.y
+            minZ = newValue.z
         }
     }
     
-    
-    public var max: simd_int2 {
+    public var max: simd_int3 {
         get {
-            return simd_make_int2(maxX, maxY)
+            return simd_make_int3(maxX, maxY, maxZ)
         }
         set(newValue) {
             maxX = newValue.x
             maxY = newValue.y
+            maxZ = newValue.z
         }
     }
 
-    public init(_ label: String, _ value: simd_int2, _ min: simd_int2, _ max: simd_int2) {
+    public init(_ label: String, _ value: simd_int3, _ min: simd_int3, _ max: simd_int3) {
         self.label = label
         
         self.x = value.x
         self.y = value.y
+        self.z = value.z
         
         self.minX = min.x
         self.maxX = max.x
         
         self.minY = min.y
         self.maxY = max.y
+        
+        self.minZ = min.z
+        self.maxZ = max.z
     }
     
-    public init(_ label: String, _ value: simd_int2) {
+    public init(_ label: String, _ value: simd_int3) {
         self.label = label
         
         self.x = value.x
         self.y = value.y
+        self.z = value.z
         
         self.minX = 0
         self.maxX = 100
         
         self.minY = 0
         self.maxY = 100
+        
+        self.minZ = 0
+        self.maxZ = 100
     }
 }

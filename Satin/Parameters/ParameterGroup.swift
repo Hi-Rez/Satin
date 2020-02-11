@@ -109,6 +109,16 @@ open class ParameterGroup: Codable {
                         }
                     }
                 }
+                else if param is Int3Parameter {
+                    let p = param as! Int3Parameter
+                    if let mp = paramsMap[label] {
+                        if let mip = mp as? Int3Parameter {
+                            mip.x = p.x
+                            mip.y = p.y
+                            mip.z = p.z
+                        }
+                    }
+                }
                 else if param is DoubleParameter {
                     let p = param as! DoubleParameter
                     if let mp = paramsMap[label] {

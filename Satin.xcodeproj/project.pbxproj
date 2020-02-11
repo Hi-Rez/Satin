@@ -49,6 +49,12 @@
 		E1670B9A2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
 		E1670B9B2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
 		E1670B9C2331C77E00107129 /* Simd+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1670B992331C77E00107129 /* Simd+Extensions.swift */; };
+		E16E1A2523F2844F0095561D /* Int3Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2423F2844F0095561D /* Int3Parameter.swift */; };
+		E16E1A2623F2844F0095561D /* Int3Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2423F2844F0095561D /* Int3Parameter.swift */; };
+		E16E1A2723F2844F0095561D /* Int3Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2423F2844F0095561D /* Int3Parameter.swift */; };
+		E16E1A2923F28A580095561D /* Int4Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2823F28A580095561D /* Int4Parameter.swift */; };
+		E16E1A2A23F28A580095561D /* Int4Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2823F28A580095561D /* Int4Parameter.swift */; };
+		E16E1A2B23F28A580095561D /* Int4Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16E1A2823F28A580095561D /* Int4Parameter.swift */; };
 		E188243122F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243022F8E391001DC5E9 /* OrthographicCamera.swift */; };
 		E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */; };
@@ -192,6 +198,8 @@
 		E1670B892331C04F00107129 /* GesturalCameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GesturalCameraController.swift; sourceTree = "<group>"; };
 		E1670B8B2331C1C800107129 /* Pipelines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipelines.swift; sourceTree = "<group>"; };
 		E1670B992331C77E00107129 /* Simd+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Simd+Extensions.swift"; sourceTree = "<group>"; };
+		E16E1A2423F2844F0095561D /* Int3Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int3Parameter.swift; sourceTree = "<group>"; };
+		E16E1A2823F28A580095561D /* Int4Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int4Parameter.swift; sourceTree = "<group>"; };
 		E188243022F8E391001DC5E9 /* OrthographicCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrthographicCamera.swift; sourceTree = "<group>"; };
 		E188243322F9F1EF001DC5E9 /* MetalFileCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalFileCompiler.swift; sourceTree = "<group>"; };
 		E190D678230F430B00034600 /* Pipelines */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Pipelines; sourceTree = "<group>"; };
@@ -444,6 +452,8 @@
 				E1D03FEF23EAA18B008FA401 /* Float4Parameter.swift */,
 				E1B552BD236F860000BAF96D /* IntParameter.swift */,
 				E12EACEC23EB4AE1007D6208 /* Int2Parameter.swift */,
+				E16E1A2423F2844F0095561D /* Int3Parameter.swift */,
+				E16E1A2823F28A580095561D /* Int4Parameter.swift */,
 			);
 			path = Parameters;
 			sourceTree = "<group>";
@@ -659,10 +669,12 @@
 				E1F3751E2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */,
 				E188243422F9F1EF001DC5E9 /* MetalFileCompiler.swift in Sources */,
+				E16E1A2523F2844F0095561D /* Int3Parameter.swift in Sources */,
 				E12625152344BF94007DB8C6 /* ShadowUniforms.swift in Sources */,
 				E1D03FF023EAA18B008FA401 /* Float4Parameter.swift in Sources */,
 				E19FA60022E7D89600A43BB4 /* Renderer.swift in Sources */,
 				E19FA5CD22E7CC7900A43BB4 /* VertexUniforms.swift in Sources */,
+				E16E1A2923F28A580095561D /* Int4Parameter.swift in Sources */,
 				E19FA60822E8A9E200A43BB4 /* Map.swift in Sources */,
 				E1670B9A2331C77E00107129 /* Simd+Extensions.swift in Sources */,
 				E1B552C7236F860000BAF96D /* AnyParameter.swift in Sources */,
@@ -683,6 +695,7 @@
 				E188243222F8E391001DC5E9 /* OrthographicCamera.swift in Sources */,
 				E1F3751F2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E1B552D4236F860000BAF96D /* IntParameter.swift in Sources */,
+				E16E1A2A23F28A580095561D /* Int4Parameter.swift in Sources */,
 				E12625162344BF94007DB8C6 /* ShadowUniforms.swift in Sources */,
 				E19FA62F22E8B6F400A43BB4 /* Math.swift in Sources */,
 				E1B552CE236F860000BAF96D /* ParameterGroup.swift in Sources */,
@@ -703,6 +716,7 @@
 				E1670B8D2331C1C800107129 /* Pipelines.swift in Sources */,
 				E1B552CB236F860000BAF96D /* StringParameter.swift in Sources */,
 				E13F425C2316686900D94603 /* BoxGeometry.swift in Sources */,
+				E16E1A2623F2844F0095561D /* Int3Parameter.swift in Sources */,
 				E19FA63522E8B6F400A43BB4 /* VertexUniforms.swift in Sources */,
 				E1B552C8236F860000BAF96D /* AnyParameter.swift in Sources */,
 				E19369D02342590500955737 /* ShadowMaterial.swift in Sources */,
@@ -740,6 +754,7 @@
 				E1E11E27230E61AC00E86791 /* Geometry.swift in Sources */,
 				E1F375202323120E00048102 /* CircleGeometry.swift in Sources */,
 				E1B552D5236F860000BAF96D /* IntParameter.swift in Sources */,
+				E16E1A2B23F28A580095561D /* Int4Parameter.swift in Sources */,
 				E12625172344BF94007DB8C6 /* ShadowUniforms.swift in Sources */,
 				E1E11E26230E61A800E86791 /* Mesh.swift in Sources */,
 				E1B552CF236F860000BAF96D /* ParameterGroup.swift in Sources */,
@@ -760,6 +775,7 @@
 				E13F425D2316686900D94603 /* BoxGeometry.swift in Sources */,
 				E1B552CC236F860000BAF96D /* StringParameter.swift in Sources */,
 				E1E11E1A230E618600E86791 /* MetalFileCompiler.swift in Sources */,
+				E16E1A2723F2844F0095561D /* Int3Parameter.swift in Sources */,
 				E19369D12342590500955737 /* ShadowMaterial.swift in Sources */,
 				E1B552C9236F860000BAF96D /* AnyParameter.swift in Sources */,
 				E19B69622315E1D10001B1A8 /* FileWatcher.swift in Sources */,

@@ -41,6 +41,14 @@ open class UniformBuffer {
                     size = MemoryLayout<simd_int2>.size
                     alignment = MemoryLayout<simd_int2>.alignment
                 }
+                else if param is Int3Parameter {
+                    size = MemoryLayout<simd_int3>.size
+                    alignment = MemoryLayout<simd_int3>.alignment
+                }
+                else if param is Int4Parameter {
+                    size = MemoryLayout<simd_int4>.size
+                    alignment = MemoryLayout<simd_int4>.alignment
+                }
                 else if param is FloatParameter {
                     size = MemoryLayout<Float>.size
                     alignment = MemoryLayout<Float>.alignment
@@ -139,6 +147,52 @@ open class UniformBuffer {
                     pointer.storeBytes(of: intParam.x, as: Int32.self)
                     pointer += isize
                     pointer.storeBytes(of: intParam.y, as: Int32.self)
+                    pointer += isize
+                    pointerOffset += size
+                }
+                else if param is Int3Parameter {
+                    let intParam = param as! Int3Parameter
+                    let size = MemoryLayout<simd_int3>.size
+                    let alignment = MemoryLayout<simd_int3>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let isize = MemoryLayout<Int32>.size
+                    pointer.storeBytes(of: intParam.x, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.y, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.z, as: Int32.self)
+                    pointer += isize
+                    // because alignment is 16 not 12
+                    pointer += isize
+                    pointerOffset += size
+                }
+                else if param is Int4Parameter {
+                    let intParam = param as! Int4Parameter
+                    let size = MemoryLayout<simd_int4>.size
+                    let alignment = MemoryLayout<simd_int4>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let isize = MemoryLayout<Int32>.size
+                    pointer.storeBytes(of: intParam.x, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.y, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.z, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.w, as: Int32.self)
                     pointer += isize
                     pointerOffset += size
                 }
