@@ -100,6 +100,15 @@ open class ParameterGroup: Codable {
                         }
                     }
                 }
+                else if param is Int2Parameter {
+                    let p = param as! Int2Parameter
+                    if let mp = paramsMap[label] {
+                        if let mip = mp as? Int2Parameter {
+                            mip.x = p.x
+                            mip.y = p.y
+                        }
+                    }
+                }
                 else if param is DoubleParameter {
                     let p = param as! DoubleParameter
                     if let mp = paramsMap[label] {

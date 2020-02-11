@@ -37,6 +37,10 @@ open class UniformBuffer {
                     size = MemoryLayout<Int32>.size
                     alignment = MemoryLayout<Int32>.alignment
                 }
+                else if param is Int2Parameter {
+                    size = MemoryLayout<simd_int2>.size
+                    alignment = MemoryLayout<simd_int2>.alignment
+                }
                 else if param is FloatParameter {
                     size = MemoryLayout<Float>.size
                     alignment = MemoryLayout<Float>.alignment
@@ -117,6 +121,25 @@ open class UniformBuffer {
                     
                     pointer.storeBytes(of: Int32(intParam.value), as: Int32.self)
                     pointer += size
+                    pointerOffset += size
+                }
+                else if param is Int2Parameter {
+                    let intParam = param as! Int2Parameter
+                    let size = MemoryLayout<simd_int2>.size
+                    let alignment = MemoryLayout<simd_int2>.alignment
+                    let rem = pointerOffset % alignment
+                    
+                    if rem > 0 {
+                        let offset = alignment - rem
+                        pointer += offset
+                        pointerOffset += offset
+                    }
+                    
+                    let isize = MemoryLayout<Int32>.size
+                    pointer.storeBytes(of: intParam.x, as: Int32.self)
+                    pointer += isize
+                    pointer.storeBytes(of: intParam.y, as: Int32.self)
+                    pointer += isize
                     pointerOffset += size
                 }
                 else if param is FloatParameter {
