@@ -10,7 +10,19 @@ import Foundation
 
 public protocol Parameter: Codable {
     static var type: ParameterType { get }
+    var controlType: ControlType { get set }
     var label: String { get }
+}
+
+public enum ControlType: String, Codable {
+    case unknown
+    case slider
+    case multislider
+    case xypad
+    case toggle
+    case button
+    case inputfield
+    case colorpicker
 }
 
 public enum ParameterType: String, Codable {

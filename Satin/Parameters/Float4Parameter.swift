@@ -11,12 +11,13 @@ import simd
 
 open class Float4Parameter: NSObject, Parameter {
     public static var type = ParameterType.float4
+    public var controlType: ControlType
     public let label: String
     
-    @objc dynamic var x: Float
-    @objc dynamic var y: Float
-    @objc dynamic var z: Float
-    @objc dynamic var w: Float
+    @objc dynamic public var x: Float
+    @objc dynamic public var y: Float
+    @objc dynamic public var z: Float
+    @objc dynamic public var w: Float
     
     @objc dynamic var minX: Float
     @objc dynamic var maxX: Float
@@ -67,8 +68,10 @@ open class Float4Parameter: NSObject, Parameter {
         }
     }
 
-    public init(_ label: String, _ value: simd_float4, _ min: simd_float4, _ max: simd_float4) {
+    public init(_ label: String, _ value: simd_float4, _ min: simd_float4, _ max: simd_float4, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
+        
         self.x = value.x
         self.y = value.y
         self.z = value.z
@@ -87,8 +90,10 @@ open class Float4Parameter: NSObject, Parameter {
         self.maxW = max.w
     }
     
-    public init(_ label: String, _ value: simd_float4) {
+    public init(_ label: String, _ value: simd_float4, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
+        
         self.x = value.x
         self.y = value.y
         self.z = value.z

@@ -11,6 +11,7 @@ import simd
 
 open class Int4Parameter: NSObject, Parameter {
     public static var type = ParameterType.int4
+    public var controlType: ControlType
     public let label: String
     
     @objc dynamic var x: Int32
@@ -66,8 +67,9 @@ open class Int4Parameter: NSObject, Parameter {
         }
     }
     
-    public init(_ label: String, _ value: simd_int4, _ min: simd_int4, _ max: simd_int4) {
+    public init(_ label: String, _ value: simd_int4, _ min: simd_int4, _ max: simd_int4, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
         
         self.x = value.x
         self.y = value.y
@@ -87,8 +89,9 @@ open class Int4Parameter: NSObject, Parameter {
         self.maxW = max.w
     }
     
-    public init(_ label: String, _ value: simd_int4) {
+    public init(_ label: String, _ value: simd_int4, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
         
         self.x = value.x
         self.y = value.y

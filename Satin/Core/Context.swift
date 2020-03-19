@@ -9,11 +9,11 @@
 import Metal
 
 open class Context {
-    var device: MTLDevice
-    var sampleCount: Int
-    var colorPixelFormat: MTLPixelFormat
-    var depthPixelFormat: MTLPixelFormat
-    var stencilPixelFormat: MTLPixelFormat
+    public var device: MTLDevice
+    public var sampleCount: Int
+    public var colorPixelFormat: MTLPixelFormat
+    public var depthPixelFormat: MTLPixelFormat
+    public var stencilPixelFormat: MTLPixelFormat
 
     public init(_ device: MTLDevice,
                 _ sampleCount: Int,

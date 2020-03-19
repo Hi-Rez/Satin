@@ -89,6 +89,11 @@ open class UniformBuffer {
         updateBuffer()
     }
     
+    public func reset()
+    {
+        index = -1
+    }
+    
     func updateOffset() {
         index = (index + 1) % maxBuffersInFlight
         offset = alignedSize * index

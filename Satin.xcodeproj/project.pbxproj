@@ -440,12 +440,12 @@
 		E1B552B5236F860000BAF96D /* Parameters */ = {
 			isa = PBXGroup;
 			children = (
-				E1B552B6236F860000BAF96D /* BoolParameter.swift */,
 				E1B552B7236F860000BAF96D /* Parameter.swift */,
-				E1B552B8236F860000BAF96D /* DoubleParameter.swift */,
 				E1B552B9236F860000BAF96D /* AnyParameter.swift */,
-				E1B552BA236F860000BAF96D /* StringParameter.swift */,
 				E1B552BB236F860000BAF96D /* ParameterGroup.swift */,
+				E1B552B6236F860000BAF96D /* BoolParameter.swift */,
+				E1B552B8236F860000BAF96D /* DoubleParameter.swift */,
+				E1B552BA236F860000BAF96D /* StringParameter.swift */,
 				E1B552BC236F860000BAF96D /* FloatParameter.swift */,
 				E1D03FE723EA970A008FA401 /* Float2Parameter.swift */,
 				E1D03FEB23EA9E47008FA401 /* Float3Parameter.swift */,

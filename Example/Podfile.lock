@@ -1,6 +1,6 @@
 PODS:
   - Forge (0.0.8)
-  - Satin (0.1.6)
+  - Satin (0.2.0)
 
 DEPENDENCIES:
   - Forge (= 0.0.8)
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Forge: 9ab0ab1075eb9a48e3c4a70a5127d2cdd95fd490
-  Satin: 0f990cff01fac8f3b5ebc0652cc53e76b05a1fc2
+  Satin: e73bdaa91e191a6a47d547f4612e17e537686d98
 
 PODFILE CHECKSUM: bc40953845094bc8b32143ee59952a4b1bf4043e
 

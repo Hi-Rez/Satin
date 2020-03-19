@@ -11,6 +11,7 @@ import simd
 
 open class Float3Parameter: NSObject, Parameter {
     public static var type = ParameterType.float3
+    public var controlType: ControlType
     public let label: String
     
     @objc dynamic var x: Float
@@ -60,28 +61,37 @@ open class Float3Parameter: NSObject, Parameter {
         }
     }
 
-    public init(_ label: String, _ value: simd_float3, _ min: simd_float3, _ max: simd_float3) {
+    public init(_ label: String, _ value: simd_float3, _ min: simd_float3, _ max: simd_float3, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
+        
         self.x = value.x
         self.y = value.y
         self.z = value.z
         self.minX = min.x
         self.maxX = max.x
+        
         self.minY = min.y
         self.maxY = max.y
+        
         self.minZ = min.z
         self.maxZ = max.z
     }
     
-    public init(_ label: String, _ value: simd_float3) {
+    public init(_ label: String, _ value: simd_float3, _ controlType: ControlType = .unknown) {
         self.label = label
+        self.controlType = controlType
+        
         self.x = value.x
         self.y = value.y
         self.z = value.z
+        
         self.minX = 0.0
         self.maxX = 1.0
+        
         self.minY = 0.0
         self.maxY = 1.0
+        
         self.minZ = 0.0
         self.maxZ = 1.0
     }
