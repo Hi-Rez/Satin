@@ -63,9 +63,9 @@ open class PlaneGeometry: Geometry {
                 let fy = Float(y)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(cx + fx * dx, cy + fy * dy, 0.0, 1.0),
+                        SIMD4<Float>(cx + fx * dx, 0.0, cy + fy * dy, 1.0),
                         SIMD2<Float>(fx / bx, fy / by),
-                        SIMD3<Float>(0.0, 0.0, 1.0)
+                        SIMD3<Float>(0.0, 1.0, 1.0)
                     )
                 )
                 

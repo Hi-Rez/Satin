@@ -177,6 +177,9 @@
 		E1F3753423261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
 		E1F3753523261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
 		E1F3753623261B3500048102 /* ConeGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3753323261B3500048102 /* ConeGeometry.swift */; };
+		E1FC6A8F24240BE40037A47D /* QuadGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FC6A8E24240BE30037A47D /* QuadGeometry.swift */; };
+		E1FC6A9024240BE40037A47D /* QuadGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FC6A8E24240BE30037A47D /* QuadGeometry.swift */; };
+		E1FC6A9124240BE40037A47D /* QuadGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FC6A8E24240BE30037A47D /* QuadGeometry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -246,6 +249,7 @@
 		E1F3752B23256A7500048102 /* CylinderGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CylinderGeometry.swift; sourceTree = "<group>"; };
 		E1F3752F2326137D00048102 /* TorusGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorusGeometry.swift; sourceTree = "<group>"; };
 		E1F3753323261B3500048102 /* ConeGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConeGeometry.swift; sourceTree = "<group>"; };
+		E1FC6A8E24240BE30037A47D /* QuadGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuadGeometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,6 +368,7 @@
 				E13610302329834000A01AFF /* IcoSphereGeometry.swift */,
 				E136103623299A0F00A01AFF /* CapsuleGeometry.swift */,
 				E136103A2329B6A600A01AFF /* ParametricGeometry.swift */,
+				E1FC6A8E24240BE30037A47D /* QuadGeometry.swift */,
 			);
 			path = Geometry;
 			sourceTree = "<group>";
@@ -665,6 +670,7 @@
 				E1F375222323185700048102 /* TriangleGeometry.swift in Sources */,
 				E1B552CD236F860000BAF96D /* ParameterGroup.swift in Sources */,
 				E13610312329834000A01AFF /* IcoSphereGeometry.swift in Sources */,
+				E1FC6A8F24240BE40037A47D /* QuadGeometry.swift in Sources */,
 				E1B552BE236F860000BAF96D /* BoolParameter.swift in Sources */,
 				E1F3751E2323120E00048102 /* CircleGeometry.swift in Sources */,
 				E19FA5C922E7CC2200A43BB4 /* Vertex.swift in Sources */,
@@ -741,6 +747,7 @@
 				E19FA63722E8B6F400A43BB4 /* Mesh.swift in Sources */,
 				E19FA63822E8B6F400A43BB4 /* Geometry.swift in Sources */,
 				E19FA63922E8B6F400A43BB4 /* PlaneGeometry.swift in Sources */,
+				E1FC6A9024240BE40037A47D /* QuadGeometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +807,7 @@
 				E1E11E1F230E619900E86791 /* OrthographicCamera.swift in Sources */,
 				E1E11E25230E61A800E86791 /* Object.swift in Sources */,
 				E1E11E1C230E619500E86791 /* Math.swift in Sources */,
+				E1FC6A9124240BE40037A47D /* QuadGeometry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
