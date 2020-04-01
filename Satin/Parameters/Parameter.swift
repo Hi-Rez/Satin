@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Parameter: Codable {
+public protocol Parameter: NSObject, Codable {
     static var type: ParameterType { get }
     var controlType: ControlType { get set }
     var label: String { get }

@@ -138,7 +138,7 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     }
     
     func setupDepthStencilState() {
-        guard let context = self.context else { return }
+        guard let context = self.context, context.depthPixelFormat != .invalid else { return }
         let device = context.device
         let depthStateDesciptor = MTLDepthStencilDescriptor()
         depthStateDesciptor.depthCompareFunction = depthCompareFunction
@@ -197,11 +197,13 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard let vertexBuffer = vertexBuffer, let depthStencilState = self.depthStencilState else { return }
+        guard let vertexBuffer = vertexBuffer else { return }
         
         preDraw?(renderEncoder)
         
-        renderEncoder.setDepthStencilState(depthStencilState)
+        if let depthStencilState = self.depthStencilState {
+            renderEncoder.setDepthStencilState(depthStencilState)
+        }
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
