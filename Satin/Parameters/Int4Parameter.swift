@@ -14,10 +14,10 @@ open class Int4Parameter: NSObject, Parameter {
     public var controlType: ControlType
     public let label: String
     
-    @objc dynamic var x: Int32
-    @objc dynamic var y: Int32
-    @objc dynamic var z: Int32
-    @objc dynamic var w: Int32
+    @objc dynamic public var x: Int32
+    @objc dynamic public var y: Int32
+    @objc dynamic public var z: Int32
+    @objc dynamic public var w: Int32
     
     @objc dynamic var minX: Int32
     @objc dynamic var maxX: Int32
