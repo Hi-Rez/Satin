@@ -6,10 +6,6 @@
 //
 
 import MetalKit
-#if os(macOS)
-import Cocoa
-#endif
-
 import simd
 
 public enum ArcballCameraControllerState {
