@@ -706,7 +706,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-macOS";
 				PRODUCT_NAME = SatinExample;
 				SWIFT_VERSION = 5.0;
 			};
@@ -726,7 +726,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-macOS";
 				PRODUCT_NAME = SatinExample;
 				SWIFT_VERSION = 5.0;
 			};
