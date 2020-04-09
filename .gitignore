@@ -5,6 +5,10 @@
 ## Build generated
 build/
 DerivedData/
+.idea/
+
+## Bundler
+vendor/
 
 ## Various settings
 *.pbxuser
