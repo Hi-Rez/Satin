@@ -1,0 +1,23 @@
+PODS:
+  - Forge (0.0.8)
+  - Satin (0.2.0)
+
+DEPENDENCIES:
+  - Forge (= 0.0.8)
+  - Satin (from `./`)
+
+SPEC REPOS:
+  trunk:
+    - Forge
+
+EXTERNAL SOURCES:
+  Satin:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  Forge: 9ab0ab1075eb9a48e3c4a70a5127d2cdd95fd490
+  Satin: e73bdaa91e191a6a47d547f4612e17e537686d98
+
+PODFILE CHECKSUM: 6282013c8c2d5b2af36958c0566a177974550129
+
+COCOAPODS: 1.8.4
