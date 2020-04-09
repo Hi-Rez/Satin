@@ -115,9 +115,9 @@ open class ArcballCameraController {
     }
     
     func updatePosition() {
-        camera.position += camera.forwardDirection * translationVelocity.z
-        camera.position += camera.rightDirection * translationVelocity.x
-        camera.position += camera.upDirection * translationVelocity.y
+        camera.position += simd_make_float3(camera.forwardDirection * translationVelocity.z)
+        camera.position += simd_make_float3(camera.rightDirection * translationVelocity.x)
+        camera.position += simd_make_float3(camera.upDirection * translationVelocity.y)
     }
     
     open func enable() {

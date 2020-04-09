@@ -12,58 +12,44 @@
 		66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		66E6788F243EC73B0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
-		66E678A8243EC8FD0070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A6243EC8FD0070B294 /* Main.storyboard */; };
 		66E678AA243EC8FE0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
-		66E678AD243EC8FE0070B294 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678AB243EC8FE0070B294 /* LaunchScreen.storyboard */; };
 		66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
-		66E678CC243EE1F70070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CB243EE1F70070B294 /* GameViewController.swift */; };
 		66E678D0243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
 		66E678D1243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
 		66E678D2243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
 		66E678D3243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
 		66E678D4243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
 		66E678D5243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
-		66E678D8243EE2C50070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678D6243EE2C50070B294 /* Main.storyboard */; };
-		66E678DC243EE6C70070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678DB243EE6C70070B294 /* GameViewController.swift */; };
-		66E678E1243EE6D50070B294 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */; };
-		66E678E2243EE6D50070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678DF243EE6D50070B294 /* Main.storyboard */; };
 		66E678E6243EE7670070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
-		66E678E8243EE9990070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678E7243EE9990070B294 /* GameViewController.swift */; };
 		7E3E2D77FA2FC4E8EDA54FC8 /* Pods_Example_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */; };
+		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		52F3A7177346BC870EC61F54 /* Pods-Example-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		591BEE08661F3801AE4293B7 /* Pods_Example_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59F0A131AC0004E45404CD8E /* Pods-Example-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.release.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.release.xcconfig"; sourceTree = "<group>"; };
-		66E67889243EC73A0070B294 /* SatinExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E67889243EC73A0070B294 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E6788C243EC73A0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		66E6788E243EC73B0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66E67893243EC73B0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66E67894243EC73B0070B294 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
-		66E6789E243EC8FD0070B294 /* SatinExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E6789E243EC8FD0070B294 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E678A0243EC8FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678A7243EC8FD0070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66E678A9243EC8FE0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		66E678AC243EC8FE0070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		66E678AE243EC8FE0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		66E678B6243EC9FD0070B294 /* SatinExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66E678B6243EC9FD0070B294 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E678B8243EC9FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678C4243EC9FD0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		66E678CB243EE1F70070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = "Example-macOS/GameViewController.swift"; sourceTree = SOURCE_ROOT; };
 		66E678CE243EE22C0070B294 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = Shared/Shaders.metal; sourceTree = SOURCE_ROOT; };
 		66E678CF243EE22C0070B294 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Renderer.swift; path = Shared/Renderer.swift; sourceTree = SOURCE_ROOT; };
-		66E678D7243EE2C50070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		66E678DB243EE6C70070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		66E678DE243EE6D40070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		66E678E0243EE6D50070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66E678E5243EE7670070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		66E678E7243EE9990070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		76601F1DEA0AAA184B9900BB /* Pods-Example-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7740F9792482B61A84336F8D /* Pods-Example-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.release.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE2F865FBB99D944698B6A24 /* Pods-Example-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CC7B8AA8B481D8E56668866F /* Pods_Example_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF5EDFAC5DDB7D28C8B7F1DB /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,9 +85,9 @@
 			isa = PBXGroup;
 			children = (
 				66E678CD243EE2190070B294 /* Shared */,
-				66E6789F243EC8FD0070B294 /* Example-iOS */,
-				66E6788B243EC73A0070B294 /* Example-macOS */,
-				66E678B7243EC9FD0070B294 /* Example-tvOS */,
+				66E6788B243EC73A0070B294 /* macOS */,
+				66E6789F243EC8FD0070B294 /* iOS */,
+				66E678B7243EC9FD0070B294 /* tvOS */,
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
@@ -111,50 +97,43 @@
 		66E6788A243EC73A0070B294 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				66E67889243EC73A0070B294 /* SatinExample.app */,
-				66E6789E243EC8FD0070B294 /* SatinExample.app */,
-				66E678B6243EC9FD0070B294 /* SatinExample.app */,
+				66E67889243EC73A0070B294 /* Example.app */,
+				66E6789E243EC8FD0070B294 /* Example.app */,
+				66E678B6243EC9FD0070B294 /* Example.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		66E6788B243EC73A0070B294 /* Example-macOS */ = {
+		66E6788B243EC73A0070B294 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
-				66E6788C243EC73A0070B294 /* AppDelegate.swift */,
-				66E678CB243EE1F70070B294 /* GameViewController.swift */,
-				66E6788E243EC73B0070B294 /* Assets.xcassets */,
-				66E678D6243EE2C50070B294 /* Main.storyboard */,
 				66E67893243EC73B0070B294 /* Info.plist */,
+				66E6788E243EC73B0070B294 /* Assets.xcassets */,
+				66E6788C243EC73A0070B294 /* AppDelegate.swift */,
 				66E67894243EC73B0070B294 /* Example.entitlements */,
+				E124FB3F243F8E5100380783 /* MainMenu.xib */,
 			);
-			path = "Example-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
-		66E6789F243EC8FD0070B294 /* Example-iOS */ = {
+		66E6789F243EC8FD0070B294 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				66E678A0243EC8FD0070B294 /* AppDelegate.swift */,
-				66E678E7243EE9990070B294 /* GameViewController.swift */,
+				E124FB41243F8F7900380783 /* Info.plist */,
 				66E678A9243EC8FE0070B294 /* Assets.xcassets */,
-				66E678AB243EC8FE0070B294 /* LaunchScreen.storyboard */,
-				66E678A6243EC8FD0070B294 /* Main.storyboard */,
-				66E678AE243EC8FE0070B294 /* Info.plist */,
+				66E678A0243EC8FD0070B294 /* AppDelegate.swift */,
 			);
-			path = "Example-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		66E678B7243EC9FD0070B294 /* Example-tvOS */ = {
+		66E678B7243EC9FD0070B294 /* tvOS */ = {
 			isa = PBXGroup;
 			children = (
-				66E678B8243EC9FD0070B294 /* AppDelegate.swift */,
-				66E678DB243EE6C70070B294 /* GameViewController.swift */,
+				E124FB43243F8F9600380783 /* Info.plist */,
 				66E678E5243EE7670070B294 /* Assets.xcassets */,
-				66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */,
-				66E678DF243EE6D50070B294 /* Main.storyboard */,
-				66E678C4243EC9FD0070B294 /* Info.plist */,
+				66E678B8243EC9FD0070B294 /* AppDelegate.swift */,
 			);
-			path = "Example-tvOS";
+			path = tvOS;
 			sourceTree = "<group>";
 		};
 		66E678CD243EE2190070B294 /* Shared */ = {
@@ -209,7 +188,7 @@
 			);
 			name = "Example-macOS";
 			productName = Example;
-			productReference = 66E67889243EC73A0070B294 /* SatinExample.app */;
+			productReference = 66E67889243EC73A0070B294 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		66E6789D243EC8FD0070B294 /* Example-iOS */ = {
@@ -229,7 +208,7 @@
 			);
 			name = "Example-iOS";
 			productName = "Example-iOS";
-			productReference = 66E6789E243EC8FD0070B294 /* SatinExample.app */;
+			productReference = 66E6789E243EC8FD0070B294 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		66E678B5243EC9FD0070B294 /* Example-tvOS */ = {
@@ -249,7 +228,7 @@
 			);
 			name = "Example-tvOS";
 			productName = "Example-tvOS";
-			productReference = 66E678B6243EC9FD0070B294 /* SatinExample.app */;
+			productReference = 66E678B6243EC9FD0070B294 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -286,8 +265,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				66E6789D243EC8FD0070B294 /* Example-iOS */,
 				66E67888243EC73A0070B294 /* Example-macOS */,
+				66E6789D243EC8FD0070B294 /* Example-iOS */,
 				66E678B5243EC9FD0070B294 /* Example-tvOS */,
 			);
 		};
@@ -299,7 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66E6788F243EC73B0070B294 /* Assets.xcassets in Resources */,
-				66E678D8243EE2C50070B294 /* Main.storyboard in Resources */,
+				E124FB40243F8E5100380783 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,9 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678AD243EC8FE0070B294 /* LaunchScreen.storyboard in Resources */,
 				66E678AA243EC8FE0070B294 /* Assets.xcassets in Resources */,
-				66E678A8243EC8FD0070B294 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,8 +295,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66E678E6243EE7670070B294 /* Assets.xcassets in Resources */,
-				66E678E1243EE6D50070B294 /* LaunchScreen.storyboard in Resources */,
-				66E678E2243EE6D50070B294 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,7 +481,6 @@
 			files = (
 				66E678D4243EE22C0070B294 /* Renderer.swift in Sources */,
 				66E678D1243EE22C0070B294 /* Shaders.metal in Sources */,
-				66E678CC243EE1F70070B294 /* GameViewController.swift in Sources */,
 				66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -515,7 +489,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678E8243EE9990070B294 /* GameViewController.swift in Sources */,
 				66E678D0243EE22C0070B294 /* Shaders.metal in Sources */,
 				66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */,
 				66E678D3243EE22C0070B294 /* Renderer.swift in Sources */,
@@ -526,7 +499,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678DC243EE6C70070B294 /* GameViewController.swift in Sources */,
 				66E678D5243EE22C0070B294 /* Renderer.swift in Sources */,
 				66E678D2243EE22C0070B294 /* Shaders.metal in Sources */,
 				66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */,
@@ -534,49 +506,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		66E678A6243EC8FD0070B294 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678A7243EC8FD0070B294 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		66E678AB243EC8FE0070B294 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678AC243EC8FE0070B294 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		66E678D6243EE2C50070B294 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678D7243EE2C50070B294 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678DE243EE6D40070B294 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		66E678DF243EE6D50070B294 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678E0243EE6D50070B294 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		66E67895243EC73B0070B294 /* Debug */ = {
@@ -700,14 +629,14 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "Example-macOS/Info.plist";
+				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-macOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -720,14 +649,14 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "Example-macOS/Info.plist";
+				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-macOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -738,14 +667,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-iOS/Info.plist";
+				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-iOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -758,14 +687,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-iOS/Info.plist";
+				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-iOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -779,13 +708,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-tvOS/Info.plist";
+				INFOPLIST_FILE = tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-tvOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -799,13 +728,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-tvOS/Info.plist";
+				INFOPLIST_FILE = tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.Example-tvOS";
-				PRODUCT_NAME = SatinExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Example;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;

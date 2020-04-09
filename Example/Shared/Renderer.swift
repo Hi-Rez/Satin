@@ -21,10 +21,8 @@ class Renderer: Forge.Renderer {
     var scene: Object!
     var context: Context!
     
-    var perspCamera = PerspectiveCamera()
-    #if os(macOS)
-    var cameraController: GesturalCameraController!
-    #endif
+    var perspCamera: ArcballPerspectiveCamera!
+    var cameraController: ArcballCameraController!
     var renderer: Satin.Renderer!
     
     required init?(metalKitView: MTKView) {
@@ -32,8 +30,26 @@ class Renderer: Forge.Renderer {
     }
     
     override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.depthStencilPixelFormat = .depth32Float_stencil8
-        metalKitView.sampleCount = 4
+        metalKitView.depthStencilPixelFormat = .depth32Float
+        metalKitView.autoResizeDrawable = false
+        #if os(iOS)
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            metalKitView.preferredFramesPerSecond = 120
+        case .phone:
+            metalKitView.preferredFramesPerSecond = 60
+        case .unspecified:
+            metalKitView.preferredFramesPerSecond = 60
+        case .tv:
+            metalKitView.preferredFramesPerSecond = 60
+        case .carPlay:
+            metalKitView.preferredFramesPerSecond = 60
+        @unknown default:
+            metalKitView.preferredFramesPerSecond = 60
+        }
+        #else
+        metalKitView.preferredFramesPerSecond = 60
+        #endif
     }
     
     override func setup() {
@@ -44,6 +60,7 @@ class Renderer: Forge.Renderer {
         setupMesh()
         setupScene()
         setupCamera()
+        setupCameraController()
         setupRenderer()
     }
     
@@ -56,8 +73,6 @@ class Renderer: Forge.Renderer {
     }
     
     func setupMaterial() {
-        print(sampleCount)
-        
         material = Material(
             library: library,
             vertex: "basic_vertex",
@@ -81,11 +96,19 @@ class Renderer: Forge.Renderer {
     }
     
     func setupCamera() {
+        perspCamera = ArcballPerspectiveCamera()
         perspCamera.position = simd_make_float3(0.0, 0.0, 9.0)
+        perspCamera.near = 0.001
         perspCamera.far = 100.0
-        #if os(macOS)
-        cameraController = GesturalCameraController(perspCamera)
-        #endif
+    }
+    
+    func setupCameraController() {
+        if cameraController == nil {
+            cameraController = ArcballCameraController(camera: perspCamera, view: mtkView, defaultPosition: perspCamera.position, defaultOrientation: perspCamera.orientation)
+        }
+        else {
+            cameraController.camera = perspCamera
+        }
     }
     
     func setupRenderer() {
@@ -95,9 +118,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func update() {
-        #if os(macOS)
         cameraController.update()
-        #endif
         renderer.update()
     }
     

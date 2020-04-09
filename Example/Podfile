@@ -1,4 +1,4 @@
-pod 'Forge', '0.0.8'
+pod 'Forge', :git => 'git@github.com:Hi-Rez/Forge.git'
 pod 'Satin', :path => '../'
 
 use_frameworks!
