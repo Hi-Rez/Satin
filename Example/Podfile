@@ -1,3 +1,8 @@
+install! 'cocoapods',
+         :generate_multiple_pod_projects => true,
+         :incremental_installation => true,
+         :preserve_pod_file_structure => true
+
 pod 'Forge', :git => 'git@github.com:Hi-Rez/Forge.git'
 pod 'Satin', :path => '../'
 
