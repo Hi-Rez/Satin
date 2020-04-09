@@ -7,7 +7,7 @@ DEPENDENCIES:
   - Satin (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - Forge
 
 EXTERNAL SOURCES:
@@ -16,8 +16,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Forge: 9ab0ab1075eb9a48e3c4a70a5127d2cdd95fd490
-  Satin: e73bdaa91e191a6a47d547f4612e17e537686d98
+  Satin: 9f47fbc7253d386ab5248fdf5227b1b35d68c1bc
 
-PODFILE CHECKSUM: bc40953845094bc8b32143ee59952a4b1bf4043e
+PODFILE CHECKSUM: 2a0cd3108b6ecd4ff5a823629313a11f48ae72c5
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

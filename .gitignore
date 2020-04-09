@@ -5,6 +5,10 @@
 ## Build generated
 build/
 DerivedData/
+.idea/
+
+## Bundler
+vendor/
 
 ## Various settings
 *.pbxuser
@@ -34,7 +38,7 @@ xcuserdata/
 # you should judge for yourself, the pros and cons are mentioned at:
 # https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
 #
-# Pods/
+Pods/
 
 # Carthage
 #
@@ -102,7 +106,7 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-*.xcworkspace
+# *.xcworkspace
 !default.xcworkspace
 xcuserdata
 profile

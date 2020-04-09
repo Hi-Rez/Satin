@@ -15,9 +15,9 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target  = "12.4"
   spec.tvos.deployment_target = "12.4"
 
-  spec.source_files           = "Satin/*.h", "Satin/**/*.{h,m,swift}"
-  spec.exclude_files          = "Pipelines/**/**/*.metal"
-  spec.resources              = "Pipelines"
+  spec.source_files           = "Source/*.h", "Source/**/*.{h,m,swift}"
+  spec.exclude_files          = "Source/Pipelines/**/**/*.metal"
+  spec.resources              = "Source/Pipelines"
   spec.frameworks             = "Metal", "MetalKit"
   spec.module_name            = "Satin"
   spec.swift_version          = "5.1"
