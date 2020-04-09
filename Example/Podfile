@@ -1,5 +1,5 @@
 pod 'Forge', '0.0.8'
-pod 'Satin', :path => './'
+pod 'Satin', :path => '../'
 
 use_frameworks!
 

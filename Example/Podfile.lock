@@ -4,7 +4,7 @@ PODS:
 
 DEPENDENCIES:
   - Forge (= 0.0.8)
-  - Satin (from `./`)
+  - Satin (from `../`)
 
 SPEC REPOS:
   trunk:
@@ -12,12 +12,12 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Satin:
-    :path: "./"
+    :path: "../"
 
 SPEC CHECKSUMS:
   Forge: 9ab0ab1075eb9a48e3c4a70a5127d2cdd95fd490
   Satin: 9f47fbc7253d386ab5248fdf5227b1b35d68c1bc
 
-PODFILE CHECKSUM: a0654282f8b254a0feb6f41be62fe1487486116e
+PODFILE CHECKSUM: 2a0cd3108b6ecd4ff5a823629313a11f48ae72c5
 
 COCOAPODS: 1.8.4
