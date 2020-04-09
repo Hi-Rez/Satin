@@ -106,7 +106,7 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-*.xcworkspace
+# *.xcworkspace
 !default.xcworkspace
 xcuserdata
 profile
