@@ -136,9 +136,9 @@
 			children = (
 				66E678A0243EC8FD0070B294 /* AppDelegate.swift */,
 				66E678E7243EE9990070B294 /* GameViewController.swift */,
-				66E678A6243EC8FD0070B294 /* Main.storyboard */,
 				66E678A9243EC8FE0070B294 /* Assets.xcassets */,
 				66E678AB243EC8FE0070B294 /* LaunchScreen.storyboard */,
+				66E678A6243EC8FD0070B294 /* Main.storyboard */,
 				66E678AE243EC8FE0070B294 /* Info.plist */,
 			);
 			path = "Example-iOS";
