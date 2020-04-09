@@ -16,10 +16,6 @@
 		66E678AA243EC8FE0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		66E678AD243EC8FE0070B294 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678AB243EC8FE0070B294 /* LaunchScreen.storyboard */; };
 		66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
-		66E678BB243EC9FD0070B294 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678BA243EC9FD0070B294 /* ViewController.swift */; };
-		66E678BE243EC9FD0070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678BC243EC9FD0070B294 /* Main.storyboard */; };
-		66E678C0243EC9FD0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678BF243EC9FD0070B294 /* Assets.xcassets */; };
-		66E678C3243EC9FD0070B294 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678C1243EC9FD0070B294 /* LaunchScreen.storyboard */; };
 		66E678CC243EE1F70070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CB243EE1F70070B294 /* GameViewController.swift */; };
 		66E678D0243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
 		66E678D1243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
@@ -29,6 +25,10 @@
 		66E678D5243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
 		66E678D8243EE2C50070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678D6243EE2C50070B294 /* Main.storyboard */; };
 		66E678DA243EE4F30070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678D9243EE4F30070B294 /* GameViewController.swift */; };
+		66E678DC243EE6C70070B294 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678DB243EE6C70070B294 /* GameViewController.swift */; };
+		66E678E1243EE6D50070B294 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */; };
+		66E678E2243EE6D50070B294 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E678DF243EE6D50070B294 /* Main.storyboard */; };
+		66E678E6243EE7670070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		7E3E2D77FA2FC4E8EDA54FC8 /* Pods_Example_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,16 +49,16 @@
 		66E678AE243EC8FE0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66E678B6243EC9FD0070B294 /* SatinExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E678B8243EC9FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678BA243EC9FD0070B294 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		66E678BD243EC9FD0070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		66E678BF243EC9FD0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		66E678C2243EC9FD0070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		66E678C4243EC9FD0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66E678CB243EE1F70070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = Example2/macOS/GameViewController.swift; sourceTree = SOURCE_ROOT; };
 		66E678CE243EE22C0070B294 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = Example2/Shared/Shaders.metal; sourceTree = SOURCE_ROOT; };
 		66E678CF243EE22C0070B294 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Renderer.swift; path = Example2/Shared/Renderer.swift; sourceTree = SOURCE_ROOT; };
 		66E678D7243EE2C50070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66E678D9243EE4F30070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameViewController.swift; path = Example2/iOS/GameViewController.swift; sourceTree = SOURCE_ROOT; };
+		66E678DB243EE6C70070B294 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		66E678DE243EE6D40070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		66E678E0243EE6D50070B294 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		66E678E5243EE7670070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		76601F1DEA0AAA184B9900BB /* Pods-Example-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7740F9792482B61A84336F8D /* Pods-Example-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.release.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,10 +148,10 @@
 			isa = PBXGroup;
 			children = (
 				66E678B8243EC9FD0070B294 /* AppDelegate.swift */,
-				66E678BA243EC9FD0070B294 /* ViewController.swift */,
-				66E678BC243EC9FD0070B294 /* Main.storyboard */,
-				66E678BF243EC9FD0070B294 /* Assets.xcassets */,
-				66E678C1243EC9FD0070B294 /* LaunchScreen.storyboard */,
+				66E678DB243EE6C70070B294 /* GameViewController.swift */,
+				66E678E5243EE7670070B294 /* Assets.xcassets */,
+				66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */,
+				66E678DF243EE6D50070B294 /* Main.storyboard */,
 				66E678C4243EC9FD0070B294 /* Info.plist */,
 			);
 			path = "Example-tvOS";
@@ -317,9 +317,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678C3243EC9FD0070B294 /* LaunchScreen.storyboard in Resources */,
-				66E678C0243EC9FD0070B294 /* Assets.xcassets in Resources */,
-				66E678BE243EC9FD0070B294 /* Main.storyboard in Resources */,
+				66E678E6243EE7670070B294 /* Assets.xcassets in Resources */,
+				66E678E1243EE6D50070B294 /* LaunchScreen.storyboard in Resources */,
+				66E678E2243EE6D50070B294 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,9 +526,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66E678DC243EE6C70070B294 /* GameViewController.swift in Sources */,
 				66E678D5243EE22C0070B294 /* Renderer.swift in Sources */,
 				66E678D2243EE22C0070B294 /* Shaders.metal in Sources */,
-				66E678BB243EC9FD0070B294 /* ViewController.swift in Sources */,
 				66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,26 +552,26 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		66E678BC243EC9FD0070B294 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678BD243EC9FD0070B294 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		66E678C1243EC9FD0070B294 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66E678C2243EC9FD0070B294 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		66E678D6243EE2C50070B294 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				66E678D7243EE2C50070B294 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		66E678DD243EE6D40070B294 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66E678DE243EE6D40070B294 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		66E678DF243EE6D50070B294 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66E678E0243EE6D50070B294 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -775,7 +775,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BE2F865FBB99D944698B6A24 /* Pods-Example-tvOS.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Example-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -795,7 +795,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF5EDFAC5DDB7D28C8B7F1DB /* Pods-Example-tvOS.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Example-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
