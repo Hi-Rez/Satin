@@ -14,15 +14,15 @@
 		66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		66E678AA243EC8FE0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
-		66E678D0243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
-		66E678D1243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
-		66E678D2243EE22C0070B294 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CE243EE22C0070B294 /* Shaders.metal */; };
-		66E678D3243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
-		66E678D4243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
-		66E678D5243EE22C0070B294 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678CF243EE22C0070B294 /* Renderer.swift */; };
 		66E678E6243EE7670070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		7E3E2D77FA2FC4E8EDA54FC8 /* Pods_Example_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */; };
 		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E17955F2243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
+		E17955F3243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
+		E17955F4243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
+		E17955F5243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
+		E17955F6243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
+		E17955F7243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,8 +39,6 @@
 		66E678A9243EC8FE0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66E678B6243EC9FD0070B294 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E678B8243EC9FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678CE243EE22C0070B294 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = Shared/Shaders.metal; sourceTree = SOURCE_ROOT; };
-		66E678CF243EE22C0070B294 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Renderer.swift; path = Shared/Renderer.swift; sourceTree = SOURCE_ROOT; };
 		66E678E5243EE7670070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		76601F1DEA0AAA184B9900BB /* Pods-Example-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7740F9792482B61A84336F8D /* Pods-Example-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.release.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -50,6 +48,8 @@
 		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E17955F0243FA87400B0D2F4 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		E17955F1243FA87400B0D2F4 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		FF5EDFAC5DDB7D28C8B7F1DB /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -84,10 +84,7 @@
 		66E67880243EC73A0070B294 = {
 			isa = PBXGroup;
 			children = (
-				66E678CD243EE2190070B294 /* Shared */,
-				66E6788B243EC73A0070B294 /* macOS */,
-				66E6789F243EC8FD0070B294 /* iOS */,
-				66E678B7243EC9FD0070B294 /* tvOS */,
+				E17955EF243FA80800B0D2F4 /* Source */,
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
@@ -139,8 +136,8 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				66E678CF243EE22C0070B294 /* Renderer.swift */,
-				66E678CE243EE22C0070B294 /* Shaders.metal */,
+				E17955F1243FA87400B0D2F4 /* Renderer.swift */,
+				E17955F0243FA87400B0D2F4 /* Shaders.metal */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -156,6 +153,17 @@
 				FF5EDFAC5DDB7D28C8B7F1DB /* Pods-Example-tvOS.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E17955EF243FA80800B0D2F4 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				66E678CD243EE2190070B294 /* Shared */,
+				66E6788B243EC73A0070B294 /* macOS */,
+				66E6789F243EC8FD0070B294 /* iOS */,
+				66E678B7243EC9FD0070B294 /* tvOS */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 		E8DB960D2E2F0A7613DAFDAF /* Frameworks */ = {
@@ -479,8 +487,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678D4243EE22C0070B294 /* Renderer.swift in Sources */,
-				66E678D1243EE22C0070B294 /* Shaders.metal in Sources */,
+				E17955F2243FA87400B0D2F4 /* Shaders.metal in Sources */,
+				E17955F5243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,9 +497,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678D0243EE22C0070B294 /* Shaders.metal in Sources */,
+				E17955F3243FA87400B0D2F4 /* Shaders.metal in Sources */,
+				E17955F6243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */,
-				66E678D3243EE22C0070B294 /* Renderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,8 +507,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E678D5243EE22C0070B294 /* Renderer.swift in Sources */,
-				66E678D2243EE22C0070B294 /* Shaders.metal in Sources */,
+				E17955F4243FA87400B0D2F4 /* Shaders.metal in Sources */,
+				E17955F7243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -629,7 +637,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -649,7 +657,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -667,7 +675,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -687,7 +695,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -708,7 +716,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = tvOS/Info.plist;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -728,7 +736,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = tvOS/Info.plist;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
