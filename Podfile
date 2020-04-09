@@ -4,13 +4,13 @@ pod 'Satin', :path => './'
 use_frameworks!
 
 target 'Example-iOS' do
-    platform :ios, '13.0'
+    platform :ios, '12.4'
 end
 
 target 'Example-macOS' do
-  platform :osx, '10.15'
+  platform :osx, '10.14'
 end
 
 target 'Example-tvOS' do
-  platform :tvos, '13.0'
+  platform :tvos, '12.4'
 end
