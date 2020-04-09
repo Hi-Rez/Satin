@@ -1,8 +1,0 @@
-cache: bundler
-rvm:
-  # Same rubies as CP
-  - 2.0.0-p647
-  - 2.3.4
-  - 2.4.1
-
-script: bundle exec rake spec
