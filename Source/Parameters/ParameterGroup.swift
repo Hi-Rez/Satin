@@ -135,6 +135,14 @@ open class ParameterGroup: Codable {
                         }
                     }
                 }
+                else if param is StringParameter {
+                    let p = param as! StringParameter
+                    if let mp = paramsMap[label] {
+                        if let mbp = mp as? StringParameter {
+                            mbp.value = p.value
+                        }
+                    }
+                }
             }
         }
         catch {

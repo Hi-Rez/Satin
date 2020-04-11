@@ -317,6 +317,10 @@ open class Renderer
             }
 #endif
         }
+        else {
+            renderPassDescriptor.depthAttachment.texture = nil
+            renderPassDescriptor.stencilAttachment.texture = nil
+        }
         
         guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         

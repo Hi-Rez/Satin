@@ -23,6 +23,8 @@ public enum ControlType: String, Codable {
     case button
     case inputfield
     case colorpicker
+    case dropdown
+    case label
 }
 
 public enum ParameterType: String, Codable {
