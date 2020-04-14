@@ -19,61 +19,8 @@ open class UniformBuffer {
     
     public init(context: Context, parameters: ParameterGroup) {
         self.parameters = parameters
-        calculateAlignmentSize()
+        self.alignedSize = ((parameters.size + 255) / 256) * 256
         setupBuffer(context: context)
-    }
-    
-    func calculateAlignmentSize() {
-        if let parameters = self.parameters {
-            var pointerOffset: Int = 0
-            for param in parameters.params {
-                var size: Int = 0
-                var alignment: Int = 0
-                if param is BoolParameter {
-                    size = MemoryLayout<Bool>.size
-                    alignment = MemoryLayout<Bool>.alignment
-                }
-                else if param is IntParameter {
-                    size = MemoryLayout<Int32>.size
-                    alignment = MemoryLayout<Int32>.alignment
-                }
-                else if param is Int2Parameter {
-                    size = MemoryLayout<simd_int2>.size
-                    alignment = MemoryLayout<simd_int2>.alignment
-                }
-                else if param is Int3Parameter {
-                    size = MemoryLayout<simd_int3>.size
-                    alignment = MemoryLayout<simd_int3>.alignment
-                }
-                else if param is Int4Parameter {
-                    size = MemoryLayout<simd_int4>.size
-                    alignment = MemoryLayout<simd_int4>.alignment
-                }
-                else if param is FloatParameter {
-                    size = MemoryLayout<Float>.size
-                    alignment = MemoryLayout<Float>.alignment
-                }
-                else if param is Float2Parameter {
-                    size = MemoryLayout<simd_float2>.size
-                    alignment = MemoryLayout<simd_float2>.alignment
-                }
-                else if param is Float3Parameter {
-                    size = MemoryLayout<simd_float3>.size
-                    alignment = MemoryLayout<simd_float3>.alignment
-                }
-                else if param is Float4Parameter {
-                    size = MemoryLayout<simd_float4>.size
-                    alignment = MemoryLayout<simd_float4>.alignment
-                }
-                let rem = pointerOffset % alignment
-                if rem > 0 {
-                    let offset = alignment - rem
-                    pointerOffset += offset
-                }
-                pointerOffset += size
-            }
-            alignedSize = ((pointerOffset + 255) / 256) * 256
-        }
     }
     
     func setupBuffer(context: Context) {

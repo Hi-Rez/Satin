@@ -66,7 +66,7 @@ open class Float2Parameter: NSObject, Parameter {
         self.maxY = max.y
     }
     
-    public init(_ label: String, _ value: simd_float2, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_float2 = simd_make_float2(0.0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

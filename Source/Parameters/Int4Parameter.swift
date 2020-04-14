@@ -89,7 +89,7 @@ open class Int4Parameter: NSObject, Parameter {
         self.maxW = max.w
     }
     
-    public init(_ label: String, _ value: simd_int4, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_int4 = simd_make_int4(0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

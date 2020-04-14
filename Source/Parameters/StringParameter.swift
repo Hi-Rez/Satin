@@ -22,7 +22,7 @@ open class StringParameter: NSObject, Parameter {
         self.value = value        
     }
     
-    public init(_ label: String, _ value: String, _ options: [String], _ controlType: ControlType = .dropdown) {
+    public init(_ label: String, _ value: String = "", _ options: [String], _ controlType: ControlType = .dropdown) {
         self.label = label
         self.controlType = controlType
         self.value = value

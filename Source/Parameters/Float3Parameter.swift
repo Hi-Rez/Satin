@@ -78,7 +78,7 @@ open class Float3Parameter: NSObject, Parameter {
         self.maxZ = max.z
     }
     
-    public init(_ label: String, _ value: simd_float3, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_float3 = simd_make_float3(0.0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

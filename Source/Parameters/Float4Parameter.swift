@@ -90,7 +90,7 @@ open class Float4Parameter: NSObject, Parameter {
         self.maxW = max.w
     }
     
-    public init(_ label: String, _ value: simd_float4, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_float4 = simd_make_float4(0.0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

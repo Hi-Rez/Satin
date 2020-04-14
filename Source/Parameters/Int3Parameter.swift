@@ -78,7 +78,7 @@ open class Int3Parameter: NSObject, Parameter {
         self.maxZ = max.z
     }
     
-    public init(_ label: String, _ value: simd_int3, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_int3 = simd_make_int3(0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

@@ -68,7 +68,7 @@ open class Int2Parameter: NSObject, Parameter {
         self.maxY = max.y
     }
     
-    public init(_ label: String, _ value: simd_int2, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_int2 = simd_make_int2(0), _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

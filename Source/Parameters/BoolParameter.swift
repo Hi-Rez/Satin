@@ -15,10 +15,9 @@ open class BoolParameter: NSObject, Parameter {
     
     @objc dynamic public var value: Bool
 
-    public init(_ label: String, _ value: Bool, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Bool = false, _ controlType: ControlType = .unknown) {
         self.label = label
-        self.controlType = controlType
-        
+        self.controlType = controlType        
         self.value = value
     }
 }

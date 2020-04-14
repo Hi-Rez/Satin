@@ -27,7 +27,7 @@ open class FloatParameter: NSObject, Parameter {
         self.max = max
     }
     
-    public init(_ label: String, _ value: Float, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Float = 0.0, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

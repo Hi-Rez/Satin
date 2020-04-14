@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import simd
 
 open class ParameterGroup: Codable {
     public var label: String = ""
     public var params: [Parameter] = []
     public var paramsMap: [String: Parameter] = [:]
-
+    
     public init(_ label: String) {
         self.label = label
     }
@@ -148,6 +149,57 @@ open class ParameterGroup: Codable {
         catch {
             print(error)
         }
+    }
+    
+    public var size: Int {
+        var pointerOffset: Int = 0
+        for param in params {
+            var size: Int = 0
+            var alignment: Int = 0
+            if param is BoolParameter {
+                size = MemoryLayout<Bool>.size
+                alignment = MemoryLayout<Bool>.alignment
+            }
+            else if param is IntParameter {
+                size = MemoryLayout<Int32>.size
+                alignment = MemoryLayout<Int32>.alignment
+            }
+            else if param is Int2Parameter {
+                size = MemoryLayout<simd_int2>.size
+                alignment = MemoryLayout<simd_int2>.alignment
+            }
+            else if param is Int3Parameter {
+                size = MemoryLayout<simd_int3>.size
+                alignment = MemoryLayout<simd_int3>.alignment
+            }
+            else if param is Int4Parameter {
+                size = MemoryLayout<simd_int4>.size
+                alignment = MemoryLayout<simd_int4>.alignment
+            }
+            else if param is FloatParameter {
+                size = MemoryLayout<Float>.size
+                alignment = MemoryLayout<Float>.alignment
+            }
+            else if param is Float2Parameter {
+                size = MemoryLayout<simd_float2>.size
+                alignment = MemoryLayout<simd_float2>.alignment
+            }
+            else if param is Float3Parameter {
+                size = MemoryLayout<simd_float3>.size
+                alignment = MemoryLayout<simd_float3>.alignment
+            }
+            else if param is Float4Parameter {
+                size = MemoryLayout<simd_float4>.size
+                alignment = MemoryLayout<simd_float4>.alignment
+            }
+            let rem = pointerOffset % alignment
+            if rem > 0 {
+                let offset = alignment - rem
+                pointerOffset += offset
+            }
+            pointerOffset += size
+        }
+        return pointerOffset
     }
 }
 

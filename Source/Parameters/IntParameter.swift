@@ -25,7 +25,7 @@ open class IntParameter: NSObject, Parameter {
         self.max = max
     }
 
-    public init(_ label: String, _ value: Int, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Int = 0, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         

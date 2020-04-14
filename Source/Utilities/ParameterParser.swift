@@ -8,14 +8,22 @@
 import Foundation
 import simd
 
+public func parseStruct(source: String, key: String) -> ParameterGroup? {
+    if let structSource = _parseStruct(source: source, key: key) {
+        return parseStruct(source: structSource)
+    }
+    return nil
+}
+
 public func parseParameters(source: String, key: String) -> ParameterGroup? {
-    if let structSource = parseStruct(source: source, key: key) {
+    if let structSource = _parseStruct(source: source, key: key) {
         return parseParameters(source: structSource)
     }
     return nil
 }
 
-func parseStruct(source: String, key: String) -> String? {
+
+func _parseStruct(source: String, key: String) -> String? {
     do {
         let pattern = "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)"
         let regex = try NSRegularExpression(pattern: pattern, options: [])
@@ -34,6 +42,64 @@ func parseStruct(source: String, key: String) -> String? {
     }
     return nil
 }
+
+func parseStruct(source: String) -> ParameterGroup? {
+    do {
+        let params = ParameterGroup("")
+        let pattern = #"(\w+\_?\w+) +(\w+) ?; ?\n?"#
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(source.startIndex..<source.endIndex, in: source)
+        let matches = regex.matches(in: source, options: [], range: nsrange)
+
+        for match in matches {
+            var vType: String?
+            var vName: String?
+
+            if let r1 = Range(match.range(at: 1), in: source) {
+                vType = String(source[r1])
+            }
+            if let r2 = Range(match.range(at: 2), in: source) {
+                vName = String(source[r2])
+            }
+            
+            if let type = vType, let name = vName {
+                if type == "bool" {
+                    params.append(BoolParameter(name))
+                }
+                else if type == "int" {
+                    params.append(IntParameter(name))
+                }
+                else if type == "int2" {
+                    params.append(Int2Parameter(name))
+                }
+                else if type == "int3" {
+                    params.append(Int3Parameter(name))
+                }
+                else if type == "int4" {
+                    params.append(Int4Parameter(name))
+                }
+                else if type == "float" {
+                    params.append(FloatParameter(name))
+                }
+                else if type == "float2" {
+                    params.append(Float2Parameter(name))
+                }
+                else if type == "float3" {
+                    params.append(Float3Parameter(name))
+                }
+                else if type == "float4" {
+                    params.append(Float4Parameter(name))
+                }
+            }
+        }
+        return params
+    }
+    catch {
+        print(error)
+        return nil
+    }
+}
+
 
 func parseParameters(source: String) -> ParameterGroup? {
     do {
@@ -453,3 +519,4 @@ func parseParameters(source: String) -> ParameterGroup? {
         return nil
     }
 }
+
