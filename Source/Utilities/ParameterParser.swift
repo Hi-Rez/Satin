@@ -9,15 +9,17 @@ import Foundation
 import simd
 
 public func parseStruct(source: String, key: String) -> ParameterGroup? {
-    if let structSource = _parseStruct(source: source, key: key) {
-        return parseStruct(source: structSource)
+    if let structSource = _parseStruct(source: source, key: key), let params = parseStruct(source: structSource) {
+        params.label = key
+        return params
     }
     return nil
 }
 
 public func parseParameters(source: String, key: String) -> ParameterGroup? {
-    if let structSource = _parseStruct(source: source, key: key) {
-        return parseParameters(source: structSource)
+    if let structSource = _parseStruct(source: source, key: key), let params = parseParameters(source: structSource) {
+        params.label = key
+        return params
     }
     return nil
 }

@@ -68,8 +68,8 @@ open class ArcballCameraController {
     #endif
     var translationVelocity: simd_float3 = simd_make_float3(0.0)
     
-    open var defaultPosition: simd_float3 = simd_make_float3(0.0)
-    open var defaultOrientation: simd_quatf = simd_quaternion(0.0, simd_make_float3(0.0))
+    open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
+    open var defaultOrientation: simd_quatf = simd_quaternion(Float.pi, simd_make_float3(0, 1, 0))
     
     var insideArcBall: Bool = false
     var previouArcballPoint = simd_make_float3(0.0)
@@ -540,7 +540,7 @@ open class ArcballCameraController {
         
         camera.position = defaultPosition
         camera.orientation = defaultOrientation
-        camera.arcballOrientation = defaultOrientation
+        camera.arcballOrientation = simd_quatf(angle: 0.0, axis: simd_make_float3(0.0))
         
         rotationVelocity = 0.0
         translationVelocity = simd_make_float3(0.0)

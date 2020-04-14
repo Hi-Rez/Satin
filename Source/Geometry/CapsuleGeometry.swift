@@ -9,17 +9,23 @@
 import simd
 
 open class CapsuleGeometry: Geometry {
-    public init(size: (radius: Float, height: Float)) {
-        super.init()
-        self.setup(size: size, res: (60,30,30))
+    public enum Axis {
+        case x
+        case y
+        case z
     }
     
-    public init(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int)) {
+    public init(size: (radius: Float, height: Float), axis: Axis = .y) {
         super.init()
-        self.setup(size: size, res: res)
+        self.setup(size: size, res: (60, 30, 30), axis: axis)
     }
     
-    func setup(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int)) {
+    public init(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int), axis: Axis = .y) {
+        super.init()
+        self.setup(size: size, res: res, axis: axis)
+    }
+    
+    func setup(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int), axis: Axis) {
         let radius = size.radius
         let height = size.height
         
@@ -30,7 +36,7 @@ open class CapsuleGeometry: Geometry {
         let phif = Float(phi)
         let thetaf = Float(theta)
         let slicesf = Float(slices)
-                        
+        
         let phiMax = Float.pi * 2.0
         let thetaMax = Float.pi * 0.5
         
@@ -41,7 +47,7 @@ open class CapsuleGeometry: Geometry {
         let halfHeight = height * 0.5
         let totalHeight = height + 2.0 * radius
         let vPerCap = radius / totalHeight
-        let vPerCyl = height / totalHeight        
+        let vPerCyl = height / totalHeight
         
         for t in 0...theta {
             let tf = Float(t)
@@ -59,9 +65,19 @@ open class CapsuleGeometry: Geometry {
                 let z = radius * sinPhi * sinTheta
                 let y = radius * cosTheta
                 
+                var position: simd_float4
+                switch axis {
+                case .x:
+                    position = simd_make_float4(y + halfHeight, z, x, 1.0)
+                case .y:
+                    position = simd_make_float4(x, y + halfHeight, z, 1.0)
+                case .z:
+                    position = simd_make_float4(x, z, y + halfHeight, 1.0)
+                }
+                
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, y + halfHeight, z, 1.0),
+                        position,
                         simd_make_float2(pf / phif, map(y, 0.0, radius, vPerCap + vPerCyl, 1.0)),
                         normalize(simd_make_float3(x, y, z))
                     )
@@ -103,9 +119,19 @@ open class CapsuleGeometry: Geometry {
                 let z = radius * sinPhi * sinTheta
                 let y = -radius * cosTheta
                 
+                var position: simd_float4
+                switch axis {
+                case .x:
+                    position = simd_make_float4(y - halfHeight, z, x, 1.0)
+                case .y:
+                    position = simd_make_float4(x, y - halfHeight, z, 1.0)
+                case .z:
+                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
+                }
+                
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, y - halfHeight, z, 1.0),
+                        position,
                         simd_make_float2(pf / phif, map(y, -radius, 0, 0.0, vPerCap)),
                         normalize(simd_make_float3(x, y, z))
                     )
@@ -144,15 +170,25 @@ open class CapsuleGeometry: Geometry {
                 let x = radius * cosPhi
                 let z = radius * sinPhi
                 
+                var position: simd_float4
+                switch axis {
+                case .x:
+                    position = simd_make_float4(y - halfHeight, z, x, 1.0)
+                case .y:
+                    position = simd_make_float4(x, y - halfHeight, z, 1.0)
+                case .z:
+                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
+                }
+                
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, y - halfHeight , z, 1.0),
+                        position,
                         simd_make_float2(pf / phif, map(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl)),
                         normalize(simd_make_float3(x, 0.0, z))
                     )
                 )
                 
-                if s != slices && p != phi {
+                if s != slices, p != phi {
                     let perLoop = phi + 1
                     let index = indexOffset + p + s * perLoop
                     

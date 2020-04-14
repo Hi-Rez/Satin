@@ -34,6 +34,9 @@ open class ComputeSystem {
 
     public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
     public var postReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
+    
+    public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
+    public var postCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
 
     var context: Context
 
@@ -114,7 +117,7 @@ open class ComputeSystem {
         _setupBuffers = true
     }
 
-    public func getBuffer(_ label: String) -> MTLBuffer? {
+    public func getBuffer(_ label: String) -> MTLBuffer? {     
         if let buffers = bufferMap[label] {
             return buffers[pong()]
         }
@@ -132,12 +135,13 @@ open class ComputeSystem {
         if bufferMap.count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0..<2 {
-                    let offsets = setBuffers(computeEncoder, i)
-                    preReset?(computeEncoder, offsets.buffer, offsets.texture)
-                    dispatch(computeEncoder, pipeline)
-                    postReset?(computeEncoder, offsets.buffer, offsets.texture)
-                }
+                let offsets = setBuffers(computeEncoder, _index)
+                preReset?(computeEncoder, offsets.buffer, offsets.texture)
+                preCompute?(computeEncoder, offsets.buffer, offsets.texture)
+                dispatch(computeEncoder, pipeline)
+                postCompute?(computeEncoder, offsets.buffer, offsets.texture)
+                postReset?(computeEncoder, offsets.buffer, offsets.texture)
+                print("resetting compute")
                 _reset = false
             }
 
@@ -145,7 +149,9 @@ open class ComputeSystem {
                 computeEncoder.setComputePipelineState(pipeline)
                 let offsets = setBuffers(computeEncoder, _index)
                 preUpdate?(computeEncoder, offsets.buffer, offsets.texture)
+                preCompute?(computeEncoder, offsets.buffer, offsets.texture)
                 dispatch(computeEncoder, pipeline)
+                postCompute?(computeEncoder, offsets.buffer, offsets.texture)
                 postUpdate?(computeEncoder, offsets.buffer, offsets.texture)
                 pingPong()
             }

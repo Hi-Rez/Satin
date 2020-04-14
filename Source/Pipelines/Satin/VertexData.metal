@@ -1,6 +1,7 @@
 typedef struct {
     float4 position [[position]];
-    float2 uv;
-    float3 normal;    
     float4 shadowPosition;
+    float3 normal;
+    float2 uv;
+    float pointSize [[point_size]];
 } VertexData;
