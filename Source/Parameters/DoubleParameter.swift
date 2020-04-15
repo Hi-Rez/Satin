@@ -12,6 +12,9 @@ open class DoubleParameter: NSObject, Parameter {
     public static var type = ParameterType.double
     public var controlType: ControlType
     public let label: String
+    public var size: Int { return MemoryLayout<Double>.size }
+    public var stride: Int { return MemoryLayout<Double>.stride }
+    public var alignment: Int { return MemoryLayout<Double>.alignment }
     
     @objc dynamic public var value: Double
     @objc dynamic public var min: Double

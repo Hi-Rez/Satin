@@ -13,6 +13,9 @@ open class Int3Parameter: NSObject, Parameter {
     public static var type = ParameterType.int3
     public var controlType: ControlType
     public let label: String
+    public var size: Int { return MemoryLayout<simd_int3>.size }
+    public var stride: Int { return MemoryLayout<simd_int3>.stride }
+    public var alignment: Int { return MemoryLayout<simd_int3>.alignment }
     
     @objc dynamic var x: Int32
     @objc dynamic var y: Int32

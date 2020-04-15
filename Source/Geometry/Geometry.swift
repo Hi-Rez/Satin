@@ -36,21 +36,24 @@ open class Geometry {
         primitiveType = .triangle
         windingOrder = .counterClockwise
         indexType = .uint32
+        vertexData = []
+        indexData = []
     }
     
     public init(primitiveType: MTLPrimitiveType, windingOrder: MTLWinding, indexType: MTLIndexType) {
         self.primitiveType = primitiveType
         self.windingOrder = windingOrder
         self.indexType = indexType
+        vertexData = []
+        indexData = []
     }
     
-    public func calculateNormals()
-    {
+    public func calculateNormals() {
         for i in stride(from: 0, to: indexData.count, by: 3) {
             let i0 = Int(indexData[i])
             let i1 = Int(indexData[i + 1])
             let i2 = Int(indexData[i + 2])
-                        
+            
             var v0 = vertexData[i0]
             var v1 = vertexData[i1]
             var v2 = vertexData[i2]
@@ -61,7 +64,6 @@ open class Geometry {
             
             let normal = normalize(cross(p1 - p0, p2 - p0))
             if length(normal) > 0.0 {
-                
                 let l0 = length(v0.normal)
                 v0.normal += normal
                 if l0 > 0.0 {

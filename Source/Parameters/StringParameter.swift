@@ -12,6 +12,9 @@ open class StringParameter: NSObject, Parameter {
     public static var type = ParameterType.string
     public var controlType: ControlType
     public let label: String
+    public var size: Int { return MemoryLayout<String>.size }
+    public var stride: Int { return MemoryLayout<String>.stride }
+    public var alignment: Int { return MemoryLayout<String>.alignment }
     
     @objc dynamic public var value: String
     @objc dynamic public var options: [String] = []

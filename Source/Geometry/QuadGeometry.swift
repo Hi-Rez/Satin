@@ -19,28 +19,28 @@ open class QuadGeometry: Geometry {
         vertexData.append(
             Vertex(
                 SIMD4<Float>(-1.0, -1.0, 0.0, 1.0),
-                SIMD2<Float>(0.0, 0.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(1.0, -1.0, 0.0, 1.0),
-                SIMD2<Float>(1.0, 0.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(-1.0, 1.0, 0.0, 1.0),
                 SIMD2<Float>(0.0, 1.0),
                 SIMD3<Float>(0.0, 0.0, 1.0)
             )
         )
         vertexData.append(
             Vertex(
-                SIMD4<Float>(1.0, 1.0, 0.0, 1.0),
+                SIMD4<Float>(1.0, -1.0, 0.0, 1.0),
                 SIMD2<Float>(1.0, 1.0),
+                SIMD3<Float>(0.0, 0.0, 1.0)
+            )
+        )
+        vertexData.append(
+            Vertex(
+                SIMD4<Float>(-1.0, 1.0, 0.0, 1.0),
+                SIMD2<Float>(0.0, 0.0),
+                SIMD3<Float>(0.0, 0.0, 1.0)
+            )
+        )
+        vertexData.append(
+            Vertex(
+                SIMD4<Float>(1.0, 1.0, 0.0, 1.0),
+                SIMD2<Float>(1.0, 0.0),
                 SIMD3<Float>(0.0, 0.0, 1.0)
             )
         )

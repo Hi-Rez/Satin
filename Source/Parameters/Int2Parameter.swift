@@ -13,6 +13,9 @@ open class Int2Parameter: NSObject, Parameter {
     public static var type = ParameterType.int2
     public var controlType: ControlType
     public let label: String
+    public var size: Int { return MemoryLayout<simd_int2>.size }
+    public var stride: Int { return MemoryLayout<simd_int2>.stride }
+    public var alignment: Int { return MemoryLayout<simd_int2>.alignment }
     
     @objc dynamic var x: Int32
     @objc dynamic var y: Int32
@@ -43,7 +46,6 @@ open class Int2Parameter: NSObject, Parameter {
         }
     }
     
-    
     public var max: simd_int2 {
         get {
             return simd_make_int2(maxX, maxY)
@@ -53,7 +55,7 @@ open class Int2Parameter: NSObject, Parameter {
             maxY = newValue.y
         }
     }
-
+    
     public init(_ label: String, _ value: simd_int2, _ min: simd_int2, _ max: simd_int2, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType

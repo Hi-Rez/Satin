@@ -9,73 +9,166 @@
 import simd
 
 open class PlaneGeometry: Geometry {
-    public override init() {
+    public enum Orientation {
+        case xy // points in +z direction
+        case yx // points in -z direction
+        case xz // points in -y direction
+        case zx // points in +y direction
+        case yz // points in +x direction
+        case zy // points in -x direction
+    }
+          
+    public init(size: Float = 2) {
         super.init()
-        self.setup(width: 2, height: 2, resX: 1, resY: 1, center: true)
+        self.setup(width: size, height: size, resU: 1, resV: 1)
     }
     
-    public convenience init(size: Float) {
-        self.init(size: (size, size))
-    }
-    
-    public convenience init(size: Float, res: Int) {
-        self.init(size: (size, size), res: res)
-    }
-    
-    public convenience init(size: (width: Float, height: Float)) {
-        self.init(size: size, res: 1)
-    }
-    
-    public convenience init(size: (width: Float, height: Float), res: Int) {
-        self.init(size: size, res: (res, res))
-    }
-    
-    public convenience init(size: (width: Float, height: Float), res: (x: Int, y: Int)) {
-        self.init(size: size, res: res, center: true)
-    }
-    
-    public init(size: (width: Float, height: Float), res: (x: Int, y: Int), center: Bool) {
+    public init(size: Float, plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size.width, height: size.height, resX: res.x, resY: res.y, center: center)
+        self.setup(width: size, height: size, resU: 1, resV: 1, plane: plane)
     }
     
-    func setup(width: Float, height: Float, resX: Int, resY: Int, center: Bool) {
-        let rx = max(resX, 1)
-        let ry = max(resY, 1)
+    public init(size: Float, plane: Orientation = .xy, centered: Bool = true) {
+        super.init()
+        self.setup(width: size, height: size, resU: 1, resV: 1, plane: plane, centered: centered)
+    }
+    
+    public init(size: Float, res: Int) {
+        super.init()
+        self.setup(width: size, height: size, resU: res, resV: res)
+    }
+    
+    public init(size: Float, res: Int, plane: Orientation = .xy) {
+        super.init()
+        self.setup(width: size, height: size, resU: res, resV: res, plane: plane)
+    }
+    
+    public init(size: Float, res: Int, plane: Orientation = .xy, centered: Bool = true) {
+        super.init()
+        self.setup(width: size, height: size, resU: res, resV: res, plane: plane, centered: centered)
+    }
+    
+    public init(size: (width: Float, height: Float)) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: 1, resV: 1)
+    }
+    
+    public init(size: (width: Float, height: Float), plane: Orientation = .xy) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane)
+    }
+    
+    public init(size: (width: Float, height: Float), plane: Orientation = .xy, centered: Bool = true) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane, centered: centered)
+    }
+    
+    public init(size: (width: Float, height: Float), res: Int) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res, resV: res)
+    }
+    
+    public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res, resV: res, plane: plane)
+    }
+    
+    public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy, centered: Bool = true) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res, resV: res, plane: plane, centered: centered)
+    }
+    
+    public init(size: (width: Float, height: Float), res: (u:Int, v:Int)) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v)
+    }
+    
+    public init(size: (width: Float, height: Float), res: (u:Int, v:Int), plane: Orientation = .xy) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane)
+    }
+
+    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy, centered: Bool = true) {
+        super.init()
+        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)
+    }
+    
+    func setup(width: Float, height: Float, resU: Int, resV: Int, plane: Orientation = .xy, centered: Bool = true) {
+        var rU = resU
+        var rV = resV
         
-        let bx = Float(rx)
-        let by = Float(ry)
+        var sizeU = width
+        var sizeV = height
         
-        let hw = width * 0.5
-        let hh = height * 0.5
+        if plane == .yx || plane == .zx || plane == .yz {
+            swap(&sizeU, &sizeV)
+            swap(&rU, &rV)
+        }
         
-        let dx = width / bx
-        let dy = height / by
+        rU = max(rU, 1)
+        rV = max(rV, 1)
         
-        let cx = center ? -hw : 0.0
-        let cy = center ? -hh : 0.0
+        let bU = Float(rU)
+        let bV = Float(rV)
         
-        let perRow = rx + 1
+        let hU = sizeU * 0.5
+        let hV = sizeV * 0.5
         
-        for y in 0...ry {
-            for x in 0...rx {
-                let fx = Float(x)
-                let fy = Float(y)
+        let dU = sizeU / bU
+        let dV = sizeV / bV
+        
+        let cU = centered ? -hU : 0.0
+        let cV = centered ? -hV : 0.0
+        
+        let perRow = rU + 1
+        
+        for v in 0...rV {
+            for u in 0...rU {
+                let fU = Float(u)
+                let fV = Float(v)
+                
+                var p = simd_make_float4(cU + fU * dU, cV + fV * dV, 0.0, 1.0)
+                var n = simd_make_float3(0.0, 0.0, 1.0)
+                var t = simd_make_float2(fU / bU, 1.0 - fV / bV)
+                
+                switch plane {
+                case .xy: // points in +z direction
+                    break
+                case .yx: // points in -z direction
+                    p = simd_make_float4(p.y, p.x, p.z, p.w)
+                    n = simd_make_float3(0.0, 0.0, -1.0)
+                    t = simd_make_float2(t.y, 1.0 - t.x)
+                case .xz: // points in -y direction
+                    p = simd_make_float4(p.x, p.z, p.y, p.w)
+                    n = simd_make_float3(0.0, -1.0, 0.0)
+                case .zx: // points in +y direction
+                    p = simd_make_float4(p.y, p.z, p.x, p.w)
+                    n = simd_make_float3(0.0, 1.0, 0.0)
+                    t = simd_make_float2(1.0 - t.y, t.x)
+                case .yz: // points in +x direction
+                    p = simd_make_float4(p.z, p.x, p.y, p.w)
+                    n = simd_make_float3(1.0, 0.0, 0.0)
+                    t = simd_make_float2(t.y, 1.0 - t.x)
+                case .zy: // points in -x direction
+                    p = simd_make_float4(p.z, p.y, p.x, p.w)
+                    n = simd_make_float3(-1.0, 0.0, 0.0)
+                }
+                
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(cx + fx * dx, 0.0, cy + fy * dy, 1.0),
-                        SIMD2<Float>(fx / bx, fy / by),
-                        SIMD3<Float>(0.0, 1.0, 1.0)
+                        p,
+                        t,
+                        n
                     )
                 )
                 
-                let index = x + y * perRow
+                let index = u + v * perRow
                 let bl = index
                 let br = bl + 1
                 let tl = index + perRow
                 let tr = tl + 1
                 
-                if x != rx, y != ry {
+                if u != rU, v != rV {
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(br))
                     indexData.append(UInt32(tl))

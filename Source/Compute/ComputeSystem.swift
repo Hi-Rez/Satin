@@ -88,14 +88,19 @@ open class ComputeSystem {
         bufferMap = [:]
         bufferOrder = []
         for param in params {
-            let size = param.alignedSize
-            if size > 0 {
+            let stride = param.stride
+            
+            print("size: \(param.size)")
+            print("stride: \(param.stride)")
+            print("alignment: \(param.alignment)")
+            
+            if stride > 0 {
                 let label = param.label
                 bufferMap[label] = []
                 bufferOrder.append(label)
                 var buffers: [MTLBuffer] = []
                 for i in 0..<2 {
-                    if let buffer = context.device.makeBuffer(length: size * count, options: [.storageModePrivate]) {
+                    if let buffer = context.device.makeBuffer(length: stride * count, options: [.storageModePrivate]) {
                         buffer.label = param.label + " \(i)"
                         buffers.append(buffer)
                     }
