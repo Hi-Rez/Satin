@@ -88,14 +88,7 @@ open class ComputeSystem {
         bufferMap = [:]
         bufferOrder = []
         for param in params {
-            let alignment = 8 // all memory is arranged in bytes = 8 bits
-            var size = param.size
-            let rem = size % alignment
-            if rem > 0 {
-                let offset = alignment - rem
-                size += offset
-            }
-
+            let size = param.alignedSize
             if size > 0 {
                 let label = param.label
                 bufferMap[label] = []
