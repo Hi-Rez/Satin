@@ -21,26 +21,10 @@ open class Material {
         }
     }
     
-    public var shadowTexture: MTLTexture?
-    
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
     init() {}
-    
-    public init(library: MTLLibrary?,
-                vertex: String,
-                fragment: String,
-                label: String,
-                context: Context) {
-        do {
-            pipeline = try makeRenderPipeline(library: library, vertex: vertex, fragment: fragment, label: label, context: context)
-        }
-        catch {
-            print(error)
-        }
-        self.context = context
-    }
     
     public init(pipeline: MTLRenderPipelineState) {
         self.pipeline = pipeline
@@ -52,7 +36,7 @@ open class Material {
         onUpdate?()
     }
     
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {     
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         onBind?(renderEncoder)
     }
     

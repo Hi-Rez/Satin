@@ -46,7 +46,7 @@ open class ConeGeometry: Geometry {
                 let angle = af * angularInc
                 let x = rad * cos(angle)
                 let y = rad * sin(angle)
-
+                
                 vertexData.append(
                     Vertex(
                         simd_make_float4(x, -halfHeight, y, 1.0),
@@ -54,27 +54,27 @@ open class ConeGeometry: Geometry {
                         simd_make_float3(0.0, -1.0, 0.0)
                     )
                 )
-
-                if r != radial && a != angular {
+                
+                if r != radial, a != angular {
                     let perLoop = angular + 1
                     let index = indexOffset + a + r * perLoop
-
+                    
                     let tl = index
                     let tr = tl + 1
                     let bl = index + perLoop
                     let br = bl + 1
-
+                    
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(tr))
-
+                    
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(br))
                 }
             }
         }
-                
+        
         let slopeInv = -radius / height
         let theta = atan(slopeInv)
         let quatTilt = simd_quaternion(theta, simd_make_float3(0.0, 0.0, 1.0))
@@ -106,7 +106,7 @@ open class ConeGeometry: Geometry {
                     )
                 )
                 
-                if v != vertical && a != angular {
+                if v != vertical, a != angular {
                     let perLoop = angular + 1
                     let index = indexOffset + a + v * perLoop
                     

@@ -14,13 +14,12 @@ open class CylinderGeometry: Geometry {
         self.setup(size: (1, 2), res: (60, 1, 1))
     }
     
-    public init(size: (radius:Float, height:Float), res: (angular: Int, radial: Int, vertical:Int)) {
+    public init(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
         super.init()
         self.setup(size: size, res: res)
     }
     
-    func setup(size: (radius:Float, height:Float), res: (angular: Int, radial: Int, vertical:Int)) {
-        
+    func setup(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
         let radius = size.radius
         let height = size.height
         let halfHeight = height * 0.5
@@ -37,7 +36,7 @@ open class CylinderGeometry: Geometry {
         let angularInc = (Float.pi * 2.0) / angularf
         let heightInc = height / verticalf
         
-        //Front Face
+        // Front Face
         for r in 0...radial {
             let rf = Float(r)
             let rad = rf * radialInc
@@ -55,7 +54,7 @@ open class CylinderGeometry: Geometry {
                     )
                 )
                 
-                if r != radial && a != angular {
+                if r != radial, a != angular {
                     let perLoop = angular + 1
                     let index = a + r * perLoop
                     
@@ -63,7 +62,6 @@ open class CylinderGeometry: Geometry {
                     let tr = tl + 1
                     let bl = index + perLoop
                     let br = bl + 1
-                    
                     
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(bl))
@@ -76,7 +74,7 @@ open class CylinderGeometry: Geometry {
             }
         }
         
-        //Rear Face
+        // Rear Face
         var indexOffset = vertexData.count
         for r in 0...radial {
             let rf = Float(r)
@@ -95,7 +93,7 @@ open class CylinderGeometry: Geometry {
                     )
                 )
                 
-                if r != radial && a != angular {
+                if r != radial, a != angular {
                     let perLoop = angular + 1
                     let index = indexOffset + a + r * perLoop
                     
@@ -103,7 +101,7 @@ open class CylinderGeometry: Geometry {
                     let tr = tl + 1
                     let bl = index + perLoop
                     let br = bl + 1
-                                        
+                    
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
@@ -114,11 +112,11 @@ open class CylinderGeometry: Geometry {
             }
         }
         
-        //Side Face
+        // Side Face
         indexOffset = vertexData.count
         for v in 0...vertical {
             let vf = Float(v)
-            let z  = -halfHeight + vf * heightInc
+            let z = -halfHeight + vf * heightInc
             for a in 0...angular {
                 let af = Float(a)
                 let angle = af * angularInc
@@ -133,7 +131,7 @@ open class CylinderGeometry: Geometry {
                     )
                 )
                 
-                if v != vertical && a != angular {
+                if v != vertical, a != angular {
                     let perLoop = angular + 1
                     let index = indexOffset + a + v * perLoop
                     
@@ -141,7 +139,7 @@ open class CylinderGeometry: Geometry {
                     let tr = tl + 1
                     let bl = index + perLoop
                     let br = bl + 1
-                                        
+                    
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
@@ -151,6 +149,5 @@ open class CylinderGeometry: Geometry {
                 }
             }
         }
-    }    
+    }
 }
-

@@ -12,6 +12,7 @@ public protocol Parameter: NSObject, Codable {
     static var type: ParameterType { get }
     var controlType: ControlType { get set }
     var label: String { get }
+    var string: String { get }
     var size: Int { get }
     var stride: Int { get }
     var alignment: Int { get }

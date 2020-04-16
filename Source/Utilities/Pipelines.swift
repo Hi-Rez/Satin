@@ -29,10 +29,10 @@ public func makeRenderPipeline(library: MTLLibrary?,
 public func makeRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
-                               fragmentConstants: MTLFunctionConstantValues, 
+                               fragmentConstants: MTLFunctionConstantValues,
                                label: String,
                                context: Context) throws -> MTLRenderPipelineState? {
-    if let library = library, let vertexProgram = library.makeFunction(name: vertex) {        
+    if let library = library, let vertexProgram = library.makeFunction(name: vertex) {
         let device = library.device
         let fragmentProgram = try library.makeFunction(name: fragment, constantValues: fragmentConstants)
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
@@ -120,7 +120,6 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
     return nil
 }
 
-
 public func makeAlphaRenderPipeline(library: MTLLibrary?,
                                     vertex: String,
                                     fragment: String,
@@ -152,7 +151,6 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
     }
     return nil
 }
-
 
 public func makeShadowRenderPipeline(library: MTLLibrary?,
                                      vertex: String,

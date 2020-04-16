@@ -11,82 +11,93 @@ import Foundation
 import Metal
 import simd
 
-struct BasicColorMaterialUniforms {
-    var color: simd_float4
-}
-
 open class BasicColorMaterial: Material {
-    public var color: simd_float4 = simd_make_float4(1.0, 1.0, 1.0, 1.0)
-    let alignedUniformsSize = ((MemoryLayout<BasicColorMaterialUniforms>.size + 255) / 256) * 256
+    var color = Float4Parameter("color")
 
-    var uniformBufferIndex: Int = 0
-    var uniformBufferOffset: Int = 0
-    var uniforms: UnsafeMutablePointer<BasicColorMaterialUniforms>!
-    var uniformsBuffer: MTLBuffer!
+    lazy var parameters: ParameterGroup = {
+        let params = ParameterGroup("BasicColorUniforms")
+        params.append(color)
+        return params
+    }()
+
+    var uniforms: UniformBuffer?
 
     public init(_ color: simd_float4) {
         super.init()
-        self.color = color
+        self.color.value = color
     }
 
     override func setup() {
         setupPipeline()
-        setupUniformsBuffer()
+        setupUniforms()
     }
 
     override func update() {
-        updateUniformsBuffer()
-        updateUniforms()
+        uniforms?.update()
         super.update()
     }
 
     func setupPipeline() {
+        BasicColorPipeline.setup(context: context, parameters: parameters)
+        if let pipeline = BasicColorPipeline.shared.pipeline {
+            self.pipeline = pipeline
+        }
+    }
+
+    func setupUniforms() {
         guard let context = self.context else { return }
-        let metalFileCompiler = MetalFileCompiler()
-        if let materialPath = getPipelinesPath("Materials/BasicColorMaterial/Shaders.metal") {
-            do {
-                let source = try metalFileCompiler.parse(URL(fileURLWithPath: materialPath))
-                // potentially think about creating a library for all of Satin's Materials
-                let library = try context.device.makeLibrary(source: source, options: .none)
-                pipeline = try makeAlphaRenderPipeline(
-                    library: library,
-                    vertex: "basicColorVertex",
-                    fragment: "basicColorFragment",
-                    label: "Basic Color Material",
-                    context: context)
-            }
-            catch {
-                print(error)
-            }
-        }
-    }
-
-    func setupUniformsBuffer() {
-        guard let context = self.context else { return }
-        let device = context.device
-        let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
-        uniformsBuffer = buffer
-        uniformsBuffer.label = "Basic Color Material Uniforms"
-        uniforms = UnsafeMutableRawPointer(uniformsBuffer.contents()).bindMemory(to: BasicColorMaterialUniforms.self, capacity: 1)
-    }
-
-    func updateUniforms() {
-        if uniforms != nil {
-            uniforms[0].color = color
-        }
-    }
-
-    func updateUniformsBuffer() {
-        if uniformsBuffer != nil {
-            uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
-            uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
-            uniforms = UnsafeMutableRawPointer(uniformsBuffer.contents() + uniformBufferOffset).bindMemory(to: BasicColorMaterialUniforms.self, capacity: 1)
-        }
+        uniforms = UniformBuffer(context: context, parameters: parameters)
     }
 
     open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        renderEncoder.setFragmentBuffer(uniformsBuffer, offset: uniformBufferOffset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+        if let uniforms = self.uniforms {
+            renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+        }
         super.bind(renderEncoder)
+    }
+}
+
+class BasicColorPipeline {
+    static let shared = BasicColorPipeline()
+    private static var sharedPipeline: MTLRenderPipelineState?
+    let pipeline: MTLRenderPipelineState?
+
+    class func setup(context: Context?, parameters: ParameterGroup) {
+        guard BasicColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
+
+        let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
+        let materialsURL = pipelinesURL.appendingPathComponent("Materials")
+        let commonURL = materialsURL.appendingPathComponent("Common")
+        let includesURL = commonURL.appendingPathComponent("Includes.metal")
+        let materialURL = materialsURL.appendingPathComponent("BasicColor")
+        let vertexURL = materialURL.appendingPathComponent("Vertex.metal")
+        let fragmentURL = materialURL.appendingPathComponent("Fragment.metal")
+
+        let metalFileCompiler = MetalFileCompiler()
+        do {
+            var source = try metalFileCompiler.parse(includesURL)
+            source += parameters.structString
+            source += try metalFileCompiler.parse(vertexURL)
+            source += try metalFileCompiler.parse(fragmentURL)
+
+            let library = try context.device.makeLibrary(source: source, options: .none)
+
+            let pipeline = try makeAlphaRenderPipeline(
+                library: library,
+                vertex: "basicColorVertex",
+                fragment: "basicColorFragment",
+                label: "Basic Color Material",
+                context: context)
+
+            BasicColorPipeline.sharedPipeline = pipeline
+        }
+        catch {
+            print(error)
+            return
+        }
+    }
+
+    init() {
+        pipeline = BasicColorPipeline.sharedPipeline
     }
 }

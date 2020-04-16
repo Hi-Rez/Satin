@@ -26,6 +26,6 @@ extension simd_quatf: Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case x,y,z,w
+        case x, y, z, w
     }
 }

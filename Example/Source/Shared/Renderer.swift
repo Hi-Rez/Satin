@@ -30,6 +30,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setupMtkView(_ metalKitView: MTKView) {
+        metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.autoResizeDrawable = false
         #if os(iOS)
@@ -73,13 +74,20 @@ class Renderer: Forge.Renderer {
     }
     
     func setupMaterial() {
-        material = Material(
-            library: library,
-            vertex: "basic_vertex",
-            fragment: "basic_fragment",
-            label: "basic",
-            context: context
-        )
+        do {
+            if let pipeline = try makeRenderPipeline(
+                library: library,
+                vertex: "basic_vertex",
+                fragment: "basic_fragment",
+                label: "basic",
+                context: context
+            ) {
+                material = Material(pipeline: pipeline)
+            }
+        }
+        catch {
+            print(error)
+        }
     }
     
     func setupGeometry() {

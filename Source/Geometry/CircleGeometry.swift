@@ -54,7 +54,7 @@ open class CircleGeometry: Geometry {
                     )
                 )
                 
-                if r != radial && a != angular {
+                if r != radial, a != angular {
                     let perLoop = angular + 1
                     let index = a + r * perLoop
                     

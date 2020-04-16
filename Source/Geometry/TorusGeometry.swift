@@ -47,13 +47,13 @@ open class TorusGeometry: Geometry {
                 let cosAngle = cos(angle)
                 let sinAngle = sin(angle)
                 
-                let x = cosSlice*(majorRadius + cosAngle*minorRadius)
-                let y = sinSlice*(majorRadius + cosAngle*minorRadius)
-                let z = sinAngle*minorRadius
+                let x = cosSlice * (majorRadius + cosAngle * minorRadius)
+                let y = sinSlice * (majorRadius + cosAngle * minorRadius)
+                let z = sinAngle * minorRadius
                 
                 let tangent = simd_make_float3(-sinSlice, cosSlice, 0.0)
-                let stangent = simd_make_float3(cosSlice*(-sinAngle), sinSlice*(-sinAngle), cosAngle)
-                            
+                let stangent = simd_make_float3(cosSlice * (-sinAngle), sinSlice * (-sinAngle), cosAngle)
+                
                 vertexData.append(
                     Vertex(
                         simd_make_float4(x, z, y, 1.0),
@@ -74,7 +74,7 @@ open class TorusGeometry: Geometry {
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
-
+                    
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(br))
                     indexData.append(UInt32(bl))

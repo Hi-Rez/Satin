@@ -36,8 +36,7 @@ open class UniformBuffer {
         updateBuffer()
     }
     
-    public func reset()
-    {
+    public func reset() {
         index = -1
     }
     

@@ -38,7 +38,6 @@ open class FPSCameraController {
     var defaultPosition: simd_float3 = simd_make_float3(0.0)
     var defaultOrientation: simd_quatf = simd_quaternion(0.0, simd_make_float3(0.0))
     
-    
     public init(camera: PerspectiveCamera, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
         self.camera = camera
         
@@ -87,7 +86,7 @@ open class FPSCameraController {
             camera.position += camera.upDirection * translateVelocity.y
             translateVelocity *= damping
         }
-                
+        
         if length(rotateVelocity) > Float.ulpOfOne {
             camera.orientation *= simd_quaternion(rotateVelocity.x * rotateScalar, worldUpDirection)
             camera.orientation *= simd_quaternion(-rotateVelocity.y * rotateScalar, worldRightDirection)

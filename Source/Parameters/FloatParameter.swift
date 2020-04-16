@@ -12,6 +12,7 @@ open class FloatParameter: NSObject, Parameter {
     public static var type = ParameterType.float
     public var controlType: ControlType
     public let label: String
+    public var string: String { return "float" }
     public var size: Int { return MemoryLayout<Float>.size }
     public var stride: Int { return MemoryLayout<Float>.stride }
     public var alignment: Int { return MemoryLayout<Float>.alignment }

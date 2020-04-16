@@ -13,7 +13,7 @@ open class QuadGeometry: Geometry {
         super.init()
         self.setup()
     }
-    
+
     func setup() {
         self.primitiveType = .triangleStrip
         vertexData.append(

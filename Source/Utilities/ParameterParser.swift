@@ -24,7 +24,6 @@ public func parseParameters(source: String, key: String) -> ParameterGroup? {
     return nil
 }
 
-
 func _parseStruct(source: String, key: String) -> String? {
     do {
         let pattern = "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)"
@@ -63,7 +62,7 @@ func parseStruct(source: String) -> ParameterGroup? {
             if let r2 = Range(match.range(at: 2), in: source) {
                 vName = String(source[r2])
             }
-            
+
             if let type = vType, let name = vName {
                 if type == "bool" {
                     params.append(BoolParameter(name))
@@ -101,7 +100,6 @@ func parseStruct(source: String) -> ParameterGroup? {
         return nil
     }
 }
-
 
 func parseParameters(source: String) -> ParameterGroup? {
     do {
@@ -317,9 +315,8 @@ func parseParameters(source: String) -> ParameterGroup? {
                             if let r1 = Range(subMatch.range(at: 1), in: uiDetails) {
                                 value = String(uiDetails[r1])
                             }
-                                                        
+
                             if let value = value, value.count > 0, let fValue = Float(value), let name = vName {
-                                print("\(value)")
                                 var label = name
                                 label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
                                 let firstChar = String(label[label.startIndex])
@@ -340,13 +337,13 @@ func parseParameters(source: String) -> ParameterGroup? {
                             }
                         }
                     }
-                    
+
                     if !success, let name = vName {
                         var label = uiDetails.count > 0 ? uiDetails : name
                         label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
                         let firstChar = String(label[label.startIndex])
                         label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
-                        
+
                         var parameter: Parameter?
                         if vType == "float" {
                             parameter = FloatParameter(label, 0.0, .inputfield)
@@ -521,4 +518,3 @@ func parseParameters(source: String) -> ParameterGroup? {
         return nil
     }
 }
-

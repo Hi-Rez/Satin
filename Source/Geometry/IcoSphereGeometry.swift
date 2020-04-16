@@ -9,7 +9,6 @@
 import simd
 
 open class IcoSphereGeometry: Geometry {
-    
     var midPointIndexCache: [String: UInt32] = [String: UInt32]()
     var index: UInt32 = 0
     
@@ -124,29 +123,29 @@ open class IcoSphereGeometry: Geometry {
         for _ in 0..<res {
             var newIndexData: [UInt32] = []
             let len = indexData.count / 3
-
+            
             for i in 0..<len {
                 let index = i * 3
                 let i0 = indexData[index]
-                let i1 = indexData[index+1]
-                let i2 = indexData[index+2]
-
+                let i1 = indexData[index + 1]
+                let i2 = indexData[index + 2]
+                
                 let a = midPoint(i0, i1, radius)
                 let b = midPoint(i1, i2, radius)
                 let c = midPoint(i2, i0, radius)
-
+                
                 newIndexData.append(i0)
                 newIndexData.append(a)
                 newIndexData.append(c)
-
+                
                 newIndexData.append(i1)
                 newIndexData.append(b)
                 newIndexData.append(a)
-
+                
                 newIndexData.append(i2)
                 newIndexData.append(c)
                 newIndexData.append(b)
-
+                
                 newIndexData.append(a)
                 newIndexData.append(b)
                 newIndexData.append(c)
@@ -155,8 +154,7 @@ open class IcoSphereGeometry: Geometry {
         }
     }
     
-    func midPoint(_ i0: UInt32, _ i1: UInt32, _ radius: Float) -> UInt32
-    {
+    func midPoint(_ i0: UInt32, _ i1: UInt32, _ radius: Float) -> UInt32 {
         let minKey = min(i0, i1)
         let maxKey = max(i0, i1)
         let key = String(minKey) + "_" + String(maxKey)
@@ -167,13 +165,12 @@ open class IcoSphereGeometry: Geometry {
         let point1 = simd_make_float3(vertexData[Int(i0)].position)
         let point2 = simd_make_float3(vertexData[Int(i1)].position)
         let middle = (point1 + point2) * 0.5
-    
+        
         let index = addVertex(position: middle, radius: radius)
         midPointIndexCache[key] = index
-      
+        
         return index
     }
-
     
     func addVertex(position: simd_float3, radius: Float) -> UInt32 {
         let p = simd_normalize(position)

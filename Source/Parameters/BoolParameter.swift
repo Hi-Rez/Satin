@@ -12,6 +12,7 @@ open class BoolParameter: NSObject, Parameter {
     public static var type = ParameterType.bool
     public var controlType: ControlType
     public let label: String
+    public var string: String { return "bool" }
     public var size: Int { return MemoryLayout<Bool>.size }
     public var stride: Int { return MemoryLayout<Bool>.stride }
     public var alignment: Int { return MemoryLayout<Bool>.alignment }

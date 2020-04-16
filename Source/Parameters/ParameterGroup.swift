@@ -184,6 +184,15 @@ open class ParameterGroup: Codable {
         }
         return alignment
     }
+
+    public var structString: String {
+        var source = "typedef struct {"
+        for param in params {
+            source += "\t \(param.string) \(param.label);\n"
+        }
+        source += "} \(label);\n"
+        return source
+    }
 }
 
 extension ParameterGroup: Equatable {

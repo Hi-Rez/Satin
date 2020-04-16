@@ -17,7 +17,7 @@ open class PlaneGeometry: Geometry {
         case yz // points in +x direction
         case zy // points in -x direction
     }
-          
+    
     public init(size: Float = 2) {
         super.init()
         self.setup(width: size, height: size, resU: 1, resV: 1)
@@ -78,16 +78,16 @@ open class PlaneGeometry: Geometry {
         self.setup(width: size.width, height: size.height, resU: res, resV: res, plane: plane, centered: centered)
     }
     
-    public init(size: (width: Float, height: Float), res: (u:Int, v:Int)) {
+    public init(size: (width: Float, height: Float), res: (u: Int, v: Int)) {
         super.init()
         self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v)
     }
     
-    public init(size: (width: Float, height: Float), res: (u:Int, v:Int), plane: Orientation = .xy) {
+    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy) {
         super.init()
         self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane)
     }
-
+    
     public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy, centered: Bool = true) {
         super.init()
         self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)

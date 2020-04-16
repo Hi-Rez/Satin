@@ -12,6 +12,7 @@ open class DoubleParameter: NSObject, Parameter {
     public static var type = ParameterType.double
     public var controlType: ControlType
     public let label: String
+    public var string: String { return "double" }
     public var size: Int { return MemoryLayout<Double>.size }
     public var stride: Int { return MemoryLayout<Double>.stride }
     public var alignment: Int { return MemoryLayout<Double>.alignment }

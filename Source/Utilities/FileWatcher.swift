@@ -12,10 +12,12 @@ open class FileWatcher
 {
     public var timeInterval: TimeInterval = 1.0
     {
-        didSet {
+        didSet
+        {
             watch()
         }
     }
+
     public var filePath: String
     public var timer: Timer?
     var lastModifiedDate: Date?
@@ -70,10 +72,11 @@ open class FileWatcher
 
     public func watch()
     {
-        if timer != nil {
+        if timer != nil
+        {
             unwatch()
         }
-                
+
         timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: { [weak self] _ in
             self?.checkFile()
         })

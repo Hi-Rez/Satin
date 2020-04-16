@@ -69,15 +69,6 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
         }
     }
     
-    public var shadowMaterial: Material? {
-        didSet {
-            if let shadowMaterial = self.shadowMaterial {
-                shadowMaterial.delegate = self
-            }
-            setupShadowMaterial()
-        }
-    }
-    
     public var visible: Bool = true
     
     public var vertexBuffer: MTLBuffer?
@@ -150,11 +141,6 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     func setupMaterial() {
         guard let context = self.context, let material = self.material else { return }
         material.context = context
-    }
-    
-    func setupShadowMaterial() {
-        guard let context = self.context, let shadowMaterial = self.shadowMaterial else { return }
-        shadowMaterial.context = context
     }
     
     func updateUniforms(camera: Camera) {
@@ -251,6 +237,5 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     
     func materialUpdated(material: Material) {
         setupMaterial()
-        setupShadowMaterial()
     }
 }

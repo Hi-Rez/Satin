@@ -19,7 +19,7 @@ open class AnyParameter: Codable {
         case type, base
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(ParameterType.self, forKey: .type)
         self.base = try type.metatype.init(from: container.superDecoder(forKey: .base))

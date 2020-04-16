@@ -89,7 +89,7 @@ open class SphereGeometry: Geometry {
     
     public override func calculateNormals() {
         for i in 0..<vertexData.count {
-            vertexData[i].normal = normalize(simd_make_float3(vertexData[i].position))            
+            vertexData[i].normal = normalize(simd_make_float3(vertexData[i].position))
         }
     }
 }

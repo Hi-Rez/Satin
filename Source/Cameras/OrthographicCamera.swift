@@ -81,13 +81,13 @@ open class OrthographicCamera: Camera
     public override init()
     {
         super.init()
-        self.near = 0
-        self.far = 1
+        near = 0
+        far = 1
     }
     
     public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
     {
-        super.init()        
+        super.init()
         self.left = left
         self.right = right
         self.bottom = bottom

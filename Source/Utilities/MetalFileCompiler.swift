@@ -23,7 +23,7 @@ open class MetalFileCompiler
     
     public func touch()
     {
-        self.onUpdate?()
+        onUpdate?()
     }
     
     public func parse(_ fileURL: URL) throws -> String
@@ -44,7 +44,6 @@ open class MetalFileCompiler
             }
             watchers.append(watcher)
             files.append(fileURLResolved)
-            
             
             let baseURL = fileURL.deletingLastPathComponent()
             var content = ""
@@ -68,7 +67,7 @@ open class MetalFileCompiler
                 {
                     let includeURL = URL(fileURLWithPath: String(content[r1]), relativeTo: baseURL)
                     do
-                    {                        
+                    {
                         let includeContent = try _parse(includeURL)
                         content.replaceSubrange(r0, with: includeContent + "\n")
                     }
@@ -87,8 +86,9 @@ open class MetalFileCompiler
         return ""
     }
     
-    deinit {
+    deinit
+    {
         files = []
-        watchers = [] 
+        watchers = []
     }
 }

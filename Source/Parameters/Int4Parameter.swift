@@ -13,6 +13,7 @@ open class Int4Parameter: NSObject, Parameter {
     public static var type = ParameterType.int4
     public var controlType: ControlType
     public let label: String
+    public var string: String { return "int4" }
     public var size: Int { return MemoryLayout<simd_int4>.size }
     public var stride: Int { return MemoryLayout<simd_int4>.stride }
     public var alignment: Int { return MemoryLayout<simd_int4>.alignment }

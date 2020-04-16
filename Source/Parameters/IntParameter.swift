@@ -12,6 +12,7 @@ open class IntParameter: NSObject, Parameter {
     public static var type = ParameterType.int
     public var controlType: ControlType
     public let label: String
+    public var string: String { return "int" }
     public var size: Int { return MemoryLayout<Int32>.size }
     public var stride: Int { return MemoryLayout<Int32>.stride }
     public var alignment: Int { return MemoryLayout<Int32>.alignment }

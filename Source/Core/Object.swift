@@ -37,19 +37,11 @@ open class Object: Codable {
     
     var context: Context? {
         didSet {
-            if context != nil {
-                setup()
-                if let context = self.context {
-                    for child in children {
-                        setupContext(context: context, object: child)
-                    }
-                }
+            setup()
+            for child in children {
+                child.context = context
             }
         }
-    }
-    
-    func setupContext(context: Context, object: Object) {
-        object.context = context
     }
     
     public var position = simd_make_float3(0, 0, 0) {
@@ -148,12 +140,11 @@ open class Object: Codable {
             _worldScale = simd_make_float3(length(sx), length(sy), length(sz))
             return _worldScale
         }
-        else
-        {
+        else {
             return _worldScale
         }
     }
-
+    
     var _worldOrientation = simd_quaternion(0, simd_make_float3(0, 0, 1))
     
     private var worldOrientation: simd_quatf {
@@ -163,9 +154,9 @@ open class Object: Codable {
             let c0 = wm.columns.0
             let c1 = wm.columns.0
             let c2 = wm.columns.0
-            let x = simd_make_float3(c0.x, c0.y, c0.z)/ws.x
-            let y = simd_make_float3(c1.x, c1.y, c1.z)/ws.y
-            let z = simd_make_float3(c2.x, c2.y, c2.z)/ws.z
+            let x = simd_make_float3(c0.x, c0.y, c0.z) / ws.x
+            let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
+            let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
             _worldOrientation = simd_quatf(simd_float3x3(columns: (x, y, z)))
             return _worldOrientation
         }
@@ -180,7 +171,8 @@ open class Object: Codable {
         if updateMatrix {
             if let parent = self.parent {
                 _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
-            } else {
+            }
+            else {
                 _worldMatrix = localMatrix
             }
             updateMatrix = false
@@ -194,7 +186,6 @@ open class Object: Codable {
     
     public func update() {
         onUpdate?()
-        
         for child in children {
             child.update()
         }

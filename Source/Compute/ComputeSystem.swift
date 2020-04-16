@@ -34,14 +34,14 @@ open class ComputeSystem {
 
     public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
     public var postReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
-    
+
     public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
     public var postCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int, _ textureOffset: Int) -> ())?
 
     var context: Context
 
-    public var resetPipeline: MTLComputePipelineState? = nil
-    public var updatePipeline: MTLComputePipelineState? = nil
+    public var resetPipeline: MTLComputePipelineState?
+    public var updatePipeline: MTLComputePipelineState?
 
     public init(context: Context,
                 resetPipeline: MTLComputePipelineState?,
@@ -60,7 +60,7 @@ open class ComputeSystem {
         self._count = count
         setupBuffers()
     }
-    
+
     public init(context: Context, count: Int) {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
@@ -70,7 +70,7 @@ open class ComputeSystem {
         self.count = count
         self._count = count
     }
-    
+
     deinit {
         params = []
         bufferMap = [:]
@@ -78,7 +78,7 @@ open class ComputeSystem {
         resetPipeline = nil
         updatePipeline = nil
     }
-    
+
     public func setParams(_ params: [ParameterGroup]) {
         self.params = params
         _setupBuffers = true
@@ -110,7 +110,7 @@ open class ComputeSystem {
         _setupBuffers = true
     }
 
-    public func getBuffer(_ label: String) -> MTLBuffer? {     
+    public func getBuffer(_ label: String) -> MTLBuffer? {
         if let buffers = bufferMap[label] {
             return buffers[pong()]
         }
@@ -124,7 +124,7 @@ open class ComputeSystem {
             _setupBuffers = false
             _count = count
         }
-        
+
         if bufferMap.count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
@@ -133,7 +133,7 @@ open class ComputeSystem {
                 preCompute?(computeEncoder, offsets.buffer, offsets.texture)
                 dispatch(computeEncoder, pipeline)
                 postCompute?(computeEncoder, offsets.buffer, offsets.texture)
-                postReset?(computeEncoder, offsets.buffer, offsets.texture)                
+                postReset?(computeEncoder, offsets.buffer, offsets.texture)
                 _reset = false
             }
 
@@ -182,9 +182,8 @@ open class ComputeSystem {
     func pong() -> Int {
         return ((_index + 1) % 2)
     }
-    
-    func pingPong()
-    {
+
+    func pingPong() {
         _index = (_index + 1) % 2
     }
 }

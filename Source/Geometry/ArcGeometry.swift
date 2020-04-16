@@ -41,7 +41,7 @@ open class ArcGeometry: Geometry {
                     )
                 )
 
-                if r != radial && a != angular {
+                if r != radial, a != angular {
                     let perLoop = angular + 1
                     let index = a + r * perLoop
 
@@ -49,7 +49,6 @@ open class ArcGeometry: Geometry {
                     let tr = tl + 1
                     let bl = index + perLoop
                     let br = bl + 1
-
 
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(bl))
