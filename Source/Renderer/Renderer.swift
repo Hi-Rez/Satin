@@ -123,7 +123,7 @@ open class Renderer
     func setupLight()
     {
         light.position = lightPosition
-        light.lookat(lightDirection)
+//        light.lookat(lightDirection)
         lightViewMatrix = lookAt(light.position, light.position + light.forwardDirection, light.upDirection)
         lightProjectionMatrix = orthographic(left: -10, right: 10, bottom: -10, top: 10, near: -10, far: 20)
         shadowMatrix = lightProjectionMatrix * lightViewMatrix

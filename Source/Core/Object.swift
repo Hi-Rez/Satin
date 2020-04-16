@@ -37,17 +37,19 @@ open class Object: Codable {
     
     var context: Context? {
         didSet {
-            setup()
-            if let context = self.context {
-                for child in self.children {
-                    setupContext(context: context, object: child)
+            if context != nil {
+                setup()
+                if let context = self.context {
+                    for child in children {
+                        setupContext(context: context, object: child)
+                    }
                 }
             }
         }
     }
     
     func setupContext(context: Context, object: Object) {
-        object.context = context        
+        object.context = context
     }
     
     public var position = simd_make_float3(0, 0, 0) {
@@ -102,9 +104,17 @@ open class Object: Codable {
     
     public var onUpdate: (() -> ())?
     
-    private var updateMatrix: Bool = true
+    var updateMatrix: Bool = true {
+        didSet {
+            if updateMatrix {
+                for child in children {
+                    child.updateMatrix = true
+                }
+            }
+        }
+    }
     
-    private var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
+    var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var localMatrix: matrix_float4x4 {
         if updateMatrix {
@@ -114,9 +124,57 @@ open class Object: Codable {
         return _localMatrix
     }
     
-    // make world position & scale & rotation
+    var _worldPosition = simd_make_float3(0, 0, 0)
     
-    private var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
+    public var worldPosition: simd_float3 {
+        if updateMatrix {
+            let wp = worldMatrix.columns.3
+            _worldPosition = simd_make_float3(wp.x, wp.y, wp.z)
+            return _worldPosition
+        }
+        else {
+            return _worldPosition
+        }
+    }
+    
+    var _worldScale = simd_make_float3(0, 0, 0)
+    
+    public var worldScale: simd_float3 {
+        if updateMatrix {
+            let wm = worldMatrix
+            let sx = wm.columns.0
+            let sy = wm.columns.1
+            let sz = wm.columns.2
+            _worldScale = simd_make_float3(length(sx), length(sy), length(sz))
+            return _worldScale
+        }
+        else
+        {
+            return _worldScale
+        }
+    }
+
+    var _worldOrientation = simd_quaternion(0, simd_make_float3(0, 0, 1))
+    
+    private var worldOrientation: simd_quatf {
+        if updateMatrix {
+            let ws = worldScale
+            let wm = worldMatrix
+            let c0 = wm.columns.0
+            let c1 = wm.columns.0
+            let c2 = wm.columns.0
+            let x = simd_make_float3(c0.x, c0.y, c0.z)/ws.x
+            let y = simd_make_float3(c1.x, c1.y, c1.z)/ws.y
+            let z = simd_make_float3(c2.x, c2.y, c2.z)/ws.z
+            _worldOrientation = simd_quatf(simd_float3x3(columns: (x, y, z)))
+            return _worldOrientation
+        }
+        else {
+            return _worldOrientation
+        }
+    }
+    
+    var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var worldMatrix: matrix_float4x4 {
         if updateMatrix {
@@ -124,9 +182,6 @@ open class Object: Codable {
                 _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
             } else {
                 _worldMatrix = localMatrix
-            }
-            for child in children {
-                child.updateMatrix = true
             }
             updateMatrix = false
         }
@@ -160,10 +215,6 @@ open class Object: Codable {
                 return
             }
         }
-    }
-    
-    public func lookat(_ target: simd_float3) {        
-        orientation = simd_quatf(from: simd_make_float3(0.0, 0.0, 1.0), to: target)
     }
 }
 
