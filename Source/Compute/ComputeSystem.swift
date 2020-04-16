@@ -89,11 +89,6 @@ open class ComputeSystem {
         bufferOrder = []
         for param in params {
             let stride = param.stride
-            
-            print("size: \(param.size)")
-            print("stride: \(param.stride)")
-            print("alignment: \(param.alignment)")
-            
             if stride > 0 {
                 let label = param.label
                 bufferMap[label] = []
@@ -138,8 +133,7 @@ open class ComputeSystem {
                 preCompute?(computeEncoder, offsets.buffer, offsets.texture)
                 dispatch(computeEncoder, pipeline)
                 postCompute?(computeEncoder, offsets.buffer, offsets.texture)
-                postReset?(computeEncoder, offsets.buffer, offsets.texture)
-                print("resetting compute")
+                postReset?(computeEncoder, offsets.buffer, offsets.texture)                
                 _reset = false
             }
 
