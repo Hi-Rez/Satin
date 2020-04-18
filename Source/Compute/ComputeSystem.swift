@@ -128,12 +128,14 @@ open class ComputeSystem {
         if bufferMap.count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                let offsets = setBuffers(computeEncoder, _index)
-                preReset?(computeEncoder, offsets.buffer, offsets.texture)
-                preCompute?(computeEncoder, offsets.buffer, offsets.texture)
-                dispatch(computeEncoder, pipeline)
-                postCompute?(computeEncoder, offsets.buffer, offsets.texture)
-                postReset?(computeEncoder, offsets.buffer, offsets.texture)
+                for i in 0...1 {
+                    let offsets = setBuffers(computeEncoder, i)
+                    preReset?(computeEncoder, offsets.buffer, offsets.texture)
+                    preCompute?(computeEncoder, offsets.buffer, offsets.texture)
+                    dispatch(computeEncoder, pipeline)
+                    postCompute?(computeEncoder, offsets.buffer, offsets.texture)
+                    postReset?(computeEncoder, offsets.buffer, offsets.texture)
+                }
                 _reset = false
             }
 
