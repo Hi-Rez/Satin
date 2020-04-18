@@ -41,7 +41,7 @@ open class ParameterGroup: Codable {
         do {
             let jsonEncoder = JSONEncoder()
             jsonEncoder.outputFormatting = .prettyPrinted
-            let payload: Data = try jsonEncoder.encode(self)
+            let payload: Data = try jsonEncoder.encode(self)            
             try payload.write(to: url)
         }
         catch {
