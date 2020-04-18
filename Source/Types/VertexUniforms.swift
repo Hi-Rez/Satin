@@ -14,4 +14,5 @@ public struct VertexUniforms {
     public var modelViewMatrix: float4x4
     public var projectionMatrix: float4x4
     public var normalMatrix: float3x3
+    public var worldCameraPosition: simd_float3
 }

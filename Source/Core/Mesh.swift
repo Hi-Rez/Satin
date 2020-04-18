@@ -155,6 +155,7 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
                 simd_make_float3(n[1].x, n[1].y, n[1].z),
                 simd_make_float3(n[2].x, n[2].y, n[2].z)
             )
+            vertexUniforms[0].worldCameraPosition = camera.worldPosition
         }
     }
     
