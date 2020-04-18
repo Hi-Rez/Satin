@@ -16,33 +16,11 @@ open class QuadGeometry: Geometry {
 
     func setup() {
         self.primitiveType = .triangleStrip
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(-1.0, -1.0, 0.0, 1.0),
-                SIMD2<Float>(0.0, 1.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(1.0, -1.0, 0.0, 1.0),
-                SIMD2<Float>(1.0, 1.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(-1.0, 1.0, 0.0, 1.0),
-                SIMD2<Float>(0.0, 0.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
-        vertexData.append(
-            Vertex(
-                SIMD4<Float>(1.0, 1.0, 0.0, 1.0),
-                SIMD2<Float>(1.0, 0.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
-        )
+        vertexData = [
+            Vertex(simd_make_float4(-1.0, -1.0, 0.0, 1.0), simd_make_float2(0.0, 1.0), simd_make_float3(0.0, 0.0, 1.0)),
+            Vertex(simd_make_float4(1.0, -1.0, 0.0, 1.0), simd_make_float2(1.0, 1.0), simd_make_float3(0.0, 0.0, 1.0)),
+            Vertex(simd_make_float4(-1.0, 1.0, 0.0, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, 1.0)),
+            Vertex(simd_make_float4(1.0, 1.0, 0.0, 1.0), simd_make_float2(1.0, 0.0), simd_make_float3(0.0, 0.0, 1.0))
+        ]
     }
 }
