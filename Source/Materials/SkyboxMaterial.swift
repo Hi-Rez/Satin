@@ -52,10 +52,7 @@ class SkyboxPipeline {
 
         do {
             if let source = try makePipelineSource(pipelinesPath, "Skybox") {
-                print(source)
-
                 let library = try context.device.makeLibrary(source: source, options: .none)
-
                 let pipeline = try makeRenderPipeline(
                     library: library,
                     vertex: "skyboxVertex",
