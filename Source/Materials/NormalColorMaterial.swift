@@ -63,33 +63,19 @@ class NormalColorPipeline {
     class func setup(context: Context?, parameters: ParameterGroup) {
         guard NormalColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
 
-        let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
-        let materialsURL = pipelinesURL.appendingPathComponent("Materials")
-        let commonURL = materialsURL.appendingPathComponent("Common")
-        
-        let includesURL = commonURL.appendingPathComponent("Includes.metal")
-        let vertexURL = commonURL.appendingPathComponent("Vertex.metal")
-        
-        let materialURL = materialsURL.appendingPathComponent("NormalColor")
-        let fragmentURL = materialURL.appendingPathComponent("Fragment.metal")
-
-        let metalFileCompiler = MetalFileCompiler()
         do {
-            var source = try metalFileCompiler.parse(includesURL)
-            source += parameters.structString
-            source += try metalFileCompiler.parse(vertexURL)
-            source += try metalFileCompiler.parse(fragmentURL)
-
-            let library = try context.device.makeLibrary(source: source, options: .none)
-
-            let pipeline = try makeRenderPipeline(
-                library: library,
-                vertex: "vert",
-                fragment: "normalColorFragment",
-                label: "Normal Color",
-                context: context)
-
-            NormalColorPipeline.sharedPipeline = pipeline
+            if let source = try makePipelineSource(pipelinesPath, "NormalColor", parameters) {
+                let library = try context.device.makeLibrary(source: source, options: .none)
+                
+                let pipeline = try makeRenderPipeline(
+                    library: library,
+                    vertex: "vert",
+                    fragment: "normalColorFragment",
+                    label: "Normal Color",
+                    context: context)
+                
+                NormalColorPipeline.sharedPipeline = pipeline
+            }
         }
         catch {
             print(error)

@@ -208,3 +208,31 @@ public func makeComputePipeline(library: MTLLibrary?,
     }
     return nil
 }
+
+func makePipelineSource(_ pipelinesPath: String, _ materialName: String, _ parameters: ParameterGroup? = nil) throws -> String? {
+    let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
+    let satinURL = pipelinesURL.appendingPathComponent("Satin")
+    let includesURL = satinURL.appendingPathComponent("Includes.metal")
+
+    let commonURL = pipelinesURL.appendingPathComponent("Common")
+    let vertexURL = commonURL.appendingPathComponent("Vertex.metal")
+
+    let materialsURL = pipelinesURL.appendingPathComponent("Materials")
+    let materialURL = materialsURL.appendingPathComponent(materialName)
+    let fragmentURL = materialURL.appendingPathComponent("Shaders.metal")
+
+    let metalFileCompiler = MetalFileCompiler()
+    do {
+        var source = try metalFileCompiler.parse(includesURL)
+        if let parameters = parameters {
+            source += parameters.structString
+        }
+        source += try metalFileCompiler.parse(vertexURL)
+        source += try metalFileCompiler.parse(fragmentURL)
+        return source
+    }
+    catch {
+        print(error)
+        return nil
+    }
+}

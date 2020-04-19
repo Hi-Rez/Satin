@@ -62,34 +62,18 @@ class BasicColorPipeline {
 
     class func setup(context: Context?, parameters: ParameterGroup) {
         guard BasicColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
-
-        let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
-        let materialsURL = pipelinesURL.appendingPathComponent("Materials")
-        let commonURL = materialsURL.appendingPathComponent("Common")
-        
-        let includesURL = commonURL.appendingPathComponent("Includes.metal")
-        let vertexURL = commonURL.appendingPathComponent("Vertex.metal")
-        
-        let materialURL = materialsURL.appendingPathComponent("BasicColor")
-        let fragmentURL = materialURL.appendingPathComponent("Fragment.metal")
-
-        let metalFileCompiler = MetalFileCompiler()
         do {
-            var source = try metalFileCompiler.parse(includesURL)
-            source += parameters.structString
-            source += try metalFileCompiler.parse(vertexURL)
-            source += try metalFileCompiler.parse(fragmentURL)
+            if let source = try makePipelineSource(pipelinesPath, "BasicColor", parameters) {
+                let library = try context.device.makeLibrary(source: source, options: .none)
+                let pipeline = try makeAlphaRenderPipeline(
+                    library: library,
+                    vertex: "vert",
+                    fragment: "basicColorFragment",
+                    label: "Basic Color",
+                    context: context)
 
-            let library = try context.device.makeLibrary(source: source, options: .none)
-
-            let pipeline = try makeAlphaRenderPipeline(
-                library: library,
-                vertex: "vert",
-                fragment: "basicColorFragment",
-                label: "Basic Color",
-                context: context)
-
-            BasicColorPipeline.sharedPipeline = pipeline
+                BasicColorPipeline.sharedPipeline = pipeline
+            }
         }
         catch {
             print(error)

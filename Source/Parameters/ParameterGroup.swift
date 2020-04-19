@@ -186,11 +186,12 @@ open class ParameterGroup: Codable {
     }
 
     public var structString: String {
-        var source = "typedef struct {"
+        let structName = label.replacingOccurrences(of: " ", with: "")
+        var source = "typedef struct {\n"
         for param in params {
             source += "\t \(param.string) \(param.label);\n"
         }
-        source += "} \(label);\n"
+        source += "} \(structName);\n\n"
         return source
     }
 }

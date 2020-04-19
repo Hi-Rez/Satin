@@ -12,11 +12,11 @@ open class UVColorMaterial: Material {
     public override init() {
         super.init()
     }
-    
+
     override func setup() {
         setupPipeline()
     }
-    
+
     func setupPipeline() {
         UVColorPipeline.setup(context: context)
         if let pipeline = UVColorPipeline.shared.pipeline {
@@ -33,30 +33,19 @@ class UVColorPipeline {
     class func setup(context: Context?) {
         guard UVColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
 
-        let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
-        let materialsURL = pipelinesURL.appendingPathComponent("Materials")
-        let commonURL = materialsURL.appendingPathComponent("Common")
-        let includesURL = commonURL.appendingPathComponent("Includes.metal")
-        let materialURL = materialsURL.appendingPathComponent("UVColor")
-        let vertexURL = commonURL.appendingPathComponent("Vertex.metal")
-        let fragmentURL = materialURL.appendingPathComponent("Fragment.metal")
-
-        let metalFileCompiler = MetalFileCompiler()
         do {
-            var source = try metalFileCompiler.parse(includesURL)
-            source += try metalFileCompiler.parse(vertexURL)
-            source += try metalFileCompiler.parse(fragmentURL)
+            if let source = try makePipelineSource(pipelinesPath, "UVColor") {
+                let library = try context.device.makeLibrary(source: source, options: .none)
 
-            let library = try context.device.makeLibrary(source: source, options: .none)
+                let pipeline = try makeRenderPipeline(
+                    library: library,
+                    vertex: "vert",
+                    fragment: "uvColorFragment",
+                    label: "UV Color",
+                    context: context)
 
-            let pipeline = try makeRenderPipeline(
-                library: library,
-                vertex: "vert",
-                fragment: "uvColorFragment",
-                label: "UV Color",
-                context: context)
-
-            UVColorPipeline.sharedPipeline = pipeline
+                UVColorPipeline.sharedPipeline = pipeline
+            }
         }
         catch {
             print(error)
