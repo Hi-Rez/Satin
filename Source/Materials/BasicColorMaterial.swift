@@ -67,7 +67,7 @@ class BasicColorPipeline {
                 let library = try context.device.makeLibrary(source: source, options: .none)
                 let pipeline = try makeAlphaRenderPipeline(
                     library: library,
-                    vertex: "vert",
+                    vertex: "satinVertex",
                     fragment: "basicColorFragment",
                     label: "Basic Color",
                     context: context)

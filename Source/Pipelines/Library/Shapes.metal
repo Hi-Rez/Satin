@@ -29,9 +29,7 @@ float RoundedRect(float2 pos, float2 size, float radius) {
     return length(v) - radius;
 }
 
-float Plane(float3 pos, float3 normal, float offset) {
-    return dot(pos, normal) + offset;
-}
+float Plane(float3 pos, float3 normal, float offset) { return dot(pos, normal) + offset; }
 
 float Cone(float3 pos, float radius, float height) {
     float z = (height * 0.5) - pos.z;
@@ -51,8 +49,7 @@ float Sphere(float3 pos, float radius) { return length(pos) - radius; }
 
 float Box(float3 pos, float3 size) {
     float3 result = abs(pos) - size;
-    return min(max(result.x, max(result.y, result.z)), 0.0) +
-           length(max(result, 0.0));
+    return min(max(result.x, max(result.y, result.z)), 0.0) + length(max(result, 0.0));
 }
 
 float Box(float3 pos, float size) { return Box(pos, float3(size)); }
@@ -62,9 +59,7 @@ float Box(float3 pos, float3 size, float radius) {
     return length(max(result, 0.0)) - radius;
 }
 
-float Box(float3 pos, float size, float radius) {
-    return Box(pos, float3(size), radius);
-}
+float Box(float3 pos, float size, float radius) { return Box(pos, float3(size), radius); }
 
 float Cylinder(float3 pos, float radius, float height) {
     float c = Circle(pos.xy, radius);
@@ -72,9 +67,7 @@ float Cylinder(float3 pos, float radius, float height) {
     return max(c, h);
 }
 
-float Capsule(float3 pos, float3 a, float3 b, float r) {
-    return Line(pos, a, b) - r;
-}
+float Capsule(float3 pos, float3 a, float3 b, float r) { return Line(pos, a, b) - r; }
 
 float Torus(float3 pos, float2 size) {
     float2 c2 = float2(length(pos.xy) - size.x, pos.z);

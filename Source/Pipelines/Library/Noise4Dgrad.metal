@@ -11,33 +11,19 @@
 //
 // Gradient Calculation extended from noise3Dgrad.glsl by Mark A. Ropper (@Markyparky56)
 
-float4 mod289(float4 x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
+float4 mod289(float4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 
-float mod289(float x) {
-    return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 
-float4 permute(float4 x) {
-    return mod289(((x * 34.0) + 1.0) * x);
-}
+float4 permute(float4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 
-float permute(float x) {
-    return mod289(((x * 34.0) + 1.0) * x);
-}
+float permute(float x) { return mod289(((x * 34.0) + 1.0) * x); }
 
-float4 taylorInvSqrt(float4 r) {
-    return 1.79284291400159 - 0.85373472095314 * r;
-}
+float4 taylorInvSqrt(float4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
-float taylorInvSqrt(float r) {
-    return 1.79284291400159 - 0.85373472095314 * r;
-}
+float taylorInvSqrt(float r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
-bool4 lessThan(float4 a, float4 b) {
-    return bool4(a < b);
-}
+bool4 lessThan(float4 a, float4 b) { return bool4(a < b); }
 
 float4 grad4(float j, float4 ip) {
     const float4 ones = float4(1.0, 1.0, 1.0, -1.0);
@@ -97,9 +83,8 @@ float4 snoise(float4 v) {
     // Permutations
     i = mod289(i);
     float j0 = permute(permute(permute(permute(i.w) + i.z) + i.y) + i.x);
-    float4 j1 = permute(permute(permute(permute(
-                                            i.w + float4(i1.w, i2.w, i3.w, 1.0)) +
-                                        i.z + float4(i1.z, i2.z, i3.z, 1.0)) +
+    float4 j1 = permute(permute(permute(permute(i.w + float4(i1.w, i2.w, i3.w, 1.0)) + i.z +
+                                        float4(i1.z, i2.z, i3.z, 1.0)) +
                                 i.y + float4(i1.y, i2.y, i3.y, 1.0)) +
                         i.x + float4(i1.x, i2.x, i3.x, 1.0));
 
@@ -139,6 +124,7 @@ float4 snoise(float4 v) {
     gradient += m04.x * p0 + m04.y * p1 + m04.z * p2 + m14.x * p3 + m14.y * p4;
     gradient *= 109.319;
 
-    float result = 109.319 * (dot(m02 * m02, float3(dot(p0, x0), dot(p1, x1), dot(p2, x2))) + dot(m12 * m12, float2(dot(p3, x3), dot(p4, x4))));
+    float result = 109.319 * (dot(m02 * m02, float3(dot(p0, x0), dot(p1, x1), dot(p2, x2))) +
+                              dot(m12 * m12, float2(dot(p3, x3), dot(p4, x4))));
     return float4(gradient.xyz, result);
 }

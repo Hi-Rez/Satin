@@ -17,9 +17,7 @@ float4 n3mod289(float4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 
 float4 permute(float4 x) { return n3mod289(((x * 34.0) + 1.0) * x); }
 
-float4 taylorInvSqrt(float4 r) {
-    return 1.79284291400159 - 0.85373472095314 * r;
-}
+float4 taylorInvSqrt(float4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
 float snoise(float3 v) {
     const float2 C = float2(1.0 / 6.0, 1.0 / 3.0);
@@ -45,9 +43,9 @@ float snoise(float3 v) {
 
     // Permutations
     i = n3mod289(i);
-    float4 p = permute(permute(permute(i.z + float4(0.0, i1.z, i2.z, 1.0)) + i.y +
-                               float4(0.0, i1.y, i2.y, 1.0)) +
-                       i.x + float4(0.0, i1.x, i2.x, 1.0));
+    float4 p = permute(
+        permute(permute(i.z + float4(0.0, i1.z, i2.z, 1.0)) + i.y + float4(0.0, i1.y, i2.y, 1.0)) +
+        i.x + float4(0.0, i1.x, i2.x, 1.0));
 
     // Gradients: 7x7 points over a square, mapped onto an octahedron.
     // The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)
@@ -81,17 +79,14 @@ float snoise(float3 v) {
     float3 p3 = float3(a1.zw, h.w);
 
     // Normalise gradients
-    float4 norm =
-        taylorInvSqrt(float4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+    float4 norm = taylorInvSqrt(float4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
     p0 *= norm.x;
     p1 *= norm.y;
     p2 *= norm.z;
     p3 *= norm.w;
 
     // Mix final noise value
-    float4 m = max(
-        0.6 - float4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+    float4 m = max(0.6 - float4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
     m = m * m;
-    return 42.0 *
-           dot(m * m, float4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
+    return 42.0 * dot(m * m, float4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }

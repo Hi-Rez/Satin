@@ -17,9 +17,7 @@ float4 permute(float4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 
 float permute(float x) { return mod289(((x * 34.0) + 1.0) * x); }
 
-float4 taylorInvSqrt(float4 r) {
-    return 1.79284291400159 - 0.85373472095314 * r;
-}
+float4 taylorInvSqrt(float4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
 float taylorInvSqrt(float r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
@@ -80,11 +78,10 @@ float snoise(float4 v) {
     // Permutations
     i = mod289(i);
     float j0 = permute(permute(permute(permute(i.w) + i.z) + i.y) + i.x);
-    float4 j1 =
-        permute(permute(permute(permute(i.w + float4(i1.w, i2.w, i3.w, 1.0)) +
-                                i.z + float4(i1.z, i2.z, i3.z, 1.0)) +
-                        i.y + float4(i1.y, i2.y, i3.y, 1.0)) +
-                i.x + float4(i1.x, i2.x, i3.x, 1.0));
+    float4 j1 = permute(permute(permute(permute(i.w + float4(i1.w, i2.w, i3.w, 1.0)) + i.z +
+                                        float4(i1.z, i2.z, i3.z, 1.0)) +
+                                i.y + float4(i1.y, i2.y, i3.y, 1.0)) +
+                        i.x + float4(i1.x, i2.x, i3.x, 1.0));
 
     // Gradients: 7x7x6 points over a cube, mapped onto a 4-cross polytope
     // 7*7*6 = 294, which is close to the ring size 17*17 = 289.
@@ -97,8 +94,7 @@ float snoise(float4 v) {
     float4 p4 = grad4(j1.w, ip);
 
     // Normalise gradients
-    float4 norm =
-        taylorInvSqrt(float4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+    float4 norm = taylorInvSqrt(float4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
     p0 *= norm.x;
     p1 *= norm.y;
     p2 *= norm.z;

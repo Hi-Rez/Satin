@@ -5,9 +5,7 @@ float shell(float a, float d) {
 
 float morph(float a, float b, float d) { return d * a + (1.0 - d) * b; }
 
-float blend(float a, float b, float r) {
-    return min(min(a, b), sqrt(a) + sqrt(b) - r);
-}
+float blend(float a, float b, float r) { return min(min(a, b), sqrt(a) + sqrt(b) - r); }
 
 float unionHard(float a, float b) { return min(a, b); }
 

@@ -8,7 +8,6 @@ typedef enum VertexBufferIndex {
     VertexBufferCustom4 = 6,
     VertexBufferCustom5 = 7,
     VertexBufferCustom6 = 8
-    
 } VertexBufferIndex;
 
 typedef enum VertexTextureIndex {

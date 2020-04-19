@@ -7,9 +7,7 @@ float3 raySphereIntersect(float3 orig, float3 dir, float radius) {
     float B = 2.0 * (dir.x * orig.x + dir.y * orig.y + dir.z * orig.z);
     float C = orig.x * orig.x + orig.y * orig.y + orig.z * orig.z - radius * radius;
     float3 quadraticSolve = quadratic(A, B, C);
-    if (quadraticSolve.z < 0) {
-        return solution;
-    }
+    if (quadraticSolve.z < 0) { return solution; }
 
     solution.x = min(quadraticSolve.x, quadraticSolve.y);
     solution.y = max(quadraticSolve.x, quadraticSolve.y);

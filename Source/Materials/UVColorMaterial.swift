@@ -39,7 +39,7 @@ class UVColorPipeline {
 
                 let pipeline = try makeRenderPipeline(
                     library: library,
-                    vertex: "vert",
+                    vertex: "satinVertex",
                     fragment: "uvColorFragment",
                     label: "UV Color",
                     context: context)

@@ -4,11 +4,13 @@
 #include "cubicSmooth.metal"
 #include "mix.metal"
 
-//https://sighack.com/post/procedural-color-algorithms-hsb-vs-ryb
+// https://sighack.com/post/procedural-color-algorithms-hsb-vs-ryb
 float3 ryb2rgb(float3 c) { return hsv2rgb(float3(pow(c.x, 1.6), c.yz)); }
 float3 ryb2rgb_smooth(float3 c) { return hsv2rgb_smooth(float3(pow(c.x, 1.6), c.yz)); }
 float3 ryb2rgb(float h, float s, float v) { return hsv2rgb(float3(pow(h, 1.6), s, v)); }
-float3 ryb2rgb_smooth(float h, float s, float v) { return hsv2rgb_smooth(float3(pow(h, 1.6), s, v)); }
+float3 ryb2rgb_smooth(float h, float s, float v) {
+    return hsv2rgb_smooth(float3(pow(h, 1.6), s, v));
+}
 
 /*
 Bezier

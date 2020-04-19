@@ -1,17 +1,13 @@
 #include "Pi.metal"
 
-float3 brightness(float3 color, float brightness) {
-    return color.rgb + brightness;
-}
+float3 brightness(float3 color, float brightness) { return color.rgb + brightness; }
 
 float3 contrast(float3 color, float contrast) {
     const float t = 0.5 - contrast * 0.5;
     return color.rgb * contrast + t;
 }
 
-float3 gamma(float3 color, float gamma) {
-    return pow(abs(color), gamma);
-}
+float3 gamma(float3 color, float gamma) { return pow(abs(color), gamma); }
 
 float3 saturation(float3 color, float saturation) {
     const float3 luminance = float3(0.3086, 0.6094, 0.0820);
@@ -22,20 +18,12 @@ float3 saturation(float3 color, float saturation) {
     green.g += saturation;
     float3 blue = float3(luminance.z * oneMinusSat);
     blue.b += saturation;
-    return float3x3(
-               red.r, red.g, red.b,
-               green.r, green.g, green.b,
-               blue.r, blue.g, blue.b) *
-           color;
+    return float3x3(red.r, red.g, red.b, green.r, green.g, green.b, blue.r, blue.g, blue.b) * color;
 }
 
-int modi(int x, int y) {
-    return x - y * (x / y);
-}
+int modi(int x, int y) { return x - y * (x / y); }
 
-float modf(float x, float y) {
-    return x - y * floor(x / y);
-}
+float modf(float x, float y) { return x - y * floor(x / y); }
 
 int andf(int a, int b) {
     int result = 0;
@@ -43,16 +31,13 @@ int andf(int a, int b) {
     const int BIT_COUNT = 32;
 
     for (int i = 0; i < BIT_COUNT; i++) {
-        if ((modi(a, 2) == 1) && (modi(b, 2) == 1)) {
-            result += n;
-        }
+        if ((modi(a, 2) == 1) && (modi(b, 2) == 1)) { result += n; }
 
         a >>= 1;
         b >>= 1;
         n <<= 1;
 
-        if (!(a > 0 && b > 0))
-            break;
+        if (!(a > 0 && b > 0)) break;
     }
     return result;
 }
@@ -110,7 +95,7 @@ float3 vibrance(float3 color, float vibrance) {
 
         color.rgb = float3(0.0);
         i += 6.0;
-        //use = 1 << ((int)i % 6);
+        // use = 1 << ((int)i % 6);
         use = int(pow(2.0, modf(i, 6.0)));
         a = float(andf(use, 1)); // i == 0;
         use >>= 1;
@@ -149,18 +134,14 @@ float3 hue(float3 col, float hue) {
     return U * cos(hue * TWO_PI) + V * sin(hue * TWO_PI) + P;
 }
 
-half3 brightnessHalf(half3 color, half brightness) {
-    return color.rgb + brightness;
-}
+half3 brightnessHalf(half3 color, half brightness) { return color.rgb + brightness; }
 
 half3 contrastHalf(half3 color, half contrast) {
     const half t = 0.5h - contrast * 0.5h;
     return color.rgb * contrast + t;
 }
 
-half3 gammaHalf(half3 color, half gamma) {
-    return pow(abs(color), gamma);
-}
+half3 gammaHalf(half3 color, half gamma) { return pow(abs(color), gamma); }
 
 half3 saturationHalf(half3 color, half saturation) {
     const half3 luminance = half3(0.3086, 0.6094, 0.0820);
@@ -171,9 +152,5 @@ half3 saturationHalf(half3 color, half saturation) {
     green.g += saturation;
     half3 blue = half3(luminance.z * oneMinusSat);
     blue.b += saturation;
-    return half3x3(
-               red.r, red.g, red.b,
-               green.r, green.g, green.b,
-               blue.r, blue.g, blue.b) *
-           color;
+    return half3x3(red.r, red.g, red.b, green.r, green.g, green.b, blue.r, blue.g, blue.b) * color;
 }

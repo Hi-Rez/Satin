@@ -66,14 +66,14 @@ class NormalColorPipeline {
         do {
             if let source = try makePipelineSource(pipelinesPath, "NormalColor", parameters) {
                 let library = try context.device.makeLibrary(source: source, options: .none)
-                
+
                 let pipeline = try makeRenderPipeline(
                     library: library,
-                    vertex: "vert",
+                    vertex: "satinVertex",
                     fragment: "normalColorFragment",
                     label: "Normal Color",
                     context: context)
-                
+
                 NormalColorPipeline.sharedPipeline = pipeline
             }
         }

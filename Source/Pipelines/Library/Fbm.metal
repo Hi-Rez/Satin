@@ -5,8 +5,7 @@ float fbm(float2 v, int octaves) {
     float res = 0.0;
     float scale = 1.0;
     for (int i = 0; i < 8; i++) {
-        if (i >= octaves)
-            break;
+        if (i >= octaves) break;
         res += snoise(v) * scale;
         v *= float2(2.0, 2.0);
         scale *= 0.5;
@@ -18,8 +17,7 @@ float fbm(float3 v, int octaves) {
     float res = 0.0;
     float scale = 1.0;
     for (int i = 0; i < 8; i++) {
-        if (i >= octaves)
-            break;
+        if (i >= octaves) break;
         res += snoise(v) * scale;
         v *= float3(2.0, 2.0, 2.0);
         scale *= 0.5;
@@ -31,8 +29,7 @@ float fbm_abs(float2 v, int octaves) {
     float res = 0.0;
     float scale = 1.0;
     for (int i = 0; i < 8; i++) {
-        if (i >= octaves)
-            break;
+        if (i >= octaves) break;
         res += abs(snoise(v)) * scale;
         v *= float2(2.0, 2.0);
         scale *= 0.5;
@@ -44,8 +41,7 @@ float fbm_abs(float3 v, int octaves) {
     float res = 0.0;
     float scale = 1.0;
     for (int i = 0; i < 8; i++) {
-        if (i >= octaves)
-            break;
+        if (i >= octaves) break;
         res += abs(snoise(v)) * scale;
         v *= float3(2.0, 2.0, 2.0);
         scale *= 0.5;
