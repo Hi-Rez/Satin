@@ -21,7 +21,7 @@ open class ArcballPerspectiveCamera: PerspectiveCamera
     {
         if updateViewMatrix
         {
-            _viewMatrix = simd_mul(lookAt(position, position + forwardDirection, upDirection), simd_matrix4x4(arcballOrientation))
+            _viewMatrix = simd_mul(lookAt(position, position + forwardDirection, worldUpDirection), simd_matrix4x4(arcballOrientation))
             updateViewMatrix = false
         }
         return _viewMatrix
