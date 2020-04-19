@@ -1,5 +1,5 @@
 typedef struct {
-    vector_float4 position;
-    vector_float2 uv;
-    vector_float3 normal;
+    float4 position;
+    float3 normal;
+    float2 uv;
 } Vertex;

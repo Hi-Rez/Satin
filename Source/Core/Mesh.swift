@@ -96,7 +96,8 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
         guard let context = self.context else { return }
         let device = context.device
         if !geometry.vertexData.isEmpty {
-            let verticesSize = geometry.vertexData.count * MemoryLayout.size(ofValue: geometry.vertexData[0])
+            let stride = MemoryLayout<Vertex>.stride
+            let verticesSize = geometry.vertexData.count * stride
             vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
             vertexBuffer?.label = "Vertices"
         }

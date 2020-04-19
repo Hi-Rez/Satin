@@ -21,6 +21,9 @@ public enum VertexBufferIndex: Int {
     case Custom1 = 3
     case Custom2 = 4
     case Custom3 = 5
+    case Custom4 = 6
+    case Custom5 = 7
+    case Custom6 = 8
 }
 
 public enum VertexTextureIndex: Int {
@@ -39,6 +42,9 @@ public enum FragmentBufferIndex: Int {
     case Custom1 = 2
     case Custom2 = 3
     case Custom3 = 4
+    case Custom4 = 5
+    case Custom5 = 6
+    case Custom6 = 7
 }
 
 public enum FragmentTextureIndex: Int {
@@ -48,4 +54,5 @@ public enum FragmentTextureIndex: Int {
     case Custom3 = 3
     case Custom4 = 4
     case Custom5 = 5
+    case Custom6 = 6
 }

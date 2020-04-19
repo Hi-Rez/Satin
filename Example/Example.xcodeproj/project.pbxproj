@@ -17,9 +17,6 @@
 		66E678E6243EE7670070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		7E3E2D77FA2FC4E8EDA54FC8 /* Pods_Example_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6B3B64156FD006349DF5801 /* Pods_Example_iOS.framework */; };
 		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
-		E17955F2243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
-		E17955F3243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
-		E17955F4243FA87400B0D2F4 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E17955F0243FA87400B0D2F4 /* Shaders.metal */; };
 		E17955F5243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
 		E17955F6243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
 		E17955F7243FA87400B0D2F4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17955F1243FA87400B0D2F4 /* Renderer.swift */; };
@@ -49,7 +46,6 @@
 		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E17955F0243FA87400B0D2F4 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		E17955F1243FA87400B0D2F4 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FF5EDFAC5DDB7D28C8B7F1DB /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -140,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				E17955F1243FA87400B0D2F4 /* Renderer.swift */,
-				E17955F0243FA87400B0D2F4 /* Shaders.metal */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -491,7 +486,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E17955F2243FA87400B0D2F4 /* Shaders.metal in Sources */,
 				E17955F5243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */,
 			);
@@ -501,7 +495,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E17955F3243FA87400B0D2F4 /* Shaders.metal in Sources */,
 				E17955F6243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */,
 			);
@@ -511,7 +504,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E17955F4243FA87400B0D2F4 /* Shaders.metal in Sources */,
 				E17955F7243FA87400B0D2F4 /* Renderer.swift in Sources */,
 				66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */,
 			);

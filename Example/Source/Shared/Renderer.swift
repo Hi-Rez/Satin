@@ -13,10 +13,8 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
-    var library: MTLLibrary!
-    
     lazy var mesh: Mesh = {
-        Mesh(geometry: BoxGeometry(size: 2), material: nil)
+        Mesh(geometry: BoxGeometry(), material: UVColorMaterial())
     }()
     
     lazy var scene: Object = {
@@ -42,9 +40,7 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context,
-                       scene: scene,
-                       camera: camera)
+        Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
     
     required init?(metalKitView: MTKView) {
@@ -76,29 +72,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        setupLibrary()
-        setupMaterial()
-    }
-    
-    func setupLibrary() {
-        library = device.makeDefaultLibrary()
-    }
-    
-    func setupMaterial() {
-        do {
-            if let pipeline = try makeRenderPipeline(
-                library: library,
-                vertex: "basic_vertex",
-                fragment: "basic_fragment",
-                label: "basic",
-                context: context
-            ) {
-                mesh.material = Material(pipeline: pipeline)
-            }
-        }
-        catch {
-            print(error)
-        }
+        //Setup things here
     }
     
     override func update() {

@@ -12,7 +12,7 @@ protocol MaterialDelegate: AnyObject {
     func materialUpdated(material: Material)
 }
 
-open class Material {
+open class Material {    
     weak var delegate: MaterialDelegate?
     public var pipeline: MTLRenderPipelineState?
     var context: Context? {

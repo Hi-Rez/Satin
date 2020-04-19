@@ -9,20 +9,20 @@
 import Metal
 import simd
 
-open class BasicColorMaterial: Material {
-    var color = Float4Parameter("color")
+open class NormalColorMaterial: Material {
+    var absolute = BoolParameter("absolute")
 
     lazy var parameters: ParameterGroup = {
-        let params = ParameterGroup("BasicColorUniforms")
-        params.append(color)
+        let params = ParameterGroup("NormalColorUniforms")
+        params.append(absolute)
         return params
     }()
 
     var uniforms: UniformBuffer?
 
-    public init(_ color: simd_float4) {
+    public init(_ absolute: Bool = false) {
         super.init()
-        self.color.value = color
+        self.absolute.value = absolute
     }
 
     override func setup() {
@@ -36,8 +36,8 @@ open class BasicColorMaterial: Material {
     }
 
     func setupPipeline() {
-        BasicColorPipeline.setup(context: context, parameters: parameters)
-        if let pipeline = BasicColorPipeline.shared.pipeline {
+        NormalColorPipeline.setup(context: context, parameters: parameters)
+        if let pipeline = NormalColorPipeline.shared.pipeline {
             self.pipeline = pipeline
         }
     }
@@ -55,13 +55,13 @@ open class BasicColorMaterial: Material {
     }
 }
 
-class BasicColorPipeline {
-    static let shared = BasicColorPipeline()
+class NormalColorPipeline {
+    static let shared = NormalColorPipeline()
     private static var sharedPipeline: MTLRenderPipelineState?
     let pipeline: MTLRenderPipelineState?
 
     class func setup(context: Context?, parameters: ParameterGroup) {
-        guard BasicColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
+        guard NormalColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
 
         let pipelinesURL = URL(fileURLWithPath: pipelinesPath)
         let materialsURL = pipelinesURL.appendingPathComponent("Materials")
@@ -70,7 +70,7 @@ class BasicColorPipeline {
         let includesURL = commonURL.appendingPathComponent("Includes.metal")
         let vertexURL = commonURL.appendingPathComponent("Vertex.metal")
         
-        let materialURL = materialsURL.appendingPathComponent("BasicColor")
+        let materialURL = materialsURL.appendingPathComponent("NormalColor")
         let fragmentURL = materialURL.appendingPathComponent("Fragment.metal")
 
         let metalFileCompiler = MetalFileCompiler()
@@ -82,14 +82,14 @@ class BasicColorPipeline {
 
             let library = try context.device.makeLibrary(source: source, options: .none)
 
-            let pipeline = try makeAlphaRenderPipeline(
+            let pipeline = try makeRenderPipeline(
                 library: library,
                 vertex: "vert",
-                fragment: "basicColorFragment",
-                label: "Basic Color",
+                fragment: "normalColorFragment",
+                label: "Normal Color",
                 context: context)
 
-            BasicColorPipeline.sharedPipeline = pipeline
+            NormalColorPipeline.sharedPipeline = pipeline
         }
         catch {
             print(error)
@@ -98,6 +98,6 @@ class BasicColorPipeline {
     }
 
     init() {
-        pipeline = BasicColorPipeline.sharedPipeline
+        pipeline = NormalColorPipeline.sharedPipeline
     }
 }
