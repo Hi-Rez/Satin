@@ -149,12 +149,11 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
             vertexUniforms[0].viewMatrix = camera.viewMatrix
             vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].projectionMatrix = camera.projectionMatrix
-            let n = vertexUniforms[0].modelViewMatrix.inverse.transpose
-            vertexUniforms[0].normalMatrix = simd_matrix(
-                simd_make_float3(n[0].x, n[0].y, n[0].z),
-                simd_make_float3(n[1].x, n[1].y, n[1].z),
-                simd_make_float3(n[2].x, n[2].y, n[2].z)
-            )
+            let n = vertexUniforms[0].modelMatrix.inverse.transpose
+            let c0 = n.columns.0
+            let c1 = n.columns.1
+            let c2 = n.columns.2
+            vertexUniforms[0].normalMatrix = simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
             vertexUniforms[0].worldCameraPosition = camera.worldPosition
         }
     }
