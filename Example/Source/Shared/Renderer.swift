@@ -13,17 +13,39 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
-    var paramTest: IntParameter!
     var library: MTLLibrary!
-    var material: Material!
-    var geometry: Geometry!
-    var mesh: Mesh!
-    var scene: Object!
-    var context: Context!
     
-    var perspCamera: ArcballPerspectiveCamera!
-    var cameraController: ArcballCameraController!
-    var renderer: Satin.Renderer!
+    lazy var mesh: Mesh = {
+        Mesh(geometry: BoxGeometry(size: 2), material: nil)
+    }()
+    
+    lazy var scene: Object = {
+        let scene = Object()
+        scene.add(mesh)
+        return scene
+    }()
+    
+    lazy var context: Context = {
+        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
+    }()
+    
+    lazy var camera: ArcballPerspectiveCamera = {
+        let camera = ArcballPerspectiveCamera()
+        camera.position = simd_make_float3(0.0, 0.0, 9.0)
+        camera.near = 0.001
+        camera.far = 100.0
+        return camera
+    }()
+    
+    lazy var cameraController: ArcballCameraController = {
+        ArcballCameraController(camera: camera, view: mtkView, defaultPosition: camera.position, defaultOrientation: camera.orientation)
+    }()
+    
+    lazy var renderer: Satin.Renderer = {
+        Satin.Renderer(context: context,
+                       scene: scene,
+                       camera: camera)
+    }()
     
     required init?(metalKitView: MTKView) {
         super.init(metalKitView: metalKitView)
@@ -54,19 +76,8 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        setupContext()
         setupLibrary()
         setupMaterial()
-        setupGeometry()
-        setupMesh()
-        setupScene()
-        setupCamera()
-        setupCameraController()
-        setupRenderer()
-    }
-    
-    func setupContext() {
-        context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }
     
     func setupLibrary() {
@@ -82,47 +93,12 @@ class Renderer: Forge.Renderer {
                 label: "basic",
                 context: context
             ) {
-                material = Material(pipeline: pipeline)
+                mesh.material = Material(pipeline: pipeline)
             }
         }
         catch {
             print(error)
         }
-    }
-    
-    func setupGeometry() {
-        geometry = BoxGeometry(size: 2)
-    }
-    
-    func setupMesh() {
-        mesh = Mesh(geometry: geometry, material: material)
-    }
-    
-    func setupScene() {
-        scene = Object()
-        scene.add(mesh)
-    }
-    
-    func setupCamera() {
-        perspCamera = ArcballPerspectiveCamera()
-        perspCamera.position = simd_make_float3(0.0, 0.0, 9.0)
-        perspCamera.near = 0.001
-        perspCamera.far = 100.0
-    }
-    
-    func setupCameraController() {
-        if cameraController == nil {
-            cameraController = ArcballCameraController(camera: perspCamera, view: mtkView, defaultPosition: perspCamera.position, defaultOrientation: perspCamera.orientation)
-        }
-        else {
-            cameraController.camera = perspCamera
-        }
-    }
-    
-    func setupRenderer() {
-        renderer = Satin.Renderer(context: context,
-                                  scene: scene,
-                                  camera: perspCamera)
     }
     
     override func update() {
@@ -136,7 +112,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func resize(_ size: (width: Float, height: Float)) {
-        perspCamera.aspect = size.width / size.height
+        camera.aspect = size.width / size.height
         renderer.resize(size)
     }
 }
