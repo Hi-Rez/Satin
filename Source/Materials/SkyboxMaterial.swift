@@ -8,37 +8,21 @@
 import Metal
 import simd
 
-open class SkyboxMaterial: Material {
-    public var texture: MTLTexture?
-
-    public override init() {
-        super.init()
-    }
-
-    public init(texture: MTLTexture) {
+open class SkyboxMaterial: BasicTextureMaterial {
+    public override init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
         if texture.textureType != .typeCube {
             fatalError("Skybox material expects a Cube texture")
         }
-        self.texture = texture
         super.init()
+        self.texture = texture
+        self.sampler = sampler
     }
 
-    override func setup() {
-        setupPipeline()
-    }
-
-    func setupPipeline() {
-        SkyboxPipeline.setup(context: context)
+    override func setupPipeline() {
+        SkyboxPipeline.setup(context: context, label: label)
         if let pipeline = SkyboxPipeline.shared.pipeline {
             self.pipeline = pipeline
         }
-    }
-
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        if let texture = self.texture {
-            renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom0.rawValue)
-        }
-        super.bind(renderEncoder)
     }
 }
 
@@ -47,17 +31,17 @@ class SkyboxPipeline {
     private static var sharedPipeline: MTLRenderPipelineState?
     let pipeline: MTLRenderPipelineState?
 
-    class func setup(context: Context?) {
+    class func setup(context: Context?, label: String) {
         guard SkyboxPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
 
         do {
-            if let source = try makePipelineSource(pipelinesPath, "Skybox") {
+            if let source = try makePipelineSource(pipelinesPath, label) {
                 let library = try context.device.makeLibrary(source: source, options: .none)
                 let pipeline = try makeRenderPipeline(
                     library: library,
-                    vertex: "skyboxVertex",
-                    fragment: "skyboxFragment",
-                    label: "Skybox",
+                    vertex: label.camelCase + "Vertex",
+                    fragment: label.camelCase + "Fragment",
+                    label: label.titleCase,
                     context: context)
 
                 SkyboxPipeline.sharedPipeline = pipeline

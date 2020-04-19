@@ -56,3 +56,13 @@ public enum FragmentTextureIndex: Int {
     case Custom5 = 5
     case Custom6 = 6
 }
+
+public enum FragmentSamplerIndex: Int {
+    case Custom0 = 0
+    case Custom1 = 1
+    case Custom2 = 2
+    case Custom3 = 3
+    case Custom4 = 4
+    case Custom5 = 5
+    case Custom6 = 6
+}

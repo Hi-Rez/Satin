@@ -13,6 +13,10 @@ protocol MaterialDelegate: AnyObject {
 }
 
 open class Material {
+    public var label: String {
+        return String(describing: self).replacingOccurrences(of: "Material", with: "").replacingOccurrences(of: "Satin.", with: "")
+    }
+    
     weak var delegate: MaterialDelegate?
     public var pipeline: MTLRenderPipelineState?
     var context: Context? {

@@ -16,8 +16,7 @@ vertex SkyVertexData skyboxVertex(uint vertexID [[vertex_id]],
 }
 
 fragment float4 skyboxFragment(SkyVertexData in [[stage_in]],
-                               texturecube<half> cubeTexture [[texture(FragmentTextureCustom0)]]) {
-    constexpr sampler s(min_filter::linear, mag_filter::linear);
-    const float4 color = float4(cubeTexture.sample(s, in.uv));
-    return color;
+                               texturecube<half> cubeTex [[texture(FragmentTextureCustom0)]],
+                               sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]]) {
+    return float4(cubeTex.sample(cubeTexSampler, in.uv));
 }

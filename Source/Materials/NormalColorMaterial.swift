@@ -13,7 +13,7 @@ open class NormalColorMaterial: Material {
     var absolute = BoolParameter("absolute")
 
     lazy var parameters: ParameterGroup = {
-        let params = ParameterGroup("NormalColorUniforms")
+        let params = ParameterGroup(label+"Uniforms")
         params.append(absolute)
         return params
     }()
@@ -36,7 +36,7 @@ open class NormalColorMaterial: Material {
     }
 
     func setupPipeline() {
-        NormalColorPipeline.setup(context: context, parameters: parameters)
+        NormalColorPipeline.setup(context: context, label: label, parameters: parameters)
         if let pipeline = NormalColorPipeline.shared.pipeline {
             self.pipeline = pipeline
         }
@@ -60,18 +60,18 @@ class NormalColorPipeline {
     private static var sharedPipeline: MTLRenderPipelineState?
     let pipeline: MTLRenderPipelineState?
 
-    class func setup(context: Context?, parameters: ParameterGroup) {
+    class func setup(context: Context?, label: String, parameters: ParameterGroup) {
         guard NormalColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
 
         do {
-            if let source = try makePipelineSource(pipelinesPath, "NormalColor", parameters) {
+            if let source = try makePipelineSource(pipelinesPath, label, parameters) {
                 let library = try context.device.makeLibrary(source: source, options: .none)
 
                 let pipeline = try makeRenderPipeline(
                     library: library,
                     vertex: "satinVertex",
-                    fragment: "normalColorFragment",
-                    label: "Normal Color",
+                    fragment: label.camelCase + "Fragment",
+                    label: label.titleCase,
                     context: context)
 
                 NormalColorPipeline.sharedPipeline = pipeline

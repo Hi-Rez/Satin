@@ -40,3 +40,13 @@ typedef enum FragmentTextureIndex {
     FragmentTextureCustom5 = 5,
     FragmentTextureCustom6 = 6
 } FragmentTextureIndex;
+
+typedef enum FragmentSamplerIndex {
+    FragmentSamplerCustom0 = 0,
+    FragmentSamplerCustom1 = 1,
+    FragmentSamplerCustom2 = 2,
+    FragmentSamplerCustom3 = 3,
+    FragmentSamplerCustom4 = 4,
+    FragmentSamplerCustom5 = 5,
+    FragmentSamplerCustom6 = 6
+} FragmentSamplerIndex;
