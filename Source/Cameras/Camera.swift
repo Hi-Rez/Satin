@@ -13,6 +13,27 @@ open class Camera: Object
     var _viewMatrix: matrix_float4x4 = matrix_identity_float4x4
     var _projectionMatrix: matrix_float4x4 = matrix_identity_float4x4
     
+    public var viewDirection: simd_float3
+    {
+        let v = viewMatrix
+        return normalize(simd_make_float3(v.columns.0.z, v.columns.1.z, v.columns.2.z))
+    }
+    
+    public override var worldPosition: simd_float3
+    {
+        if updateMatrix
+        {
+            let viewInverse = viewMatrix.inverse
+            let cp = viewInverse[3]
+            _worldPosition = simd_make_float3(cp.x, cp.y, cp.z)
+            return _worldPosition
+        }
+        else
+        {
+            return _worldPosition
+        }
+    }
+    
     public var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix

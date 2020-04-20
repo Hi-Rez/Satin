@@ -272,8 +272,8 @@ open class ArcballCameraController {
             state = .rolling
         }
         else if gestureRecognizer.state == .changed, state == .rolling {
-            let roll = simd_quatf(angle: Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
-            camera.orientation = simd_mul(roll, camera.orientation)
+            let roll = simd_quatf(angle: -Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
+            camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
             gestureRecognizer.rotation = 0.0
         }
         else {
@@ -328,8 +328,8 @@ open class ArcballCameraController {
         if event.window == view.window {
             if abs(event.deltaX) > abs(event.deltaY) {
                 state = .rolling
-                let roll = simd_quatf(angle: -Float(event.deltaX / (0.5 * view.frame.width)), axis: camera.forwardDirection)
-                camera.orientation = simd_mul(roll, camera.orientation)
+                let roll = simd_quatf(angle: Float(event.deltaX / (0.5 * view.frame.width)), axis: camera.forwardDirection)
+                camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
             }
             else {
                 state = .zooming
@@ -355,8 +355,8 @@ open class ArcballCameraController {
                 if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
                     if abs(event.deltaX) > abs(event.deltaY) {
                         state = .rolling
-                        let roll = simd_quatf(angle: -Float(event.deltaX / 200.0), axis: camera.forwardDirection)
-                        camera.orientation = simd_mul(roll, camera.orientation)
+                        let roll = simd_quatf(angle: Float(event.deltaX / 200.0), axis: camera.forwardDirection)
+                        camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
                     }
                     else {
                         state = .zooming
@@ -404,8 +404,8 @@ open class ArcballCameraController {
             state = .rolling
         }
         else if gestureRecognizer.state == .changed, state == .rolling {
-            let roll = simd_quatf(angle: -Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
-            camera.orientation = simd_mul(roll, camera.orientation)
+            let roll = simd_quatf(angle: Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
+            camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
             gestureRecognizer.rotation = 0.0
         }
         else {

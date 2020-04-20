@@ -20,26 +20,11 @@ open class ArcballPerspectiveCamera: PerspectiveCamera
     public override var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix
-        {
-            _viewMatrix = simd_mul(lookAt(position, position + forwardDirection, worldUpDirection), simd_matrix4x4(arcballOrientation))
+        {            
+            _viewMatrix = simd_mul(lookAt(position, position + forwardDirection, upDirection), simd_matrix4x4(arcballOrientation))            
             updateViewMatrix = false
         }
         return _viewMatrix
-    }
-    
-    public override var worldPosition: simd_float3
-    {
-        if updateMatrix
-        {
-            let viewInverse = viewMatrix.inverse
-            let cp = viewInverse[3]
-            _worldPosition = simd_make_float3(cp.x, cp.y, cp.z)
-            return _worldPosition
-        }
-        else
-        {
-            return _worldPosition
-        }
     }
     
     public override init()
