@@ -154,6 +154,7 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
             let c2 = n.columns.2
             vertexUniforms[0].normalMatrix = simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
             vertexUniforms[0].worldCameraPosition = camera.worldPosition
+            vertexUniforms[0].worldCameraViewDirection = camera.viewDirection
         }
     }
     

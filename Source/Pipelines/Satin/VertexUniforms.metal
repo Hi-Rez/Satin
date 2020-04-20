@@ -5,4 +5,5 @@ typedef struct {
     matrix_float4x4 projectionMatrix;
     matrix_float3x3 normalMatrix;
     float3 worldCameraPosition;
+    float3 worldCameraViewDirection;
 } VertexUniforms;
