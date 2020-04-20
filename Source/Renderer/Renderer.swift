@@ -177,30 +177,29 @@ open class Renderer
         {
             object.context = context
         }
+                
+        guard object.visible else { return }
         
         if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
         {
             mesh.update(camera: camera)
             
-            if mesh.visible
-            {
-                guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
-                let label = mesh.label
-                
-                renderEncoder.pushDebugGroup(label)
-                
-                renderEncoder.label = label
-                renderEncoder.setViewport(viewport)
-                renderEncoder.setRenderPipelineState(pipeline)
-                
-                material.bind(renderEncoder)
-                
-                mesh.draw(renderEncoder: renderEncoder)
-                
-                renderEncoder.popDebugGroup()
-                
-                renderEncoder.endEncoding()
-            }
+            guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
+            let label = mesh.label
+            
+            renderEncoder.pushDebugGroup(label)
+            
+            renderEncoder.label = label
+            renderEncoder.setViewport(viewport)
+            renderEncoder.setRenderPipelineState(pipeline)
+            
+            material.bind(renderEncoder)
+            
+            mesh.draw(renderEncoder: renderEncoder)
+            
+            renderEncoder.popDebugGroup()
+            
+            renderEncoder.endEncoding()
         }
         
         for child in object.children

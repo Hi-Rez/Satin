@@ -34,6 +34,7 @@ open class Object: Codable {
     
     public var id: String = UUID().uuidString
     public var label: String = "Object"
+    public var visible: Bool = true
     
     var context: Context? {
         didSet {

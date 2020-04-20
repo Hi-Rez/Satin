@@ -69,8 +69,6 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
         }
     }
     
-    public var visible: Bool = true
-    
     public var vertexBuffer: MTLBuffer?
     public var indexBuffer: MTLBuffer?
     
