@@ -190,15 +190,17 @@ public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> m
 
     let sy = 1.0 / tanf(angle)
     let sx = sy / aspect
-    let sz = far / (far - near)
+    let rz = far - near
+    let sz = -(far + near) / rz
+    let sw = -far * near / rz
 
     var result = matrix_identity_float4x4
 
     result[0].x = sx
     result[1].y = sy
     result[2].z = sz
-    result[2].w = 1.0
-    result[3].z = -near * sz
+    result[2].w = -1.0
+    result[3].z = sw
     result[3].w = 0.0
 
     return result

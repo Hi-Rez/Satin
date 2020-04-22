@@ -110,13 +110,14 @@ open class ArcballCameraController {
     }
     
     func updateOrientation() {
-        let quat = simd_quaternion(rotationVelocity, rotationAxis)
-        camera.arcballOrientation = simd_mul(quat, camera.arcballOrientation)
+        let quat = simd_quaternion(-rotationVelocity, rotationAxis)
+//        camera.arcballOrientation = simd_mul(quat, camera.arcballOrientation)
+        camera.arcballOrientation *= quat
     }
     
     func updatePosition() {
         camera.position += simd_make_float3(camera.forwardDirection * translationVelocity.z)
-        camera.position += simd_make_float3(camera.rightDirection * translationVelocity.x)
+        camera.position -= simd_make_float3(camera.rightDirection * translationVelocity.x)
         camera.position += simd_make_float3(camera.upDirection * translationVelocity.y)
     }
     
@@ -361,7 +362,7 @@ open class ArcballCameraController {
                     else {
                         state = .zooming
                         let cameraDistance = max(length(camera.position) * 0.25, 1.0)
-                        translationVelocity.z += 2.5 * Float(event.deltaY / 100.0) * translationScalar * cameraDistance
+                        translationVelocity.z -= 2.5 * Float(event.deltaY / 100.0) * translationScalar * cameraDistance
                         translationVelocity.z /= 2.0
                     }
                 }
@@ -536,14 +537,17 @@ open class ArcballCameraController {
     }
     
     open func reset() {
-        state = .inactive
-        
-        camera.position = defaultPosition
-        camera.orientation = defaultOrientation
-        camera.arcballOrientation = simd_quatf(angle: 0.0, axis: simd_make_float3(0.0))
-        
-        rotationVelocity = 0.0
-        translationVelocity = simd_make_float3(0.0)
+        DispatchQueue.main.async { [unowned self] in
+            self.state = .inactive
+            self.rotationVelocity = 0.0
+            self.translationVelocity = simd_make_float3(0.0)
+            
+            guard let camera = self.camera else { return }
+            camera.position = self.defaultPosition
+            camera.orientation = self.defaultOrientation
+            camera.arcballOrientation = simd_quatf(matrix_identity_float4x4)
+            camera.updateMatrix = true
+        }
     }
     
     deinit {

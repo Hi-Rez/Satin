@@ -51,7 +51,7 @@ open class Object: Codable {
         }
     }
     
-    public var orientation = simd_quaternion(0, simd_make_float3(0, 0, 1)) {
+    public var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
         }
@@ -148,7 +148,7 @@ open class Object: Codable {
     
     var _worldOrientation = simd_quaternion(0, simd_make_float3(0, 0, 1))
     
-    private var worldOrientation: simd_quatf {
+    public var worldOrientation: simd_quatf {
         if updateMatrix {
             let ws = worldScale
             let wm = worldMatrix

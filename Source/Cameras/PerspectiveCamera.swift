@@ -31,6 +31,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
+            updateMatrix = true
         }
     }
     
@@ -39,6 +40,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
+            updateMatrix = true
         }
     }
     
@@ -47,6 +49,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
+            updateMatrix = true
         }
     }
     
@@ -64,7 +67,7 @@ open class PerspectiveCamera: Camera
     {
         if updateViewMatrix
         {
-            _viewMatrix = lookAt(position, position + forwardDirection, upDirection)
+            _viewMatrix = worldMatrix.inverse
             updateViewMatrix = false
         }
         return _viewMatrix
@@ -73,7 +76,7 @@ open class PerspectiveCamera: Camera
     public override init()
     {
         super.init()
-        orientation = simd_quaternion(Float.pi, simd_make_float3(0, 1, 0))
+        orientation = simd_quatf(matrix_identity_float4x4)
         position = simd_make_float3(0.0, 0.0, 1.0)
     }
     

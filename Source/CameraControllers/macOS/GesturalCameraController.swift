@@ -35,7 +35,7 @@ open class GesturalCameraController {
     var defaultPosition: simd_float3 = simd_make_float3(0.0)
     var defaultOrientation: simd_quatf = simd_quaternion(0.0, simd_make_float3(0.0))
     
-    public init(_ camera: PerspectiveCamera) {
+    public init(camera: PerspectiveCamera) {
         self.camera = camera
         
         defaultPosition = self.camera.position
@@ -160,24 +160,24 @@ open class GesturalCameraController {
     
     open func scrollWheel(with event: NSEvent) {
         if event.phase == .began {
-            panVelocity = simd_make_float2(Float(event.scrollingDeltaX), Float(event.scrollingDeltaY)) * panScalar
+            panVelocity = simd_make_float2(-Float(event.scrollingDeltaX), Float(event.scrollingDeltaY)) * panScalar
         }
         else if event.phase == .changed {
-            panVelocity += simd_make_float2(Float(event.scrollingDeltaX), Float(event.scrollingDeltaY)) * panScalar
+            panVelocity += simd_make_float2(-Float(event.scrollingDeltaX), Float(event.scrollingDeltaY)) * panScalar
         }
     }
     
     open func magnify(with event: NSEvent) {
         if event.phase == .began {
-            zoomVelocity = Float(event.magnification) * zoomScalar
+            zoomVelocity = -Float(event.magnification) * zoomScalar
         }
         else if event.phase == .changed {
-            zoomVelocity += Float(event.magnification) * zoomScalar
+            zoomVelocity -= Float(event.magnification) * zoomScalar
         }
     }
     
     open func rotate(with event: NSEvent) {
-        rotateVelocity.z += degToRad(event.rotation) * 0.25
+        rotateVelocity.z -= degToRad(event.rotation) * 0.075
     }
     
     open func reset() {

@@ -9,29 +9,36 @@ import simd
 
 open class ArcballPerspectiveCamera: PerspectiveCamera
 {
-    public var arcballOrientation: simd_quatf = simd_quaternion(0, simd_make_float3(0, 0, 1))
+    public var arcballOrientation: simd_quatf = simd_quatf(matrix_identity_float4x4)
     {
         didSet
         {
             updateViewMatrix = true
+            updateMatrix = true
         }
     }
     
-    public override var viewMatrix: matrix_float4x4
+    public override var worldMatrix: matrix_float4x4
     {
-        if updateViewMatrix
-        {            
-            _viewMatrix = simd_mul(lookAt(position, position + forwardDirection, upDirection), simd_matrix4x4(arcballOrientation))            
-            updateViewMatrix = false
+        if updateMatrix
+        {
+            if let parent = self.parent
+            {
+                _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
+            }
+            else
+            {
+                _worldMatrix = localMatrix
+            }
+            _worldMatrix = simd_mul(simd_matrix4x4(arcballOrientation), _worldMatrix)
+            updateMatrix = false
         }
-        return _viewMatrix
+        return _worldMatrix
     }
     
     public override init()
     {
         super.init()
-        orientation = simd_quaternion(Float.pi, simd_make_float3(0, 1, 0))
-        position = simd_make_float3(0.0, 0.0, 1.0)
     }
     
     public required init(from decoder: Decoder) throws
