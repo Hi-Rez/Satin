@@ -17,21 +17,21 @@ open class BasicTextureMaterial: Material {
     }
 
     public init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
+        super.init()
         if texture.textureType != .type2D || texture.textureType != .type2DMultisample {
             fatalError("Basic texture material expects a 2D texture")
         }
         self.texture = texture
-        self.sampler = sampler
-        super.init()
+        self.sampler = sampler        
     }
 
-    override func setup() {
+    open override func setup() {
+        super.setup()
         setupPipeline()
         setupSampler()
     }
-    
-    func setupSampler()
-    {
+
+    func setupSampler() {
         guard sampler == nil else { return }
         let desc = MTLSamplerDescriptor()
         desc.label = label.titleCase
@@ -48,13 +48,13 @@ open class BasicTextureMaterial: Material {
     }
 
     open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        super.bind(renderEncoder)
         if let texture = self.texture {
             renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom0.rawValue)
         }
         if let sampler = self.sampler {
             renderEncoder.setFragmentSamplerState(sampler, index: FragmentSamplerIndex.Custom0.rawValue)
-        }
-        super.bind(renderEncoder)
+        }        
     }
 }
 

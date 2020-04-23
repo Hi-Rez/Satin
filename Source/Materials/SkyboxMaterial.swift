@@ -10,10 +10,10 @@ import simd
 
 open class SkyboxMaterial: BasicTextureMaterial {
     public override init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
+        super.init()
         if texture.textureType != .typeCube {
             fatalError("Skybox material expects a Cube texture")
-        }
-        super.init()
+        }        
         self.texture = texture
         self.sampler = sampler
     }

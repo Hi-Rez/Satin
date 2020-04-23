@@ -9,7 +9,7 @@
 import Metal
 import simd
 
-open class Mesh: Object, GeometryDelegate, MaterialDelegate {
+open class Mesh: Object, GeometryDelegate {
     open override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -62,9 +62,6 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     
     public var material: Material? {
         didSet {
-            if let material = self.material {
-                material.delegate = self
-            }
             setupMaterial()
         }
     }
@@ -167,9 +164,7 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     }
     
     public override func update() {
-        if let material = self.material {
-            material.update()
-        }
+        material?.update()
         updateUniformsBuffer()
         super.update()
     }
@@ -231,11 +226,5 @@ open class Mesh: Object, GeometryDelegate, MaterialDelegate {
     
     func vertexDataUpdated() {
         setupVertexBuffer()
-    }
-    
-    // MARK: - MaterialDelegate Conformance
-    
-    func materialUpdated(material: Material) {
-        setupMaterial()
     }
 }

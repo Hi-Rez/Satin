@@ -13,7 +13,8 @@ open class UvColorMaterial: Material {
         super.init()
     }
 
-    override func setup() {
+    open override func setup() {
+        super.setup()
         setupPipeline()
     }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     var camelCase: String {
         var parts = self.split(separator: " ")
         if let first = parts.first {

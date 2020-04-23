@@ -8,18 +8,23 @@
 
 import Metal
 
-protocol MaterialDelegate: AnyObject {
+public protocol MaterialDelegate: AnyObject {
     func materialUpdated(material: Material)
 }
 
 open class Material {
     public var label: String {
-        return String(describing: self).replacingOccurrences(of: "Material", with: "").replacingOccurrences(of: "Satin.", with: "")
+        var label = String(describing: self).replacingOccurrences(of: "Material", with: "")
+        if let bundleName = Bundle(for: type(of: self)).displayName {
+            label = label.replacingOccurrences(of: bundleName, with: "")
+        }
+        label = label.replacingOccurrences(of: ".", with: "")
+        return label
     }
     
-    weak var delegate: MaterialDelegate?
+    public weak var delegate: MaterialDelegate?
     public var pipeline: MTLRenderPipelineState?
-    var context: Context? {
+    public var context: Context? {
         didSet {
             setup()
         }
@@ -28,15 +33,15 @@ open class Material {
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
-    init() {}
+    public init() {}
     
     public init(pipeline: MTLRenderPipelineState) {
         self.pipeline = pipeline
     }
     
-    func setup() {}
+    open func setup() {}
     
-    func update() {
+    open func update() {
         onUpdate?()
     }
     

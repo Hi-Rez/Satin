@@ -25,14 +25,15 @@ open class NormalColorMaterial: Material {
         self.absolute.value = absolute
     }
 
-    override func setup() {
+    open override func setup() {
+        super.setup()
         setupPipeline()
         setupUniforms()
     }
 
-    override func update() {
-        uniforms?.update()
+    open override func update() {
         super.update()
+        uniforms?.update()
     }
 
     func setupPipeline() {
@@ -48,10 +49,10 @@ open class NormalColorMaterial: Material {
     }
 
     open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        super.bind(renderEncoder)
         if let uniforms = self.uniforms {
             renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
-        }
-        super.bind(renderEncoder)
+        }        
     }
 }
 

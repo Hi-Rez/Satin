@@ -23,6 +23,53 @@ open class ParameterGroup: Codable {
         paramsMap[param.label] = param
     }
 
+    public func remove(_ param: Parameter) {
+        let key = param.label
+        paramsMap.removeValue(forKey: key)
+        for (i, p) in params.enumerated() {
+            if p.label == key {
+                params.remove(at: i)
+                break
+            }
+        }
+    }
+
+    public func removeAll() {
+        params = []
+        paramsMap = [:]
+    }
+
+    public func setFrom(_ incomingParams: ParameterGroup) {
+        var order: [String] = []
+        for param in incomingParams.params {
+            order.append(param.label)
+        }
+
+        let incomingKeys = Set(Array(incomingParams.paramsMap.keys))
+        let exisitingKeys = Set(Array(self.paramsMap.keys))
+        let newKeys = incomingKeys.subtracting(exisitingKeys)
+        let removedKeys = exisitingKeys.subtracting(incomingKeys)
+
+        for key in removedKeys {
+            if let param = self.paramsMap[key] {
+                remove(param)
+            }
+        }
+        for key in newKeys {
+            if let param = incomingParams.paramsMap[key] {
+                append(param)
+            }
+        }
+
+        let paramsMap: [String: Parameter] = self.paramsMap
+        removeAll()
+        for key in order {
+            if let param = paramsMap[key] {
+                append(param)
+            }
+        }
+    }
+
     private enum CodingKeys: CodingKey {
         case params, title
     }
