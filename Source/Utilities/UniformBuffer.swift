@@ -15,21 +15,20 @@ open class UniformBuffer: Buffer {
     public var offset: Int = 0
     public var alignedSize: Int = 0
     
-    public override init(context: Context, parameters: ParameterGroup, options: MTLResourceOptions = [.storageModeShared]) {
+    public init(context: Context, parameters: ParameterGroup, options: MTLResourceOptions = [.storageModeShared]) {
         super.init()
         self.parameters = parameters
         self.alignedSize = ((parameters.size + 255) / 256) * 256
-        setupBuffer(context: context, options: options)
+        setupBuffer(context: context, count: maxBuffersInFlight, options: options)
     }
     
-    override func setupBuffer(context: Context, options: MTLResourceOptions) {
-        guard alignedSize > 0, let buffer = context.device.makeBuffer(length: alignedSize * maxBuffersInFlight, options: options) else { fatalError("Unable to create UniformBuffer") }
+    override func setupBuffer(context: Context, count: Int, options: MTLResourceOptions) {
+        guard alignedSize > 0, let buffer = context.device.makeBuffer(length: alignedSize * count, options: options) else { fatalError("Unable to create UniformBuffer") }
         buffer.label = parameters.label
         self.buffer = buffer
-        update()
     }
-    
-    public override func update() {
+        
+    public override func update(_ index: Int = 0) {
         updateOffset()
         updateBuffer()
     }

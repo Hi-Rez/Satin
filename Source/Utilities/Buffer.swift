@@ -13,20 +13,19 @@ open class Buffer {
 
     init() {}
 
-    public init(context: Context, parameters: ParameterGroup, options: MTLResourceOptions = [.storageModeShared]) {
+    public init(context: Context, parameters: ParameterGroup, count: Int = 1, options: MTLResourceOptions = [.storageModeShared]) {
         self.parameters = parameters
-        setupBuffer(context: context, options: options)
+        setupBuffer(context: context, count: count, options: options)
     }
 
-    func setupBuffer(context: Context, options: MTLResourceOptions) {
-        guard let buffer = context.device.makeBuffer(length: parameters.size, options: options) else { fatalError("Unable to create Buffer") }
+    func setupBuffer(context: Context, count: Int, options: MTLResourceOptions) {
+        guard let buffer = context.device.makeBuffer(length: parameters.stride * count, options: options) else { fatalError("Unable to create Buffer") }
         buffer.label = parameters.label
         self.buffer = buffer
-        update()
     }
 
-    public func update() {
-        update(UnsafeMutableRawPointer(buffer.contents()))
+    public func update(_ index: Int = 0) {
+        update(UnsafeMutableRawPointer(buffer.contents() + index * parameters.stride))
     }
 
     func update(_ content: UnsafeMutableRawPointer) {
@@ -141,8 +140,8 @@ open class Buffer {
         }
     }
 
-    public func sync() {
-        sync(UnsafeMutableRawPointer(buffer.contents()))
+    public func sync(_ index: Int) {
+        sync(UnsafeMutableRawPointer(buffer.contents() + index * parameters.stride))
     }
 
     func sync(_ content: UnsafeMutableRawPointer) {
