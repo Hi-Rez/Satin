@@ -52,7 +52,6 @@ class Renderer: Forge.Renderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
-        metalKitView.autoResizeDrawable = false
         #if os(iOS)
         switch UIDevice.current.userInterfaceIdiom {
         case .pad:

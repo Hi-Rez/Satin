@@ -5,6 +5,8 @@
 //  Created by Reza Ali on 4/13/20.
 //
 
+#if os(iOS) || os(macOS)
+
 import Metal
 
 open class ComputeSystem {
@@ -189,3 +191,5 @@ open class ComputeSystem {
         _index = (_index + 1) % 2
     }
 }
+
+#endif

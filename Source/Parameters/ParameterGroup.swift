@@ -41,7 +41,7 @@ open class ParameterGroup: Codable {
         do {
             let jsonEncoder = JSONEncoder()
             jsonEncoder.outputFormatting = .prettyPrinted
-            let payload: Data = try jsonEncoder.encode(self)            
+            let payload: Data = try jsonEncoder.encode(self)
             try payload.write(to: url)
         }
         catch {
@@ -76,6 +76,16 @@ open class ParameterGroup: Codable {
                     let p = param as! Float3Parameter
                     if let mp = paramsMap[label] {
                         if let mfp = mp as? Float3Parameter {
+                            mfp.x = p.x
+                            mfp.y = p.y
+                            mfp.z = p.z
+                        }
+                    }
+                }
+                else if param is PackedFloat3Parameter {
+                    let p = param as! PackedFloat3Parameter
+                    if let mp = paramsMap[label] {
+                        if let mfp = mp as? PackedFloat3Parameter {
                             mfp.x = p.x
                             mfp.y = p.y
                             mfp.z = p.z
@@ -140,6 +150,14 @@ open class ParameterGroup: Codable {
                     let p = param as! StringParameter
                     if let mp = paramsMap[label] {
                         if let mbp = mp as? StringParameter {
+                            mbp.value = p.value
+                        }
+                    }
+                }
+                else if param is UInt32Parameter {
+                    let p = param as! UInt32Parameter
+                    if let mp = paramsMap[label] {
+                        if let mbp = mp as? UInt32Parameter {
                             mbp.value = p.value
                         }
                     }

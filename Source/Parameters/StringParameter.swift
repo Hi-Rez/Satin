@@ -16,16 +16,16 @@ open class StringParameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<String>.size }
     public var stride: Int { return MemoryLayout<String>.stride }
     public var alignment: Int { return MemoryLayout<String>.alignment }
-    
-    @objc dynamic public var value: String
-    @objc dynamic public var options: [String] = []
-    
+
+    @objc public dynamic var value: String
+    @objc public dynamic var options: [String] = []
+
     public init(_ label: String, _ value: String, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
-        self.value = value        
+        self.value = value
     }
-    
+
     public init(_ label: String, _ value: String = "", _ options: [String], _ controlType: ControlType = .dropdown) {
         self.label = label
         self.controlType = controlType

@@ -83,7 +83,11 @@ open class OrthographicCamera: Camera
     public override init()
     {
         super.init()
-        near = 0
+        left = -1
+        right = 1
+        bottom = -1
+        top = 1
+        near = -1
         far = 1
     }
     

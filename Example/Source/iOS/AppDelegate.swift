@@ -7,21 +7,23 @@
 //
 
 import UIKit
+import MetalKit
+
 import Forge
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    var viewController: Forge.ViewController?
+    var viewController: Forge.ViewController!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        viewController = Forge.ViewController(nibName: .init("ViewController"), bundle: Bundle(for: Forge.ViewController.self))
-        viewController?.rendererClassName = "Renderer"
+        viewController = Forge.ViewController(nibName: .init("ViewController"), bundle: Bundle(for: Forge.ViewController.self))        
 
         guard let view = self.viewController?.view else { return false }
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
+        
+        self.viewController.renderer = Renderer(metalKitView: view as! MTKView)
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = viewController

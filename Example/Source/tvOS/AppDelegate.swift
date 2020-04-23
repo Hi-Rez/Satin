@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import MetalKit
+
 import Forge
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    var viewController: Forge.ViewController?
+    var viewController: Forge.ViewController!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -20,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController?.rendererClassName = "Renderer"
 
         guard let view = self.viewController?.view else { return false }
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.viewController.renderer = Renderer(metalKitView: view as! MTKView)        
 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()

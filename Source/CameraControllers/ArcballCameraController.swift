@@ -260,7 +260,7 @@ open class ArcballCameraController {
         else if gestureRecognizer.state == .changed, state == .zooming {
             let cameraDistance = max(length(camera.position) * 0.175, 1.0)
             let velocity = newMagnification - magnification
-            translationVelocity.z += 0.25 * translationScalar * velocity * cameraDistance
+            translationVelocity.z -= 0.25 * translationScalar * velocity * cameraDistance
             magnification = newMagnification
         }
         else {
@@ -378,20 +378,6 @@ open class ArcballCameraController {
         }
     }
     
-    func magnify(with event: NSEvent) {
-        if let window = view.window, window.isKeyWindow {
-            if Float(abs(event.magnification)) < Float.ulpOfOne {
-                state = .inactive
-            }
-            else {
-                state = .zooming
-                let cameraDistance = max(length(camera.position) * 0.25, 1.0)
-                translationVelocity.z += 2.5 * Float(event.magnification) * translationScalar * cameraDistance
-                translationVelocity.z /= 2.0
-            }
-        }
-    }
-    
     #elseif os(iOS)
     
     @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
@@ -496,7 +482,7 @@ open class ArcballCameraController {
         }
         else if gestureRecognizer.state == .changed, state == .zooming {
             let cameraDistance = max(length(camera.position) * 0.175, 1.0)
-            translationVelocity.z += 0.01 * translationScalar * Float(gestureRecognizer.velocity) * cameraDistance
+            translationVelocity.z -= 0.01 * translationScalar * Float(gestureRecognizer.velocity) * cameraDistance
             gestureRecognizer.scale = 1.0
         }
         else {

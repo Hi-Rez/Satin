@@ -32,7 +32,7 @@ public enum ControlType: String, Codable {
 }
 
 public enum ParameterType: String, Codable {
-    case float, float2, float3, float4, bool, int, int2, int3, int4, double, string
+    case float, float2, float3, float4, bool, int, int2, int3, int4, double, string, packedfloat3, uint32
 
     var metatype: Parameter.Type {
         switch self {
@@ -58,6 +58,10 @@ public enum ParameterType: String, Codable {
             return DoubleParameter.self
         case .string:
             return StringParameter.self
+        case .packedfloat3:
+            return PackedFloat3Parameter.self
+        case .uint32:
+            return UInt32Parameter.self
         }
     }
 }
