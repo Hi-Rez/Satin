@@ -6,8 +6,6 @@
 //  Copyright © 2020 Reza Ali. All rights reserved.
 //
 
-import Satin
-
 open class LiveMaterial: Material {
     public var params: ParameterGroup?
     var uniforms: UniformBuffer?
