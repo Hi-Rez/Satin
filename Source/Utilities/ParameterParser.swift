@@ -221,7 +221,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                             if let min = min, let max = max, let value = value, let label = vName {
                                 if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
                                     var parameter: Parameter?
-                                    if vType == "float" {                                        
+                                    if vType == "float" {
                                         parameter = FloatParameter(label.titleCase, fValue, fMin, fMax)
                                     }
                                     else if vType == "int" {

@@ -25,9 +25,14 @@ open class ArcballCameraController {
     var leftMouseDownHandler: Any?
     var leftMouseDraggedHandler: Any?
     var leftMouseUpHandler: Any?
+    
     var rightMouseDownHandler: Any?
     var rightMouseDraggedHandler: Any?
     var rightMouseUpHandler: Any?
+    
+    var otherMouseDownHandler: Any?
+    var otherMouseDraggedHandler: Any?
+    var otherMouseUpHandler: Any?
     
     var scrollWheelHandler: Any?
     
@@ -111,7 +116,6 @@ open class ArcballCameraController {
     
     func updateOrientation() {
         let quat = simd_quaternion(-rotationVelocity, rotationAxis)
-//        camera.arcballOrientation = simd_mul(quat, camera.arcballOrientation)
         camera.arcballOrientation *= quat
     }
     
@@ -150,6 +154,21 @@ open class ArcballCameraController {
         
         rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] in
             self.rightMouseUp(with: $0)
+            return $0
+        }
+        
+        otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] in
+            self.otherMouseDown(with: $0)
+            return $0
+        }
+        
+        otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] in
+            self.otherMouseDragged(with: $0)
+            return $0
+        }
+        
+        otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] in
+            self.otherMouseUp(with: $0)
             return $0
         }
         
@@ -227,6 +246,18 @@ open class ArcballCameraController {
         
         if let rightMouseUpHandler = self.rightMouseUpHandler {
             NSEvent.removeMonitor(rightMouseUpHandler)
+        }
+        
+        if let otherMouseDownHandler = self.otherMouseDownHandler {
+            NSEvent.removeMonitor(otherMouseDownHandler)
+        }
+        
+        if let otherMouseDraggedHandler = self.otherMouseDraggedHandler {
+            NSEvent.removeMonitor(otherMouseDraggedHandler)
+        }
+        
+        if let otherMouseUpHandler = self.otherMouseUpHandler {
+            NSEvent.removeMonitor(otherMouseUpHandler)
         }
         
         if let scrollWheelHandler = self.scrollWheelHandler {
@@ -334,14 +365,37 @@ open class ArcballCameraController {
             }
             else {
                 state = .zooming
-                let cameraDistance = max(length(camera.position) * 0.25, 1.0)
-                translationVelocity.z += 2.5 * Float(event.deltaY / (0.5 * view.frame.height)) * translationScalar * cameraDistance
+                let cameraDistance = max(length(camera.worldPosition) * 0.25, 1.0)
+                translationVelocity.z -= 2.5 * Float(event.deltaY / (0.5 * view.frame.height)) * translationScalar * cameraDistance
                 translationVelocity.z /= 2.0
             }
         }
     }
     
     func rightMouseUp(with event: NSEvent) {
+        if event.window == view.window {
+            state = .inactive
+        }
+    }
+    
+    func otherMouseDown(with event: NSEvent) {
+        if event.window == view.window {
+            state = .panning
+        }
+    }
+    
+    func otherMouseDragged(with event: NSEvent) {
+        if event.window == view.window {
+            state = .panning
+            let cameraDistance = max(length(camera.worldPosition) * 0.5, 1.0)
+            translationVelocity.x += Float(event.deltaX / 200.0) * translationScalar * cameraDistance
+            translationVelocity.y += Float(event.deltaY / 200.0) * translationScalar * cameraDistance
+            translationVelocity.x /= 2.0
+            translationVelocity.y /= 2.0
+        }
+    }
+    
+    func otherMouseUp(with event: NSEvent) {
         if event.window == view.window {
             state = .inactive
         }
@@ -361,14 +415,14 @@ open class ArcballCameraController {
                     }
                     else {
                         state = .zooming
-                        let cameraDistance = max(length(camera.position) * 0.25, 1.0)
+                        let cameraDistance = max(length(camera.worldPosition) * 0.25, 1.0)
                         translationVelocity.z -= 2.5 * Float(event.deltaY / 100.0) * translationScalar * cameraDistance
                         translationVelocity.z /= 2.0
                     }
                 }
                 else if event.phase == .changed {
                     state = .panning
-                    let cameraDistance = max(length(camera.position) * 0.5, 1.0)
+                    let cameraDistance = max(length(camera.worldPosition) * 0.5, 1.0)
                     translationVelocity.x += Float(event.deltaX / 100.0) * translationScalar * cameraDistance
                     translationVelocity.y += Float(event.deltaY / 100.0) * translationScalar * cameraDistance
                     translationVelocity.x /= 2.0
@@ -463,7 +517,7 @@ open class ArcballCameraController {
             velocity.x /= view.frame.width
             velocity.y /= view.frame.height
             
-            let cameraDistance = CGFloat(max(length(camera.position) * 0.175, 1.0))
+            let cameraDistance = CGFloat(max(length(camera.worldPosition) * 0.175, 1.0))
             
             velocity.x *= cameraDistance
             velocity.y *= cameraDistance
@@ -481,7 +535,7 @@ open class ArcballCameraController {
             state = .zooming
         }
         else if gestureRecognizer.state == .changed, state == .zooming {
-            let cameraDistance = max(length(camera.position) * 0.175, 1.0)
+            let cameraDistance = max(length(camera.worldPosition) * 0.175, 1.0)
             translationVelocity.z -= 0.01 * translationScalar * Float(gestureRecognizer.velocity) * cameraDistance
             gestureRecognizer.scale = 1.0
         }
