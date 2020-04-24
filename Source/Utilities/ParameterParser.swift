@@ -26,16 +26,22 @@ public func parseParameters(source: String, key: String) -> ParameterGroup? {
 
 func _parseStruct(source: String, key: String) -> String? {
     do {
-        let pattern = "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)"
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let range = NSRange(source.startIndex..<source.endIndex, in: source)
-        let matches = regex.matches(in: source, options: [], range: range)
+        let patterns = [
+            "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)",
+            key+"\\W*\\{\\W(?:((.*|\\n)+))\\W\\}"
+        ]
+        for pattern in patterns {
+            let regex = try NSRegularExpression(pattern: pattern, options: [])
+            let range = NSRange(source.startIndex..<source.endIndex, in: source)
+            let matches = regex.matches(in: source, options: [], range: range)
 
-        for match in matches {
-            if let r1 = Range(match.range(at: 1), in: source) {
-                return String(source[r1])
+            for match in matches {
+                if let r1 = Range(match.range(at: 1), in: source) {
+                    return String(source[r1])+"\n"
+                }
             }
         }
+
         return nil
     }
     catch {
@@ -211,16 +217,15 @@ func parseParameters(source: String) -> ParameterGroup? {
                                 value = String(uiDetails[r3])
                             }
 
-                            if let min = min, let max = max, let value = value, var label = vName {
-                                let firstChar = String(label[label.startIndex])
-                                label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
+                            if let min = min, let max = max, let value = value, let label = vName {
                                 if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
                                     var parameter: Parameter?
                                     if vType == "float" {
-                                        parameter = FloatParameter(label, fValue, fMin, fMax)
+                                        print(label.titleCase)
+                                        parameter = FloatParameter(label.titleCase, fValue, fMin, fMax)
                                     }
                                     else if vType == "int" {
-                                        parameter = IntParameter(label, Int(fValue), Int(fMin), Int(fMax))
+                                        parameter = IntParameter(label.titleCase, Int(fValue), Int(fMin), Int(fMax))
                                     }
 
                                     if let parameter = parameter {
@@ -240,10 +245,10 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                         var parameter: Parameter?
                         if vType == "float" {
-                            parameter = FloatParameter(label, 0.5, 0.0, 1.0)
+                            parameter = FloatParameter(label.titleCase, 0.5, 0.0, 1.0)
                         }
                         else if vType == "int" {
-                            parameter = IntParameter(label, 50, 0, 100)
+                            parameter = IntParameter(label.titleCase, 50, 0, 100)
                         }
 
                         if let parameter = parameter {
@@ -319,15 +324,12 @@ func parseParameters(source: String) -> ParameterGroup? {
                             if let value = value, value.count > 0, let fValue = Float(value), let name = vName {
                                 var label = name
                                 label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
-                                let firstChar = String(label[label.startIndex])
-                                label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
-
                                 var parameter: Parameter?
                                 if vType == "float" {
-                                    parameter = FloatParameter(label, fValue, .inputfield)
+                                    parameter = FloatParameter(label.titleCase, fValue, .inputfield)
                                 }
                                 else if vType == "int" {
-                                    parameter = IntParameter(label, Int(fValue), .inputfield)
+                                    parameter = IntParameter(label.titleCase, Int(fValue), .inputfield)
                                 }
 
                                 if let parameter = parameter {
@@ -346,10 +348,10 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                         var parameter: Parameter?
                         if vType == "float" {
-                            parameter = FloatParameter(label, 0.0, .inputfield)
+                            parameter = FloatParameter(label.titleCase, 0.0, .inputfield)
                         }
                         else if vType == "int" {
-                            parameter = IntParameter(label, 0, .inputfield)
+                            parameter = IntParameter(label.titleCase, 0, .inputfield)
                         }
 
                         if let parameter = parameter {
@@ -392,15 +394,13 @@ func parseParameters(source: String) -> ParameterGroup? {
                     if !success, let name = vName {
                         var label = name
                         label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
-                        let firstChar = String(label[label.startIndex])
-                        label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
-
+                        
                         if uiDetails.count > 0 {
                             let value = uiDetails
-                            params.append(BoolParameter(label, value == "true" ? true : false, .toggle))
+                            params.append(BoolParameter(label.titleCase, value == "true" ? true : false, .toggle))
                         }
                         else {
-                            params.append(BoolParameter(label, true, .toggle))
+                            params.append(BoolParameter(label.titleCase, true, .toggle))
                         }
                         success = true
                     }
@@ -489,11 +489,9 @@ func parseParameters(source: String) -> ParameterGroup? {
                                 alpha = String(uiDetails[r4])
                             }
 
-                            if let red = red, let green = green, let blue = blue, let alpha = alpha, var label = vName {
-                                let firstChar = String(label[label.startIndex])
-                                label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
+                            if let red = red, let green = green, let blue = blue, let alpha = alpha, let label = vName {
                                 if let fRed = Float(red), let fGreen = Float(green), let fBlue = Float(blue), let fAlpha = Float(alpha) {
-                                    params.append(Float4Parameter(label, simd_make_float4(fRed, fGreen, fBlue, fAlpha), .colorpicker))
+                                    params.append(Float4Parameter(label.titleCase, simd_make_float4(fRed, fGreen, fBlue, fAlpha), .colorpicker))
                                     success = true
                                 }
                             }
@@ -503,9 +501,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                     if !success, let name = vName {
                         var label = uiDetails.count > 0 ? uiDetails : name
                         label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
-                        let firstChar = String(label[label.startIndex])
-                        label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
-                        params.append(Float4Parameter(label, simd_make_float4(1.0, 1.0, 1.0, 1.0), .colorpicker))
+                        params.append(Float4Parameter(label.titleCase, simd_make_float4(1.0, 1.0, 1.0, 1.0), .colorpicker))
                         success = true
                     }
                 }
