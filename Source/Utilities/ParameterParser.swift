@@ -110,8 +110,9 @@ func parseStruct(source: String) -> ParameterGroup? {
 func parseParameters(source: String) -> ParameterGroup? {
     do {
         let params = ParameterGroup("")
-        let pattern = #"(\w+\_?\w+) +(\w+); *\/\/ *(\w+) *:?,? *(.*?)\n"#
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let pattern = #"^\s*(?!\/\/)(\w+\_?\w+)\s+(\w+)\s*;\s*\/\/\s*((\w+),?:?(.*))?$"#
+        let options: NSRegularExpression.Options = [.anchorsMatchLines]
+        let regex = try NSRegularExpression(pattern: pattern, options:options)
         let nsrange = NSRange(source.startIndex..<source.endIndex, in: source)
         let matches = regex.matches(in: source, options: [], range: nsrange)
 
@@ -127,13 +128,13 @@ func parseParameters(source: String) -> ParameterGroup? {
             if let r2 = Range(match.range(at: 2), in: source) {
                 vName = String(source[r2])
             }
-            if let r3 = Range(match.range(at: 3), in: source) {
+            if let r3 = Range(match.range(at: 4), in: source) {
                 uiType = String(source[r3])
             }
-            if let r4 = Range(match.range(at: 4), in: source) {
+            if let r4 = Range(match.range(at: 5), in: source) {
                 uiDetails = String(source[r4])
             }
-
+            
             if let vType = vType, let uiType = uiType, let uiDetails = uiDetails {
                 if uiType == "slider" {
                     var success = false
