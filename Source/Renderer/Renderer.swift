@@ -11,6 +11,8 @@ import simd
 
 open class Renderer
 {
+    public var label: String = "Satin Renderer"
+    
     public var preDraw: ((_ renderEncoder: MTLParallelRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLParallelRenderCommandEncoder) -> ())?
     
@@ -69,7 +71,6 @@ open class Renderer
     {
         self.scene = scene
         self.camera = camera
-        
         setContext(context)
     }
     
@@ -160,8 +161,8 @@ open class Renderer
         
         guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         
-        parellelRenderEncoder.pushDebugGroup("Main Pass")
-        parellelRenderEncoder.label = "Main Encoder"
+        parellelRenderEncoder.pushDebugGroup(label + " Pass")
+        parellelRenderEncoder.label = label + " Encoder"
         
         preDraw?(parellelRenderEncoder)
         draw(parellelRenderEncoder: parellelRenderEncoder, object: scene)

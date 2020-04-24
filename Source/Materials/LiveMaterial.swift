@@ -61,7 +61,9 @@ open class LiveMaterial: Material {
             parseUniforms(source)
             let library = try context.device.makeLibrary(source: source, options: .none)
             pipeline = try setupPipeline(library)
-            delegate?.materialUpdated(material: self)
+            DispatchQueue.main.async { [unowned self] in
+                self.delegate?.materialUpdated(material: self)
+            }
         }
         catch {
             print(error)

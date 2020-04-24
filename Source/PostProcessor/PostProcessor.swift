@@ -10,28 +10,38 @@ import Metal
 open class PostProcessor {
     public var label: String = "Post" {
         didSet {
+            renderer.label = label + " Renderer"
             mesh.label = label + " Mesh"
         }
     }
     
     public var context: Context!
     
-    public lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: QuadGeometry(), material: nil)
-        mesh.label = label + " Mesh"
-        return mesh
+    public lazy var scene: Object = {
+        let scene = Object()
+        scene.add(mesh)
+        return scene
     }()
     
-    var camera = OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
+    public lazy var mesh: Mesh = {
+        Mesh(geometry: QuadGeometry(), material: nil)
+    }()
     
-    public lazy var renderer: Renderer = {
-        let renderer = Satin.Renderer(context: context, scene: mesh, camera: camera)
-        renderer.autoClearColor = true
+    lazy var camera: OrthographicCamera = {
+        OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
+    }()
+    
+    lazy var renderer: Renderer = {
+        let renderer = Renderer(context: context, scene: scene, camera: camera)
+        renderer.autoClearColor = false
         return renderer
     }()
     
-    public init(context: Context) {
+    public init(context: Context, material: Material?) {
         self.context = context
+        mesh.material = material
+        renderer.label = label + " Processor"
+        mesh.label = label + " Mesh"
     }
     
     public func update() {
