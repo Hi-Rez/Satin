@@ -6,9 +6,12 @@
 //  Copyright © 2020 Reza Ali. All rights reserved.
 //
 
+import Metal
+
 open class LiveMaterial: Material {
     public var params: ParameterGroup?
-    var uniforms: UniformBuffer?
+    public var uniforms: UniformBuffer?
+
     var metalFileCompiler = MetalFileCompiler()
     var instance: String = ""
     var pipelinePath: String = ""
@@ -22,7 +25,7 @@ open class LiveMaterial: Material {
     open override func setup() {
         super.setup()
         setupCompiler()
-        setupPipeline()
+        compile()
     }
 
     open override func update() {
@@ -32,7 +35,7 @@ open class LiveMaterial: Material {
 
     func setupCompiler() {
         metalFileCompiler.onUpdate = { [unowned self] in
-            self.setupPipeline()
+            self.compile()
         }
     }
 
@@ -49,27 +52,31 @@ open class LiveMaterial: Material {
         }
     }
 
-    func setupPipeline() {
+    func compile() {
         guard let context = self.context, !pipelinePath.isEmpty else { return }
         guard let satinIncludes = getSatinPipelinesPath("Includes.metal") else { return }
         do {
             var source = try metalFileCompiler.parse(URL(fileURLWithPath: satinIncludes))
             source += try metalFileCompiler.parse(URL(fileURLWithPath: pipelinePath))
             parseUniforms(source)
-
             let library = try context.device.makeLibrary(source: source, options: .none)
-            pipeline = try makeAlphaRenderPipeline(
-                library: library,
-                vertex: label.camelCase + "Vertex",
-                fragment: label.camelCase + "Fragment",
-                label: label.titleCase,
-                context: context)
-
+            pipeline = try setupPipeline(library)
             delegate?.materialUpdated(material: self)
         }
         catch {
             print(error)
         }
+    }
+
+    open func setupPipeline(_ library: MTLLibrary) throws -> MTLRenderPipelineState? {
+        guard let context = self.context else { return nil }
+        let pipeline = try makeAlphaRenderPipeline(
+            library: library,
+            vertex: label.camelCase + "Vertex",
+            fragment: label.camelCase + "Fragment",
+            label: label.titleCase,
+            context: context)
+        return pipeline
     }
 
     func setupUniforms() {

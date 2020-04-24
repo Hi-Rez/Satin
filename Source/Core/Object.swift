@@ -208,6 +208,27 @@ open class Object: Codable {
             }
         }
     }
+    
+    public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
+        fn(self)
+        if recursive {
+            for child in children {
+                child.apply(fn, recursive)
+            }
+        }
+    }
+    
+    public func getChildren(_ recursive: Bool = true) -> [Object] {
+        if recursive {
+            var results: [Object] = []
+            for child in children {
+                results.append(child)
+                results.append(contentsOf: child.getChildren(recursive))
+            }
+            return results
+        }
+        return children
+    }
 }
 
 extension Object: Equatable {
