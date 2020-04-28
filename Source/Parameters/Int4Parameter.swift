@@ -23,17 +23,17 @@ open class Int4Parameter: NSObject, Parameter {
     @objc dynamic public var z: Int32
     @objc dynamic public var w: Int32
     
-    @objc dynamic var minX: Int32
-    @objc dynamic var maxX: Int32
+    @objc dynamic public var minX: Int32
+    @objc dynamic public var maxX: Int32
     
-    @objc dynamic var minY: Int32
-    @objc dynamic var maxY: Int32
+    @objc dynamic public var minY: Int32
+    @objc dynamic public var maxY: Int32
     
-    @objc dynamic var minZ: Int32
-    @objc dynamic var maxZ: Int32
+    @objc dynamic public var minZ: Int32
+    @objc dynamic public var maxZ: Int32
     
-    @objc dynamic var minW: Int32
-    @objc dynamic var maxW: Int32
+    @objc dynamic public var minW: Int32
+    @objc dynamic public var maxW: Int32
     
     public var value: simd_int4 {
         get {

@@ -14,13 +14,13 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Forge:
-    :commit: e26b80d97d942d35632fbb0b060e23b93df996fd
+    :commit: 0d991b1e7bacd2209eb672fcbefac067355ba6a1
     :git: "git@github.com:Hi-Rez/Forge.git"
 
 SPEC CHECKSUMS:
   Forge: 235ac8e6a6ac48d2db3be3bae3723ec6180b0ba1
   Satin: 9f47fbc7253d386ab5248fdf5227b1b35d68c1bc
 
-PODFILE CHECKSUM: f8f176777e0841768e254d7651eeb88589263875
+PODFILE CHECKSUM: 75c4fd593df5b8abfd166c28c2bde0060ea27e9a
 
 COCOAPODS: 1.8.4

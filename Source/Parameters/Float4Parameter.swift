@@ -23,17 +23,17 @@ open class Float4Parameter: NSObject, Parameter {
     @objc dynamic public var z: Float
     @objc dynamic public var w: Float
     
-    @objc dynamic var minX: Float
-    @objc dynamic var maxX: Float
+    @objc dynamic public var minX: Float
+    @objc dynamic public var maxX: Float
     
-    @objc dynamic var minY: Float
-    @objc dynamic var maxY: Float
+    @objc dynamic public var minY: Float
+    @objc dynamic public var maxY: Float
     
-    @objc dynamic var minZ: Float
-    @objc dynamic var maxZ: Float
+    @objc dynamic public var minZ: Float
+    @objc dynamic public var maxZ: Float
     
-    @objc dynamic var minW: Float
-    @objc dynamic var maxW: Float
+    @objc dynamic public var minW: Float
+    @objc dynamic public var maxW: Float
     
     public var value: simd_float4 {
         get {

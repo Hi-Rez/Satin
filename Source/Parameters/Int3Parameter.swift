@@ -18,18 +18,18 @@ open class Int3Parameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<simd_int3>.stride }
     public var alignment: Int { return MemoryLayout<simd_int3>.alignment }
     
-    @objc dynamic var x: Int32
-    @objc dynamic var y: Int32
-    @objc dynamic var z: Int32
+    @objc dynamic public var x: Int32
+    @objc dynamic public var y: Int32
+    @objc dynamic public var z: Int32
     
-    @objc dynamic var minX: Int32
-    @objc dynamic var maxX: Int32
+    @objc dynamic public var minX: Int32
+    @objc dynamic public var maxX: Int32
     
-    @objc dynamic var minY: Int32
-    @objc dynamic var maxY: Int32
+    @objc dynamic public var minY: Int32
+    @objc dynamic public var maxY: Int32
     
-    @objc dynamic var minZ: Int32
-    @objc dynamic var maxZ: Int32
+    @objc dynamic public var minZ: Int32
+    @objc dynamic public var maxZ: Int32
     
     public var value: simd_int3 {
         get {

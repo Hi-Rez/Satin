@@ -18,14 +18,14 @@ open class Float2Parameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<simd_float2>.stride }
     public var alignment: Int { return MemoryLayout<simd_float2>.alignment }
     
-    @objc dynamic var x: Float
-    @objc dynamic var y: Float
+    @objc dynamic public var x: Float
+    @objc dynamic public var y: Float
     
-    @objc dynamic var minX: Float
-    @objc dynamic var maxX: Float
+    @objc dynamic public var minX: Float
+    @objc dynamic public var maxX: Float
     
-    @objc dynamic var minY: Float
-    @objc dynamic var maxY: Float
+    @objc dynamic public var minY: Float
+    @objc dynamic public var maxY: Float
     
     public var value: simd_float2 {
         get {

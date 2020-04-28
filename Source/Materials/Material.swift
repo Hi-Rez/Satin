@@ -14,7 +14,7 @@ public protocol MaterialDelegate: AnyObject {
 
 open class Material {
     public var label: String {
-        var label = String(describing: self).replacingOccurrences(of: "Material", with: "")
+        var label = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName {
             label = label.replacingOccurrences(of: bundleName, with: "")
         }

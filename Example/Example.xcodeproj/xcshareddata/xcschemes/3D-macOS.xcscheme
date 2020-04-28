@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "66E67888243EC73A0070B294"
                BuildableName = "Example.app"
-               BlueprintName = "Example-macOS"
+               BlueprintName = "3D-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66E67888243EC73A0070B294"
             BuildableName = "Example.app"
-            BlueprintName = "Example-macOS"
+            BlueprintName = "3D-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66E67888243EC73A0070B294"
             BuildableName = "Example.app"
-            BlueprintName = "Example-macOS"
+            BlueprintName = "3D-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -27,13 +27,12 @@ open class PostProcessor {
         Mesh(geometry: QuadGeometry(), material: nil)
     }()
     
-    lazy var camera: OrthographicCamera = {
+    public lazy var camera: OrthographicCamera = {
         OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
     }()
     
-    lazy var renderer: Renderer = {
+    public lazy var renderer: Renderer = {
         let renderer = Renderer(context: context, scene: scene, camera: camera)
-        renderer.autoClearColor = false
         return renderer
     }()
     

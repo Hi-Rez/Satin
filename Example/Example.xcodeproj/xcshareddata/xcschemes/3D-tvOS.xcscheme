@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "66E678B5243EC9FD0070B294"
                BuildableName = "Example.app"
-               BlueprintName = "Example-tvOS"
+               BlueprintName = "3D-tvOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66E678B5243EC9FD0070B294"
             BuildableName = "Example.app"
-            BlueprintName = "Example-tvOS"
+            BlueprintName = "3D-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66E678B5243EC9FD0070B294"
             BuildableName = "Example.app"
-            BlueprintName = "Example-tvOS"
+            BlueprintName = "3D-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

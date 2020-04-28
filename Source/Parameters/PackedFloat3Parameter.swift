@@ -17,18 +17,18 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     public var stride: Int { return 12 }
     public var alignment: Int { return 4 }
     
-    @objc dynamic var x: Float
-    @objc dynamic var y: Float
-    @objc dynamic var z: Float
+    @objc dynamic public var x: Float
+    @objc dynamic public var y: Float
+    @objc dynamic public var z: Float
     
-    @objc dynamic var minX: Float
-    @objc dynamic var maxX: Float
+    @objc dynamic public var minX: Float
+    @objc dynamic public var maxX: Float
     
-    @objc dynamic var minY: Float
-    @objc dynamic var maxY: Float
+    @objc dynamic public var minY: Float
+    @objc dynamic public var maxY: Float
     
-    @objc dynamic var minZ: Float
-    @objc dynamic var maxZ: Float
+    @objc dynamic public var minZ: Float
+    @objc dynamic public var maxZ: Float
     
     public var value: simd_float3 {
         get {
