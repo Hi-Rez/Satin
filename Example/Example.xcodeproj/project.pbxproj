@@ -1136,7 +1136,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "Example-macOS copy-Info.plist";
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1156,7 +1156,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "Example-macOS copy-Info.plist";
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1175,7 +1175,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CC7PU3PUHS;
-				INFOPLIST_FILE = "Example-iOS copy-Info.plist";
+				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1196,7 +1196,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CC7PU3PUHS;
-				INFOPLIST_FILE = "Example-iOS copy-Info.plist";
+				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1217,7 +1217,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-tvOS copy-Info.plist";
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1237,7 +1237,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "Example-tvOS copy-Info.plist";
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

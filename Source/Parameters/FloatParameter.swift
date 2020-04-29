@@ -16,11 +16,24 @@ open class FloatParameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<Float>.size }
     public var stride: Int { return MemoryLayout<Float>.stride }
     public var alignment: Int { return MemoryLayout<Float>.alignment }
-     
-    @objc dynamic public var value: Float
-    @objc dynamic public var min: Float
-    @objc dynamic public var max: Float
-
+    public var count: Int { return 1 }
+    public subscript<Float>(index: Int) -> Float {
+        get {
+            return value as! Float
+        }
+        set {
+            value = newValue as! Swift.Float
+        }
+    }
+    
+    public func dataType<Float>() -> Float.Type {
+        return Float.self
+    }
+    
+    @objc public dynamic var value: Float
+    @objc public dynamic var min: Float
+    @objc public dynamic var max: Float
+    
     public init(_ label: String, _ value: Float, _ min: Float, _ max: Float, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
@@ -35,6 +48,15 @@ open class FloatParameter: NSObject, Parameter {
         self.controlType = controlType
         
         self.value = value
+        self.min = 0.0
+        self.max = 1.0
+    }
+    
+    public init(_ label: String, _ controlType: ControlType = .unknown) {
+        self.label = label
+        self.controlType = controlType
+        
+        self.value = 0.0
         self.min = 0.0
         self.max = 1.0
     }

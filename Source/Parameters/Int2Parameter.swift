@@ -17,15 +17,28 @@ open class Int2Parameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<simd_int2>.size }
     public var stride: Int { return MemoryLayout<simd_int2>.stride }
     public var alignment: Int { return MemoryLayout<simd_int2>.alignment }
+    public var count: Int { return 2 }
+    public subscript<Int32>(index: Int) -> Int32 {
+        get {
+            return value[index % count] as! Int32
+        }
+        set {
+            value[index % count] = newValue as! Swift.Int32
+        }
+    }
     
-    @objc dynamic public var x: Int32
-    @objc dynamic public var y: Int32
+    public func dataType<Int32>() -> Int32.Type {
+        return Int32.self
+    }
     
-    @objc dynamic public var minX: Int32
-    @objc dynamic public var maxX: Int32
+    @objc public dynamic var x: Int32
+    @objc public dynamic var y: Int32
     
-    @objc dynamic public var minY: Int32
-    @objc dynamic public var maxY: Int32
+    @objc public dynamic var minX: Int32
+    @objc public dynamic var maxX: Int32
+    
+    @objc public dynamic var minY: Int32
+    @objc public dynamic var maxY: Int32
     
     public var value: simd_int2 {
         get {
@@ -77,6 +90,20 @@ open class Int2Parameter: NSObject, Parameter {
         
         self.x = value.x
         self.y = value.y
+        
+        self.minX = 0
+        self.maxX = 100
+        
+        self.minY = 0
+        self.maxY = 100
+    }
+    
+    public init(_ label: String, _ controlType: ControlType = .unknown) {
+        self.label = label
+        self.controlType = controlType
+        
+        self.x = 0
+        self.y = 0
         
         self.minX = 0
         self.maxX = 100

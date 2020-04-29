@@ -17,15 +17,28 @@ open class Float2Parameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<simd_float2>.size }
     public var stride: Int { return MemoryLayout<simd_float2>.stride }
     public var alignment: Int { return MemoryLayout<simd_float2>.alignment }
+    public var count: Int { return 2 }
+    public subscript<Float>(index: Int) -> Float {
+        get {
+            return value[index % count] as! Float
+        }
+        set {
+            value[index % count] = newValue as! Swift.Float
+        }
+    }
     
-    @objc dynamic public var x: Float
-    @objc dynamic public var y: Float
+    public func dataType<Float>() -> Float.Type {
+        return Float.self
+    }
     
-    @objc dynamic public var minX: Float
-    @objc dynamic public var maxX: Float
+    @objc public dynamic var x: Float
+    @objc public dynamic var y: Float
     
-    @objc dynamic public var minY: Float
-    @objc dynamic public var maxY: Float
+    @objc public dynamic var minX: Float
+    @objc public dynamic var maxX: Float
+    
+    @objc public dynamic var minY: Float
+    @objc public dynamic var maxY: Float
     
     public var value: simd_float2 {
         get {
@@ -47,7 +60,6 @@ open class Float2Parameter: NSObject, Parameter {
         }
     }
     
-    
     public var max: simd_float2 {
         get {
             return simd_make_float2(maxX, maxY)
@@ -57,7 +69,7 @@ open class Float2Parameter: NSObject, Parameter {
             maxY = newValue.y
         }
     }
-
+    
     public init(_ label: String, _ value: simd_float2, _ min: simd_float2, _ max: simd_float2, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
@@ -80,5 +92,17 @@ open class Float2Parameter: NSObject, Parameter {
         self.maxX = 1.0
         self.minY = 0.0
         self.maxY = 1.0
-    } 
+    }
+    
+    public init(_ label: String, _ controlType: ControlType = .unknown) {
+        self.label = label
+        self.controlType = controlType
+        
+        self.x = 0.0
+        self.y = 0.0
+        self.minX = 0.0
+        self.maxX = 1.0
+        self.minY = 0.0
+        self.maxY = 1.0
+    }
 }

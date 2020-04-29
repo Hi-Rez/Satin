@@ -61,7 +61,7 @@ open class ParameterGroup: Codable {
                 append(param)
             }
         }
-        
+
         for key in commonKeys {
             if let inParam = incomingParams.paramsMap[key] {
                 setParameterFrom(param: inParam, setValue: false, setOptions: true)
@@ -102,7 +102,7 @@ open class ParameterGroup: Codable {
             print(error)
         }
     }
-    
+
     func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool) {
         let label = param.label
         if param is FloatParameter {

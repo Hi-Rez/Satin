@@ -15,6 +15,19 @@ open class UInt32Parameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<UInt32>.size }
     public var stride: Int { return MemoryLayout<UInt32>.stride }
     public var alignment: Int { return MemoryLayout<UInt32>.alignment }
+    public var count: Int { return 1 }
+    public subscript<UInt32>(index: Int) -> UInt32 {
+        get {
+            return value as! UInt32
+        }
+        set {
+            value = newValue as! Swift.UInt32
+        }
+    }
+
+    public func dataType<UInt32>() -> UInt32.Type {
+        return UInt32.self
+    }
 
     @objc public dynamic var value: UInt32
     @objc public dynamic var min: UInt32
@@ -34,6 +47,15 @@ open class UInt32Parameter: NSObject, Parameter {
         self.controlType = controlType
 
         self.value = value
+        self.min = 0
+        self.max = 100
+    }
+
+    public init(_ label: String, _ controlType: ControlType = .unknown) {
+        self.label = label
+        self.controlType = controlType
+
+        self.value = 0
         self.min = 0
         self.max = 100
     }

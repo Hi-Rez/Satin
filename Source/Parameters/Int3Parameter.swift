@@ -17,19 +17,32 @@ open class Int3Parameter: NSObject, Parameter {
     public var size: Int { return MemoryLayout<simd_int3>.size }
     public var stride: Int { return MemoryLayout<simd_int3>.stride }
     public var alignment: Int { return MemoryLayout<simd_int3>.alignment }
+    public var count: Int { return 3 }
+    public subscript<Int32>(index: Int) -> Int32 {
+        get {
+            return value[index % count] as! Int32
+        }
+        set {
+            value[index % count] = newValue as! Swift.Int32
+        }
+    }
     
-    @objc dynamic public var x: Int32
-    @objc dynamic public var y: Int32
-    @objc dynamic public var z: Int32
+    public func dataType<Int32>() -> Int32.Type {
+        return Int32.self
+    }
     
-    @objc dynamic public var minX: Int32
-    @objc dynamic public var maxX: Int32
+    @objc public dynamic var x: Int32
+    @objc public dynamic var y: Int32
+    @objc public dynamic var z: Int32
     
-    @objc dynamic public var minY: Int32
-    @objc dynamic public var maxY: Int32
+    @objc public dynamic var minX: Int32
+    @objc public dynamic var maxX: Int32
     
-    @objc dynamic public var minZ: Int32
-    @objc dynamic public var maxZ: Int32
+    @objc public dynamic var minY: Int32
+    @objc public dynamic var maxY: Int32
+    
+    @objc public dynamic var minZ: Int32
+    @objc public dynamic var maxZ: Int32
     
     public var value: simd_int3 {
         get {
@@ -63,7 +76,7 @@ open class Int3Parameter: NSObject, Parameter {
             maxZ = newValue.z
         }
     }
-
+    
     public init(_ label: String, _ value: simd_int3, _ min: simd_int3, _ max: simd_int3, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
@@ -89,6 +102,24 @@ open class Int3Parameter: NSObject, Parameter {
         self.x = value.x
         self.y = value.y
         self.z = value.z
+        
+        self.minX = 0
+        self.maxX = 100
+        
+        self.minY = 0
+        self.maxY = 100
+        
+        self.minZ = 0
+        self.maxZ = 100
+    }
+    
+    public init(_ label: String, _ controlType: ControlType = .unknown) {
+        self.label = label
+        self.controlType = controlType
+        
+        self.x = 0
+        self.y = 0
+        self.z = 0
         
         self.minX = 0
         self.maxX = 100

@@ -16,6 +16,9 @@ public protocol Parameter: NSObject, Codable {
     var size: Int { get }
     var stride: Int { get }
     var alignment: Int { get }
+    var count: Int { get }    
+    subscript<T>(index: Int) -> T { get set }
+    func dataType<T>() -> T.Type
 }
 
 public enum ControlType: String, Codable {

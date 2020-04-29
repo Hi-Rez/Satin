@@ -28,7 +28,7 @@ func _parseStruct(source: String, key: String) -> String? {
     do {
         let patterns = [
             "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)",
-            key+"\\W*\\{\\W(?:((.*|\\n)+))\\W\\}"
+            key + "\\W*\\{\\W(?:((.*|\\n)+))\\W\\}"
         ]
         for pattern in patterns {
             let regex = try NSRegularExpression(pattern: pattern, options: [])
@@ -37,7 +37,7 @@ func _parseStruct(source: String, key: String) -> String? {
 
             for match in matches {
                 if let r1 = Range(match.range(at: 1), in: source) {
-                    return String(source[r1])+"\n"
+                    return String(source[r1]) + "\n"
                 }
             }
         }
@@ -112,7 +112,7 @@ func parseParameters(source: String) -> ParameterGroup? {
         let params = ParameterGroup("")
         let pattern = #"^\s*(?!\/\/)(\w+\_?\w+)\s+(\w+)\s*;\s*\/\/\s*((\w+),?:?(.*))?$"#
         let options: NSRegularExpression.Options = [.anchorsMatchLines]
-        let regex = try NSRegularExpression(pattern: pattern, options:options)
+        let regex = try NSRegularExpression(pattern: pattern, options: options)
         let nsrange = NSRange(source.startIndex..<source.endIndex, in: source)
         let matches = regex.matches(in: source, options: [], range: nsrange)
 
@@ -134,7 +134,7 @@ func parseParameters(source: String) -> ParameterGroup? {
             if let r4 = Range(match.range(at: 5), in: source) {
                 uiDetails = String(source[r4])
             }
-            
+
             if let vType = vType, let uiType = uiType, let uiDetails = uiDetails {
                 if uiType == "slider" {
                     var success = false
@@ -286,11 +286,33 @@ func parseParameters(source: String) -> ParameterGroup? {
                         if let value = value, let label = label {
                             if let fValue = Float(value) {
                                 var parameter: Parameter?
+
                                 if vType == "float" {
                                     parameter = FloatParameter(label, fValue, .inputfield)
                                 }
+                                else if vType == "float2" {
+                                    parameter = Float2Parameter(label, simd_make_float2(fValue, fValue), .inputfield)
+                                }
+                                else if vType == "float3" {
+                                    parameter = Float3Parameter(label, simd_make_float3(fValue, fValue, fValue), .inputfield)
+                                }
+                                else if vType == "float4" {
+                                    parameter = Float4Parameter(label, simd_make_float4(fValue, fValue, fValue, fValue), .inputfield)
+                                }
                                 else if vType == "int" {
                                     parameter = IntParameter(label, Int(fValue), .inputfield)
+                                }
+                                else if vType == "int2" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int2Parameter(label, simd_make_int2(iValue, iValue), .inputfield)
+                                }
+                                else if vType == "int3" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int3Parameter(label, simd_make_int3(iValue, iValue, iValue), .inputfield)
+                                }
+                                else if vType == "int4" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int4Parameter(label, simd_make_int4(iValue, iValue, iValue, iValue), .inputfield)
                                 }
 
                                 if let parameter = parameter {
@@ -325,13 +347,35 @@ func parseParameters(source: String) -> ParameterGroup? {
                                 var label = name
                                 label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
                                 var parameter: Parameter?
+
                                 if vType == "float" {
                                     parameter = FloatParameter(label.titleCase, fValue, .inputfield)
+                                }
+                                else if vType == "float2" {
+                                    parameter = Float2Parameter(label.titleCase, simd_make_float2(fValue, fValue), .inputfield)
+                                }
+                                else if vType == "float3" {
+                                    parameter = Float3Parameter(label.titleCase, simd_make_float3(fValue, fValue, fValue), .inputfield)
+                                }
+                                else if vType == "float4" {
+                                    parameter = Float4Parameter(label.titleCase, simd_make_float4(fValue, fValue, fValue, fValue), .inputfield)
                                 }
                                 else if vType == "int" {
                                     parameter = IntParameter(label.titleCase, Int(fValue), .inputfield)
                                 }
-
+                                else if vType == "int2" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int2Parameter(label.titleCase, simd_make_int2(iValue, iValue), .inputfield)
+                                }
+                                else if vType == "int3" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int3Parameter(label.titleCase, simd_make_int3(iValue, iValue, iValue), .inputfield)
+                                }
+                                else if vType == "int4" {
+                                    let iValue = Int32(fValue)
+                                    parameter = Int4Parameter(label.titleCase, simd_make_int4(iValue, iValue, iValue, iValue), .inputfield)
+                                }
+                                
                                 if let parameter = parameter {
                                     params.append(parameter)
                                     success = true
@@ -347,11 +391,30 @@ func parseParameters(source: String) -> ParameterGroup? {
                         label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
 
                         var parameter: Parameter?
+                        
                         if vType == "float" {
-                            parameter = FloatParameter(label.titleCase, 0.0, .inputfield)
+                            parameter = FloatParameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "float2" {
+                            parameter = Float2Parameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "float3" {
+                            parameter = Float3Parameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "float4" {
+                            parameter = Float4Parameter(label.titleCase, .inputfield)
                         }
                         else if vType == "int" {
-                            parameter = IntParameter(label.titleCase, 0, .inputfield)
+                            parameter = IntParameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "int2" {
+                            parameter = Int2Parameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "int3" {
+                            parameter = Int3Parameter(label.titleCase, .inputfield)
+                        }
+                        else if vType == "int4" {
+                            parameter = Int4Parameter(label.titleCase, .inputfield)
                         }
 
                         if let parameter = parameter {
@@ -394,7 +457,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                     if !success, let name = vName {
                         var label = name
                         label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
-                        
+
                         if uiDetails.count > 0 {
                             let value = uiDetails
                             params.append(BoolParameter(label.titleCase, value == "true" ? true : false, .toggle))
