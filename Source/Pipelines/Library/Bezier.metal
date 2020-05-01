@@ -39,6 +39,16 @@ float3 bezier(float3 t, float3 a, float3 b, float3 c, float3 d, float3 e) {
     return a0 + b0 + c0 + d0 + e0;
 }
 
+float3 bezier(float3 t, float2 a, float2 b, float2 c, float2 d, float2 e) {
+    const float2 OneMinusT = (1.0 - t);
+    const float2 a0 = 1.0 * pow(t, 0.0) * pow(OneMinusT, 4.0) * a;
+    const float2 b0 = 4.0 * pow(t, 1.0) * pow(OneMinusT, 3.0) * b;
+    const float2 c0 = 6.0 * pow(t, 2.0) * pow(OneMinusT, 2.0) * c;
+    const float2 d0 = 4.0 * pow(t, 3.0) * pow(OneMinusT, 1.0) * d;
+    const float2 e0 = 1.0 * pow(t, 4.0) * pow(OneMinusT, 0.0) * e;
+    return a0 + b0 + c0 + d0 + e0;
+}
+
 float3 bezier(float t, float3 a, float3 b, float3 c, float3 d) {
     const float OneMinusT = (1.0 - t);
     const float3 a0 = 1.0 * pow(t, 0.0) * pow(OneMinusT, 3.0) * a;

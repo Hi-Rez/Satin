@@ -354,7 +354,7 @@ open class ParameterGroup: Codable {
         let structName = label.replacingOccurrences(of: " ", with: "")
         var source = "typedef struct {\n"
         for param in params {
-            source += "\t \(param.string) \(param.label);\n"
+            source += "\t \(param.string) \(param.label.camelCase);\n"
         }
         source += "} \(structName);\n\n"
         return source
