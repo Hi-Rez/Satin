@@ -43,12 +43,13 @@ open class Renderer
         }
     }
     
-    public var autoClearColor: Bool = true
     public var clearColor: MTLClearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
     
     public var updateColorTexture: Bool = true
     public var colorTexture: MTLTexture?
-    
+    public var colorLoadAction: MTLLoadAction = .clear
+    public var colorStoreAction: MTLStoreAction = .store
+
     public var updateDepthTexture: Bool = true
     public var depthTexture: MTLTexture?
     
@@ -117,9 +118,25 @@ open class Renderer
         let depthPixelFormat = context.depthPixelFormat
         
         renderPassDescriptor.colorAttachments[0].clearColor = clearColor
-        renderPassDescriptor.colorAttachments[0].loadAction = autoClearColor ? .clear : .load
+        renderPassDescriptor.colorAttachments[0].loadAction = colorLoadAction
         renderPassDescriptor.colorAttachments[0].texture = sampleCount > 1 ? colorTexture : renderPassDescriptor.colorAttachments[0].texture
-        renderPassDescriptor.colorAttachments[0].storeAction = sampleCount > 1 ? .storeAndMultisampleResolve : .store
+        if sampleCount > 1 {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
+                renderPassDescriptor.colorAttachments[0].storeAction = .storeAndMultisampleResolve
+            }
+            else {
+                renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
+            }
+        }
+        else {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
+                renderPassDescriptor.colorAttachments[0].storeAction = .store
+            }
+            else {
+                renderPassDescriptor.colorAttachments[0].storeAction = .dontCare
+            }
+        }
+        
         
         if let depthTexture = self.depthTexture
         {
@@ -231,7 +248,7 @@ open class Renderer
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
             depthTexture = context.device.makeTexture(descriptor: descriptor)
-            depthTexture?.label = "Depth Texture"
+            depthTexture?.label = label + " Depth Texture"
             updateDepthTexture = false
         }
         else
@@ -257,7 +274,7 @@ open class Renderer
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
             stencilTexture = context.device.makeTexture(descriptor: descriptor)
-            stencilTexture?.label = "Stencil Texture"
+            stencilTexture?.label = label + " Stencil Texture"
             updateStencilTexture = false
         }
         else
@@ -282,7 +299,7 @@ open class Renderer
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
             colorTexture = context.device.makeTexture(descriptor: descriptor)
-            colorTexture?.label = "Color Texture"
+            colorTexture?.label = label + " Color Texture"
             updateColorTexture = false
         }
         else
