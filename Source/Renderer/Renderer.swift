@@ -49,7 +49,7 @@ open class Renderer
     public var colorTexture: MTLTexture?
     public var colorLoadAction: MTLLoadAction = .clear
     public var colorStoreAction: MTLStoreAction = .store
-
+    
     public var updateDepthTexture: Bool = true
     public var depthTexture: MTLTexture?
     
@@ -121,22 +121,26 @@ open class Renderer
         renderPassDescriptor.colorAttachments[0].loadAction = colorLoadAction
         renderPassDescriptor.colorAttachments[0].texture = sampleCount > 1 ? colorTexture : renderPassDescriptor.colorAttachments[0].texture
         if sampleCount > 1 {
-            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
+            {
                 renderPassDescriptor.colorAttachments[0].storeAction = .storeAndMultisampleResolve
             }
-            else {
+            else
+            {
                 renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
             }
         }
-        else {
-            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
+        else
+        {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
+            {
                 renderPassDescriptor.colorAttachments[0].storeAction = .store
             }
-            else {
+            else
+            {
                 renderPassDescriptor.colorAttachments[0].storeAction = .dontCare
             }
         }
-        
         
         if let depthTexture = self.depthTexture
         {
@@ -176,17 +180,20 @@ open class Renderer
             renderPassDescriptor.stencilAttachment.texture = nil
         }
         
-        guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
-        
-        parellelRenderEncoder.pushDebugGroup(label + " Pass")
-        parellelRenderEncoder.label = label + " Encoder"
-        
-        preDraw?(parellelRenderEncoder)
-        draw(parellelRenderEncoder: parellelRenderEncoder, object: scene)
-        postDraw?(parellelRenderEncoder)
-        
-        parellelRenderEncoder.popDebugGroup()
-        parellelRenderEncoder.endEncoding()
+        if scene.visible
+        {
+            guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+            
+            parellelRenderEncoder.pushDebugGroup(label + " Pass")
+            parellelRenderEncoder.label = label + " Encoder"
+            
+            preDraw?(parellelRenderEncoder)
+            draw(parellelRenderEncoder: parellelRenderEncoder, object: scene)
+            postDraw?(parellelRenderEncoder)
+            
+            parellelRenderEncoder.popDebugGroup()
+            parellelRenderEncoder.endEncoding()
+        }
     }
     
     public func draw(parellelRenderEncoder: MTLParallelRenderCommandEncoder, object: Object)
@@ -195,8 +202,6 @@ open class Renderer
         {
             object.context = context
         }
-                
-        guard object.visible else { return }
         
         if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
         {
@@ -222,7 +227,10 @@ open class Renderer
         
         for child in object.children
         {
-            draw(parellelRenderEncoder: parellelRenderEncoder, object: child)
+            if child.visible
+            {
+                draw(parellelRenderEncoder: parellelRenderEncoder, object: child)
+            }
         }
     }
     

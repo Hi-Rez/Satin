@@ -24,6 +24,25 @@ public func parseParameters(source: String, key: String) -> ParameterGroup? {
     return nil
 }
 
+public func findStructName(_ key: String, _ source: String) -> String? {
+    do {        
+        var pattern = #".?(constant|device) +?(\w*) +?&?\*?"#
+        pattern += key
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let nsrange = NSRange(source.startIndex..<source.endIndex, in: source)
+        let matches = regex.matches(in: source, options: [], range: nsrange)
+        for match in matches {
+            if let r2 = Range(match.range(at: 2), in: source) {
+                return String(source[r2])
+            }
+        }
+    }
+    catch {
+        print(error)
+    }
+    return nil
+}
+
 func _parseStruct(source: String, key: String) -> String? {
     do {
         let patterns = [
@@ -375,7 +394,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                                     let iValue = Int32(fValue)
                                     parameter = Int4Parameter(label.titleCase, simd_make_int4(iValue, iValue, iValue, iValue), .inputfield)
                                 }
-                                
+
                                 if let parameter = parameter {
                                     params.append(parameter)
                                     success = true
@@ -391,7 +410,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                         label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
 
                         var parameter: Parameter?
-                        
+
                         if vType == "float" {
                             parameter = FloatParameter(label.titleCase, .inputfield)
                         }
