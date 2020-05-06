@@ -36,7 +36,7 @@ open class Object: Codable {
     public var label: String = "Object"
     public var visible: Bool = true
     
-    var context: Context? {
+    open var context: Context? {
         didSet {
             setup()
             for child in children {
@@ -183,16 +183,16 @@ open class Object: Codable {
     
     public init() {}
     
-    func setup() {}
+    open func setup() {}
     
-    public func update() {
+    open func update() {
         onUpdate?()
         for child in children {
             child.update()
         }
     }
     
-    public func add(_ child: Object) {
+    open func add(_ child: Object) {
         if !children.contains(child) {
             child.parent = self
             child.context = context
@@ -200,7 +200,7 @@ open class Object: Codable {
         }
     }
     
-    public func remove(_ child: Object) {
+    open func remove(_ child: Object) {
         for (index, object) in children.enumerated() {
             if object == child {
                 children.remove(at: index)
