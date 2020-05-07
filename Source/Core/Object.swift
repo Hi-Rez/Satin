@@ -36,11 +36,13 @@ open class Object: Codable {
     public var label: String = "Object"
     public var visible: Bool = true
     
-    open var context: Context? {
+    open var context: Context? = nil {
         didSet {
-            setup()
-            for child in children {
-                child.context = context
+            if context != nil {                
+                setup()
+                for child in children {
+                    child.context = context
+                }
             }
         }
     }
