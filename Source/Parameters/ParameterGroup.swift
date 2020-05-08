@@ -105,7 +105,11 @@ open class ParameterGroup: Codable {
 
     func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool) {
         let label = param.label
-        if param is FloatParameter {
+        if paramsMap[label] == nil
+        {
+            append(param)
+        }
+        else if param is FloatParameter {
             let p = param as! FloatParameter
             if let mp = paramsMap[label] {
                 if let mfp = mp as? FloatParameter {
