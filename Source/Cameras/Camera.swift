@@ -18,7 +18,7 @@ open class Camera: Object
         let v = worldMatrix
         return normalize(simd_make_float3(v.columns.0.z, v.columns.1.z, -v.columns.2.z))
     }
-        
+    
     public var viewMatrix: matrix_float4x4
     {
         if updateViewMatrix
@@ -83,5 +83,28 @@ open class Camera: Object
     {
         case near
         case far
+    }
+    
+    // Projects a coordinate from world space into the camera's normalized device coordinate (NDC) space.
+    
+    open func project(_ worldCoordinate: simd_float3) -> simd_float2
+    {
+        var wc = simd_make_float4(worldCoordinate, 1.0)
+        wc = projectionMatrix * viewMatrix * wc
+        return simd_make_float2(wc)/wc.w
+    }
+    
+    // Projects a point from world space into the camera's normalized device coordinate (NDC) space.
+    
+    open func project(_ worldCoordinate: simd_float3, _ viewSize: simd_float2) -> simd_float2
+    {
+        return viewSize * ((project(worldCoordinate) + 1.0) * 0.5)
+    }
+    
+    // Projects a point from the camera's normalized device coordinate (NDC) space into world space.
+    open func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
+    {
+        let origin = worldMatrix * projectionMatrix.inverse * simd_float4(ndcCoordinate.x, ndcCoordinate.y, 0.5, 1.0)
+        return simd_make_float3(origin)
     }
 }
