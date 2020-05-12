@@ -119,7 +119,20 @@ open class Renderer
         
         renderPassDescriptor.colorAttachments[0].clearColor = clearColor
         renderPassDescriptor.colorAttachments[0].loadAction = colorLoadAction
-        renderPassDescriptor.colorAttachments[0].texture = sampleCount > 1 ? colorTexture : renderPassDescriptor.colorAttachments[0].texture
+        
+        if sampleCount > 1 {
+            if renderPassDescriptor.colorAttachments[0].texture?.sampleCount == sampleCount {
+                renderPassDescriptor.colorAttachments[0].texture = renderPassDescriptor.colorAttachments[0].texture
+            }
+            else {
+                renderPassDescriptor.colorAttachments[0].texture = colorTexture
+            }
+        }
+        else {
+            renderPassDescriptor.colorAttachments[0].texture = renderPassDescriptor.colorAttachments[0].texture
+        }
+        
+        
         if sampleCount > 1 {
             if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
             {

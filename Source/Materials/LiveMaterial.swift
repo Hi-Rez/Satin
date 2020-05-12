@@ -41,7 +41,7 @@ open class LiveMaterial: Material {
 
     func parseUniforms(_ source: String) {
         if let params = parseParameters(source: source, key: label + "Uniforms") {
-            params.label = label.titleCase + " Uniforms" + (instance.isEmpty ? "" : " \(instance)")
+            params.label = label.titleCase + (instance.isEmpty ? "" : " \(instance)")
             if self.params == nil {
                 self.params = params
             }
