@@ -114,24 +114,46 @@ open class Renderer
     {
         guard let context = self.context else { return }
         
+        let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
+        let inDepthTexture = renderPassDescriptor.depthAttachment.texture
+        let inStencilTexture = renderPassDescriptor.stencilAttachment.texture
+        
         let sampleCount = context.sampleCount
+        let colorPixelFormat = context.colorPixelFormat
         let depthPixelFormat = context.depthPixelFormat
+        let stencilPixelFormat = context.stencilPixelFormat
         
-        renderPassDescriptor.colorAttachments[0].clearColor = clearColor
-        renderPassDescriptor.colorAttachments[0].loadAction = colorLoadAction
+        // Set Color Texture
         
-        if sampleCount > 1 {
-            if renderPassDescriptor.colorAttachments[0].texture?.sampleCount == sampleCount {
-                renderPassDescriptor.colorAttachments[0].texture = renderPassDescriptor.colorAttachments[0].texture
-            }
-            else {
-                renderPassDescriptor.colorAttachments[0].texture = colorTexture
-            }
-        }
-        else {
-            renderPassDescriptor.colorAttachments[0].texture = renderPassDescriptor.colorAttachments[0].texture
+        if inColorTexture?.sampleCount != sampleCount || inColorTexture?.pixelFormat != colorPixelFormat
+        {
+            renderPassDescriptor.colorAttachments[0].texture = colorTexture
         }
         
+        // Set Depth Texture
+        
+        if inDepthTexture?.sampleCount != sampleCount || inDepthTexture?.pixelFormat != depthPixelFormat
+        {
+            renderPassDescriptor.depthAttachment.texture = depthTexture
+            if depthPixelFormat == .depth32Float_stencil8
+            {
+                renderPassDescriptor.stencilAttachment.texture = depthTexture
+            }
+        }
+        
+        // Set Stencil Texture
+        
+        if inStencilTexture?.sampleCount != sampleCount || inStencilTexture?.pixelFormat != stencilPixelFormat
+        {
+            if depthPixelFormat == .depth32Float_stencil8
+            {
+                renderPassDescriptor.stencilAttachment.texture = depthTexture
+            }
+            else
+            {
+                renderPassDescriptor.stencilAttachment.texture = stencilTexture
+            }
+        }
         
         if sampleCount > 1 {
             if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
@@ -155,43 +177,16 @@ open class Renderer
             }
         }
         
-        if let depthTexture = self.depthTexture
-        {
-            renderPassDescriptor.depthAttachment.texture = depthTexture
-            renderPassDescriptor.depthAttachment.loadAction = depthLoadAction
-            renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
-            renderPassDescriptor.depthAttachment.clearDepth = clearDepth
-#if os(macOS)
-            if depthPixelFormat == .depth32Float_stencil8
-            {
-                renderPassDescriptor.stencilAttachment.texture = depthTexture
-            }
-            else if let stencilTexture = self.stencilTexture
-            {
-                renderPassDescriptor.stencilAttachment.texture = stencilTexture
-                renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
-                renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
-                renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
-            }
-#elseif os(iOS) || os(tvOS)
-            if depthPixelFormat == .depth32Float_stencil8
-            {
-                renderPassDescriptor.stencilAttachment.texture = depthTexture
-            }
-            else if let stencilTexture = self.stencilTexture
-            {
-                renderPassDescriptor.stencilAttachment.texture = stencilTexture
-                renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
-                renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
-                renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
-            }
-#endif
-        }
-        else
-        {
-            renderPassDescriptor.depthAttachment.texture = nil
-            renderPassDescriptor.stencilAttachment.texture = nil
-        }
+        renderPassDescriptor.colorAttachments[0].clearColor = clearColor
+        renderPassDescriptor.colorAttachments[0].loadAction = colorLoadAction
+        
+        renderPassDescriptor.depthAttachment.loadAction = depthLoadAction
+        renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
+        renderPassDescriptor.depthAttachment.clearDepth = clearDepth
+        
+        renderPassDescriptor.stencilAttachment.loadAction = stencilLoadAction
+        renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
+        renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
         
         if scene.visible
         {
@@ -207,6 +202,10 @@ open class Renderer
             parellelRenderEncoder.popDebugGroup()
             parellelRenderEncoder.endEncoding()
         }
+        
+        renderPassDescriptor.colorAttachments[0].texture = inColorTexture
+        renderPassDescriptor.depthAttachment.texture = inDepthTexture
+        renderPassDescriptor.stencilAttachment.texture = inStencilTexture
     }
     
     public func draw(parellelRenderEncoder: MTLParallelRenderCommandEncoder, object: Object)
