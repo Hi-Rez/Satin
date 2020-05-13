@@ -18,6 +18,13 @@ open class LiveMaterial: Material {
         self.instance = instance
         super.init()
     }
+    
+    public init(pipelinesURL: URL, instance: String = "") {
+        self.pipelineURL = pipelinesURL
+        self.instance = instance
+        super.init()
+        self.pipelineURL = self.pipelineURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal")
+    }
 
     open override func setup() {
         super.setup()
@@ -30,20 +37,14 @@ open class LiveMaterial: Material {
         }
     }
 
-    open override func setupPipeline() {
-        guard let source = compileSource() else { return }
-        guard let library = makeLibrary(source) else { return }
-        guard let pipeline = createPipeline(library, vertex: label.camelCase + "Vertex", fragment: label.camelCase + "Fragment") else { return }
-        self.pipeline = pipeline
-    }
-
     open override func compileSource() -> String? {
         guard let satinURL = getPipelinesSatinUrl() else { return nil }
         let includesURL = satinURL.appendingPathComponent("Includes.metal")
         do {
             var source = try compiler.parse(includesURL)
-            let shaderSource = try compiler.parse(pipelineURL)
+            var shaderSource = try compiler.parse(pipelineURL)
             parseUniforms(shaderSource)
+            injectPassThroughVertex(source: &shaderSource)
             source += shaderSource
             return source
         }
@@ -56,7 +57,7 @@ open class LiveMaterial: Material {
     open func parseUniforms(_ source: String) {
         if let params = parseParameters(source: source, key: label + "Uniforms") {
             params.label = label.titleCase + (instance.isEmpty ? "" : " \(instance)")
-            parameters.setFrom(params)            
+            parameters.setFrom(params)
             setupUniforms()
         }
     }

@@ -13,7 +13,7 @@ public protocol MaterialDelegate: AnyObject {
     func materialUpdated(material: Material)
 }
 
-open class Material {
+open class Material: ParameterGroupDelegate {
     public enum Blending {
         case disabled
         case alpha
@@ -33,9 +33,14 @@ open class Material {
     }
     
     public var uniforms: UniformBuffer?
-    public lazy var parameters: ParameterGroup = {
-        ParameterGroup(label + "Uniforms")
-    }()
+    var uniformsNeedsUpdate = true
+    
+    public var parameters: ParameterGroup {
+        didSet {
+            parameters.delegate = self
+            uniformsNeedsUpdate = true
+        }
+    }
     
     public weak var delegate: MaterialDelegate?
     
@@ -47,7 +52,9 @@ open class Material {
     
     public var context: Context? {
         didSet {
-            setup()
+            if oldValue != context {
+                setup()
+            }
         }
     }
     
@@ -62,16 +69,21 @@ open class Material {
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
-    public init() {}
+    public init() {
+        self.parameters = ParameterGroup()
+        parameters.label = label + "Uniforms"
+        parameters.delegate = self
+    }
     
     public init(pipeline: MTLRenderPipelineState) {
         self.pipeline = pipeline
+        self.parameters = ParameterGroup()
+        parameters.label = label + "Uniforms"
+        parameters.delegate = self
     }
     
     open func setup() {
-        setupParameters()    
-        setupUniforms()
-        setupPipeline()        
+        setupPipeline()
     }
     
     open func setupPipeline() {
@@ -87,8 +99,9 @@ open class Material {
     }
     
     open func makeLibrary(_ source: String?) -> MTLLibrary? {
-        guard let context = self.context, let source = source else { return nil }
+        guard let context = self.context, var source = source else { return nil }
         do {
+            injectPassThroughVertex(source: &source)
             return try context.device.makeLibrary(source: source, options: .none)
         }
         catch {
@@ -97,10 +110,16 @@ open class Material {
         return nil
     }
     
+    open func injectPassThroughVertex(source: inout String) {
+        let vertexFunctionName = label.camelCase + "Vertex"
+        if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
+            source += passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
+        }
+    }
+    
     open func createPipeline(_ library: MTLLibrary?, vertex: String = "", fragment: String = "") -> MTLRenderPipelineState? {
         guard let context = self.context, let library = library else { return nil }
-        
-        let vertex = vertex.isEmpty ? "satinVertex" : vertex
+        let vertex = vertex.isEmpty ? label.camelCase + "Vertex" : vertex
         let fragment = fragment.isEmpty ? label.camelCase + "Fragment" : fragment
         
         do {
@@ -138,8 +157,6 @@ open class Material {
         return nil
     }
     
-    open func setupParameters() {}
-    
     open func setupUniforms() {
         if let context = self.context, parameters.size > 0 {
             uniforms = UniformBuffer(context: context, parameters: parameters)
@@ -151,6 +168,14 @@ open class Material {
     
     open func update() {
         onUpdate?()
+        updateUniforms()
+    }
+    
+    open func updateUniforms() {
+        if uniformsNeedsUpdate {
+            setupUniforms()
+            uniformsNeedsUpdate = false
+        }
         uniforms?.update()
     }
     
@@ -221,4 +246,44 @@ open class Material {
     }
     
     deinit {}
+}
+
+extension Material {
+    public func added(parameter: Parameter, from group: ParameterGroup) {
+        uniformsNeedsUpdate = true
+    }
+    
+    public func removed(parameter: Parameter, from group: ParameterGroup) {
+        uniformsNeedsUpdate = true
+    }
+    
+    public func loaded(group: ParameterGroup) {
+        uniformsNeedsUpdate = true
+    }
+    
+    public func saved(group: ParameterGroup) {}
+    
+    public func cleared(group: ParameterGroup) {
+        uniformsNeedsUpdate = true
+    }
+}
+
+class PassThroughVertexPipelineSource {
+    static let shared = PassThroughVertexPipelineSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard PassThroughVertexPipelineSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let vertexURL = getPipelinesCommonUrl("Vertex.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(vertexURL)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
 }

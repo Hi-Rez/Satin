@@ -9,18 +9,28 @@
 import Foundation
 import simd
 
+public protocol ParameterGroupDelegate: AnyObject {
+    func added(parameter: Parameter, from group: ParameterGroup)
+    func removed(parameter: Parameter, from group: ParameterGroup)
+    func loaded(group: ParameterGroup)
+    func saved(group: ParameterGroup)
+    func cleared(group: ParameterGroup)
+}
+
 open class ParameterGroup: Codable {
     public var label: String = ""
     public var params: [Parameter] = []
     public var paramsMap: [String: Parameter] = [:]
-
-    public init(_ label: String) {
+    public weak var delegate: ParameterGroupDelegate? = nil
+    
+    public init(_ label: String = "") {
         self.label = label
     }
 
     public func append(_ param: Parameter) {
         params.append(param)
         paramsMap[param.label] = param
+        delegate?.added(parameter: param, from: self)
     }
 
     public func remove(_ param: Parameter) {
@@ -32,11 +42,13 @@ open class ParameterGroup: Codable {
                 break
             }
         }
+        delegate?.removed(parameter: param, from: self)
     }
 
-    public func removeAll() {
+    public func clear() {
         params = []
         paramsMap = [:]
+        delegate?.cleared(group: self)
     }
 
     public func setFrom(_ incomingParams: ParameterGroup) {
@@ -69,7 +81,7 @@ open class ParameterGroup: Codable {
         }
 
         let paramsMap: [String: Parameter] = self.paramsMap
-        removeAll()
+        clear()
         for key in order {
             if let param = paramsMap[key] {
                 append(param)
@@ -97,6 +109,7 @@ open class ParameterGroup: Codable {
             jsonEncoder.outputFormatting = .prettyPrinted
             let payload: Data = try jsonEncoder.encode(self)
             try payload.write(to: url)
+            delegate?.saved(group: self)
         }
         catch {
             print(error)
@@ -314,6 +327,7 @@ open class ParameterGroup: Codable {
             for param in loaded.params {
                 setParameterFrom(param: param, setValue: true, setOptions: false)
             }
+            delegate?.loaded(group: self)
         }
         catch {
             print(error)

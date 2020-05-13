@@ -15,10 +15,10 @@ import Satin
 class Renderer: Forge.Renderer {
     lazy var mesh: Mesh = {
         Mesh(geometry: BoxGeometry(), material: UvColorMaterial())
-//         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial())
+//         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial(true))
 //        Mesh(geometry: BoxGeometry(), material: BasicColorMaterial(simd_make_float4(1.0, 0.0, 0.0, 1.0)))
     }()
-    
+        
     lazy var scene: Object = {
         let scene = Object()
         scene.add(mesh)

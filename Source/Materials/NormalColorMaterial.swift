@@ -15,10 +15,7 @@ open class NormalColorMaterial: Material {
     public init(_ absolute: Bool = false) {
         super.init()
         self.absolute.value = absolute
-    }
-
-    open override func setupParameters() {
-        parameters.append(absolute)
+        parameters.append(self.absolute)
     }
 
     open override func compileSource() -> String? {

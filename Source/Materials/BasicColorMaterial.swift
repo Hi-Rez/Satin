@@ -16,10 +16,7 @@ open class BasicColorMaterial: Material {
         super.init()
         self.blending = blending
         self.color.value = color
-    }
-
-    open override func setupParameters() {
-        parameters.append(color)
+        parameters.append(self.color)
     }
 
     open override func compileSource() -> String? {

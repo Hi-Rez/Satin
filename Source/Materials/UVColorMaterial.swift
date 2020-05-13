@@ -12,7 +12,7 @@ open class UvColorMaterial: Material {
     public override init() {
         super.init()
     }
-    
+
     open override func compileSource() -> String? {
         return UvColorPipelineSource.setup(label: label, parameters: parameters)
     }
