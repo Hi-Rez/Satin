@@ -10,79 +10,37 @@ import Metal
 import simd
 
 open class BasicColorMaterial: Material {
-    var color = Float4Parameter("color")
+    public var color = Float4Parameter("color")
 
-    lazy var parameters: ParameterGroup = {
-        let params = ParameterGroup(label+"Uniforms")
-        params.append(color)
-        return params
-    }()
-
-    var uniforms: UniformBuffer?
-
-    public init(_ color: simd_float4) {
+    public init(_ color: simd_float4 = simd_float4(repeating: 1.0), _ blending: Blending = .alpha) {
         super.init()
+        self.blending = blending
         self.color.value = color
     }
 
-    open override func setup() {
-        super.setup()
-        setupPipeline()
-        setupUniforms()
+    open override func setupParameters() {
+        parameters.append(color)
     }
 
-    open override func update() {
-        super.update()
-        uniforms?.update()        
-    }
-
-    func setupPipeline() {
-        BasicColorPipeline.setup(context: context, label: label, parameters: parameters)
-        if let pipeline = BasicColorPipeline.shared.pipeline {
-            self.pipeline = pipeline
-        }
-    }
-
-    func setupUniforms() {
-        guard let context = self.context else { return }
-        uniforms = UniformBuffer(context: context, parameters: parameters)
-    }
-
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        super.bind(renderEncoder)
-        if let uniforms = self.uniforms {
-            renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
-        }        
+    open override func compileSource() -> String? {
+        return BasicColorPipelineSource.setup(label: label, parameters: parameters)
     }
 }
 
-class BasicColorPipeline {
-    static let shared = BasicColorPipeline()
-    private static var sharedPipeline: MTLRenderPipelineState?
-    let pipeline: MTLRenderPipelineState?
+class BasicColorPipelineSource {
+    static let shared = BasicColorPipelineSource()
+    private static var sharedSource: String?
 
-    class func setup(context: Context?, label: String, parameters: ParameterGroup) {
-        guard BasicColorPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
+    class func setup(label: String, parameters: ParameterGroup) -> String? {
+        guard BasicColorPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try makePipelineSource(pipelinesPath, label, parameters) {
-                let library = try context.device.makeLibrary(source: source, options: .none)
-                let pipeline = try makeAlphaRenderPipeline(
-                    library: library,
-                    vertex: "satinVertex",
-                    fragment: label.camelCase + "Fragment",
-                    label: label.titleCase,
-                    context: context)
-                
-                BasicColorPipeline.sharedPipeline = pipeline
+            if let source = try compilePipelineSource(label, parameters) {
+                BasicColorPipelineSource.sharedSource = source
             }
         }
         catch {
             print(error)
-            return
         }
-    }
-
-    init() {
-        pipeline = BasicColorPipeline.sharedPipeline
+        return sharedSource
     }
 }

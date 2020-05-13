@@ -73,7 +73,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        //Setup things here
+        // Setup things here
     }
     
     override func update() {

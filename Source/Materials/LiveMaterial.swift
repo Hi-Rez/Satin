@@ -9,92 +9,55 @@
 import Metal
 
 open class LiveMaterial: Material {
-    public var params: ParameterGroup?
-    public var uniforms: UniformBuffer?
+    public var compiler = MetalFileCompiler()
+    public var instance: String = ""
+    public var pipelineURL: URL
 
-    var metalFileCompiler = MetalFileCompiler()
-    var instance: String = ""
-    var pipelinePath: String = ""
-
-    public init(pipelinePath: String = "", instance: String = "") {
-        super.init()
-        self.pipelinePath = pipelinePath
+    public init(pipelineURL: URL, instance: String = "") {
+        self.pipelineURL = pipelineURL
         self.instance = instance
+        super.init()
     }
 
     open override func setup() {
         super.setup()
         setupCompiler()
-        compile()
     }
 
-    open override func update() {
-        uniforms?.update()
-        super.update()
-    }
-
-    func setupCompiler() {
-        metalFileCompiler.onUpdate = { [unowned self] in
-            self.compile()
+    open func setupCompiler() {
+        compiler.onUpdate = { [unowned self] in
+            self.setupPipeline()
         }
     }
 
-    func parseUniforms(_ source: String) {
-        if let params = parseParameters(source: source, key: label + "Uniforms") {
-            params.label = label.titleCase + (instance.isEmpty ? "" : " \(instance)")
-            if self.params == nil {
-                self.params = params
-            }
-            else if let existingParams = self.params {
-                existingParams.setFrom(params)
-            }
-            setupUniforms()
-        }
+    open override func setupPipeline() {
+        guard let source = compileSource() else { return }
+        guard let library = makeLibrary(source) else { return }
+        guard let pipeline = createPipeline(library, vertex: label.camelCase + "Vertex", fragment: label.camelCase + "Fragment") else { return }
+        self.pipeline = pipeline
     }
 
-    func compile() {
-        guard let context = self.context, !pipelinePath.isEmpty else { return }
-        guard let satinIncludes = getSatinPipelinesPath("Includes.metal") else { return }
+    open override func compileSource() -> String? {
+        guard let satinURL = getPipelinesSatinUrl() else { return nil }
+        let includesURL = satinURL.appendingPathComponent("Includes.metal")
         do {
-            var source = try metalFileCompiler.parse(URL(fileURLWithPath: satinIncludes))
-            source += try metalFileCompiler.parse(URL(fileURLWithPath: pipelinePath))
-            parseUniforms(source)
-            let library = try context.device.makeLibrary(source: source, options: .none)
-            pipeline = try setupPipeline(library)
-            DispatchQueue.main.async { [unowned self] in
-                self.delegate?.materialUpdated(material: self)
-            }
+            var source = try compiler.parse(includesURL)
+            let shaderSource = try compiler.parse(pipelineURL)
+            parseUniforms(shaderSource)
+            source += shaderSource
+            return source
         }
         catch {
             print(error)
         }
+        return nil
     }
 
-    open func setupPipeline(_ library: MTLLibrary) throws -> MTLRenderPipelineState? {
-        guard let context = self.context else { return nil }
-        let pipeline = try makeAlphaRenderPipeline(
-            library: library,
-            vertex: label.camelCase + "Vertex",
-            fragment: label.camelCase + "Fragment",
-            label: label.titleCase,
-            context: context)
-        return pipeline
-    }
-
-    func setupUniforms() {
-        guard let context = self.context else { return }
-        if let params = self.params, params.size > 0 {
-            uniforms = UniformBuffer(context: context, parameters: params)
-        }
-        else {
-            uniforms = nil
-        }
-    }
-
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        super.bind(renderEncoder)
-        if let uniforms = self.uniforms {
-            renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+    open func parseUniforms(_ source: String) {
+        if let params = parseParameters(source: source, key: label + "Uniforms") {
+            params.label = label.titleCase + (instance.isEmpty ? "" : " \(instance)")
+            parameters.setFrom(params)            
+            setupUniforms()
         }
     }
 }

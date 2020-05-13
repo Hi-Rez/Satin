@@ -220,7 +220,11 @@ open class Raycaster {
         let meshes: [Mesh] = getMeshes(object, recursive)
         
         let count = meshes.count
-        if count != _count {
+        
+        if count == 0 {
+            return []
+        }        
+        else if count != _count {
             _count = count
         }
         

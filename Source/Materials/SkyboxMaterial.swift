@@ -12,48 +12,30 @@ open class SkyboxMaterial: BasicTextureMaterial {
     public override init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
         super.init()
         if texture.textureType != .typeCube {
-            fatalError("Skybox material expects a Cube texture")
-        }        
+            fatalError("SkyboxMaterial expects a Cube texture")
+        }
         self.texture = texture
         self.sampler = sampler
     }
 
-    override func setupPipeline() {
-        SkyboxPipeline.setup(context: context, label: label)
-        if let pipeline = SkyboxPipeline.shared.pipeline {
-            self.pipeline = pipeline
-        }
+    
+    open override func compileSource() -> String? {
+        return SkyboxPipelineSource.setup(label: label, parameters: parameters)
     }
 }
 
-class SkyboxPipeline {
-    static let shared = SkyboxPipeline()
-    private static var sharedPipeline: MTLRenderPipelineState?
-    let pipeline: MTLRenderPipelineState?
+class SkyboxPipelineSource {
+    static let shared = SkyboxPipelineSource()
+    private static var sharedSource: String?
 
-    class func setup(context: Context?, label: String) {
-        guard SkyboxPipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
-
+    class func setup(label: String, parameters: ParameterGroup) -> String? {
+        guard SkyboxPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try makePipelineSource(pipelinesPath, label) {
-                let library = try context.device.makeLibrary(source: source, options: .none)
-                let pipeline = try makeRenderPipeline(
-                    library: library,
-                    vertex: label.camelCase + "Vertex",
-                    fragment: label.camelCase + "Fragment",
-                    label: label.titleCase,
-                    context: context)
-
-                SkyboxPipeline.sharedPipeline = pipeline
-            }
+            SkyboxPipelineSource.sharedSource = try compilePipelineSource(label, parameters)
         }
         catch {
             print(error)
-            return
         }
-    }
-
-    init() {
-        pipeline = SkyboxPipeline.sharedPipeline
+        return sharedSource
     }
 }

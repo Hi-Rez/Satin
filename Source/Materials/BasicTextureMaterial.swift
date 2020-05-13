@@ -8,18 +8,19 @@
 import Metal
 import simd
 
-open class BasicTextureMaterial: Material {
+open class BasicTextureMaterial: BasicColorMaterial {
     public var texture: MTLTexture?
     public var sampler: MTLSamplerState?
-
-    public override init() {
+    
+    
+    public init() {
         super.init()
     }
-
+        
     public init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
         super.init()
         if texture.textureType != .type2D || texture.textureType != .type2DMultisample {
-            fatalError("Basic texture material expects a 2D texture")
+            fatalError("BasicTextureMaterial expects a 2D texture")
         }
         self.texture = texture
         self.sampler = sampler        
@@ -27,7 +28,6 @@ open class BasicTextureMaterial: Material {
 
     open override func setup() {
         super.setup()
-        setupPipeline()
         setupSampler()
     }
 
@@ -40,52 +40,46 @@ open class BasicTextureMaterial: Material {
         sampler = context?.device.makeSamplerState(descriptor: desc)
     }
 
-    func setupPipeline() {
-        BasicTexturePipeline.setup(context: context, label: label)
-        if let pipeline = BasicTexturePipeline.shared.pipeline {
-            self.pipeline = pipeline
-        }
+    
+    open override func compileSource() -> String? {
+        return BasicTexturePipelineSource.setup(label: label, parameters: parameters)
     }
-
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        super.bind(renderEncoder)
+    
+    open func bindTexture(_ renderEncoder: MTLRenderCommandEncoder)
+    {
         if let texture = self.texture {
             renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom0.rawValue)
         }
+    }
+    
+    open func bindSampler(_ renderEncoder: MTLRenderCommandEncoder)
+    {
         if let sampler = self.sampler {
             renderEncoder.setFragmentSamplerState(sampler, index: FragmentSamplerIndex.Custom0.rawValue)
-        }        
+        }
+    }
+
+    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {        
+        bindTexture(renderEncoder)
+        bindSampler(renderEncoder)
+        super.bind(renderEncoder)
     }
 }
 
-class BasicTexturePipeline {
-    static let shared = BasicTexturePipeline()
-    private static var sharedPipeline: MTLRenderPipelineState?
-    let pipeline: MTLRenderPipelineState?
+class BasicTexturePipelineSource {
+    static let shared = BasicTexturePipelineSource()
+    private static var sharedSource: String?
 
-    class func setup(context: Context?, label: String) {
-        guard BasicTexturePipeline.sharedPipeline == nil, let context = context, let pipelinesPath = getPipelinesPath() else { return }
-
+    class func setup(label: String, parameters: ParameterGroup) -> String? {
+        guard BasicTexturePipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try makePipelineSource(pipelinesPath, label) {
-                let library = try context.device.makeLibrary(source: source, options: .none)
-                let pipeline = try makeAlphaRenderPipeline(
-                    library: library,
-                    vertex: "satinVertex",
-                    fragment: label.camelCase + "Fragment",
-                    label: label.titleCase,
-                    context: context)
-
-                BasicTexturePipeline.sharedPipeline = pipeline
+            if let source = try compilePipelineSource(label, parameters) {
+                BasicTexturePipelineSource.sharedSource = source
             }
         }
         catch {
             print(error)
-            return
         }
-    }
-
-    init() {
-        pipeline = BasicTexturePipeline.sharedPipeline
+        return sharedSource
     }
 }

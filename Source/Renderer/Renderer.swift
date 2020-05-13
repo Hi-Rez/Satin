@@ -128,8 +128,9 @@ open class Renderer
         if inColorTexture?.sampleCount != sampleCount || inColorTexture?.pixelFormat != colorPixelFormat
         {
             renderPassDescriptor.colorAttachments[0].texture = colorTexture
+            renderPassDescriptor.colorAttachments[0].resolveTexture = inColorTexture
         }
-        
+         
         // Set Depth Texture
         
         if inDepthTexture?.sampleCount != sampleCount || inDepthTexture?.pixelFormat != depthPixelFormat
