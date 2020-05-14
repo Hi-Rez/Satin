@@ -22,7 +22,7 @@ open class ParameterGroup: Codable {
     public var params: [Parameter] = []
     public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
-    
+
     public init(_ label: String = "") {
         self.label = label
     }
@@ -76,7 +76,7 @@ open class ParameterGroup: Codable {
 
         for key in commonKeys {
             if let inParam = incomingParams.paramsMap[key] {
-                setParameterFrom(param: inParam, setValue: false, setOptions: true)
+                setParameterFrom(param: inParam, setValue: false, setOptions: true, append: false)
             }
         }
 
@@ -116,11 +116,24 @@ open class ParameterGroup: Codable {
         }
     }
 
-    func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool) {
+    public func load(_ url: URL, append: Bool = true) {
+        do {
+            let data = try Data(contentsOf: url)
+            let loaded = try JSONDecoder().decode(ParameterGroup.self, from: data)
+            for param in loaded.params {
+                setParameterFrom(param: param, setValue: true, setOptions: false, append: append)
+            }
+            delegate?.loaded(group: self)
+        }
+        catch {
+            print(error)
+        }
+    }
+
+    func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool, append: Bool = true) {
         let label = param.label
-        if paramsMap[label] == nil
-        {
-            append(param)
+        if append, paramsMap[label] == nil {
+            self.append(param)
         }
         else if param is FloatParameter {
             let p = param as! FloatParameter
@@ -317,20 +330,6 @@ open class ParameterGroup: Codable {
                     }
                 }
             }
-        }
-    }
-
-    public func load(_ url: URL) {
-        do {
-            let data = try Data(contentsOf: url)
-            let loaded = try JSONDecoder().decode(ParameterGroup.self, from: data)
-            for param in loaded.params {
-                setParameterFrom(param: param, setValue: true, setOptions: false)
-            }
-            delegate?.loaded(group: self)
-        }
-        catch {
-            print(error)
         }
     }
 
