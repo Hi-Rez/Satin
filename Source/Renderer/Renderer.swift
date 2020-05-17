@@ -115,6 +115,7 @@ open class Renderer
         guard let context = self.context else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
+        let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
         let inDepthTexture = renderPassDescriptor.depthAttachment.texture
         let inStencilTexture = renderPassDescriptor.stencilAttachment.texture
         
@@ -125,11 +126,10 @@ open class Renderer
         
         // Set Color Texture
         
-        if inColorTexture?.sampleCount != sampleCount || inColorTexture?.pixelFormat != colorPixelFormat
+        if sampleCount > 1, inColorTexture?.sampleCount != sampleCount || inColorTexture?.pixelFormat != colorPixelFormat
         {
             renderPassDescriptor.colorAttachments[0].texture = colorTexture
-            renderPassDescriptor.colorAttachments[0].resolveTexture = inColorTexture
-        }
+        }            
          
         // Set Depth Texture
         
@@ -205,6 +205,7 @@ open class Renderer
         }
         
         renderPassDescriptor.colorAttachments[0].texture = inColorTexture
+        renderPassDescriptor.colorAttachments[0].resolveTexture = inColorResolveTexture
         renderPassDescriptor.depthAttachment.texture = inDepthTexture
         renderPassDescriptor.stencilAttachment.texture = inStencilTexture
     }
