@@ -210,16 +210,15 @@ public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> m
 
 public func orthographic(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) -> matrix_float4x4
 {
-    let length = 1.0 / (right - left)
-    let height = 1.0 / (top - bottom)
-    let depth = 1.0 / (far - near)
-
     var result = matrix_identity_float4x4
 
-    result[0].x = 2.0 * length
-    result[1].y = 2.0 * height
-    result[2].z = depth
-    result[3].z = -near * depth
+    result[0].x = 2.0 / (right - left)
+    result[1].y = 2.0 / (top - bottom)
+    result[2].z = -1.0 / (far - near)
+    
+    result[3].x = (left + right)/(left - right)
+    result[3].y = (top + bottom)/(bottom - top)
+    result[3].z = near / (near - far)
 
     return result
 }
