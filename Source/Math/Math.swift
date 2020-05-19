@@ -215,9 +215,9 @@ public func orthographic(left: Float, right: Float, bottom: Float, top: Float, n
     result[0].x = 2.0 / (right - left)
     result[1].y = 2.0 / (top - bottom)
     result[2].z = -1.0 / (far - near)
-    
-    result[3].x = (left + right)/(left - right)
-    result[3].y = (top + bottom)/(bottom - top)
+
+    result[3].x = (left + right) / (left - right)
+    result[3].y = (top + bottom) / (bottom - top)
     result[3].z = near / (near - far)
 
     return result
