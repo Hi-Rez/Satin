@@ -38,7 +38,7 @@ open class Object: Codable {
     
     open var context: Context? = nil {
         didSet {
-            if context != nil {                
+            if context != nil {
                 setup()
                 for child in children {
                     child.context = context
@@ -102,6 +102,12 @@ open class Object: Codable {
     var updateMatrix: Bool = true {
         didSet {
             if updateMatrix {
+                _updateLocalMatrix = true
+                _updateWorldMatrix = true
+                _updateWorldPosition = true
+                _updateWorldScale = true
+                _updateWorldOrientation = true                
+                updateMatrix = false
                 for child in children {
                     child.updateMatrix = true
                 }
@@ -109,49 +115,49 @@ open class Object: Codable {
         }
     }
     
+    var _updateLocalMatrix: Bool = true
     var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var localMatrix: matrix_float4x4 {
-        if updateMatrix {
+        if _updateLocalMatrix {
             _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
-            updateMatrix = false
+            _updateLocalMatrix = false
         }
         return _localMatrix
     }
     
+    var _updateWorldPosition: Bool = true
     var _worldPosition = simd_make_float3(0, 0, 0)
     
     public var worldPosition: simd_float3 {
-        if updateMatrix {
+        if _updateWorldPosition {
             let wp = worldMatrix.columns.3
             _worldPosition = simd_make_float3(wp.x, wp.y, wp.z)
-            return _worldPosition
+            _updateWorldPosition = false
         }
-        else {
-            return _worldPosition
-        }
+        return _worldPosition
     }
     
+    var _updateWorldScale: Bool = true
     var _worldScale = simd_make_float3(0, 0, 0)
     
     public var worldScale: simd_float3 {
-        if updateMatrix {
+        if _updateWorldScale {
             let wm = worldMatrix
             let sx = wm.columns.0
             let sy = wm.columns.1
             let sz = wm.columns.2
             _worldScale = simd_make_float3(length(sx), length(sy), length(sz))
-            return _worldScale
+            _updateWorldScale = false
         }
-        else {
-            return _worldScale
-        }
+        return _worldScale
     }
     
+    var _updateWorldOrientation: Bool = true
     var _worldOrientation = simd_quaternion(0, simd_make_float3(0, 0, 1))
     
     public var worldOrientation: simd_quatf {
-        if updateMatrix {
+        if _updateWorldOrientation {
             let ws = worldScale
             let wm = worldMatrix
             let c0 = wm.columns.0
@@ -161,24 +167,23 @@ open class Object: Codable {
             let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
             let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
             _worldOrientation = simd_quatf(simd_float3x3(columns: (x, y, z)))
-            return _worldOrientation
+            _updateWorldOrientation = false
         }
-        else {
-            return _worldOrientation
-        }
+        return _worldOrientation
     }
     
+    var _updateWorldMatrix: Bool = true
     var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var worldMatrix: matrix_float4x4 {
-        if updateMatrix {
+        if _updateWorldMatrix {
             if let parent = self.parent {
                 _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
             }
             else {
                 _worldMatrix = localMatrix
             }
-            updateMatrix = false
+            _updateWorldMatrix = false
         }
         return _worldMatrix
     }
