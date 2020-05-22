@@ -10,7 +10,7 @@ import Metal
 import simd
 
 open class NormalColorMaterial: Material {
-    var absolute = BoolParameter("absolute")
+    var absolute = BoolParameter("Absolute", .toggle)
 
     public init(_ absolute: Bool = false) {
         super.init()

@@ -25,7 +25,7 @@ public func parseParameters(source: String, key: String) -> ParameterGroup? {
 }
 
 public func findStructName(_ key: String, _ source: String) -> String? {
-    do {        
+    do {
         var pattern = #".?(constant|device) +?(\w*) +?&?\*?"#
         pattern += key
         let regex = try NSRegularExpression(pattern: pattern, options: [])
@@ -126,10 +126,40 @@ func parseStruct(source: String) -> ParameterGroup? {
     }
 }
 
+func addParameter(group: ParameterGroup, type: String, name: String, control: ControlType = .none) {
+    if type == "float" {
+        group.append(FloatParameter(name, control))
+    }
+    else if type == "float2" {
+        group.append(Float2Parameter(name, control))
+    }
+    else if type == "float3" {
+        group.append(Float3Parameter(name, control))
+    }
+    else if type == "float4" {
+        group.append(Float4Parameter(name, control))
+    }
+    else if type == "int" {
+        group.append(IntParameter(name, control))
+    }
+    else if type == "int2" {
+        group.append(Int2Parameter(name, control))
+    }
+    else if type == "int3" {
+        group.append(Int3Parameter(name, control))
+    }
+    else if type == "int4" {
+        group.append(Int4Parameter(name, control))
+    }
+    else if type == "bool" {
+        group.append(BoolParameter(name, control))
+    }
+}
+
 func parseParameters(source: String) -> ParameterGroup? {
     do {
         let params = ParameterGroup("")
-        let pattern = #"^\s*(?!\/\/)(\w+\_?\w+)\s+(\w+)\s*;\s*\/\/\s*((\w+),?:?(.*))?$"#
+        let pattern = #"^\s*(?!\/\/)(\w+\_?\w+)\s+(\w+)\s*;\s*(\s*\/\/\s*((\w+),?:?(.*))?)?$"#
         let options: NSRegularExpression.Options = [.anchorsMatchLines]
         let regex = try NSRegularExpression(pattern: pattern, options: options)
         let nsrange = NSRange(source.startIndex..<source.endIndex, in: source)
@@ -141,16 +171,26 @@ func parseParameters(source: String) -> ParameterGroup? {
             var uiType: String?
             var uiDetails: String?
 
+            // Type: float, float2, int2, etc
             if let r1 = Range(match.range(at: 1), in: source) {
                 vType = String(source[r1])
             }
+
+            // name: position, uv, etc
             if let r2 = Range(match.range(at: 2), in: source) {
                 vName = String(source[r2])
             }
-            if let r3 = Range(match.range(at: 4), in: source) {
+
+            // if comment doesnt exist, just create the parameter with no UI = .none
+            if let type = vType, let name = vName, Range(match.range(at: 3), in: source) == nil {
+                addParameter(group: params, type: type, name: name.titleCase)
+                continue
+            }
+
+            if let r3 = Range(match.range(at: 5), in: source) {
                 uiType = String(source[r3])
             }
-            if let r4 = Range(match.range(at: 5), in: source) {
+            if let r4 = Range(match.range(at: 6), in: source) {
                 uiDetails = String(source[r4])
             }
 

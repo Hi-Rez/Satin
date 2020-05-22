@@ -10,7 +10,7 @@ import Metal
 import simd
 
 open class BasicColorMaterial: Material {
-    public var color = Float4Parameter("color")
+    public var color = Float4Parameter("Color", .colorpicker)
 
     public init(_ color: simd_float4 = simd_float4(repeating: 1.0), _ blending: Blending = .alpha) {
         super.init()
