@@ -235,10 +235,10 @@ func parseParameters(source: String) -> ParameterGroup? {
                             if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
                                 var parameter: Parameter?
                                 if vType == "float" {
-                                    parameter = FloatParameter(label, fValue, fMin, fMax)
+                                    parameter = FloatParameter(label, fValue, fMin, fMax, .slider)
                                 }
                                 else if vType == "int" {
-                                    parameter = IntParameter(label, Int(fValue), Int(fMin), Int(fMax))
+                                    parameter = IntParameter(label, Int(fValue), Int(fMin), Int(fMax), .slider)
                                 }
 
                                 if let parameter = parameter {
@@ -281,10 +281,10 @@ func parseParameters(source: String) -> ParameterGroup? {
                                 if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
                                     var parameter: Parameter?
                                     if vType == "float" {
-                                        parameter = FloatParameter(label.titleCase, fValue, fMin, fMax)
+                                        parameter = FloatParameter(label.titleCase, fValue, fMin, fMax, .slider)
                                     }
                                     else if vType == "int" {
-                                        parameter = IntParameter(label.titleCase, Int(fValue), Int(fMin), Int(fMax))
+                                        parameter = IntParameter(label.titleCase, Int(fValue), Int(fMin), Int(fMax), .slider)
                                     }
 
                                     if let parameter = parameter {
@@ -304,10 +304,10 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                         var parameter: Parameter?
                         if vType == "float" {
-                            parameter = FloatParameter(label.titleCase, 0.5, 0.0, 1.0)
+                            parameter = FloatParameter(label.titleCase, 0.5, 0.0, 1.0, .slider)
                         }
                         else if vType == "int" {
-                            parameter = IntParameter(label.titleCase, 50, 0, 100)
+                            parameter = IntParameter(label.titleCase, 50, 0, 100, .slider)
                         }
 
                         if let parameter = parameter {
