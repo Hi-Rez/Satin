@@ -66,6 +66,23 @@ open class Material: ParameterGroupDelegate {
         }
     }
     
+    public var depthStencilState: MTLDepthStencilState?
+    public var depthCompareFunction: MTLCompareFunction = .less {
+        didSet {
+            if oldValue != depthCompareFunction {
+                setupDepthStencilState()
+            }
+        }
+    }
+    
+    public var depthWriteEnabled: Bool = true {
+        didSet {
+            if oldValue != depthWriteEnabled {
+                setupDepthStencilState()
+            }
+        }
+    }
+    
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
@@ -83,7 +100,18 @@ open class Material: ParameterGroupDelegate {
     }
     
     open func setup() {
+        setupDepthStencilState()
         setupPipeline()
+    }
+    
+    func setupDepthStencilState() {
+        guard let context = self.context, context.depthPixelFormat != .invalid else { return }
+        let device = context.device
+        let depthStateDesciptor = MTLDepthStencilDescriptor()
+        depthStateDesciptor.depthCompareFunction = depthCompareFunction
+        depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
+        guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
+        depthStencilState = state
     }
     
     open func setupPipeline() {
@@ -180,14 +208,19 @@ open class Material: ParameterGroupDelegate {
     }
     
     open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
-        if let uniforms = self.uniforms {
-            renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
-            renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
-        }
+        guard let uniforms = self.uniforms else { return }
+        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
+        renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+    }
+    
+    open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
+        guard let depthStencilState = self.depthStencilState else { return }
+        renderEncoder.setDepthStencilState(depthStencilState)
     }
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         bindUniforms(renderEncoder)
+        bindDepthStencilState(renderEncoder)
         onBind?(renderEncoder)
     }
     

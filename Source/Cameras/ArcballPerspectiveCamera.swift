@@ -20,7 +20,7 @@ open class ArcballPerspectiveCamera: PerspectiveCamera
     
     public override var worldMatrix: matrix_float4x4
     {
-        if updateMatrix
+        if _updateWorldMatrix
         {
             if let parent = self.parent
             {
@@ -31,7 +31,7 @@ open class ArcballPerspectiveCamera: PerspectiveCamera
                 _worldMatrix = localMatrix
             }
             _worldMatrix = simd_mul(simd_matrix4x4(arcballOrientation), _worldMatrix)
-            updateMatrix = false
+            _updateWorldMatrix = false
         }
         return _worldMatrix
     }

@@ -56,7 +56,7 @@ open class ArcballCameraController {
     
     open var rotationDamping: Float = 0.9
     #if os(macOS)
-    open var rotationScalar: Float = 3.0
+    open var rotationScalar: Float = 5.0
     #elseif os(iOS)
     open var rotationScalar: Float = 2.0
     #endif
