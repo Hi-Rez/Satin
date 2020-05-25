@@ -18,6 +18,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -39,6 +40,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -62,6 +64,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -81,6 +84,7 @@ public func makeIndirectRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -101,6 +105,7 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -133,6 +138,7 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -162,6 +168,7 @@ public func makeShadowRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = nil
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
@@ -181,6 +188,7 @@ public func makeAdditiveRenderPipeline(library: MTLLibrary?,
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = SatinVertexDescriptor()
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat

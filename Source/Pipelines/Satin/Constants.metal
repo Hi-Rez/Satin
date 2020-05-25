@@ -1,3 +1,20 @@
+typedef enum VertexAttribute {
+    VertexAttributePosition = 0,
+    VertexAttributeNormal = 1,
+    VertexAttributeTexcoord = 2,
+    VertexAttributeCustom0 = 3,
+    VertexAttributeCustom1 = 4,
+    VertexAttributeCustom2 = 5,
+    VertexAttributeCustom3 = 6,
+    VertexAttributeCustom4 = 7,
+    VertexAttributeCustom5 = 8,
+    VertexAttributeCustom6 = 9,
+    VertexAttributeCustom7 = 10,
+    VertexAttributeCustom8 = 11,
+    VertexAttributeCustom9 = 12,
+    VertexAttributeCustom10 = 13
+} VertexAttribute;
+
 typedef enum VertexBufferIndex {
     VertexBufferVertices = 0,
     VertexBufferVertexUniforms = 1,

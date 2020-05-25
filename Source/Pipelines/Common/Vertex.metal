@@ -1,11 +1,9 @@
-vertex VertexData satinVertex(uint vertexID [[vertex_id]],
-                              constant Vertex *vertices [[buffer(VertexBufferVertices)]],
+vertex VertexData satinVertex(const Vertex in [[stage_in]],
                               constant VertexUniforms &vertexUniforms
                               [[buffer(VertexBufferVertexUniforms)]]) {
-    Vertex v = vertices[vertexID];
     VertexData out;
-    out.position = vertexUniforms.projectionMatrix * vertexUniforms.modelViewMatrix * v.position;
-    out.normal = normalize(vertexUniforms.normalMatrix * v.normal);
-    out.uv = v.uv;
+    out.position = vertexUniforms.projectionMatrix * vertexUniforms.modelViewMatrix * in.position;
+    out.normal = normalize(vertexUniforms.normalMatrix * in.normal);
+    out.uv = in.uv;
     return out;
 }

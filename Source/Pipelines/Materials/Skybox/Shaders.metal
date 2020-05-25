@@ -3,11 +3,9 @@ typedef struct {
     float3 uv;
 } SkyVertexData;
 
-vertex SkyVertexData skyboxVertex(uint vertexID [[vertex_id]],
-                                  constant Vertex *vertices [[buffer(VertexBufferVertices)]],
+vertex SkyVertexData skyboxVertex(const Vertex v [[stage_in]],
                                   constant VertexUniforms &vertexUniforms
                                   [[buffer(VertexBufferVertexUniforms)]]) {
-    Vertex v = vertices[vertexID];
     float4 position = v.position;
     SkyVertexData out;
     out.position = vertexUniforms.projectionMatrix * vertexUniforms.modelViewMatrix * position;

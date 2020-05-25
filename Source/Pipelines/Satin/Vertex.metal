@@ -1,5 +1,5 @@
 typedef struct {
-    float4 position;
-    float3 normal;
-    float2 uv;
+    float4 position [[attribute(VertexAttributePosition)]];
+    float3 normal [[attribute(VertexAttributeNormal)]];
+    float2 uv [[attribute(VertexAttributeTexcoord)]];
 } Vertex;

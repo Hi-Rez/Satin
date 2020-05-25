@@ -14,6 +14,23 @@ public let worldForwardDirection = simd_make_float3(0, 0, 1)
 public let worldUpDirection = simd_make_float3(0, 1, 0)
 public let worldRightDirection = simd_make_float3(1, 0, 0)
 
+public enum VertexAttribute: Int {
+    case Position = 0
+    case Normal = 1
+    case Texcoord = 2
+    case Custom0 = 3
+    case Custom1 = 4
+    case Custom2 = 5
+    case Custom3 = 6
+    case Custom4 = 7
+    case Custom5 = 8
+    case Custom6 = 9
+    case Custom7 = 10
+    case Custom8 = 11
+    case Custom9 = 12
+    case Custom10 = 13
+}
+
 public enum VertexBufferIndex: Int {
     case Vertices = 0
     case VertexUniforms = 1
