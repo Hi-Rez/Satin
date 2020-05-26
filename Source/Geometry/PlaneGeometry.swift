@@ -20,80 +20,80 @@ open class PlaneGeometry: Geometry {
     
     public init(size: Float = 2) {
         super.init()
-        self.setup(width: size, height: size, resU: 1, resV: 1)
+        self.setupData(width: size, height: size, resU: 1, resV: 1)
     }
     
     public init(size: Float, plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size, height: size, resU: 1, resV: 1, plane: plane)
+        self.setupData(width: size, height: size, resU: 1, resV: 1, plane: plane)
     }
     
     public init(size: Float, plane: Orientation = .xy, centered: Bool = true) {
         super.init()
-        self.setup(width: size, height: size, resU: 1, resV: 1, plane: plane, centered: centered)
+        self.setupData(width: size, height: size, resU: 1, resV: 1, plane: plane, centered: centered)
     }
     
     public init(size: Float, res: Int) {
         super.init()
-        self.setup(width: size, height: size, resU: res, resV: res)
+        self.setupData(width: size, height: size, resU: res, resV: res)
     }
     
     public init(size: Float, res: Int, plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size, height: size, resU: res, resV: res, plane: plane)
+        self.setupData(width: size, height: size, resU: res, resV: res, plane: plane)
     }
     
     public init(size: Float, res: Int, plane: Orientation = .xy, centered: Bool = true) {
         super.init()
-        self.setup(width: size, height: size, resU: res, resV: res, plane: plane, centered: centered)
+        self.setupData(width: size, height: size, resU: res, resV: res, plane: plane, centered: centered)
     }
     
     public init(size: (width: Float, height: Float)) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: 1, resV: 1)
+        self.setupData(width: size.width, height: size.height, resU: 1, resV: 1)
     }
     
     public init(size: (width: Float, height: Float), plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane)
+        self.setupData(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane)
     }
     
     public init(size: (width: Float, height: Float), plane: Orientation = .xy, centered: Bool = true) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane, centered: centered)
+        self.setupData(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane, centered: centered)
     }
     
     public init(size: (width: Float, height: Float), res: Int) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res, resV: res)
+        self.setupData(width: size.width, height: size.height, resU: res, resV: res)
     }
     
     public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res, resV: res, plane: plane)
+        self.setupData(width: size.width, height: size.height, resU: res, resV: res, plane: plane)
     }
     
     public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy, centered: Bool = true) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res, resV: res, plane: plane, centered: centered)
+        self.setupData(width: size.width, height: size.height, resU: res, resV: res, plane: plane, centered: centered)
     }
     
     public init(size: (width: Float, height: Float), res: (u: Int, v: Int)) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v)
+        self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v)
     }
     
     public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane)
+        self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane)
     }
     
     public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy, centered: Bool = true) {
         super.init()
-        self.setup(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)
+        self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)
     }
     
-    func setup(width: Float, height: Float, resU: Int, resV: Int, plane: Orientation = .xy, centered: Bool = true) {
+    func setupData(width: Float, height: Float, resU: Int, resV: Int, plane: Orientation = .xy, centered: Bool = true) {
         var rU = resU
         var rV = resV
         

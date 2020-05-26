@@ -14,15 +14,15 @@ open class IcoSphereGeometry: Geometry {
     
     public override init() {
         super.init()
-        setup(radius: 1, res: 1)
+        setupData(radius: 1, res: 1)
     }
     
     public init(radius: Float, res: Int) {
         super.init()
-        setup(radius: radius, res: res)
+        setupData(radius: radius, res: res)
     }
     
-    func setup(radius: Float, res: Int) {
+    func setupData(radius: Float, res: Int) {
         let t = Float(1.0 + sqrt(5.0)) * 0.5
         
         _ = addVertex(position: simd_make_float3(-1, t, 0), radius: radius)

@@ -11,7 +11,7 @@ import simd
 open class CircleGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup(radius: 1, res: (60, 1))
+        self.setupData(radius: 1, res: (60, 1))
     }
     
     public convenience init(radius: Float) {
@@ -24,10 +24,10 @@ open class CircleGeometry: Geometry {
     
     public init(radius: Float, res: (angular: Int, radial: Int)) {
         super.init()
-        self.setup(radius: radius, res: res)
+        self.setupData(radius: radius, res: res)
     }
     
-    func setup(radius: Float, res: (angular: Int, radial: Int)) {
+    func setupData(radius: Float, res: (angular: Int, radial: Int)) {
         let radial = max(res.radial, 1)
         let angular = max(res.angular, 3)
         

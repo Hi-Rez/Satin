@@ -11,10 +11,10 @@ import simd
 open class ParametricGeometry: Geometry {
     public init(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
         super.init()
-        self.setup(u: u, v: v, res: res, generator: generator)
+        self.setupData(u: u, v: v, res: res, generator: generator)
     }
 
-    func setup(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
+    func setupData(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
         let ru = res.u
         let rv = res.v
 

@@ -9,7 +9,7 @@
 import Metal
 import simd
 
-open class Mesh: Object, GeometryDelegate {
+open class Mesh: Object {
     open override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -36,9 +36,7 @@ open class Mesh: Object, GeometryDelegate {
     
     public var geometry: Geometry = Geometry() {
         didSet {
-            geometry.delegate = self
-            setupVertexBuffer()
-            setupIndexBuffer()
+            setupGeometry()
         }
     }
     
@@ -48,8 +46,7 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    public var vertexBuffer: MTLBuffer?
-    public var indexBuffer: MTLBuffer?
+    public var submeshes: [Submesh] = []
     
     public init(geometry: Geometry, material: Material?) {
         super.init()
@@ -62,37 +59,10 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     open override func setup() {
-        setupVertexBuffer()
-        setupIndexBuffer()
         setupUniformBuffer()
+        setupGeometry()
+        setupSubmeshes()
         setupMaterial()
-    }
-    
-    func setupVertexBuffer() {
-        guard let context = self.context else { return }
-        let device = context.device
-        if !geometry.vertexData.isEmpty {
-            let stride = MemoryLayout<Vertex>.stride
-            let verticesSize = geometry.vertexData.count * stride
-            vertexBuffer = device.makeBuffer(bytes: geometry.vertexData, length: verticesSize, options: [])
-            vertexBuffer?.label = "Vertices"
-        }
-        else {
-            vertexBuffer = nil
-        }
-    }
-    
-    func setupIndexBuffer() {
-        guard let context = self.context else { return }
-        let device = context.device
-        if !geometry.indexData.isEmpty {
-            let indicesSize = geometry.indexData.count * MemoryLayout.size(ofValue: geometry.indexData[0])
-            indexBuffer = device.makeBuffer(bytes: geometry.indexData, length: indicesSize, options: [])
-            indexBuffer?.label = "Indices"
-        }
-        else {
-            indexBuffer = nil
-        }
     }
     
     func setupUniformBuffer() {
@@ -105,6 +75,18 @@ open class Mesh: Object, GeometryDelegate {
         vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
     }
     
+    func setupGeometry() {
+        guard let context = self.context else { return }
+        geometry.context = context
+    }
+    
+    func setupSubmeshes() {
+        guard let context = self.context else { return }
+        for submesh in submeshes {
+            submesh.context = context
+        }
+    }
+
     func setupMaterial() {
         guard let context = self.context, let material = self.material else { return }
         material.context = context
@@ -149,17 +131,30 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard let vertexBuffer = vertexBuffer else { return }
+        guard let vertexBuffer = geometry.vertexBuffer else { return }
         
         preDraw?(renderEncoder)
-
+        
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
         renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: VertexBufferIndex.VertexUniforms.rawValue)
         
-        if let indexBuffer = indexBuffer {
+        if !submeshes.isEmpty {
+            for submesh in submeshes {
+                if submesh.visible, let indexBuffer = submesh.indexBuffer {
+                    renderEncoder.drawIndexedPrimitives(
+                        type: geometry.primitiveType,
+                        indexCount: submesh.indexCount,
+                        indexType: submesh.indexType,
+                        indexBuffer: indexBuffer,
+                        indexBufferOffset: 0,
+                        instanceCount: instanceCount
+                    )
+                }
+            }
+        } else if let indexBuffer = geometry.indexBuffer {
             renderEncoder.drawIndexedPrimitives(
                 type: geometry.primitiveType,
                 indexCount: geometry.indexData.count,
@@ -168,8 +163,7 @@ open class Mesh: Object, GeometryDelegate {
                 indexBufferOffset: 0,
                 instanceCount: instanceCount
             )
-        }
-        else {
+        } else {
             renderEncoder.drawPrimitives(
                 type: geometry.primitiveType,
                 vertexStart: 0,
@@ -179,18 +173,8 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    deinit {
-        vertexBuffer = nil
-        indexBuffer = nil
-    }
-    
-    // MARK: - GeometryDelegate Conformance
-    
-    func indexDataUpdated() {
-        setupIndexBuffer()
-    }
-    
-    func vertexDataUpdated() {
-        setupVertexBuffer()
+    public func addSubmesh(_ submesh: Submesh) {
+        submesh.parent = self
+        submeshes.append(submesh)
     }
 }

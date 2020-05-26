@@ -13,7 +13,7 @@ open class SkyboxGeometry: Geometry {
         self.setup()
     }
 
-    func setup() {
+    func setupData() {
         self.primitiveType = .triangle
         vertexData = [
             // +Y

@@ -12,10 +12,10 @@ open class QuadGeometry: Geometry {
     
     public init(size: Float = 2) {
         super.init()
-        self.setup(size: size)
+        self.setupData(size: size)
     }
     
-    func setup(size: Float) {
+    func setupData(size: Float) {
         let hsize = size * 0.5
         self.primitiveType = .triangle
         vertexData = [

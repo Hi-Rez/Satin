@@ -11,10 +11,10 @@ import simd
 open class ArcGeometry: Geometry {
     public init(radius: (inner: Float, outer: Float), angle: (start: Float, end: Float), res: (angular: Int, radial: Int)) {
         super.init()
-        self.setup(radius: radius, angle: angle, res: res)
+        self.setupData(radius: radius, angle: angle, res: res)
     }
 
-    func setup(radius: (inner: Float, outer: Float), angle: (start: Float, end: Float), res: (angular: Int, radial: Int)) {
+    func setupData(radius: (inner: Float, outer: Float), angle: (start: Float, end: Float), res: (angular: Int, radial: Int)) {
         let radial = max(res.radial, 1)
         let angular = max(res.angular, 3)
 

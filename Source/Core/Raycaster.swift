@@ -19,6 +19,7 @@ public struct RaycastResult {
     public let uv: simd_float2
     public let primitiveIndex: UInt32
     public let object: Object
+    public let submesh: Submesh?
 }
 
 open class Raycaster {
@@ -172,7 +173,7 @@ open class Raycaster {
     public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2) {
         if camera is PerspectiveCamera {
             let origin = camera.worldPosition
-            let unproject = camera.worldMatrix * camera.projectionMatrix.inverse * simd_make_float4(coordinate.x, coordinate.y, camera.near / camera.far, 1.0)
+            let unproject = camera.unProject(coordinate)
             let direction = normalize(simd_make_float3(unproject.x - origin.x, unproject.y - origin.y, unproject.z - origin.z))
             ray = Ray(origin, direction)
         }
@@ -219,11 +220,24 @@ open class Raycaster {
     public func intersect(_ object: Object, _ recursive: Bool = true) -> [RaycastResult] {
         let meshes: [Mesh] = getMeshes(object, recursive)
         
-        let count = meshes.count
+        var count = 0
+        var intersectables: [Any] = []
+        for mesh in meshes {
+            let submeshes = mesh.submeshes
+            count += max(mesh.submeshes.count, 1)
+            if !submeshes.isEmpty {
+                for submesh in submeshes {
+                    intersectables.append(submesh)
+                }
+            }
+            else {
+                intersectables.append(mesh)
+            }
+        }
         
         if count == 0 {
             return []
-        }        
+        }
         else if count != _count {
             _count = count
         }
@@ -231,8 +245,14 @@ open class Raycaster {
         guard let commandBuffer = commandQueue?.makeCommandBuffer() else { return [] }
         commandBuffer.label = "Raycaster Command Buffer"
         
-        for (index, mesh) in meshes.enumerated() {
-            intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, index)
+        for (index, object) in intersectables.enumerated() {
+            if let mesh = object as? Mesh {
+                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, nil, index)
+            }
+            else if let submesh = object as? Submesh, let mesh = submesh.parent
+            {
+                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, submesh, index)
+            }
         }
         
         commandBuffer.commit()
@@ -243,87 +263,104 @@ open class Raycaster {
         }
         
         var results: [RaycastResult] = []
-        for (index, mesh) in meshes.enumerated() {
-            intersectionBuffer.sync(index)
-            let distance = distanceParam.value
-            if distance >= 0 {
-                let primitiveIndex = indexParam.value
-                let index = Int(primitiveIndex) * 3
-                
-                var i0 = 0
-                var i1 = 0
-                var i2 = 0
-                let geometry = mesh.geometry
-                if geometry.indexData.isEmpty {
-                    i0 = index
-                    i1 = index + 1
-                    i2 = index + 2
+        for (index, object) in intersectables.enumerated() {
+            if let mesh = object as? Mesh {
+                if let result = calculateResult(mesh, nil, index) {
+                    results.append(result)
                 }
-                else {
-                    i0 = Int(geometry.indexData[index])
-                    i1 = Int(geometry.indexData[index + 1])
-                    i2 = Int(geometry.indexData[index + 2])
+            }
+            else if let submesh = object as? Submesh, let mesh = submesh.parent
+            {
+                if let result = calculateResult(mesh, submesh, index) {
+                    results.append(result)
                 }
-                
-                let a: Vertex = geometry.vertexData[i0]
-                let b: Vertex = geometry.vertexData[i1]
-                let c: Vertex = geometry.vertexData[i2]
-                
-                let coords = coordinatesParam.value
-                let u: Float = coords.x
-                let v: Float = coords.y
-                let w: Float = 1.0 - u - v
-                
-                let meshWorldMatrix = mesh.worldMatrix
-                
-                let aP = meshWorldMatrix * a.position * u
-                let bP = meshWorldMatrix * b.position * v
-                let cP = meshWorldMatrix * c.position * w
-                
-                let aU = a.uv * u
-                let bU = b.uv * v
-                let cU = c.uv * w
-                
-                let aN = meshWorldMatrix * simd_make_float4(a.normal) * u
-                let bN = meshWorldMatrix * simd_make_float4(b.normal) * v
-                let cN = meshWorldMatrix * simd_make_float4(c.normal) * w
-                
-                let hitP = simd_make_float3(aP + bP + cP)
-                let hitU = simd_make_float2(aU + bU + cU)
-                let hitN = normalize(simd_make_float3(aN + bN + cN))
-                
-                //            print("")
-                //            print("origin: \(origin)")
-                //            print("direction: \(direction)")
-                //            print("hit Pos: \(hitP)")
-                //            print("hit UV: \(hitU)")
-                //            print("hit Normal: \(hitN)")
-                //            print("coordinates: (\(u), \(v), \(w))")
-                //            print("distance: \(distance)")
-                //            print("primitive index: \(primitiveIndex)")
-                //            print("")
-                
-                results.append(RaycastResult(
-                    barycentricCoordinates: simd_make_float3(u, v, w),
-                    distance: distance,
-                    normal: hitN,
-                    position: hitP,
-                    uv: hitU,
-                    primitiveIndex: primitiveIndex,
-                    object: mesh
-                ))
             }
         }
+        
         results.sort {
             $0.distance < $1.distance
         }
+        
         return results
+    }
+    
+    func calculateResult(_ mesh: Mesh,
+                _ submesh: Submesh?,
+                _ index: Int) -> RaycastResult? {
+        intersectionBuffer.sync(index)
+        let distance = distanceParam.value
+        if distance >= 0 {
+            let primitiveIndex = indexParam.value
+            let index = Int(primitiveIndex) * 3
+            
+            var i0 = 0
+            var i1 = 0
+            var i2 = 0
+            
+            let geometry = mesh.geometry
+            
+            if let sub = submesh {
+                i0 = Int(sub.indexData[index])
+                i1 = Int(sub.indexData[index + 1])
+                i2 = Int(sub.indexData[index + 2])
+            }
+            else if mesh.geometry.indexData.count > 0 {
+                i0 = Int(geometry.indexData[index])
+                i1 = Int(geometry.indexData[index + 1])
+                i2 = Int(geometry.indexData[index + 2])
+            }
+            else {
+                i0 = index
+                i1 = index + 1
+                i2 = index + 2
+            }
+            
+            let a: Vertex = geometry.vertexData[i0]
+            let b: Vertex = geometry.vertexData[i1]
+            let c: Vertex = geometry.vertexData[i2]
+            
+            let coords = coordinatesParam.value
+            let u: Float = coords.x
+            let v: Float = coords.y
+            let w: Float = 1.0 - u - v
+            
+            let meshWorldMatrix = mesh.worldMatrix
+            
+            let aP = meshWorldMatrix * a.position * u
+            let bP = meshWorldMatrix * b.position * v
+            let cP = meshWorldMatrix * c.position * w
+            
+            let aU = a.uv * u
+            let bU = b.uv * v
+            let cU = c.uv * w
+            
+            let aN = meshWorldMatrix * simd_make_float4(a.normal) * u
+            let bN = meshWorldMatrix * simd_make_float4(b.normal) * v
+            let cN = meshWorldMatrix * simd_make_float4(c.normal) * w
+            
+            let hitP = simd_make_float3(aP + bP + cP)
+            let hitU = simd_make_float2(aU + bU + cU)
+            let hitN = normalize(simd_make_float3(aN + bN + cN))
+            
+            return RaycastResult(
+                barycentricCoordinates: simd_make_float3(u, v, w),
+                distance: distance,
+                normal: hitN,
+                position: hitP,
+                uv: hitU,
+                primitiveIndex: primitiveIndex,
+                object: mesh,
+                submesh: submesh
+            )
+        }
+        return nil
     }
     
     func intersect(_ commandBuffer: MTLCommandBuffer,
                    _ rayBuffer: Buffer,
                    _ intersectionBuffer: Buffer,
                    _ mesh: Mesh,
+                   _ submesh: Submesh?,
                    _ index: Int) {
         let meshWorldMatrix = mesh.worldMatrix
         let meshWorldMatrixInverse = meshWorldMatrix.inverse
@@ -340,12 +377,17 @@ open class Raycaster {
         intersector!.frontFacingWinding = winding
         intersector!.cullMode = mesh.cullMode
         
-        let accelerationStructure = accelerationStructures[index]        
-        accelerationStructure.vertexBuffer = mesh.vertexBuffer!
+        let accelerationStructure = accelerationStructures[index]
+        accelerationStructure.vertexBuffer = mesh.geometry.vertexBuffer!
         accelerationStructure.vertexStride = MemoryLayout<Vertex>.stride
         accelerationStructure.label = mesh.label + " Acceleration Structure"
         
-        if let indexBuffer = mesh.indexBuffer {
+        if let sub = submesh, let indexBuffer = sub.indexBuffer {
+            accelerationStructure.indexBuffer = indexBuffer
+            accelerationStructure.indexType = .uInt32
+            accelerationStructure.triangleCount = sub.indexData.count / 3
+        }
+        else if let indexBuffer = geometry.indexBuffer {
             accelerationStructure.indexBuffer = indexBuffer
             accelerationStructure.indexType = .uInt32
             accelerationStructure.triangleCount = geometry.indexData.count / 3

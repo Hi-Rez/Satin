@@ -11,10 +11,10 @@ import simd
 open class TriangleGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup()
+        self.setupData()
     }
     
-    func setup() {
+    func setupData() {
         let twoPi: Float = Float.pi * 2.0
         var angle: Float = 0.0
         vertexData.append(

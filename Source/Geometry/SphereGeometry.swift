@@ -11,7 +11,7 @@ import simd
 open class SphereGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup(radius: 1, res: (angular: 60, vertical: 60))
+        self.setupData(radius: 1, res: (angular: 60, vertical: 60))
     }
     
     public convenience init(radius: Float) {
@@ -24,10 +24,10 @@ open class SphereGeometry: Geometry {
     
     public init(radius: Float, res: (angular: Int, vertical: Int)) {
         super.init()
-        self.setup(radius: radius, res: res)
+        self.setupData(radius: radius, res: res)
     }
     
-    func setup(radius: Float, res: (angular: Int, vertical: Int)) {
+    func setupData(radius: Float, res: (angular: Int, vertical: Int)) {
         let phi = max(res.angular, 3)
         let theta = max(res.vertical, 3)
         

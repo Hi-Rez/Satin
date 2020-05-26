@@ -11,15 +11,15 @@ import simd
 open class TorusGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup(radius: (1, 2), res: (60, 60))
+        self.setupData(radius: (1, 2), res: (60, 60))
     }
     
     public init(radius: (minor: Float, major: Float), res: (minor: Int, major: Int)) {
         super.init()
-        self.setup(radius: radius, res: res)
+        self.setupData(radius: radius, res: res)
     }
     
-    func setup(radius: (minor: Float, major: Float), res: (minor: Int, major: Int)) {
+    func setupData(radius: (minor: Float, major: Float), res: (minor: Int, major: Int)) {
         let majorRadius = radius.major
         let minorRadius = radius.minor
         

@@ -13,7 +13,7 @@ open class PointGeometry: Geometry {
         self.setup()
     }
 
-    func setup() {
+    func setupData() {
         primitiveType = .point
         vertexData.append(
             Vertex(

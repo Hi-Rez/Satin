@@ -9,43 +9,80 @@
 import Metal
 import simd
 
-protocol GeometryDelegate: AnyObject {
-    func vertexDataUpdated()
-    func indexDataUpdated()
-}
-
 open class Geometry {
-    public var primitiveType: MTLPrimitiveType
-    public var windingOrder: MTLWinding
-    public var indexType: MTLIndexType
-    weak var delegate: GeometryDelegate?
+    public var primitiveType: MTLPrimitiveType = .triangle
+    public var windingOrder: MTLWinding = .counterClockwise
+    public var indexType: MTLIndexType = .uint32
     
     public var vertexData: [Vertex] = [] {
         didSet {
-            delegate?.vertexDataUpdated()
+            if context != nil {
+                setupVertexBuffer()
+            }
         }
     }
     
     public var indexData: [UInt32] = [] {
         didSet {
-            delegate?.indexDataUpdated()
+            if context != nil {
+                setupIndexBuffer()
+            }
         }
     }
     
-    public init() {
-        primitiveType = .triangle
-        windingOrder = .counterClockwise
-        indexType = .uint32
-        vertexData = []
-        indexData = []
+    public var context: Context? {
+        didSet {
+            if oldValue != context {
+                setup()
+            }
+        }
     }
+    
+    public var vertexBuffer: MTLBuffer?
+    public var indexBuffer: MTLBuffer?
+    
+    public init() {}
     
     public init(primitiveType: MTLPrimitiveType, windingOrder: MTLWinding, indexType: MTLIndexType) {
         self.primitiveType = primitiveType
         self.windingOrder = windingOrder
         self.indexType = indexType
-        vertexData = []
-        indexData = []
+    }
+    
+    func setup() {
+        if vertexBuffer == nil {
+            setupVertexBuffer()
+        }
+        if indexBuffer == nil {
+            setupIndexBuffer()
+        }
+    }
+    
+    func setupVertexBuffer() {
+        guard let context = self.context else { return }
+        let device = context.device
+        if !vertexData.isEmpty {
+            let stride = MemoryLayout<Vertex>.stride
+            let verticesSize = vertexData.count * stride
+            vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
+            vertexBuffer?.label = "Vertices"
+        }
+        else {
+            vertexBuffer = nil
+        }
+    }
+    
+    func setupIndexBuffer() {
+        guard let context = self.context else { return }
+        let device = context.device
+        if !indexData.isEmpty {
+            let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
+            indexBuffer = device.makeBuffer(bytes: indexData, length: indicesSize, options: [])
+            indexBuffer?.label = "Indices"
+        }
+        else {
+            indexBuffer = nil
+        }
     }
     
     public func calculateNormals() {
@@ -89,8 +126,9 @@ open class Geometry {
     }
     
     deinit {
-        delegate = nil
         indexData = []
         vertexData = []
+        vertexBuffer = nil
+        indexBuffer = nil
     }
 }

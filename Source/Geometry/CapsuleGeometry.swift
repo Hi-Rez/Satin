@@ -17,15 +17,15 @@ open class CapsuleGeometry: Geometry {
     
     public init(size: (radius: Float, height: Float), axis: Axis = .y) {
         super.init()
-        self.setup(size: size, res: (60, 30, 30), axis: axis)
+        self.setupData(size: size, res: (60, 30, 30), axis: axis)
     }
     
     public init(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int), axis: Axis = .y) {
         super.init()
-        self.setup(size: size, res: res, axis: axis)
+        self.setupData(size: size, res: res, axis: axis)
     }
     
-    func setup(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int), axis: Axis) {
+    func setupData(size: (radius: Float, height: Float), res: (angular: Int, vertical: Int, slices: Int), axis: Axis) {
         let radius = size.radius
         let height = size.height
         

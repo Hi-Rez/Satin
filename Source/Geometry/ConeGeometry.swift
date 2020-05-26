@@ -11,15 +11,15 @@ import simd
 open class ConeGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup(size: (1, 2), res: (60, 1, 1))
+        self.setupData(size: (1, 2), res: (60, 1, 1))
     }
     
     public init(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
         super.init()
-        self.setup(size: size, res: res)
+        self.setupData(size: size, res: res)
     }
     
-    func setup(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
+    func setupData(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
         let radius = size.radius
         let height = size.height
         let halfHeight = height * 0.5

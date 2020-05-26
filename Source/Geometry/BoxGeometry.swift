@@ -11,7 +11,7 @@ import simd
 open class BoxGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup(width: 2, height: 2, depth: 2, resX: 1, resY: 1, resZ: 1)
+        self.setupData(width: 2, height: 2, depth: 2, resX: 1, resY: 1, resZ: 1)
     }
 
     public convenience init(size: Float) {
@@ -32,10 +32,10 @@ open class BoxGeometry: Geometry {
 
     public init(size: (width: Float, height: Float, depth: Float), res: (x: Int, y: Int, z: Int)) {
         super.init()
-        self.setup(width: size.width, height: size.height, depth: size.depth, resX: res.x, resY: res.y, resZ: res.z)
+        self.setupData(width: size.width, height: size.height, depth: size.depth, resX: res.x, resY: res.y, resZ: res.z)
     }
 
-    func setup(width: Float, height: Float, depth: Float, resX: Int, resY: Int, resZ: Int) {
+    func setupData(width: Float, height: Float, depth: Float, resX: Int, resY: Int, resZ: Int) {
         let rx = max(resX, 1)
         let ry = max(resY, 1)
         let rz = max(resZ, 1)

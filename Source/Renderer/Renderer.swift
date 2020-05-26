@@ -17,6 +17,16 @@ open class Renderer
     public var postDraw: ((_ renderEncoder: MTLParallelRenderCommandEncoder) -> ())?
     
     public var scene: Object = Object()
+    {
+        didSet
+        {
+            if let context = self.context
+            {
+                scene.context = context
+            }
+        }
+    }
+    
     public var camera: Camera = Camera()
     public var context: Context?
     {

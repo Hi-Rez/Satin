@@ -18,7 +18,7 @@ class Renderer: Forge.Renderer {
 //         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial(true))
 //        Mesh(geometry: BoxGeometry(), material: BasicColorMaterial(simd_make_float4(1.0, 0.0, 0.0, 1.0)))
     }()
-        
+    
     lazy var scene: Object = {
         let scene = Object()
         scene.add(mesh)
@@ -44,6 +44,12 @@ class Renderer: Forge.Renderer {
     lazy var renderer: Satin.Renderer = {
         Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
+    
+    #if os(macOS) || os(iOS)
+    lazy var raycaster: Raycaster = {
+        Raycaster(context: context)
+    }()
+    #endif
     
     required init?(metalKitView: MTKView) {
         super.init(metalKitView: metalKitView)
@@ -89,5 +95,41 @@ class Renderer: Forge.Renderer {
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
+    }
+    
+    #if os(macOS)
+    override func mouseDown(with event: NSEvent) {        
+        let m = event.locationInWindow
+        let pt = normalizePoint(m, mtkView.frame.size)
+        raycaster.setFromCamera(camera, pt)
+        let results = raycaster.intersect(scene)
+        for result in results {
+            print(result.object.label)
+            print(result.position)
+        }
+    }
+    
+    #elseif os(iOS)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let first = touches.first {
+            let point = first.location(in: mtkView)
+            let size = mtkView.frame.size
+            let pt = normalizePoint(point, size)
+            raycaster.setFromCamera(camera, pt)
+            let results = raycaster.intersect(scene, true)
+            for result in results {
+                print(result.object.label)
+                print(result.position)
+            }
+        }
+    }
+    #endif
+    
+    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
+        #if os(macOS)
+        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
+        #else
+        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
+        #endif
     }
 }

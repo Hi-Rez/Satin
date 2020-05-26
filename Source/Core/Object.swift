@@ -106,7 +106,7 @@ open class Object: Codable {
                 _updateWorldMatrix = true
                 _updateWorldPosition = true
                 _updateWorldScale = true
-                _updateWorldOrientation = true                
+                _updateWorldOrientation = true
                 updateMatrix = false
                 for child in children {
                     child.updateMatrix = true
@@ -119,11 +119,24 @@ open class Object: Codable {
     var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var localMatrix: matrix_float4x4 {
-        if _updateLocalMatrix {
-            _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
-            _updateLocalMatrix = false
+        get {
+            if _updateLocalMatrix {
+                _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
+                _updateLocalMatrix = false
+            }
+            return _localMatrix
         }
-        return _localMatrix
+        set {
+            position = simd_make_float3(newValue.columns.3)
+            let sx = newValue.columns.0
+            let sy = newValue.columns.1
+            let sz = newValue.columns.2
+            scale = simd_make_float3(length(sx), length(sy), length(sz))
+            let rx = simd_make_float3(sx.x, sx.y, sx.z) / scale.x
+            let ry = simd_make_float3(sy.x, sy.y, sy.z) / scale.y
+            let rz = simd_make_float3(sz.x, sz.y, sz.z) / scale.z
+            orientation = simd_quatf(simd_float3x3(columns: (rx, ry, rz)))
+        }
     }
     
     var _updateWorldPosition: Bool = true
@@ -161,8 +174,8 @@ open class Object: Codable {
             let ws = worldScale
             let wm = worldMatrix
             let c0 = wm.columns.0
-            let c1 = wm.columns.0
-            let c2 = wm.columns.0
+            let c1 = wm.columns.1
+            let c2 = wm.columns.2
             let x = simd_make_float3(c0.x, c0.y, c0.z) / ws.x
             let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
             let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
