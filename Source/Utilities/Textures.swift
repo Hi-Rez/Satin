@@ -55,7 +55,7 @@ public func makeCubeTexture(_ context: Context, _ urls: [URL], _ mipmapped: Bool
     return cubeTexture
 }
 
-func loadImage(url: URL) -> CGImage? {
+public func loadImage(url: URL) -> CGImage? {
     #if os(macOS)
     guard let nsImage = NSImage(contentsOf: url), let tiffData = nsImage.tiffRepresentation else {
         fatalError("Failed to create NSImage from: \(url.path)")

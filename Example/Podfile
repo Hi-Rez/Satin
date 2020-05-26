@@ -20,6 +20,18 @@ target '3D-tvOS' do
   platform :tvos, '12.4'
 end
 
+target 'Obj-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'Obj-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'Obj-tvOS' do
+  platform :tvos, '12.4'
+end
+
 target '2D-iOS' do
     platform :ios, '12.4'
 end
