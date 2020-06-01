@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E174EC44247BB86D005C1806"
-               BuildableName = "Obj.app"
-               BlueprintName = "Obj-iOS"
+               BlueprintIdentifier = "E192EFBB24857E0F00C7EE74"
+               BuildableName = "LiveCode.app"
+               BlueprintName = "LiveCode-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E174EC44247BB86D005C1806"
-            BuildableName = "Obj.app"
-            BlueprintName = "Obj-iOS"
+            BlueprintIdentifier = "E192EFBB24857E0F00C7EE74"
+            BuildableName = "LiveCode.app"
+            BlueprintName = "LiveCode-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E174EC44247BB86D005C1806"
-            BuildableName = "Obj.app"
-            BlueprintName = "Obj-iOS"
+            BlueprintIdentifier = "E192EFBB24857E0F00C7EE74"
+            BuildableName = "LiveCode.app"
+            BlueprintName = "LiveCode-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

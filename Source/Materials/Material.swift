@@ -141,7 +141,7 @@ open class Material: ParameterGroupDelegate {
     open func injectPassThroughVertex(source: inout String) {
         let vertexFunctionName = label.camelCase + "Vertex"
         if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
-            source += passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
+            source += "\n" + passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
         }
     }
     

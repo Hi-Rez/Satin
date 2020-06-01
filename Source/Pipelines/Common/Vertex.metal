@@ -7,3 +7,4 @@ vertex VertexData satinVertex(const Vertex in [[stage_in]],
     out.uv = in.uv;
     return out;
 }
+

@@ -16,6 +16,7 @@ open class SkyboxMaterial: BasicTextureMaterial {
         }
         self.texture = texture
         self.sampler = sampler
+        self.depthWriteEnabled = false
     }
 
     open override func compileSource() -> String? {
