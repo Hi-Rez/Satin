@@ -46,6 +46,7 @@ open class LiveMaterial: Material {
             parseUniforms(shaderSource)
             injectPassThroughVertex(source: &shaderSource)
             source += shaderSource
+            print(source)
             return source
         }
         catch {

@@ -30,8 +30,11 @@ class Renderer: Forge.Renderer {
         ArcballCameraController(camera: camera, view: mtkView, defaultPosition: camera.position, defaultOrientation: camera.orientation)
     }()
     
-    var scene: Object!
-    var renderer: Satin.Renderer!
+    var scene = Object()
+    
+    lazy var renderer: Satin.Renderer = {
+        Satin.Renderer(context: context, scene: scene, camera: camera)
+    }()
     
     #if os(macOS) || os(iOS)
     lazy var raycaster: Raycaster = {
@@ -92,7 +95,6 @@ class Renderer: Forge.Renderer {
             geo.indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
         }
         
-        scene = Object()
         scene.add(mesh)
     }
     

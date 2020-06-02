@@ -30,7 +30,7 @@ open class BasicTextureMaterial: BasicColorMaterial {
         setupSampler()
     }
 
-    func setupSampler() {
+    open func setupSampler() {
         guard sampler == nil else { return }
         let desc = MTLSamplerDescriptor()
         desc.label = label.titleCase

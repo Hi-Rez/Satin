@@ -49,6 +49,12 @@
 		E192EFC524857E0F00C7EE74 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E192EFCE24857EB600C7EE74 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E192EFCD24857EB600C7EE74 /* Renderer.swift */; };
 		E192EFD0248587F400C7EE74 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E192EFCF248587F400C7EE74 /* Assets */; };
+		E192F00C2485AFD600C7EE74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E192F00E2485AFD600C7EE74 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1603872CB50E5BB26F912C65 /* Pods_3D_macOS.framework */; };
+		E192F0102485AFD600C7EE74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E192F0122485AFD600C7EE74 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E192F01E2485B08500C7EE74 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E192F01D2485B08500C7EE74 /* Assets */; };
+		E192F0202485B16C00C7EE74 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E192F01F2485B16C00C7EE74 /* Renderer.swift */; };
 		E1D95E5C244C0439008F4AB7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
 		E1E7C54124515B8A00BD8324 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E1E7C54524515B8A00BD8324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
@@ -103,9 +109,11 @@
 		E17B98682451481200216411 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E17B986E2451488100216411 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E192EFCB24857E0F00C7EE74 /* LiveCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E192EFCC24857E0F00C7EE74 /* Obj-macOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Obj-macOS copy-Info.plist"; path = "/Users/rezaali/Code/Apple/Satin/Example/Obj-macOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		E192EFCD24857EB600C7EE74 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E192EFCF248587F400C7EE74 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		E192F0182485AFD600C7EE74 /* Matcap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Matcap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E192F01D2485B08500C7EE74 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		E192F01F2485B16C00C7EE74 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1E7C54C24515B8A00BD8324 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E7C55D24515DA600BD8324 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +189,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E192F00D2485AFD600C7EE74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E192F00E2485AFD600C7EE74 /* Pods_3D_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1E7C54224515B8A00BD8324 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -207,7 +223,6 @@
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
-				E192EFCC24857E0F00C7EE74 /* Obj-macOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -224,6 +239,7 @@
 				E174EC53247BB86D005C1806 /* Obj.app */,
 				E174EC68247BBB98005C1806 /* Obj.app */,
 				E192EFCB24857E0F00C7EE74 /* LiveCode.app */,
+				E192F0182485AFD600C7EE74 /* Matcap.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -264,6 +280,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E192F0072485AF9900C7EE74 /* Matcap */,
 				E192EFBA248464C000C7EE74 /* LiveCode */,
 				E17B2FD6247A4E6D00BD2BF9 /* Obj */,
 				E17B9870245148AC00216411 /* 3D */,
@@ -340,6 +357,15 @@
 				E192EFCD24857EB600C7EE74 /* Renderer.swift */,
 			);
 			path = LiveCode;
+			sourceTree = "<group>";
+		};
+		E192F0072485AF9900C7EE74 /* Matcap */ = {
+			isa = PBXGroup;
+			children = (
+				E192F01D2485B08500C7EE74 /* Assets */,
+				E192F01F2485B16C00C7EE74 /* Renderer.swift */,
+			);
+			path = Matcap;
 			sourceTree = "<group>";
 		};
 		E8DB960D2E2F0A7613DAFDAF /* Frameworks */ = {
@@ -518,6 +544,26 @@
 			productReference = E192EFCB24857E0F00C7EE74 /* LiveCode.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E192F0082485AFD600C7EE74 /* Matcap-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E192F0152485AFD600C7EE74 /* Build configuration list for PBXNativeTarget "Matcap-macOS" */;
+			buildPhases = (
+				E192F0092485AFD600C7EE74 /* [CP] Check Pods Manifest.lock */,
+				E192F00A2485AFD600C7EE74 /* Sources */,
+				E192F00D2485AFD600C7EE74 /* Frameworks */,
+				E192F00F2485AFD600C7EE74 /* Resources */,
+				E192F0132485AFD600C7EE74 /* Touch Frameworks */,
+				E192F0142485AFD600C7EE74 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Matcap-macOS";
+			productName = Example;
+			productReference = E192F0182485AFD600C7EE74 /* Matcap.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E1E7C53D24515B8A00BD8324 /* 2D-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1E7C54924515B8A00BD8324 /* Build configuration list for PBXNativeTarget "2D-iOS" */;
@@ -602,6 +648,7 @@
 				E174EC44247BB86D005C1806 /* Obj-iOS */,
 				E174EC5A247BBB98005C1806 /* Obj-tvOS */,
 				E192EFBB24857E0F00C7EE74 /* LiveCode-macOS */,
+				E192F0082485AFD600C7EE74 /* Matcap-macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -678,6 +725,16 @@
 				E192EFC324857E0F00C7EE74 /* Assets.xcassets in Resources */,
 				E192EFD0248587F400C7EE74 /* Assets in Resources */,
 				E192EFC524857E0F00C7EE74 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E192F00F2485AFD600C7EE74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E192F0102485AFD600C7EE74 /* Assets.xcassets in Resources */,
+				E192F01E2485B08500C7EE74 /* Assets in Resources */,
+				E192F0122485AFD600C7EE74 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1135,6 +1192,63 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E192F0092485AFD600C7EE74 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-3D-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E192F0132485AFD600C7EE74 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E192F0142485AFD600C7EE74 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E1E7C54724515B8A00BD8324 /* Touch Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1343,6 +1457,15 @@
 			files = (
 				E192EFCE24857EB600C7EE74 /* Renderer.swift in Sources */,
 				E192EFBF24857E0F00C7EE74 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E192F00A2485AFD600C7EE74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E192F0202485B16C00C7EE74 /* Renderer.swift in Sources */,
+				E192F00C2485AFD600C7EE74 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1808,6 +1931,46 @@
 			};
 			name = Release;
 		};
+		E192F0162485AFD600C7EE74 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 417133556972E42BAD4FB55F /* Pods-3D-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Matcap;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E192F0172485AFD600C7EE74 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B6234954694E61B5C7B0106 /* Pods-3D-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_NAME = Matcap;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		E1E7C54A24515B8A00BD8324 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C77B973E7A44A9C1C95B499 /* Pods-2D-iOS.debug.xcconfig */;
@@ -1972,6 +2135,15 @@
 			buildConfigurations = (
 				E192EFC924857E0F00C7EE74 /* Debug */,
 				E192EFCA24857E0F00C7EE74 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E192F0152485AFD600C7EE74 /* Build configuration list for PBXNativeTarget "Matcap-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E192F0162485AFD600C7EE74 /* Debug */,
+				E192F0172485AFD600C7EE74 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
