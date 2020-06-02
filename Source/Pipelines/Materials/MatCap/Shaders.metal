@@ -6,7 +6,7 @@ typedef struct {
     float pointSize [[point_size]];
 } MatCapVertexData;
 
-vertex MatCapVertexData matCapVertex(const Vertex in [[stage_in]],
+vertex MatCapVertexData matCapVertex(Vertex in [[stage_in]],
                                      constant VertexUniforms &vertexUniforms
                                      [[buffer(VertexBufferVertexUniforms)]]) {
     const float4 screenSpaceNormal = vertexUniforms.modelViewMatrix * float4(in.normal, 0.0);

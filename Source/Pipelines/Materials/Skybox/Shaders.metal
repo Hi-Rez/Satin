@@ -3,7 +3,7 @@ typedef struct {
     float3 uv;
 } SkyVertexData;
 
-vertex SkyVertexData skyboxVertex(const Vertex v [[stage_in]],
+vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
                                   constant VertexUniforms &vertexUniforms
                                   [[buffer(VertexBufferVertexUniforms)]]) {
     float4 position = v.position;

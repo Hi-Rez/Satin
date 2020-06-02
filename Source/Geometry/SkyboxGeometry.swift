@@ -10,7 +10,7 @@ import simd
 open class SkyboxGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup()
+        self.setupData()
     }
 
     func setupData() {
