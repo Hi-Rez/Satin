@@ -80,8 +80,8 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        loadModel()
-//        loadKnot()
+//        loadModel()
+        loadKnot()
     }
     
     func loadModel() {
@@ -114,44 +114,12 @@ class Renderer: Forge.Renderer {
     func loadKnot() {
         let twoPi = Float.pi * 2.0
         let geometry = ParametricGeometry(u: (0.0, twoPi), v: (0.0, twoPi), res: (300, 16), generator: { u, v in
-            
             let R: Float = 0.75
             let r: Float = 0.25
             let c: Float = 0.1
-            
-            let t = u
-            let s = v
-            let q: Float = 2.0
+            let q: Float = 1.0
             let p: Float = 3.0
-            
-            let theta = p * t
-            let phi = q * t
-            
-            let cosTheta = cos(theta)
-            let sinTheta = sin(theta)
-            
-            let cosPhi = cos(phi)
-            let sinPhi = sin(phi)
-            
-            let torus: simd_float3 = [
-                (R + r * cosPhi) * cosTheta,
-                (R + r * cosPhi) * sinTheta,
-                r * sinPhi
-            ]
-            
-            let normal: simd_float3 = [
-                cos(theta) * cos(phi),
-                sin(theta) * cos(phi),
-                sin(phi)
-            ]
-            
-            let tTheta: simd_float3 = (1.0 + r * cosPhi) * [-sinTheta, cosTheta, 0.0]
-            let tPhi: simd_float3 = r * [-sinPhi * cosTheta, -sinPhi * sinTheta, cosPhi]
-            let tangentPrime: simd_float3 = normalize(p * tTheta + q * tPhi)
-            let biTangent = cross(tangentPrime, normal)
-            let final = torus + (c * cos(s) * normal + c * sin(s) * biTangent)
-            
-            return final
+            return torusKnotGenerator(u, v, R, r, c, q, p)
         })
         
         // MatCapMaterial inspired by @TheSpite
