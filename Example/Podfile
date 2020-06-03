@@ -12,8 +12,16 @@ target 'LiveCode-macOS' do
   platform :osx, '10.14'
 end
 
-target 'Matcap-macOS' do
+target 'MatCap-macOS' do
   platform :osx, '10.14'
+end
+
+target 'MatCap-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'MatCap-tvOS' do
+  platform :tvos, '12.4'
 end
 
 target '3D-iOS' do

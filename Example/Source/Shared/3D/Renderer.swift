@@ -97,8 +97,9 @@ class Renderer: Forge.Renderer {
         renderer.resize(size)
     }
     
+    #if !targetEnvironment(simulator)
     #if os(macOS)
-    override func mouseDown(with event: NSEvent) {        
+    override func mouseDown(with event: NSEvent) {
         let m = event.locationInWindow
         let pt = normalizePoint(m, mtkView.frame.size)
         raycaster.setFromCamera(camera, pt)
@@ -123,6 +124,7 @@ class Renderer: Forge.Renderer {
             }
         }
     }
+    #endif
     #endif
     
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {

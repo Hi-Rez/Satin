@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E192F0082485AFD600C7EE74"
-               BuildableName = "Matcap.app"
-               BlueprintName = "Matcap-macOS"
+               BuildableName = "MatCap.app"
+               BlueprintName = "MatCap-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E192F0082485AFD600C7EE74"
-            BuildableName = "Matcap.app"
-            BlueprintName = "Matcap-macOS"
+            BuildableName = "MatCap.app"
+            BlueprintName = "MatCap-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E192F0082485AFD600C7EE74"
-            BuildableName = "Matcap.app"
-            BlueprintName = "Matcap-macOS"
+            BuildableName = "MatCap.app"
+            BlueprintName = "MatCap-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
