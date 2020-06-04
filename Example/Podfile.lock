@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Forge:
-    :commit: 0d991b1e7bacd2209eb672fcbefac067355ba6a1
+    :commit: 2413128ad7dd22ecc57c3e31216ab6d5bbfd386d
     :git: "git@github.com:Hi-Rez/Forge.git"
 
 SPEC CHECKSUMS:
