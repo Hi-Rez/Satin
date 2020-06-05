@@ -154,13 +154,7 @@ open class PlaneGeometry: Geometry {
                     n = simd_make_float3(-1.0, 0.0, 0.0)
                 }
                 
-                vertexData.append(
-                    Vertex(
-                        p,
-                        t,
-                        n
-                    )
-                )
+                vertexData.append(Vertex(position: p, normal: n, uv: t))
                 
                 let index = u + v * perRow
                 let bl = index

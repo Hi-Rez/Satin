@@ -77,9 +77,9 @@ open class CapsuleGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        position,
-                        simd_make_float2(pf / phif, map(y, 0.0, radius, vPerCap + vPerCyl, 1.0)),
-                        normalize(simd_make_float3(x, y, z))
+                        position: position,
+                        normal: normalize(simd_make_float3(x, y, z)),
+                        uv: simd_make_float2(pf / phif, map(y, 0.0, radius, vPerCap + vPerCyl, 1.0))
                     )
                 )
                 
@@ -131,9 +131,9 @@ open class CapsuleGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        position,
-                        simd_make_float2(pf / phif, map(y, -radius, 0, 0.0, vPerCap)),
-                        normalize(simd_make_float3(x, y, z))
+                        position: position,
+                        normal: normalize(simd_make_float3(x, y, z)),
+                        uv: simd_make_float2(pf / phif, map(y, -radius, 0, 0.0, vPerCap))
                     )
                 )
                 
@@ -182,9 +182,9 @@ open class CapsuleGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        position,
-                        simd_make_float2(pf / phif, map(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl)),
-                        normalize(simd_make_float3(x, 0.0, z))
+                        position: position,
+                        normal: normalize(simd_make_float3(x, 0.0, z)),
+                        uv: simd_make_float2(pf / phif, map(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl))
                     )
                 )
                 

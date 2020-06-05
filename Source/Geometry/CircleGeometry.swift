@@ -48,9 +48,9 @@ open class CircleGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, y, 0.0, 1.0),
-                        simd_make_float2(rf / radialf, af / angularf),
-                        normalize(simd_make_float3(0.0, 0.0, 1.0))
+                        position: simd_make_float4(x, y, 0.0, 1.0),
+                        normal: normalize(simd_make_float3(0.0, 0.0, 1.0)),
+                        uv: simd_make_float2(rf / radialf, af / angularf)
                     )
                 )
                 

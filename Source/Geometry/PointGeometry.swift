@@ -16,11 +16,7 @@ open class PointGeometry: Geometry {
     func setupData() {
         primitiveType = .point
         vertexData.append(
-            Vertex(
-                SIMD4<Float>(0.0, 0.0, 0.0, 1.0),
-                SIMD2<Float>(0.0, 0.0),
-                SIMD3<Float>(0.0, 0.0, 1.0)
-            )
+            Vertex(position: [0.0, 0.0, 0.0, 1.0], normal: [0.0, 0.0, 1.0], uv: [0.0, 0.0])
         )
     }
 }

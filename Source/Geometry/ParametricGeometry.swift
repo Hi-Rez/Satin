@@ -68,9 +68,9 @@ open class ParametricGeometry: Geometry {
 
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(pos, 1.0),
-                        simd_make_float2(uf / ruf, vf / rvf),
-                        normal
+                        position: simd_make_float4(pos, 1.0),
+                        normal: normal,
+                        uv: simd_make_float2(uf / ruf, vf / rvf)
                     )
                 )
 

@@ -8,6 +8,18 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
+target 'Geometry-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'Geometry-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'Geometry-tvOS' do
+  platform :tvos, '12.4'
+end
+
 target 'LiveCode-macOS' do
   platform :osx, '10.14'
 end

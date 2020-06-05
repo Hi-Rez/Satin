@@ -60,9 +60,9 @@ open class BoxGeometry: Geometry {
                 let fy = Float(y)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(-hw + fx * dx, -hh + fy * dy, hd, 1.0),
-                        SIMD2<Float>(fx / bx, fy / by),
-                        SIMD3<Float>(0.0, 0.0, 1.0)
+                        position: simd_make_float4(-hw + fx * dx, -hh + fy * dy, hd, 1.0),
+                        normal: simd_make_float3(0.0, 0.0, 1.0),
+                        uv: simd_make_float2(fx / bx, fy / by)
                     )
                 )
 
@@ -92,9 +92,9 @@ open class BoxGeometry: Geometry {
                 let fy = Float(y)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(hw - fx * dx, -hh + fy * dy, -hd, 1.0),
-                        SIMD2<Float>(fx / bx, fy / by),
-                        SIMD3<Float>(0.0, 0.0, -1.0)
+                        position: simd_make_float4(hw - fx * dx, -hh + fy * dy, -hd, 1.0),
+                        normal: simd_make_float3(0.0, 0.0, -1.0),
+                        uv: simd_make_float2(fx / bx, fy / by)
                     )
                 )
 
@@ -125,9 +125,9 @@ open class BoxGeometry: Geometry {
                 let fz = Float(z)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(-hw + fx * dx, hh, hd - fz * dz, 1.0),
-                        SIMD2<Float>(fx / bx, fz / bz),
-                        SIMD3<Float>(0.0, 1.0, 0.0)
+                        position: simd_make_float4(-hw + fx * dx, hh, hd - fz * dz, 1.0),
+                        normal: simd_make_float3(0.0, 1.0, 0.0),
+                        uv: simd_make_float2(fx / bx, fz / bz)
                     )
                 )
 
@@ -157,9 +157,9 @@ open class BoxGeometry: Geometry {
                 let fz = Float(z)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(-hw + fx * dx, -hh, -hd + fz * dz, 1.0),
-                        SIMD2<Float>(fx / bx, fz / bz),
-                        SIMD3<Float>(0.0, -1.0, 0.0)
+                        position: simd_make_float4(-hw + fx * dx, -hh, -hd + fz * dz, 1.0),
+                        normal: simd_make_float3(0.0, -1.0, 0.0),
+                        uv: simd_make_float2(fx / bx, fz / bz)
                     )
                 )
 
@@ -189,9 +189,9 @@ open class BoxGeometry: Geometry {
                 let fz = Float(z)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(hw, -hh + fy * dy, hd - fz * dz, 1.0),
-                        SIMD2<Float>(fz / bz, fy / by),
-                        SIMD3<Float>(1.0, 0.0, 0.0)
+                        position: simd_make_float4(hw, -hh + fy * dy, hd - fz * dz, 1.0),
+                        normal: simd_make_float3(1.0, 0.0, 0.0),
+                        uv: simd_make_float2(fz / bz, fy / by)
                     )
                 )
 
@@ -221,9 +221,9 @@ open class BoxGeometry: Geometry {
                 let fz = Float(z)
                 vertexData.append(
                     Vertex(
-                        SIMD4<Float>(-hw, -hh + fy * dy, -hd + fz * dz, 1.0),
-                        SIMD2<Float>(fz / bz, fy / by),
-                        SIMD3<Float>(-1.0, 0.0, 0.0)
+                        position: simd_make_float4(-hw, -hh + fy * dy, -hd + fz * dz, 1.0),
+                        normal: simd_make_float3(-1.0, 0.0, 0.0),
+                        uv: simd_make_float2(fz / bz, fy / by)
                     )
                 )
 

@@ -60,9 +60,9 @@ open class SphereGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, y, z, 1.0),
-                        simd_make_float2(pf / phif, 1.0 - tf / thetaMinusOnef),
-                        normalize(simd_make_float3(x, y, z))
+                        position: simd_make_float4(x, y, z, 1.0),
+                        normal: normalize(simd_make_float3(x, y, z)),
+                        uv: simd_make_float2(pf / phif, 1.0 - tf / thetaMinusOnef)
                     )
                 )
                 

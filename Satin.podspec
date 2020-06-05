@@ -15,6 +15,8 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target  = "12.4"
   spec.tvos.deployment_target = "12.4"
 
+  spec.public_header_files    = ["Source/*.h", "Source/**/*.h"]
+
   spec.source_files           = "Source/*.h", "Source/**/*.{h,m,swift}"
   spec.exclude_files          = "Source/Pipelines/**/**/*.metal"
   spec.resources              = "Source/Pipelines"

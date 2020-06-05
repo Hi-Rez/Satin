@@ -17,35 +17,35 @@ open class SkyboxGeometry: Geometry {
         self.primitiveType = .triangle
         vertexData = [
             // +Y
-            Vertex(simd_make_float4(-0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, -1.0, 0.0)),
-            Vertex(simd_make_float4(0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, -1.0, 0.0)),
-            Vertex(simd_make_float4(0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, -1.0, 0.0)),
-            Vertex(simd_make_float4(-0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, -1.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(0.0, -1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(0.0, -1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(0.0, -1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(0.0, -1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
             // -Y
-            Vertex(simd_make_float4(-0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 1.0, 0.0)),
-            Vertex(simd_make_float4(0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 1.0, 0.0)),
-            Vertex(simd_make_float4(0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 1.0, 0.0)),
-            Vertex(simd_make_float4(-0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 1.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 1.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
             // +Z
-            Vertex(simd_make_float4(-0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, -1.0)),
-            Vertex(simd_make_float4(0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, -1.0)),
-            Vertex(simd_make_float4(0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, -1.0)),
-            Vertex(simd_make_float4(-0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, -1.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 0.0, -1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 0.0, -1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 0.0, -1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(0.0, 0.0, -1.0), uv: simd_make_float2(0.0, 0.0)),
             // -Z
-            Vertex(simd_make_float4(0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, 1.0)),
-            Vertex(simd_make_float4(-0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, 1.0)),
-            Vertex(simd_make_float4(-0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, 1.0)),
-            Vertex(simd_make_float4(0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(0.0, 0.0, 1.0)),
+            Vertex(position: simd_make_float4(0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(0.0, 0.0)),
             // -X
-            Vertex(simd_make_float4(-0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(-0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(-0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(-0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(1.0, 0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(-0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
             // +X
-            Vertex(simd_make_float4(0.5, -0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(-1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(0.5, -0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(-1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(0.5, 0.5, -0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(-1.0, 0.0, 0.0)),
-            Vertex(simd_make_float4(0.5, 0.5, 0.5, 1.0), simd_make_float2(0.0, 0.0), simd_make_float3(-1.0, 0.0, 0.0))
+            Vertex(position: simd_make_float4(0.5, -0.5, 0.5, 1.0), normal: simd_make_float3(-1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, -0.5, -0.5, 1.0), normal: simd_make_float3(-1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, -0.5, 1.0), normal: simd_make_float3(-1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0)),
+            Vertex(position: simd_make_float4(0.5, 0.5, 0.5, 1.0), normal: simd_make_float3(-1.0, 0.0, 0.0), uv: simd_make_float2(0.0, 0.0))
         ]
 
         indexData = [0, 3, 2, 2, 1, 0,

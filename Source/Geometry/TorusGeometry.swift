@@ -56,9 +56,9 @@ open class TorusGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        simd_make_float4(x, z, y, 1.0),
-                        simd_make_float2(af / angularf, sf / slicesf),
-                        normalize(cross(tangent, stangent))
+                        position: simd_make_float4(x, z, y, 1.0),
+                        normal: normalize(cross(tangent, stangent)),
+                        uv: simd_make_float2(af / angularf, sf / slicesf)
                     )
                 )
                 

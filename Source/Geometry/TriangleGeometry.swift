@@ -19,27 +19,27 @@ open class TriangleGeometry: Geometry {
         var angle: Float = 0.0
         vertexData.append(
             Vertex(
-                simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
-                simd_make_float2(0, 0),
-                normalize(simd_make_float3(0.0, 0.0, 1.0))
+                position: simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
+                normal: normalize(simd_make_float3(0.0, 0.0, 1.0)),
+                uv: simd_make_float2(0, 0)
             )
         )
         
         angle = twoPi / 3.0
         vertexData.append(
             Vertex(
-                simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
-                simd_make_float2(0, 1),
-                normalize(simd_make_float3(0.0, 0.0, 1.0))
+                position: simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
+                normal: normalize(simd_make_float3(0.0, 0.0, 1.0)),
+                uv: simd_make_float2(0, 1)
             )
         )
         
         angle = 2.0 * twoPi / 3.0
         vertexData.append(
             Vertex(
-                simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
-                simd_make_float2(1, 0),
-                normalize(simd_make_float3(0.0, 0.0, 1.0))
+                position: simd_make_float4(sin(angle), cos(angle), 0.0, 1.0),
+                normal: normalize(simd_make_float3(0.0, 0.0, 1.0)),
+                uv: simd_make_float2(1, 0)
             )
         )
         
