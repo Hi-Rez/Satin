@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.public_header_files    = ["Source/*.h", "Source/**/*.h"]
 
-  spec.source_files           = "Source/*.h", "Source/**/*.{h,m,swift}"
+  spec.source_files           = "Source/*.h", "Source/**/*.{h,c,m,swift}"
   spec.exclude_files          = "Source/Pipelines/**/**/*.metal"
   spec.resources              = "Source/Pipelines"
   spec.frameworks             = "Metal", "MetalKit"
