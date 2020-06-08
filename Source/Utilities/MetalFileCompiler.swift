@@ -35,16 +35,9 @@ open class MetalFileCompiler
     
     func _parse(_ fileURL: URL) throws -> String
     {
-        let fileURLResolved = fileURL.resolvingSymlinksInPath()
+        var fileURLResolved = fileURL.resolvingSymlinksInPath()
         if !files.contains(fileURLResolved)
         {
-            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
-            watcher.onUpdate = { [unowned self] in
-                self.onUpdate?()
-            }
-            watchers.append(watcher)
-            files.append(fileURLResolved)
-            
             let baseURL = fileURL.deletingLastPathComponent()
             var content = ""
             do
@@ -53,8 +46,30 @@ open class MetalFileCompiler
             }
             catch
             {
-                throw MetalFileCompilerError.invalidFile(fileURLResolved)
+                if fileURLResolved.path.contains("Library")
+                {
+                    if let libraryFileURL = getPipelinesLibraryUrl(fileURLResolved.lastPathComponent)
+                    {
+                        content = try String(contentsOf: libraryFileURL, encoding: .utf8)
+                        fileURLResolved = libraryFileURL
+                    }
+                    else
+                    {
+                        throw MetalFileCompilerError.invalidFile(fileURLResolved)
+                    }
+                }
+                else
+                {
+                    throw MetalFileCompilerError.invalidFile(fileURLResolved)
+                }
             }
+            
+            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
+            watcher.onUpdate = { [unowned self] in
+                self.onUpdate?()
+            }
+            watchers.append(watcher)
+            files.append(fileURLResolved)
             
             let pattern = #"^#include +\"(.*)\""#
             let regex = try NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])

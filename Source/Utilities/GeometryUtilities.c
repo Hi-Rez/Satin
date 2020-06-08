@@ -7,6 +7,7 @@
 
 #include "GeometryUtilities.h"
 
+#include <malloc/_malloc.h>
 #include <simd/simd.h>
 
 void freeGeometryData(GeometryData geometry) {

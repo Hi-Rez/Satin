@@ -9,6 +9,11 @@ import Metal
 import simd
 
 open class SkyboxMaterial: BasicTextureMaterial {
+    public override init() {
+        super.init()        
+        self.depthWriteEnabled = false
+    }
+    
     public override init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
         super.init()
         if texture.textureType != .typeCube {

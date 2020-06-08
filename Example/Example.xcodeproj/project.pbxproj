@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		013246C0AA4FAAC945FE5215 /* Pods_MatCap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099EFF66D7D142DA7C2B9388 /* Pods_MatCap_tvOS.framework */; };
+		01063681A0D27C7C925E6947 /* Pods_Cubemap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */; };
+		013246C0AA4FAAC945FE5215 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		28EBCDEFD00F5310407DFE85 /* Pods_2D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC478C1FD91C2722DFA2D136 /* Pods_2D_iOS.framework */; };
 		29779AEBCCDDADD923C3CE00 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		368F6C6B942AED5368A40DCF /* Pods_Obj_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */; };
+		412C5F430898DA02B35A8A2A /* Pods_Cubemap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54460EA8B284A90BD9A96957 /* Pods_Cubemap_macOS.framework */; };
 		529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */; };
+		5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */; };
 		629B01020CECDA195F303BBC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		66E6788F243EC73B0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
@@ -19,19 +22,21 @@
 		66E678AA243EC8FE0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		66E678B9243EC9FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
 		66E678E6243EE7670070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
+		6C80C75807CC010D3085DE8F /* Pods_Cubemap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECB3D992C9FC269CE687C120 /* Pods_Cubemap_iOS.framework */; };
 		708B93CD6FAB78B4CA8CBE56 /* Pods_Geometry_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE23C2869846F19BE6C298DE /* Pods_Geometry_macOS.framework */; };
 		7CA689F662AFA4AD2A398160 /* Pods_Geometry_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */; };
 		9242AAC1B56D7677A947725C /* Pods_3D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67ECD10F3C29BBB7F4D3DB80 /* Pods_3D_tvOS.framework */; };
 		9289AB361E42B671E3920892 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A71C7B06C0174ED106A411E /* Pods_3D_macOS.framework */; };
 		9562006863F7061C8724A0CD /* Pods_LiveCode_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */; };
 		97375F1B270BCC17B718BBBE /* Pods_Obj_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */; };
-		99944A954CFDF4CA65C627CA /* Pods_MatCap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C45DFC8A280D9601AE9C6B /* Pods_MatCap_iOS.framework */; };
+		99944A954CFDF4CA65C627CA /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9F04983EDFBABD9BB6FBF4D1 /* Pods_Geometry_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */; };
 		A038ED9DA76DB20E878EFB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		B42D5878581C5BAF8C2C96E8 /* Pods_3D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F35293C59A6E55AB3AD233C5 /* Pods_3D_iOS.framework */; };
+		BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */; };
 		D700143DFDF0ABBB7ACD6EC6 /* Pods_2D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */; };
 		D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		D9AAE82BD14730FF90DCFEC5 /* Pods_MatCap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FEFE0B24F23A0EAF16EB1D5 /* Pods_MatCap_macOS.framework */; };
+		D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
@@ -52,6 +57,23 @@
 		E17B98612451481200216411 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E17B98622451481200216411 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E17B986F2451488100216411 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17B986E2451488100216411 /* Renderer.swift */; };
+		E1919A4A248D9C36008FD392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E1919A4E248D9C36008FD392 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E1919A50248D9C36008FD392 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E1919A58248D9C7F008FD392 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1919A32248D9BC3008FD392 /* Renderer.swift */; };
+		E1919A5A248D9C92008FD392 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1919A59248D9C92008FD392 /* Assets */; };
+		E1919A5B248DBBAF008FD392 /* TorusKnotGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */; };
+		E1919A5F248DC5C5008FD392 /* TorusKnotGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */; };
+		E1919A61248DC5C5008FD392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
+		E1919A66248DC5C5008FD392 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
+		E1919A68248DC5C5008FD392 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E1919A73248DC5C8008FD392 /* TorusKnotGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */; };
+		E1919A75248DC5C8008FD392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
+		E1919A7A248DC5C8008FD392 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
+		E1919A83248DC641008FD392 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1919A32248D9BC3008FD392 /* Renderer.swift */; };
+		E1919A84248DC641008FD392 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1919A32248D9BC3008FD392 /* Renderer.swift */; };
+		E1919A85248DC647008FD392 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1919A59248D9C92008FD392 /* Assets */; };
+		E1919A86248DC647008FD392 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1919A59248D9C92008FD392 /* Assets */; };
 		E192EFBF24857E0F00C7EE74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E192EFC324857E0F00C7EE74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E192EFC524857E0F00C7EE74 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
@@ -100,6 +122,7 @@
 		E1E7C55724515DA600BD8324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1E7C55F24515DB600BD8324 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17B986E2451488100216411 /* Renderer.swift */; };
 		F0CEA7DD0FC0F2AB5822FB64 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */; };
 		F4525EB6D2853E367A61EA5F /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F8600421B47B20340EFAD160 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F9FFD7952CDDB7BC22CC8FCB /* Pods_2D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */; };
@@ -109,11 +132,12 @@
 		0394D0CC78024B10634585CC /* Pods-MatCap-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-macOS.debug.xcconfig"; path = "Target Support Files/Pods-MatCap-macOS/Pods-MatCap-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		0690847EE93D7C4D49D39CC7 /* Pods-Matcap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-iOS.release.xcconfig"; path = "Target Support Files/Pods-Matcap-iOS/Pods-Matcap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geometry_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		099EFF66D7D142DA7C2B9388 /* Pods_MatCap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CB5A7A2599206614D2F01F0 /* Pods-Geometry-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Geometry-iOS/Pods-Geometry-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geometry_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C77B973E7A44A9C1C95B499 /* Pods-2D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1C84A2DEF5941D908AD76C67 /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		20078319F761B0FBD2A630BB /* Pods-Cubemap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-iOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29EB33822739DE8F28C25695 /* Pods-Obj-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Obj-tvOS/Pods-Obj-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_2D_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,11 +147,13 @@
 		32171FD5C7FFE7703C1A3520 /* Pods-Geometry-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Geometry-macOS/Pods-Geometry-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		32FF045D739918D97A6B6325 /* Pods-2D-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-tvOS/Pods-2D-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		352049314E4E59FED3ADBF47 /* Pods-MatCap-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.debug.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71C7B06C0174ED106A411E /* Pods_3D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		417133556972E42BAD4FB55F /* Pods-3D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6234954694E61B5C7B0106 /* Pods-3D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.release.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		528D8A1A8FE62168A56059D1 /* Pods-Geometry-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-tvOS/Pods-Geometry-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		54460EA8B284A90BD9A96957 /* Pods_Cubemap_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		576DCD9208123272EEF6180D /* Pods-MatCap-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-tvOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-tvOS/Pods-MatCap-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		57CA93238F58BC90BDB4B24A /* Pods-Obj-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-macOS.release.xcconfig"; path = "Target Support Files/Pods-Obj-macOS/Pods-Obj-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		5AF8829523C519637CAF613A /* Pods-3D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -145,22 +171,28 @@
 		67AA03964445E959FFD8C108 /* Pods-Matcap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Matcap-macOS/Pods-Matcap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		67ECD10F3C29BBB7F4D3DB80 /* Pods_3D_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		682AAF343D45CA554ACB5299 /* Pods-Example-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.release.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		6FEFE0B24F23A0EAF16EB1D5 /* Pods_MatCap_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7535A5B536B5D637C3DF615C /* Pods-2D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.release.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		80980545C11C4C193B17A42F /* Pods-MatCap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		84A915D34485E0EA833046C4 /* Pods-MatCap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-macOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-macOS/Pods-MatCap-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		8715FBBCB72C5F898B4DD46D /* Pods-Example-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B9BC9F0B378493E0F1A0418 /* Pods-Geometry-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Geometry-tvOS/Pods-Geometry-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8CF5412A3380A67027D1A8FA /* Pods-Obj-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Obj-macOS/Pods-Obj-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		8D4BB013DC4CEA62B93D6E60 /* Pods-Cubemap-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		90ACE27AD07AD226292A79C9 /* Pods-2D-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-tvOS.release.xcconfig"; path = "Target Support Files/Pods-2D-tvOS/Pods-2D-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		90EA35BD9E6CBDED882BDBB1 /* Pods-Cubemap-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Cubemap-tvOS/Pods-Cubemap-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		933B4FF12CED8E28211FDBCC /* Pods-Matcap-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Matcap-iOS/Pods-Matcap-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		95FF633959655935C0F5B606 /* Pods-3D-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-tvOS.release.xcconfig"; path = "Target Support Files/Pods-3D-tvOS/Pods-3D-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiveCode_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CD2A5A15F237FC62BB84B19 /* Pods-Geometry-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-macOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-macOS/Pods-Geometry-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		A2A12B375D33C54DB5572F16 /* Pods-Obj-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Obj-iOS/Pods-Obj-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_2D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADE46710BE2063129B8119D5 /* Pods-Geometry-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-iOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-iOS/Pods-Geometry-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		B3EC87467C4C58D380CE00DD /* Pods-Cubemap-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		C70B1191F0E094662E373128 /* Pods-Cubemap-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-tvOS/Pods-Cubemap-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		CA96995181D74EB7FADCC329 /* Pods-MatCap-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-MatCap-tvOS/Pods-MatCap-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D410958C22CEB31D4B4044CF /* Pods-Matcap-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Matcap-macOS/Pods-Matcap-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D9F82D287CD0E89A89596B75 /* Pods-Example-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -178,6 +210,11 @@
 		E17B2FD9247A4FB400BD2BF9 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		E17B98682451481200216411 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E17B986E2451488100216411 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E1919A32248D9BC3008FD392 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E1919A56248D9C36008FD392 /* Cubemap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cubemap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1919A59248D9C92008FD392 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		E1919A6E248DC5C5008FD392 /* Cubemap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cubemap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1919A81248DC5C8008FD392 /* Cubemap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cubemap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E192EFCB24857E0F00C7EE74 /* LiveCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E192EFCD24857EB600C7EE74 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E192EFCF248587F400C7EE74 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
@@ -188,10 +225,10 @@
 		E192F05C24874CE700C7EE74 /* TorusKnotGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TorusKnotGenerator.h; sourceTree = "<group>"; };
 		E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TorusKnotGenerator.c; sourceTree = "<group>"; };
 		E192F086248762FA00C7EE74 /* MatCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1B27E66248A36AD00C6CCB4 /* Geometry-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Geometry-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1B27E7D248A37AB00C6CCB4 /* Geometry-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Geometry-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1B27E66248A36AD00C6CCB4 /* Geometry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geometry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1B27E7D248A37AB00C6CCB4 /* Geometry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geometry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CC09892489751A00B92285 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		E1CC099A2489752000B92285 /* Geometry-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Geometry-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1CC099A2489752000B92285 /* Geometry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geometry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1CC099D2489797300B92285 /* Geometry-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Geometry-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1CC099E2489797300B92285 /* Icosahedron.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Icosahedron.h; sourceTree = "<group>"; };
 		E1CC099F2489797300B92285 /* Icosahedron.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Icosahedron.c; sourceTree = "<group>"; };
@@ -201,12 +238,12 @@
 		E2B9BF9592798A79BE4BF708 /* Pods-Example-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.release.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		E565DE2FBA7C3BDD6E4B9049 /* Pods-Obj-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-iOS.release.xcconfig"; path = "Target Support Files/Pods-Obj-iOS/Pods-Obj-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		EBE31A448135423E6AF93D85 /* Pods-3D-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-tvOS/Pods-3D-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		ECB3D992C9FC269CE687C120 /* Pods_Cubemap_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2D0FDE205D0E573F6F652A8 /* Pods-Obj-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Obj-tvOS/Pods-Obj-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F3318F0A78EF92CF79B5CBF9 /* Pods-2D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-macOS.release.xcconfig"; path = "Target Support Files/Pods-2D-macOS/Pods-2D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		F35293C59A6E55AB3AD233C5 /* Pods_3D_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54BDC92FCB6D9239BC41B8C /* Pods-3D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.release.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		F68D6FFD9AE7C9C940ECAE04 /* Pods-2D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-macOS/Pods-2D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		F9C45DFC8A280D9601AE9C6B /* Pods_MatCap_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,7 +280,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8600421B47B20340EFAD160 /* (null) in Frameworks */,
-				99944A954CFDF4CA65C627CA /* Pods_MatCap_iOS.framework in Frameworks */,
+				99944A954CFDF4CA65C627CA /* (null) in Frameworks */,
+				BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +319,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1919A4B248D9C36008FD392 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				412C5F430898DA02B35A8A2A /* Pods_Cubemap_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A62248DC5C5008FD392 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6C80C75807CC010D3085DE8F /* Pods_Cubemap_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A76248DC5C8008FD392 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01063681A0D27C7C925E6947 /* Pods_Cubemap_tvOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E192EFC024857E0F00C7EE74 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -293,7 +355,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9AAE82BD14730FF90DCFEC5 /* Pods_MatCap_macOS.framework in Frameworks */,
+				D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */,
+				F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,7 +365,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */,
-				013246C0AA4FAAC945FE5215 /* Pods_MatCap_tvOS.framework in Frameworks */,
+				013246C0AA4FAAC945FE5215 /* (null) in Frameworks */,
+				5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,9 +439,12 @@
 				E192F0182485AFD600C7EE74 /* MatCap.app */,
 				E192F086248762FA00C7EE74 /* MatCap.app */,
 				E160CA4F24876781005D37A4 /* MatCap.app */,
-				E1CC099A2489752000B92285 /* Geometry-macOS.app */,
-				E1B27E66248A36AD00C6CCB4 /* Geometry-iOS.app */,
-				E1B27E7D248A37AB00C6CCB4 /* Geometry-tvOS.app */,
+				E1CC099A2489752000B92285 /* Geometry.app */,
+				E1B27E66248A36AD00C6CCB4 /* Geometry.app */,
+				E1B27E7D248A37AB00C6CCB4 /* Geometry.app */,
+				E1919A56248D9C36008FD392 /* Cubemap.app */,
+				E1919A6E248DC5C5008FD392 /* Cubemap.app */,
+				E1919A81248DC5C8008FD392 /* Cubemap.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -418,6 +485,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E1919A31248D9B8A008FD392 /* Cubemap */,
 				E160CA5124876998005D37A4 /* Geometry */,
 				E192F0072485AF9900C7EE74 /* MatCap */,
 				E192EFBA248464C000C7EE74 /* LiveCode */,
@@ -473,6 +541,12 @@
 				ADE46710BE2063129B8119D5 /* Pods-Geometry-iOS.release.xcconfig */,
 				8B9BC9F0B378493E0F1A0418 /* Pods-Geometry-tvOS.debug.xcconfig */,
 				528D8A1A8FE62168A56059D1 /* Pods-Geometry-tvOS.release.xcconfig */,
+				8D4BB013DC4CEA62B93D6E60 /* Pods-Cubemap-iOS.debug.xcconfig */,
+				20078319F761B0FBD2A630BB /* Pods-Cubemap-iOS.release.xcconfig */,
+				B3EC87467C4C58D380CE00DD /* Pods-Cubemap-macOS.debug.xcconfig */,
+				84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */,
+				90EA35BD9E6CBDED882BDBB1 /* Pods-Cubemap-tvOS.debug.xcconfig */,
+				C70B1191F0E094662E373128 /* Pods-Cubemap-tvOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -520,6 +594,15 @@
 				E17955F1243FA87400B0D2F4 /* Renderer.swift */,
 			);
 			path = 3D;
+			sourceTree = "<group>";
+		};
+		E1919A31248D9B8A008FD392 /* Cubemap */ = {
+			isa = PBXGroup;
+			children = (
+				E1919A59248D9C92008FD392 /* Assets */,
+				E1919A32248D9BC3008FD392 /* Renderer.swift */,
+			);
+			path = Cubemap;
 			sourceTree = "<group>";
 		};
 		E192EFBA248464C000C7EE74 /* LiveCode */ = {
@@ -571,15 +654,18 @@
 				47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */,
 				F35293C59A6E55AB3AD233C5 /* Pods_3D_iOS.framework */,
 				67ECD10F3C29BBB7F4D3DB80 /* Pods_3D_tvOS.framework */,
-				6FEFE0B24F23A0EAF16EB1D5 /* Pods_MatCap_macOS.framework */,
 				23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */,
 				88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */,
 				DE23C2869846F19BE6C298DE /* Pods_Geometry_macOS.framework */,
 				3A71C7B06C0174ED106A411E /* Pods_3D_macOS.framework */,
 				075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */,
-				F9C45DFC8A280D9601AE9C6B /* Pods_MatCap_iOS.framework */,
 				1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */,
-				099EFF66D7D142DA7C2B9388 /* Pods_MatCap_tvOS.framework */,
+				ECB3D992C9FC269CE687C120 /* Pods_Cubemap_iOS.framework */,
+				54460EA8B284A90BD9A96957 /* Pods_Cubemap_macOS.framework */,
+				382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */,
+				93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */,
+				96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */,
+				12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -747,6 +833,66 @@
 			productReference = E17B98682451481200216411 /* 2D.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E1919A45248D9C36008FD392 /* Cubemap-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1919A53248D9C36008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-macOS" */;
+			buildPhases = (
+				E1919A46248D9C36008FD392 /* [CP] Check Pods Manifest.lock */,
+				E1919A47248D9C36008FD392 /* Sources */,
+				E1919A4B248D9C36008FD392 /* Frameworks */,
+				E1919A4D248D9C36008FD392 /* Resources */,
+				E1919A51248D9C36008FD392 /* Touch Frameworks */,
+				E1919A52248D9C36008FD392 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cubemap-macOS";
+			productName = Example;
+			productReference = E1919A56248D9C36008FD392 /* Cubemap.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E1919A5C248DC5C5008FD392 /* Cubemap-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1919A6B248DC5C5008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-iOS" */;
+			buildPhases = (
+				E1919A5D248DC5C5008FD392 /* [CP] Check Pods Manifest.lock */,
+				E1919A5E248DC5C5008FD392 /* Sources */,
+				E1919A62248DC5C5008FD392 /* Frameworks */,
+				E1919A65248DC5C5008FD392 /* Resources */,
+				E1919A69248DC5C5008FD392 /* Touch Frameworks */,
+				E1919A6A248DC5C5008FD392 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cubemap-iOS";
+			productName = "Example-iOS";
+			productReference = E1919A6E248DC5C5008FD392 /* Cubemap.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E1919A70248DC5C8008FD392 /* Cubemap-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1919A7E248DC5C8008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-tvOS" */;
+			buildPhases = (
+				E1919A71248DC5C8008FD392 /* [CP] Check Pods Manifest.lock */,
+				E1919A72248DC5C8008FD392 /* Sources */,
+				E1919A76248DC5C8008FD392 /* Frameworks */,
+				E1919A79248DC5C8008FD392 /* Resources */,
+				E1919A7C248DC5C8008FD392 /* Touch Frameworks */,
+				E1919A7D248DC5C8008FD392 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cubemap-tvOS";
+			productName = "Example-tvOS";
+			productReference = E1919A81248DC5C8008FD392 /* Cubemap.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E192EFBB24857E0F00C7EE74 /* LiveCode-macOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E192EFC824857E0F00C7EE74 /* Build configuration list for PBXNativeTarget "LiveCode-macOS" */;
@@ -824,7 +970,7 @@
 			);
 			name = "Geometry-iOS";
 			productName = "Example-iOS";
-			productReference = E1B27E66248A36AD00C6CCB4 /* Geometry-iOS.app */;
+			productReference = E1B27E66248A36AD00C6CCB4 /* Geometry.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1B27E6D248A37AB00C6CCB4 /* Geometry-tvOS */ = {
@@ -844,7 +990,7 @@
 			);
 			name = "Geometry-tvOS";
 			productName = "Example-tvOS";
-			productReference = E1B27E7D248A37AB00C6CCB4 /* Geometry-tvOS.app */;
+			productReference = E1B27E7D248A37AB00C6CCB4 /* Geometry.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1CC098A2489752000B92285 /* Geometry-macOS */ = {
@@ -864,7 +1010,7 @@
 			);
 			name = "Geometry-macOS";
 			productName = Example;
-			productReference = E1CC099A2489752000B92285 /* Geometry-macOS.app */;
+			productReference = E1CC099A2489752000B92285 /* Geometry.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1E7C53D24515B8A00BD8324 /* 2D-iOS */ = {
@@ -963,6 +1109,9 @@
 				E1CC098A2489752000B92285 /* Geometry-macOS */,
 				E1B27E55248A36AD00C6CCB4 /* Geometry-iOS */,
 				E1B27E6D248A37AB00C6CCB4 /* Geometry-tvOS */,
+				E1919A45248D9C36008FD392 /* Cubemap-macOS */,
+				E1919A5C248DC5C5008FD392 /* Cubemap-iOS */,
+				E1919A70248DC5C8008FD392 /* Cubemap-tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -1039,6 +1188,35 @@
 			files = (
 				E17B98612451481200216411 /* Assets.xcassets in Resources */,
 				E17B98622451481200216411 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A4D248D9C36008FD392 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A4E248D9C36008FD392 /* Assets.xcassets in Resources */,
+				E1919A5A248D9C92008FD392 /* Assets in Resources */,
+				E1919A50248D9C36008FD392 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A65248DC5C5008FD392 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A66248DC5C5008FD392 /* Assets.xcassets in Resources */,
+				E1919A85248DC647008FD392 /* Assets in Resources */,
+				E1919A68248DC5C5008FD392 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A79248DC5C8008FD392 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A7A248DC5C8008FD392 /* Assets.xcassets in Resources */,
+				E1919A86248DC647008FD392 /* Assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1550,6 +1728,177 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E1919A46248D9C36008FD392 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cubemap-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1919A51248D9C36008FD392 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E1919A52248D9C36008FD392 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1919A5D248DC5C5008FD392 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cubemap-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1919A69248DC5C5008FD392 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E1919A6A248DC5C5008FD392 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1919A71248DC5C8008FD392 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cubemap-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1919A7C248DC5C8008FD392 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E1919A7D248DC5C8008FD392 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-tvOS/Pods-Cubemap-tvOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-tvOS/Pods-Cubemap-tvOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Cubemap-tvOS/Pods-Cubemap-tvOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		E192EFBC24857E0F00C7EE74 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2105,6 +2454,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1919A47248D9C36008FD392 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A5B248DBBAF008FD392 /* TorusKnotGenerator.c in Sources */,
+				E1919A58248D9C7F008FD392 /* Renderer.swift in Sources */,
+				E1919A4A248D9C36008FD392 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A5E248DC5C5008FD392 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A83248DC641008FD392 /* Renderer.swift in Sources */,
+				E1919A5F248DC5C5008FD392 /* TorusKnotGenerator.c in Sources */,
+				E1919A61248DC5C5008FD392 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1919A72248DC5C8008FD392 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1919A84248DC641008FD392 /* Renderer.swift in Sources */,
+				E1919A73248DC5C8008FD392 /* TorusKnotGenerator.c in Sources */,
+				E1919A75248DC5C8008FD392 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E192EFBD24857E0F00C7EE74 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2315,7 +2694,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2336,7 +2715,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2355,7 +2734,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2376,7 +2755,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2396,7 +2775,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -2416,7 +2795,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
 				PRODUCT_NAME = 3D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -2439,7 +2818,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -2461,7 +2840,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -2484,7 +2863,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2505,7 +2884,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2525,7 +2904,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -2545,7 +2924,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -2569,7 +2948,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2589,7 +2968,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
 				PRODUCT_NAME = Obj;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2609,7 +2988,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2629,9 +3008,142 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E1919A54248D9C36008FD392 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B3EC87467C4C58D380CE00DD /* Pods-Cubemap-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E1919A55248D9C36008FD392 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E1919A6C248DC5C5008FD392 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D4BB013DC4CEA62B93D6E60 /* Pods-Cubemap-iOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E1919A6D248DC5C5008FD392 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20078319F761B0FBD2A630BB /* Pods-Cubemap-iOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E1919A7F248DC5C8008FD392 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 90EA35BD9E6CBDED882BDBB1 /* Pods-Cubemap-tvOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.4;
+			};
+			name = Debug;
+		};
+		E1919A80248DC5C8008FD392 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C70B1191F0E094662E373128 /* Pods-Cubemap-tvOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = Cubemap;
+				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.4;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -2649,7 +3161,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.livecode;
 				PRODUCT_NAME = LiveCode;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2669,7 +3181,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.livecode;
 				PRODUCT_NAME = LiveCode;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2690,7 +3202,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2713,7 +3225,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2731,7 +3243,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -2752,7 +3264,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
 				PRODUCT_NAME = MatCap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -2776,8 +3288,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2798,8 +3310,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2819,8 +3331,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2840,8 +3352,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2868,8 +3380,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2893,8 +3405,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_NAME = Geometry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2913,7 +3425,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2934,7 +3446,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2954,7 +3466,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -2974,7 +3486,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hi-rez.example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
 				PRODUCT_NAME = 2D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -3064,6 +3576,33 @@
 			buildConfigurations = (
 				E17B98662451481200216411 /* Debug */,
 				E17B98672451481200216411 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1919A53248D9C36008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1919A54248D9C36008FD392 /* Debug */,
+				E1919A55248D9C36008FD392 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1919A6B248DC5C5008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1919A6C248DC5C5008FD392 /* Debug */,
+				E1919A6D248DC5C5008FD392 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1919A7E248DC5C8008FD392 /* Build configuration list for PBXNativeTarget "Cubemap-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1919A7F248DC5C8008FD392 /* Debug */,
+				E1919A80248DC5C8008FD392 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

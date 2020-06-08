@@ -54,29 +54,13 @@ class Renderer: Forge.Renderer {
     
     var scene = Object()
     
-    lazy var matcapTexture: MTLTexture? = {
-        // from https://github.com/nidorx/matcaps
-        let fileName = "8A6565_2E214D_D48A5F_ADA59C.png"
-        let loader = MTKTextureLoader(device: device)
-        do {
-            return try loader.newTexture(URL: self.texturesURL.appendingPathComponent(fileName), options: [
-                MTKTextureLoader.Option.SRGB: false,
-                MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically
-            ])
-        }
-        catch {
-            print(error)
-            return nil
-        }
-    }()
-    
     lazy var context: Context = {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
     lazy var camera: ArcballPerspectiveCamera = {
         let camera = ArcballPerspectiveCamera()
-        camera.position = simd_make_float3(0.0, 0.0, 4.0)
+        camera.position = simd_make_float3(0.0, 0.0, 6.0)
         camera.near = 0.001
         camera.far = 100.0
         return camera
@@ -111,7 +95,7 @@ class Renderer: Forge.Renderer {
     
     func setupMesh() {
         mesh = Mesh(geometry: IcosahedronGeometry(size: 1.0, res: 4), material: NormalColorMaterial(true))
-        mesh.label = "IcoSphere"
+        mesh.label = "Icosahedron"
         mesh.triangleFillMode = .lines
         scene.add(mesh)
     }

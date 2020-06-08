@@ -8,6 +8,7 @@
 
 #include "Icosahedron.h"
 
+#include <malloc/_malloc.h>
 #include <simd/simd.h>
 
 GeometryData generateIcosahedronGeometryData(float radius, int res) {

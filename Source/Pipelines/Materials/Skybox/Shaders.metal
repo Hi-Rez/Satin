@@ -6,7 +6,7 @@ typedef struct {
 vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
                                   constant VertexUniforms &vertexUniforms
                                   [[buffer(VertexBufferVertexUniforms)]]) {
-    float4 position = v.position;
+    const float4 position = v.position;
     SkyVertexData out;
     out.position = vertexUniforms.projectionMatrix * vertexUniforms.modelViewMatrix * position;
     out.uv = float3(position.xy, -position.z);
