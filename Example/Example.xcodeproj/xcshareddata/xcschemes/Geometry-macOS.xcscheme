@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1CC098A2489752000B92285"
-               BuildableName = "Geometry-macOS.app"
+               BuildableName = "Geometry.app"
                BlueprintName = "Geometry-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1CC098A2489752000B92285"
-            BuildableName = "Geometry-macOS.app"
+            BuildableName = "Geometry.app"
             BlueprintName = "Geometry-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1CC098A2489752000B92285"
-            BuildableName = "Geometry-macOS.app"
+            BuildableName = "Geometry.app"
             BlueprintName = "Geometry-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

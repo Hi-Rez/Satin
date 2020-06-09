@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1B27E6D248A37AB00C6CCB4"
-               BuildableName = "Geometry-tvOS.app"
+               BuildableName = "Geometry.app"
                BlueprintName = "Geometry-tvOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1B27E6D248A37AB00C6CCB4"
-            BuildableName = "Geometry-tvOS.app"
+            BuildableName = "Geometry.app"
             BlueprintName = "Geometry-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1B27E6D248A37AB00C6CCB4"
-            BuildableName = "Geometry-tvOS.app"
+            BuildableName = "Geometry.app"
             BlueprintName = "Geometry-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

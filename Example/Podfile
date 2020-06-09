@@ -8,6 +8,10 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
+target 'PBR-macOS' do
+  platform :osx, '10.14'
+end
+
 target 'Cubemap-macOS' do
   platform :osx, '10.14'
 end

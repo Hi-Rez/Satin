@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E1B27E55248A36AD00C6CCB4"
-               BuildableName = "Geometry.app"
-               BlueprintName = "Geometry-iOS"
+               BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
+               BuildableName = "PBR-macOS.app"
+               BlueprintName = "PBR-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E1B27E55248A36AD00C6CCB4"
-            BuildableName = "Geometry.app"
-            BlueprintName = "Geometry-iOS"
+            BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
+            BuildableName = "PBR-macOS.app"
+            BlueprintName = "PBR-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E1B27E55248A36AD00C6CCB4"
-            BuildableName = "Geometry.app"
-            BlueprintName = "Geometry-iOS"
+            BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
+            BuildableName = "PBR-macOS.app"
+            BlueprintName = "PBR-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

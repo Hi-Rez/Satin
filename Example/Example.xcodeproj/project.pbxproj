@@ -42,6 +42,13 @@
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E168FC62248ECC5F004B8407 /* TorusKnotGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */; };
+		E168FC64248ECC5F004B8407 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E168FC66248ECC5F004B8407 /* Pods_Cubemap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54460EA8B284A90BD9A96957 /* Pods_Cubemap_macOS.framework */; };
+		E168FC68248ECC5F004B8407 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E168FC6A248ECC5F004B8407 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E168FC75248ECC97004B8407 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E168FC74248ECC97004B8407 /* Assets */; };
+		E168FC77248ECCA2004B8407 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E168FC76248ECCA2004B8407 /* Renderer.swift */; };
 		E174EC48247BB86D005C1806 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E174EC4C247BB86D005C1806 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E174EC4D247BB86D005C1806 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
@@ -202,6 +209,9 @@
 		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E160CA4F24876781005D37A4 /* MatCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E168FC70248ECC5F004B8407 /* PBR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PBR.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E168FC74248ECC97004B8407 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		E168FC76248ECCA2004B8407 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E174EC53247BB86D005C1806 /* Obj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Obj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E174EC68247BBB98005C1806 /* Obj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Obj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E17955F1243FA87400B0D2F4 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
@@ -282,6 +292,14 @@
 				F8600421B47B20340EFAD160 /* (null) in Frameworks */,
 				99944A954CFDF4CA65C627CA /* (null) in Frameworks */,
 				BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E168FC65248ECC5F004B8407 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E168FC66248ECC5F004B8407 /* Pods_Cubemap_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,6 +463,7 @@
 				E1919A56248D9C36008FD392 /* Cubemap.app */,
 				E1919A6E248DC5C5008FD392 /* Cubemap.app */,
 				E1919A81248DC5C8008FD392 /* Cubemap.app */,
+				E168FC70248ECC5F004B8407 /* PBR.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -485,6 +504,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E168FC5E248ECC4D004B8407 /* PBR */,
 				E1919A31248D9B8A008FD392 /* Cubemap */,
 				E160CA5124876998005D37A4 /* Geometry */,
 				E192F0072485AF9900C7EE74 /* MatCap */,
@@ -560,13 +580,22 @@
 			path = Geometry;
 			sourceTree = "<group>";
 		};
+		E168FC5E248ECC4D004B8407 /* PBR */ = {
+			isa = PBXGroup;
+			children = (
+				E168FC74248ECC97004B8407 /* Assets */,
+				E168FC76248ECCA2004B8407 /* Renderer.swift */,
+			);
+			path = PBR;
+			sourceTree = "<group>";
+		};
 		E17955EF243FA80800B0D2F4 /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				66E678CD243EE2190070B294 /* Shared */,
+				66E678B7243EC9FD0070B294 /* tvOS */,
 				66E6788B243EC73A0070B294 /* macOS */,
 				66E6789F243EC8FD0070B294 /* iOS */,
-				66E678B7243EC9FD0070B294 /* tvOS */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -751,6 +780,26 @@
 			name = "MatCap-iOS";
 			productName = "Example-iOS";
 			productReference = E160CA4F24876781005D37A4 /* MatCap.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E168FC5F248ECC5F004B8407 /* PBR-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E168FC6D248ECC5F004B8407 /* Build configuration list for PBXNativeTarget "PBR-macOS" */;
+			buildPhases = (
+				E168FC60248ECC5F004B8407 /* [CP] Check Pods Manifest.lock */,
+				E168FC61248ECC5F004B8407 /* Sources */,
+				E168FC65248ECC5F004B8407 /* Frameworks */,
+				E168FC67248ECC5F004B8407 /* Resources */,
+				E168FC6B248ECC5F004B8407 /* Touch Frameworks */,
+				E168FC6C248ECC5F004B8407 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PBR-macOS";
+			productName = Example;
+			productReference = E168FC70248ECC5F004B8407 /* PBR.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E174EC44247BB86D005C1806 /* Obj-iOS */ = {
@@ -1112,6 +1161,7 @@
 				E1919A45248D9C36008FD392 /* Cubemap-macOS */,
 				E1919A5C248DC5C5008FD392 /* Cubemap-iOS */,
 				E1919A70248DC5C8008FD392 /* Cubemap-tvOS */,
+				E168FC5F248ECC5F004B8407 /* PBR-macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -1150,6 +1200,16 @@
 				E160CA4724876781005D37A4 /* Assets.xcassets in Resources */,
 				E1CC097524896ED800B92285 /* Assets in Resources */,
 				E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E168FC67248ECC5F004B8407 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E168FC68248ECC5F004B8407 /* Assets.xcassets in Resources */,
+				E168FC75248ECC97004B8407 /* Assets in Resources */,
+				E168FC6A248ECC5F004B8407 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1538,6 +1598,63 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E168FC60248ECC5F004B8407 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Cubemap-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E168FC6B248ECC5F004B8407 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E168FC6C248ECC5F004B8407 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E174EC45247BB86D005C1806 /* [CP] Check Pods Manifest.lock */ = {
@@ -2418,6 +2535,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E168FC61248ECC5F004B8407 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E168FC77248ECCA2004B8407 /* Renderer.swift in Sources */,
+				E168FC62248ECC5F004B8407 /* TorusKnotGenerator.c in Sources */,
+				E168FC64248ECC5F004B8407 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E174EC46247BB86D005C1806 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2847,6 +2974,51 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E168FC6E248ECC5F004B8407 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B3EC87467C4C58D380CE00DD /* Pods-Cubemap-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = PBR;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E168FC6F248ECC5F004B8407 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_NAME = PBR;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -3540,6 +3712,15 @@
 			buildConfigurations = (
 				E160CA4D24876781005D37A4 /* Debug */,
 				E160CA4E24876781005D37A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E168FC6D248ECC5F004B8407 /* Build configuration list for PBXNativeTarget "PBR-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E168FC6E248ECC5F004B8407 /* Debug */,
+				E168FC6F248ECC5F004B8407 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

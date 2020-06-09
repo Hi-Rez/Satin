@@ -54,8 +54,8 @@ public func SatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
     offset += MemoryLayout<Float>.size * 4
     
     descriptor.attributes[2] = MDLVertexAttribute(
-        name: MDLVertexAttributeNormal,
-        format: .float3,
+        name: MDLVertexAttributeTextureCoordinate,
+        format: .float2,
         offset: offset,
         bufferIndex: 0
     )
