@@ -18,40 +18,71 @@ public func makeCubeTexture(_ context: Context, _ urls: [URL], _ mipmapped: Bool
     assert(urls.count == 6, "Please provide 6 images to create a cube texture")
     
     guard let cgImage = loadImage(url: urls.first!) else { fatalError("Failed to create cgImage") }
-
+    
     let width = cgImage.width
     let height = cgImage.height
-
-    assert(width == height, "Cube images must have the same width & height")    
-
+    
+    assert(width == height, "Cube images must have the same width & height")
+    
     let cubeSize = width
     let bytesPerPixel = cgImage.bitsPerPixel / 8
-    let bytesPerRow = bytesPerPixel * cubeSize
-    let bytesPerImage = bytesPerRow * cubeSize
     
     let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: context.colorPixelFormat, size: cubeSize, mipmapped: mipmapped)
     guard let cubeTexture = context.device.makeTexture(descriptor: desc) else { return nil }
-
-    let bitmapInfo = CGBitmapInfo.byteOrder32Little.rawValue + CGImageAlphaInfo.premultipliedFirst.rawValue
-    guard let cgContext = CGContext(data: nil,
-                                    width: width,
-                                    height: height,
-                                    bitsPerComponent: 8,
-                                    bytesPerRow: width * bytesPerPixel,
-                                    space: CGColorSpaceCreateDeviceRGB(),
-                                    bitmapInfo: bitmapInfo) else { return nil }
-    let drawRect = CGRect(x: 0, y: 0, width: width, height: height)
-    cgContext.draw(cgImage, in: drawRect)
+    let mipCount = mipmapped ? cubeTexture.mipmapLevelCount : 1
     
-    let region = MTLRegionMake2D(0, 0, cubeSize, cubeSize)
-    cubeTexture.replace(region: region, mipmapLevel: 0, slice: 0, withBytes: cgContext.data!, bytesPerRow: bytesPerRow, bytesPerImage: bytesPerImage)
-
+    let bitmapInfo = CGBitmapInfo.byteOrder32Little.rawValue + CGImageAlphaInfo.premultipliedFirst.rawValue
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    
+    var mipSize = cubeSize
+    for i in 0..<mipCount {
+        let bytesPerRow = bytesPerPixel * mipSize
+        let bytesPerImage = bytesPerRow * mipSize
+        
+        guard let cgContext = CGContext(data: nil,
+                                        width: mipSize,
+                                        height: mipSize,
+                                        bitsPerComponent: 8,
+                                        bytesPerRow: mipSize * bytesPerPixel,
+                                        space: colorSpace,
+                                        bitmapInfo: bitmapInfo) else { return nil }
+        
+        let drawRect = CGRect(x: 0, y: 0, width: mipSize, height: mipSize)
+        cgContext.draw(cgImage, in: drawRect)
+        
+        let region = MTLRegionMake2D(0, 0, mipSize, mipSize)
+        cubeTexture.replace(region: region, mipmapLevel: i, slice: 0, withBytes: cgContext.data!, bytesPerRow: bytesPerRow, bytesPerImage: bytesPerImage)
+        
+        mipSize /= 2
+    }
+    
     for slice in 1..<6 {
         guard let cgImage = loadImage(url: urls[slice]) else { return nil }
-        cgContext.draw(cgImage, in: drawRect)
-        cubeTexture.replace(region: region, mipmapLevel: 0, slice: slice, withBytes: cgContext.data!, bytesPerRow: bytesPerRow, bytesPerImage: bytesPerImage)
+        
+        var mipSize = cubeSize
+        for i in 0..<mipCount {
+            let bytesPerRow = bytesPerPixel * mipSize
+            let bytesPerImage = bytesPerRow * mipSize
+            
+            guard let cgContext = CGContext(data: nil,
+                                            width: mipSize,
+                                            height: mipSize,
+                                            bitsPerComponent: 8,
+                                            bytesPerRow: mipSize * bytesPerPixel,
+                                            space: colorSpace,
+                                            bitmapInfo: bitmapInfo) else { return nil }
+            
+            let drawRect = CGRect(x: 0, y: 0, width: mipSize, height: mipSize)
+            cgContext.draw(cgImage, in: drawRect)
+            
+            let region = MTLRegionMake2D(0, 0, mipSize, mipSize)
+            cgContext.draw(cgImage, in: drawRect)
+            cubeTexture.replace(region: region, mipmapLevel: i, slice: slice, withBytes: cgContext.data!, bytesPerRow: bytesPerRow, bytesPerImage: bytesPerImage)
+            
+            mipSize /= 2
+        }
     }
-
+    
     return cubeTexture
 }
 

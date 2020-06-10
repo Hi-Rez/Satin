@@ -30,7 +30,7 @@ vertex CustomVertexData customVertex( Vertex v [[stage_in]],
 fragment float4 customFragment( CustomVertexData in [[stage_in]],
     texturecube<float> cubeTexture [[texture( FragmentTextureCustom0 )]] )
 {
-    constexpr sampler s( mag_filter::linear, min_filter::linear );
+    constexpr sampler s( mag_filter::linear, min_filter::linear, mip_filter::linear );
 
     const float3 normal = in.normal;
     const float3 worldEyeDirection = in.worldEyeDirection;

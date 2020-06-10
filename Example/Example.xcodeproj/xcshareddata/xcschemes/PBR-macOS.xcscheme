@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
-               BuildableName = "PBR-macOS.app"
+               BuildableName = "PBR.app"
                BlueprintName = "PBR-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
-            BuildableName = "PBR-macOS.app"
+            BuildableName = "PBR.app"
             BlueprintName = "PBR-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E168FC5F248ECC5F004B8407"
-            BuildableName = "PBR-macOS.app"
+            BuildableName = "PBR.app"
             BlueprintName = "PBR-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

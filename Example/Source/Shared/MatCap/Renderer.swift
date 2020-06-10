@@ -35,7 +35,9 @@ class Renderer: Forge.Renderer {
         do {
             return try loader.newTexture(URL: self.texturesURL.appendingPathComponent(fileName), options: [
                 MTKTextureLoader.Option.SRGB: false,
-                MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically
+                MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically,
+                MTKTextureLoader.Option.allocateMipmaps: true,
+                MTKTextureLoader.Option.generateMipmaps: true
             ])
         }
         catch {
