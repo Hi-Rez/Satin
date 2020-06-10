@@ -26,8 +26,14 @@ bundle config set path vendor/bundle
 bundle install
 ```
 
-Finally, install the CocoaPod dependencies using Bundler:
+Install the CocoaPod dependencies using Bundler:
 
 ```
 bundle exec pod install
+```
+
+Finally, make sure to open the xcode workspace not the xcode project:
+
+```
+open Example.xcworkspace/
 ```

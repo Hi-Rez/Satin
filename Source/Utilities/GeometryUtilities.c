@@ -46,14 +46,6 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
     vtx[10].position = simd_make_float4(-w, 0.0, h, 1.0);
     vtx[11].position = simd_make_float4(w, 0.0, h, 1.0);
 
-    // Debug
-//    i[0] = (TriangleIndices){ 0, 2, 1 };
-//    i[1] = (TriangleIndices){ 1, 2, 3 };
-//    i[2] = (TriangleIndices){ 4, 5, 6 };
-//    i[3] = (TriangleIndices){ 5, 7, 6 };
-//    i[4] = (TriangleIndices){ 9, 10, 11 };
-//    i[5] = (TriangleIndices){ 9, 8, 10 };
-
     ind[0] = (TriangleIndices){ 0, 11, 5 };
     ind[1] = (TriangleIndices){ 0, 5, 1 };
     ind[2] = (TriangleIndices){ 0, 1, 7 };
