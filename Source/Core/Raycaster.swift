@@ -178,7 +178,7 @@ open class Raycaster {
             ray = Ray(origin, direction)
         }
         else if camera is OrthographicCamera {
-            let origin = camera.worldMatrix * camera.projectionMatrix.inverse * simd_float4(coordinate.x, coordinate.y, 0.5, 1.0)
+            let origin = camera.unProject(coordinate)
             let direction = normalize(simd_make_float3(camera.worldMatrix * simd_float4(0.0, 0.0, -1.0, 0.0)))
             ray = Ray(simd_make_float3(origin), direction)
         }
@@ -289,7 +289,7 @@ open class Raycaster {
                 _ index: Int) -> RaycastResult? {
         intersectionBuffer.sync(index)
         let distance = distanceParam.value
-        if distance >= 0 {
+        if distance >= 0 {            
             let primitiveIndex = indexParam.value
             let index = Int(primitiveIndex) * 3
             
