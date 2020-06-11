@@ -278,6 +278,10 @@ open class Material: ParameterGroupDelegate {
         }
     }
     
+    public func get(_ name: String) -> Parameter? {
+        return parameters.paramsMap[name]
+    }
+    
     deinit {}
 }
 
