@@ -104,3 +104,31 @@ public enum FragmentSamplerIndex: Int {
     case Custom9 = 9
     case Custom10 = 10
 }
+
+public enum ComputeBufferIndex: Int {
+    case Custom0 = 0
+    case Custom1 = 1
+    case Custom2 = 2
+    case Custom3 = 3
+    case Custom4 = 4
+    case Custom5 = 5
+    case Custom6 = 6
+    case Custom7 = 7
+    case Custom8 = 8
+    case Custom9 = 9
+    case Custom10 = 10
+}
+
+public enum ComputeTextureIndex: Int {
+    case Custom0 = 0
+    case Custom1 = 1
+    case Custom2 = 2
+    case Custom3 = 3
+    case Custom4 = 4
+    case Custom5 = 5
+    case Custom6 = 6
+    case Custom7 = 7
+    case Custom8 = 8
+    case Custom9 = 9
+    case Custom10 = 10
+}

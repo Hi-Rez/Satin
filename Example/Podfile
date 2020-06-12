@@ -12,6 +12,19 @@ target 'PBR-macOS' do
   platform :osx, '10.14'
 end
 
+
+target 'TextureCompute-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'TextureCompute-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'TextureCompute-tvOS' do
+  platform :tvos, '12.4'
+end
+
 target 'Cubemap-macOS' do
   platform :osx, '10.14'
 end

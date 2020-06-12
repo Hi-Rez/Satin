@@ -46,17 +46,15 @@ open class MetalFileCompiler
             }
             catch
             {
-                if fileURLResolved.path.contains("Library")
+                if fileURLResolved.path.contains("Satin"), let satinFileURL = getPipelinesSatinUrl(fileURLResolved.lastPathComponent)
                 {
-                    if let libraryFileURL = getPipelinesLibraryUrl(fileURLResolved.lastPathComponent)
-                    {
-                        content = try String(contentsOf: libraryFileURL, encoding: .utf8)
-                        fileURLResolved = libraryFileURL
-                    }
-                    else
-                    {
-                        throw MetalFileCompilerError.invalidFile(fileURLResolved)
-                    }
+                    content = try String(contentsOf: satinFileURL, encoding: .utf8)
+                    fileURLResolved = satinFileURL
+                }
+                else if fileURLResolved.path.contains("Library"), let libraryFileURL = getPipelinesLibraryUrl(fileURLResolved.lastPathComponent)
+                {
+                    content = try String(contentsOf: libraryFileURL, encoding: .utf8)
+                    fileURLResolved = libraryFileURL
                 }
                 else
                 {
