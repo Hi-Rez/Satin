@@ -12,6 +12,7 @@ open class TextureComputeSystem {
         didSet {
             _reset = true
             _setupTextures = true
+            checkDescriptor()
         }
     }
 
@@ -83,8 +84,9 @@ open class TextureComputeSystem {
         setup()
     }
 
-    func setup() {
+    private func setup() {
         checkFeatures()
+        checkDescriptor()
         setupTextures()
     }
 
@@ -92,6 +94,15 @@ open class TextureComputeSystem {
         textures = []
         resetPipeline = nil
         updatePipeline = nil
+    }
+
+    private func checkDescriptor() {
+        if !textureDescriptor.usage.contains(.shaderWrite) {
+            textureDescriptor.usage = [textureDescriptor.usage, .shaderWrite]
+        }
+        if feedback, !textureDescriptor.usage.contains(.shaderRead) {
+            textureDescriptor.usage = [textureDescriptor.usage, .shaderRead]
+        }
     }
 
     private func checkFeatures() {
@@ -180,24 +191,16 @@ open class TextureComputeSystem {
     }
 
     private func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
-        if let texture = self.texture {
-            let threadExecutionWidth = pipeline.threadExecutionWidth
-            let maxTotalThreadsPerThreadgroup = pipeline.maxTotalThreadsPerThreadgroup
-
-            #if os(iOS) || os(macOS)
-
-            if _useDispatchThreads {
-                _dispatchThreads(texture, computeEncoder, pipeline)
-            } else {
-                _dispatchThreadgroups(texture, computeEncoder, pipeline)
-            }
-
-            #elseif os(tvOS)
-
+        guard let texture = self.texture else { return }
+        #if os(iOS) || os(macOS)
+        if _useDispatchThreads {
+            _dispatchThreads(texture, computeEncoder, pipeline)
+        } else {
             _dispatchThreadgroups(texture, computeEncoder, pipeline)
-
-            #endif
         }
+        #elseif os(tvOS)
+        _dispatchThreadgroups(texture, computeEncoder, pipeline)
+        #endif
     }
 
     #if os(iOS) || os(macOS)
@@ -241,15 +244,15 @@ open class TextureComputeSystem {
         }
     }
 
-    func ping() -> Int {
+    private func ping() -> Int {
         return _index
     }
 
-    func pong() -> Int {
+    private func pong() -> Int {
         return ((_index + 1) % count)
     }
 
-    func pingPong() {
+    private func pingPong() {
         _index = (_index + 1) % count
     }
 }

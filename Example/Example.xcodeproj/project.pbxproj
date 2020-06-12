@@ -8,16 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		01063681A0D27C7C925E6947 /* Pods_Cubemap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */; };
-		013246C0AA4FAAC945FE5215 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		013246C0AA4FAAC945FE5215 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		1EAE066DA00134A1DC1CA408 /* Pods_TextureCompute_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAAF36114968823415159C6 /* Pods_TextureCompute_tvOS.framework */; };
 		28EBCDEFD00F5310407DFE85 /* Pods_2D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC478C1FD91C2722DFA2D136 /* Pods_2D_iOS.framework */; };
-		29779AEBCCDDADD923C3CE00 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		29779AEBCCDDADD923C3CE00 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		368F6C6B942AED5368A40DCF /* Pods_Obj_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */; };
-		412C5F430898DA02B35A8A2A /* Pods_Cubemap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54460EA8B284A90BD9A96957 /* Pods_Cubemap_macOS.framework */; };
+		412C5F430898DA02B35A8A2A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */; };
 		5324DC1FEF54FE6C626D0441 /* Pods_TextureCompute_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 205563ABDD56CC0194F44B5B /* Pods_TextureCompute_macOS.framework */; };
 		5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */; };
-		629B01020CECDA195F303BBC /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		629B01020CECDA195F303BBC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		66E6788F243EC73B0070B294 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		66E678A1243EC8FD0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
@@ -29,19 +29,19 @@
 		708B93CD6FAB78B4CA8CBE56 /* Pods_Geometry_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE23C2869846F19BE6C298DE /* Pods_Geometry_macOS.framework */; };
 		7CA689F662AFA4AD2A398160 /* Pods_Geometry_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */; };
 		80203402C3E1A4C551740786 /* Pods_TextureCompute_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCFF498CB7853F80672659D2 /* Pods_TextureCompute_iOS.framework */; };
-		9242AAC1B56D7677A947725C /* Pods_3D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67ECD10F3C29BBB7F4D3DB80 /* Pods_3D_tvOS.framework */; };
-		9289AB361E42B671E3920892 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A71C7B06C0174ED106A411E /* Pods_3D_macOS.framework */; };
+		9242AAC1B56D7677A947725C /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		9289AB361E42B671E3920892 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9562006863F7061C8724A0CD /* Pods_LiveCode_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */; };
 		97375F1B270BCC17B718BBBE /* Pods_Obj_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */; };
-		99944A954CFDF4CA65C627CA /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		99944A954CFDF4CA65C627CA /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9F04983EDFBABD9BB6FBF4D1 /* Pods_Geometry_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */; };
-		A038ED9DA76DB20E878EFB35 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		B42D5878581C5BAF8C2C96E8 /* Pods_3D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F35293C59A6E55AB3AD233C5 /* Pods_3D_iOS.framework */; };
+		A038ED9DA76DB20E878EFB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		B42D5878581C5BAF8C2C96E8 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */; };
 		D700143DFDF0ABBB7ACD6EC6 /* Pods_2D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */; };
-		D8E4CB724BDB5D09DE3AEFD9 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		D9AAE82BD14730FF90DCFEC5 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		E076B36BDF43C2AA0C154E49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
@@ -114,18 +114,14 @@
 		E1B27E7F248A37DE00C6CCB4 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC09892489751A00B92285 /* Renderer.swift */; };
 		E1B27E80248A37E400C6CCB4 /* Icosahedron.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CC099F2489797300B92285 /* Icosahedron.c */; };
 		E1B625C32492C05D00C774D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
-		E1B625C52492C05D00C774D1 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		E1B625C62492C05D00C774D1 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		E1B625C92492C05D00C774D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E1B625CA2492C05D00C774D1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E1B625D22492C09600C774D1 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B625BE2492C03400C774D1 /* Renderer.swift */; };
 		E1B625D42492C23600C774D1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1B625D32492C23600C774D1 /* Assets */; };
 		E1B625F92492E81300C774D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
-		E1B625FB2492E81300C774D1 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		E1B625FE2492E81300C774D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E1B625FF2492E81300C774D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
 		E1B6260B2492E81500C774D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
-		E1B6260D2492E81500C774D1 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		E1B626102492E81500C774D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1B626182492E87100C774D1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1B625D32492C23600C774D1 /* Assets */; };
 		E1B626192492E87100C774D1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1B625D32492C23600C774D1 /* Assets */; };
@@ -149,10 +145,10 @@
 		E1E7C55324515DA600BD8324 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
 		E1E7C55724515DA600BD8324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1E7C55F24515DB600BD8324 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17B986E2451488100216411 /* Renderer.swift */; };
-		F0CEA7DD0FC0F2AB5822FB64 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		F0CEA7DD0FC0F2AB5822FB64 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */; };
-		F4525EB6D2853E367A61EA5F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		F8600421B47B20340EFAD160 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		F4525EB6D2853E367A61EA5F /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		F8600421B47B20340EFAD160 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F9FFD7952CDDB7BC22CC8FCB /* Pods_2D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -295,9 +291,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				629B01020CECDA195F303BBC /* BuildFile in Frameworks */,
-				F0CEA7DD0FC0F2AB5822FB64 /* BuildFile in Frameworks */,
-				9289AB361E42B671E3920892 /* Pods_3D_macOS.framework in Frameworks */,
+				629B01020CECDA195F303BBC /* (null) in Frameworks */,
+				F0CEA7DD0FC0F2AB5822FB64 /* (null) in Frameworks */,
+				9289AB361E42B671E3920892 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,8 +301,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A038ED9DA76DB20E878EFB35 /* BuildFile in Frameworks */,
-				B42D5878581C5BAF8C2C96E8 /* Pods_3D_iOS.framework in Frameworks */,
+				A038ED9DA76DB20E878EFB35 /* (null) in Frameworks */,
+				B42D5878581C5BAF8C2C96E8 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,8 +310,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29779AEBCCDDADD923C3CE00 /* BuildFile in Frameworks */,
-				9242AAC1B56D7677A947725C /* Pods_3D_tvOS.framework in Frameworks */,
+				29779AEBCCDDADD923C3CE00 /* (null) in Frameworks */,
+				9242AAC1B56D7677A947725C /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,8 +319,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8600421B47B20340EFAD160 /* BuildFile in Frameworks */,
-				99944A954CFDF4CA65C627CA /* BuildFile in Frameworks */,
+				F8600421B47B20340EFAD160 /* (null) in Frameworks */,
+				99944A954CFDF4CA65C627CA /* (null) in Frameworks */,
 				BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,7 +337,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4525EB6D2853E367A61EA5F /* BuildFile in Frameworks */,
+				F4525EB6D2853E367A61EA5F /* (null) in Frameworks */,
 				368F6C6B942AED5368A40DCF /* Pods_Obj_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -350,7 +346,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E076B36BDF43C2AA0C154E49 /* BuildFile in Frameworks */,
+				E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */,
 				529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,7 +371,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				412C5F430898DA02B35A8A2A /* Pods_Cubemap_macOS.framework in Frameworks */,
+				412C5F430898DA02B35A8A2A /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,7 +403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9AAE82BD14730FF90DCFEC5 /* BuildFile in Frameworks */,
+				D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */,
 				F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -416,8 +412,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E4CB724BDB5D09DE3AEFD9 /* BuildFile in Frameworks */,
-				013246C0AA4FAAC945FE5215 /* BuildFile in Frameworks */,
+				D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */,
+				013246C0AA4FAAC945FE5215 /* (null) in Frameworks */,
 				5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3360,7 +3356,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -3383,7 +3379,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";

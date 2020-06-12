@@ -14,6 +14,16 @@ open class SkyboxMaterial: BasicTextureMaterial {
         self.depthWriteEnabled = false
     }
     
+    public override init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
+        super.init()
+        if let texture = texture, texture.textureType != .typeCube {
+            fatalError("SkyboxMaterial expects a Cube texture")
+        }
+        self.texture = texture
+        self.sampler = sampler
+        self.depthWriteEnabled = false
+    }
+    
     public override init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
         super.init()
         if texture.textureType != .typeCube {

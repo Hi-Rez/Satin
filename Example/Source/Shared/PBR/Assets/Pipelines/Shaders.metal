@@ -16,15 +16,8 @@ vertex CustomVertexData customVertex(
     constant VertexUniforms &uniforms [[buffer( VertexBufferVertexUniforms )]] )
 {
     float4 position = v.position;
-
-    // const int id = iid;
-    // int x = id;
-    // int y = id / 6;
     position.x += ( iid % 7 - 3.0 ) * 2.5;
     position.y += ( iid / 7 - 3.0 ) * 2.5;
-    // position.x += x * 1.0;
-    // position.y += y * 10.0;
-
     const float4 worldPosition = uniforms.modelMatrix * position;
     const float3 worldCameraPosition = uniforms.worldCameraPosition;
 
@@ -34,12 +27,15 @@ vertex CustomVertexData customVertex(
         .cameraPosition = worldCameraPosition,
         .normal = v.normal,
         .uv = v.uv,
-        .roughness = (float)( iid % 7 ) / 6.0,
+        .roughness = (float)( iid % 7 ) / 7.0,
         .metallic = (float)( iid / 7 ) / 7.0
     };
 }
 
-fragment float4 customFragment( CustomVertexData in [[stage_in]] )
+fragment float4 customFragment( CustomVertexData in [[stage_in]],
+    texturecube<float> irradianceTex [[texture( FragmentTextureCustom0 )]],
+    texturecube<float> specularTex [[texture( FragmentTextureCustom1 )]],
+    texture2d<float> integrationTex [[texture( FragmentTextureCustom2 )]] )
 {
     constexpr sampler s( mag_filter::linear, min_filter::linear );
 
@@ -48,10 +44,11 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]] )
     const float3 view = normalize( cameraPosition - worldPosition );
     const float2 uv = in.uv;
     const float3 normal = normalize( in.normal ); //getNormalFromMap( normalTex, s, uv, normalize( in.normal ), worldPosition );
+    const float3 reflection = reflect( -view, normal );
 
     const float NdotV = max( dot( normal, view ), 0.00001 );
 
-    const float3 albedo = float3( 0.5, 0.0, 0.0 );
+    const float3 albedo = float3( 1.0, 1.0, 1.0 );
     const float roughness = in.roughness;
     const float metallic = in.metallic;
     const float ao = 1.0;
@@ -64,10 +61,10 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]] )
     };
 
     const float3 lightColors[4] = {
-        float3( 300.0f, 300.0f, 300.0f ),
-        float3( 300.0f, 300.0f, 300.0f ),
-        float3( 300.0f, 300.0f, 300.0f ),
-        float3( 300.0f, 300.0f, 300.0f )
+        float3( 150.0f, 150.0f, 150.0f ),
+        float3( 150.0f, 150.0f, 150.0f ),
+        float3( 150.0f, 150.0f, 150.0f ),
+        float3( 150.0f, 150.0f, 150.0f )
     };
 
     // float3 f0 = float3( 1.022, .782, 0.344 );
@@ -85,17 +82,17 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]] )
         const float3 radiance = lightColors[i] * attenuation;
 
         // scale light by NdotL
-        const float NdotL = max( dot( normal, light ), 0.00001 );
-        const float HdotV = max( dot( halfway, view ), 0.00001 );
-        const float NdotH = max( dot( normal, halfway ), 0.00001 );
+        const float NdotL = max( dot( normal, light ), 0.0001 );
+        const float HdotV = max( dot( halfway, view ), 0.0001 );
+        const float NdotH = max( dot( normal, halfway ), 0.0001 );
 
         // Cook-Torrance BRDF
-        const float NDF = distributionGGX( NdotH, roughness );
+        const float N = distributionGGX( NdotH, roughness );
         const float G = geometrySmith( NdotV, NdotL, roughness );
         const float3 F = fresnelSchlick( HdotV, f0 );
 
-        const float3 nominator = NDF * G * F;
-        const float denominator = 4 * NdotV * NdotL;
+        const float3 nominator = N * G * F;
+        const float denominator = 4.0 * NdotV * NdotL;
         const float3 specular = nominator / max( denominator, 0.00001 ); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
 
         // kS is equal to Fresnel
@@ -113,12 +110,28 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]] )
         Lo += ( kD * albedo / PI + specular ) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }
 
-    const float3 ambient = float3( 0.03 ) * albedo * ao;
+    const float3 F = fresnelSchlickRoughness( NdotV, f0, roughness );
+    const float3 kS = F;
+    float3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
+    const float3 irradiance = irradianceTex.sample( s, normal ).rgb;
+    const float3 diffuse = irradiance * albedo;
+
+    // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
+    const float levels = float( specularTex.get_num_mip_levels() - 1 );
+
+    constexpr sampler ss( mag_filter::linear, min_filter::linear, mip_filter::linear );
+    const float3 prefilteredColor = specularTex.sample( ss, reflection, level( levels * roughness ) ).rgb;
+
+    const float2 brdf = integrationTex.sample( s, float2( NdotV, roughness ) ).rg;
+    const float3 specular = prefilteredColor * ( F * brdf.x + brdf.y );
+
+    const float3 ambient = ( kD * diffuse + specular ) * ao;
     float3 color = ambient + Lo;
 
-    // HDR tonemapping
+    // // HDR tonemapping
     color = color / ( color + float3( 1.0 ) );
-    // gamma correct
+    // // gamma correct
     color = pow( color, float3( 1.0 / 2.2 ) );
 
     return float4( color, 1.0 );

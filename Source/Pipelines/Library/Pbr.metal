@@ -54,9 +54,17 @@ float geometryKelemen(float NdotV, float NdotL, float VdotH) {
 }
 
 float geometrySchlickGGX(float NdotV, float roughness) {
-    const float a = roughness * roughness;
-    const float k = a / 2.0;
-    return NdotV / (NdotV * (1.0 - k) + k);
+//    const float a = roughness * roughness;
+//    const float k = a / 2.0;
+//    return NdotV / (NdotV * (1.0 - k) + k);
+    
+    const float r = (roughness + 1.0);
+    const float k = (r*r) / 8.0;
+
+    const float nom   = NdotV;
+    const float denom = NdotV * (1.0 - k) + k;
+    
+    return nom / denom;
 }
 
 float geometrySmith(float NdotV, float NdotL, float roughness) {
@@ -91,7 +99,7 @@ float3 getNormalFromMap(texture2d<float> normalTex, sampler s, float2 uv, float3
 }
 
 // GGX NDF via importance sampling
-float3 importanceSampleGGX(float2 Xi, float roughness, float3 N) {
+float3 importanceSampleGGX(float2 Xi, const float3 N, float roughness ) {
     float alpha = roughness * roughness;
     float alpha2 = alpha * alpha;
 
@@ -112,31 +120,4 @@ float3 importanceSampleGGX(float2 Xi, float roughness, float3 N) {
 
     float3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
     return normalize(sampleVec);
-}
-
-float2 integrateBRDF(float NoV, float Roughness) {
-    const float3 N = float3(0.0, 0.0, 1.0);
-    float3 V;
-    V.x = sqrt(1.0f - NoV * NoV); // sin
-    V.y = 0;
-    V.z = NoV; // cos
-    float A = 0;
-    float B = 0;
-    const uint NumSamples = 1024;
-    for (uint i = 0; i < NumSamples; i++) {
-        float2 Xi = hammersley(i, NumSamples);
-        float3 H = importanceSampleGGX(Xi, Roughness, N);
-        float3 L = 2 * dot(V, H) * H - V;
-        float NoL = saturate(L.z);
-        float NoH = saturate(H.z);
-        float VoH = saturate(dot(V, H));
-        if (NoL > 0) {
-            float G = geometrySmith(NoV, NoL, Roughness);
-            float G_Vis = G * VoH / (NoH * NoV);
-            float Fc = pow(1 - VoH, 5);
-            A += (1 - Fc) * G_Vis;
-            B += Fc * G_Vis;
-        }
-    }
-    return float2(A, B) / NumSamples;
 }
