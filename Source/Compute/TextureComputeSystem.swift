@@ -184,39 +184,38 @@ open class TextureComputeSystem {
             let threadExecutionWidth = pipeline.threadExecutionWidth
             let maxTotalThreadsPerThreadgroup = pipeline.maxTotalThreadsPerThreadgroup
 
-            print("threadExecutionWidth: \(threadExecutionWidth)")
-            print("maxTotalThreadsPerThreadgroup: \(maxTotalThreadsPerThreadgroup)")
-
             #if os(iOS) || os(macOS)
+
             if _useDispatchThreads {
                 _dispatchThreads(texture, computeEncoder, pipeline)
             } else {
                 _dispatchThreadgroups(texture, computeEncoder, pipeline)
             }
+
             #elseif os(tvOS)
+
             _dispatchThreadgroups(texture, computeEncoder, pipeline)
+
             #endif
         }
     }
 
     #if os(iOS) || os(macOS)
     private func _dispatchThreads(_ texture: MTLTexture, _ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
-        
         let threadExecutionWidth = pipeline.threadExecutionWidth
         let maxTotalThreadsPerThreadgroup = pipeline.maxTotalThreadsPerThreadgroup
-        
+
         let threadsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: texture.depth)
-        
+
         let threadsPerThreadgroup = MTLSizeMake(threadExecutionWidth, maxTotalThreadsPerThreadgroup / threadExecutionWidth, 1)
         computeEncoder.dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
     }
     #endif
 
     private func _dispatchThreadgroups(_ texture: MTLTexture, _ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
-        
         let threadExecutionWidth = pipeline.threadExecutionWidth
         let maxTotalThreadsPerThreadgroup = pipeline.maxTotalThreadsPerThreadgroup
-        
+
         if texture.depth > 1 {
             var w = Int(pow(Float(maxTotalThreadsPerThreadgroup), 1.0 / 3.0))
             if w > threadExecutionWidth {
