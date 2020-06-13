@@ -3,15 +3,6 @@ typedef struct {
     int face;
 } SpecularUniforms;
 
-static constant float4 rotations[6] = {
-    float4( 0.0, 1.0, 0.0, HALF_PI ),
-    float4( 0.0, 1.0, 0.0, -HALF_PI ),
-    float4( 1.0, 0.0, 0.0, -HALF_PI ),
-    float4( 1.0, 0.0, 0.0, HALF_PI ),
-    float4( 0.0, 0.0, 1.0, 0.0 ),
-    float4( 0.0, 1.0, 0.0, PI )
-};
-
 kernel void specularCompute(
     uint2 gid [[thread_position_in_grid]],
     texture2d<float, access::write> tex [[texture( 0 )]],

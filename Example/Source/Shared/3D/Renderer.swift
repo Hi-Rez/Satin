@@ -13,6 +13,12 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
+    #if os(macOS) || os(iOS)
+    lazy var raycaster: Raycaster = {
+        Raycaster(context: context)
+    }()
+    #endif
+    
     lazy var mesh: Mesh = {
         Mesh(geometry: BoxGeometry(), material: UvColorMaterial())
 //         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial(true))
@@ -44,7 +50,7 @@ class Renderer: Forge.Renderer {
     lazy var renderer: Satin.Renderer = {
         Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
-        
+    
     required init?(metalKitView: MTKView) {
         super.init(metalKitView: metalKitView)
     }
@@ -121,4 +127,11 @@ class Renderer: Forge.Renderer {
     #endif
     #endif
     
+    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
+        #if os(macOS)
+        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
+        #else
+        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
+        #endif
+    }
 }

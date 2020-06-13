@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1B625BF2492C05D00C774D1"
-               BuildableName = "TextureCompute-macOS.app"
+               BuildableName = "TextureCompute.app"
                BlueprintName = "TextureCompute-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1B625BF2492C05D00C774D1"
-            BuildableName = "TextureCompute-macOS.app"
+            BuildableName = "TextureCompute.app"
             BlueprintName = "TextureCompute-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1B625BF2492C05D00C774D1"
-            BuildableName = "TextureCompute-macOS.app"
+            BuildableName = "TextureCompute.app"
             BlueprintName = "TextureCompute-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

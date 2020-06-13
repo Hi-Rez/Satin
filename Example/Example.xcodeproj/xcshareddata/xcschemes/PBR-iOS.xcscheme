@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E1B626072492E81500C774D1"
-               BuildableName = "TextureCompute.app"
-               BlueprintName = "TextureCompute-tvOS"
+               BlueprintIdentifier = "E1891B112494511C00E6F04E"
+               BuildableName = "PBR.app"
+               BlueprintName = "PBR-iOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E1B626072492E81500C774D1"
-            BuildableName = "TextureCompute.app"
-            BlueprintName = "TextureCompute-tvOS"
+            BlueprintIdentifier = "E1891B112494511C00E6F04E"
+            BuildableName = "PBR.app"
+            BlueprintName = "PBR-iOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E1B626072492E81500C774D1"
-            BuildableName = "TextureCompute.app"
-            BlueprintName = "TextureCompute-tvOS"
+            BlueprintIdentifier = "E1891B112494511C00E6F04E"
+            BuildableName = "PBR.app"
+            BlueprintName = "PBR-iOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

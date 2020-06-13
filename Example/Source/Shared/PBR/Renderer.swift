@@ -5,7 +5,8 @@
 //  Created by Reza Ali on 6/7/20.
 //  Copyright © 2020 Hi-Rez. All rights reserved.
 //
-//  Cube Map Texture (quarry_01) from: https://hdrihaven.com/hdri/
+//  PBR Code from: https://learnopengl.com/PBR/
+//  Cube Map Texture from: https://hdrihaven.com/hdri/
 //
 
 import Metal
@@ -39,31 +40,8 @@ class Renderer: Forge.Renderer {
     lazy var scene: Object = {
         let scene = Object()
         scene.add(mesh)
-//        scene.add(debugMesh)
+        scene.add(debugMesh)
         return scene
-    }()
-    
-    lazy var cubeTexture: MTLTexture? = {
-        let url = texturesURL.appendingPathComponent("Cubemap")
-        
-        let texture = makeCubeTexture(
-            context,
-            [
-                url.appendingPathComponent("px.png"),
-                url.appendingPathComponent("nx.png"),
-                url.appendingPathComponent("py.png"),
-                url.appendingPathComponent("ny.png"),
-                url.appendingPathComponent("pz.png"),
-                url.appendingPathComponent("nz.png"),
-            ],
-            true // <- generates mipmaps
-        )
-        
-        if let texture = texture, let material = skybox.material as? SkyboxMaterial {
-            material.texture = texture
-        }
-        
-        return texture
     }()
     
     lazy var context: Context = {
@@ -72,7 +50,7 @@ class Renderer: Forge.Renderer {
     
     lazy var camera: ArcballPerspectiveCamera = {
         let camera = ArcballPerspectiveCamera()
-        camera.position = simd_make_float3(0.0, 0.0, 30.0)
+        camera.position = simd_make_float3(0.0, 0.0, 40.0)
         camera.near = 0.001
         camera.far = 1000.0
         return camera
@@ -83,15 +61,18 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var renderer: Satin.Renderer = {
-        let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
-        return renderer
+        Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
     
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 3), material: customMaterial)
-        mesh.cullMode = .none
         mesh.label = "Sphere"
         mesh.instanceCount = 49
+        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
+            renderEncoder.setFragmentTexture(self.diffuseCubeTexture, index: FragmentTextureIndex.Custom0.rawValue)
+            renderEncoder.setFragmentTexture(self.specularCubeTexture, index: FragmentTextureIndex.Custom1.rawValue)
+            renderEncoder.setFragmentTexture(self.integrationTextureCompute.texture, index: FragmentTextureIndex.Custom2.rawValue)
+        }
         return mesh
     }()
     
@@ -102,21 +83,18 @@ class Renderer: Forge.Renderer {
     lazy var skybox: Mesh = {
         let mesh = Mesh(geometry: SkyboxGeometry(), material: SkyboxMaterial())
         mesh.label = "Skybox"
-        mesh.scale = [50, 50, 50]
+        mesh.scale = [150, 150, 150]
         scene.add(mesh)
         return mesh
     }()
     
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
-    override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.sampleCount = 8
-        metalKitView.depthStencilPixelFormat = .depth32Float
-        metalKitView.preferredFramesPerSecond = 60
-        metalKitView.colorPixelFormat = .bgra8Unorm
-    }
+    lazy var debugMesh: Mesh = {
+        let mesh = Mesh(geometry: PlaneGeometry(size: 10), material: BasicTextureMaterial(texture: integrationTextureCompute.texture))
+        mesh.label = "Debug"
+        mesh.position = [0, 0, -5]
+        mesh.visible = false
+        return mesh
+    }()
     
     lazy var integrationTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
@@ -126,17 +104,58 @@ class Renderer: Forge.Renderer {
         return compute
     }()
     
+    // Diffuse (Irradiance) Computation
+    
+    lazy var diffuseTextureComputeParameters: ParameterGroup = {
+        let params = ParameterGroup("DiffuseParameters")
+        params.append(faceParameter)
+        return params
+    }()
+    
+    lazy var diffuseTextureComputeUniforms: Buffer = {
+        Buffer(context: context, parameters: diffuseTextureComputeParameters)
+    }()
+    
     lazy var diffuseTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba16Float, size: 64, mipmapped: false)
+            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 64, height: 64, mipmapped: false)
         )
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
-            computeEncoder.setTexture(self.cubeTexture, index: offset)
+            computeEncoder.setTexture(self.hdrCubemapTexture, index: offset)
+            computeEncoder.setBuffer(self.diffuseTextureComputeUniforms.buffer, offset: 0, index: 0)
         }
         
         return compute
     }()
+    
+    // HDRI to Cubemap Computation
+    
+    lazy var cubemapTextureComputeParameters: ParameterGroup = {
+        let params = ParameterGroup("CubemapParameters")
+        params.append(faceParameter)
+        return params
+    }()
+    
+    lazy var cubemapTextureComputeUniforms: Buffer = {
+        Buffer(context: context, parameters: cubemapTextureComputeParameters)
+    }()
+    
+    lazy var cubemapTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(
+            context: context,
+            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
+        )
+        
+        compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
+            computeEncoder.setTexture(self.hdriTexture, index: offset)
+            computeEncoder.setBuffer(self.cubemapTextureComputeUniforms.buffer, offset: 0, index: 0)
+        }
+        
+        return compute
+    }()
+    
+    // Specular Computation
     
     var roughnessParameter = FloatParameter("roughness", 0)
     var faceParameter = IntParameter("face", 0)
@@ -156,51 +175,120 @@ class Renderer: Forge.Renderer {
     lazy var specularTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba16Float, width: 512, height: 512, mipmapped: false)
+            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
         )
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
-            computeEncoder.setTexture(self.cubeTexture, index: offset)
+            computeEncoder.setTexture(self.hdrCubemapTexture, index: offset)
             computeEncoder.setBuffer(self.specularTextureComputeUniforms.buffer, offset: 0, index: 0)
         }
         return compute
     }()
     
-    lazy var debugMesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 10), material: BasicTextureMaterial(texture: integrationTextureCompute.texture))
-        mesh.position = [0, 0, -5]
-        return mesh
+    // HDRI to Skybox Texture
+    
+    lazy var skyboxTextureComputeParameters: ParameterGroup = {
+        let params = ParameterGroup("SkyboxParameters")
+        params.append(faceParameter)
+        return params
     }()
     
-    var diffuseCubeTexture: MTLTexture?
-    lazy var specularCubeTexture: MTLTexture? = {
-        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba16Float, size: 512, mipmapped: true)
-        return device.makeTexture(descriptor: cubeDesc)
+    lazy var skyboxTextureComputeUniforms: Buffer = {
+        Buffer(context: context, parameters: skyboxTextureComputeParameters)
     }()
+    
+    lazy var skyboxTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(
+            context: context,
+            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
+        )
+        
+        compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
+            computeEncoder.setTexture(self.hdriTexture, index: offset)
+            computeEncoder.setBuffer(self.skyboxTextureComputeUniforms.buffer, offset: 0, index: 0)
+        }
+        
+        return compute
+    }()
+    
+    // Textures
+    
+    var hdriTexture: MTLTexture?
+    
+    lazy var hdrCubemapTexture: MTLTexture? = {
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 512, mipmapped: true)
+        let texture = device.makeTexture(descriptor: cubeDesc)
+        texture?.label = "Cubemap"
+        return texture
+    }()
+    
+    lazy var diffuseCubeTexture: MTLTexture? = {
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 64, mipmapped: true)
+        let texture = device.makeTexture(descriptor: cubeDesc)
+        texture?.label = "Diffuse"
+        return texture
+    }()
+    
+    lazy var specularCubeTexture: MTLTexture? = {
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 512, mipmapped: true)
+        let texture = device.makeTexture(descriptor: cubeDesc)
+        texture?.label = "Specular"
+        return texture
+    }()
+    
+    lazy var skyboxCubeTexture: MTLTexture? = {
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .bgra8Unorm, size: 512, mipmapped: true)
+        let texture = device.makeTexture(descriptor: cubeDesc)
+        texture?.label = "Skybox"
+        return texture
+    }()
+    
+    required init?(metalKitView: MTKView) {
+        super.init(metalKitView: metalKitView)
+    }
+    
+    override func setupMtkView(_ metalKitView: MTKView) {
+        metalKitView.sampleCount = 8
+        metalKitView.depthStencilPixelFormat = .depth32Float
+        metalKitView.preferredFramesPerSecond = 60
+        metalKitView.colorPixelFormat = .bgra8Unorm
+    }
     
     override func setup() {
+        loadHdri()
         setupMetalCompiler()
         setupLibrary()
         
-        setupMeshPreDraw()
         #if os(macOS)
 //        openEditor()
         #endif
     }
     
-    func setupMeshPreDraw() {
-        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
-            renderEncoder.setFragmentTexture(self.diffuseTextureCompute.texture, index: FragmentTextureIndex.Custom0.rawValue)
-            if let specularCubeTexture = self.specularCubeTexture {
-                renderEncoder.setFragmentTexture(specularCubeTexture, index: FragmentTextureIndex.Custom1.rawValue)
+    func loadHdri() {
+        do {
+            let filename = "stone_alley_03_2k.exr"
+            if let image = loadImage(url: texturesURL.appendingPathComponent(filename)) {
+                let w = image.width
+                let h = image.height
+                
+                print("Width: \(w)")
+                print("Height: \(h)")
+                print("bitsPerPixel: \(image.bitsPerPixel)")
+                print("bitsPerComponent: \(image.bitsPerComponent)")
+                
+                let loader = MTKTextureLoader(device: device)
+                do {
+                    hdriTexture = try loader.newTexture(cgImage: image, options: nil)
+                }
             }
-            renderEncoder.setFragmentTexture(self.integrationTextureCompute.texture, index: FragmentTextureIndex.Custom2.rawValue)
+        }
+        catch {
+            print(error)
         }
     }
     
     override func update() {
         if let material = skybox.material as? SkyboxMaterial {
-            material.texture = diffuseTextureCompute.texture
-////            material.texture = specularCubeTexture
+            material.texture = skyboxCubeTexture
         }
         
         cameraController.update()
@@ -245,97 +333,9 @@ class Renderer: Forge.Renderer {
         if event.characters == "e" {
             openEditor()
         }
+        else if event.characters == "d" {
+            debugMesh.visible = !debugMesh.visible
+        }
     }
     #endif
-    
-    func setupMetalCompiler() {
-        metalFileCompiler.onUpdate = { [unowned self] in
-            self.setupLibrary()
-        }
-    }
-    
-    // MARK: Setup Library
-    
-    func setupLibrary() {
-        print("Compiling Library")
-        do {
-            let librarySource = try metalFileCompiler.parse(pipelinesURL.appendingPathComponent("Compute/Shaders.metal"))
-            let library = try context.device.makeLibrary(source: librarySource, options: .none)
-            setupCompute(library, integrationTextureCompute, "integrationCompute")
-            setupCompute(library, diffuseTextureCompute, "diffuseCompute")
-            setupSpecularCompute(library)
-            
-        }
-        catch let MetalFileCompilerError.invalidFile(fileURL) {
-            print("Invalid File: \(fileURL.absoluteString)")
-        }
-        catch {
-            print("Error: \(error)")
-        }
-    }
-    
-    func setupCompute(_ library: MTLLibrary, _ computeSystem: TextureComputeSystem, _ kernel: String) {
-        do {
-            let pipeline = try makeComputePipeline(library: library, kernel: kernel)
-            computeSystem.updatePipeline = pipeline
-            
-            if let commandQueue = self.device.makeCommandQueue(), let commandBuffer = commandQueue.makeCommandBuffer() {
-                computeSystem.update(commandBuffer)
-                commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
-            }
-        }
-        catch {
-            print(error)
-        }
-    }
-    
-    func setupSpecularCompute(_ library: MTLLibrary) {
-        do {
-            let pipeline = try makeComputePipeline(library: library, kernel: "specularCompute")
-            specularTextureCompute.updatePipeline = pipeline
-            
-            guard let cubeTexture = specularCubeTexture else { return }
-            let levels = cubeTexture.mipmapLevelCount
-            
-            var size = cubeTexture.width
-            for level in 0..<levels {
-                print("Level: \(level)")
-                print("Size: \(size)")
-                specularTextureCompute.textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba16Float, width: size, height: size, mipmapped: false)
-                
-                if let commandQueue = self.device.makeCommandQueue() {
-                    for slice in 0..<6 {
-                        print("Slice: \(slice)")
-                        
-                        if let commandBuffer = commandQueue.makeCommandBuffer() {
-                            faceParameter.value = slice
-                            roughnessParameter.value = Float(level) / Float(levels - 1)
-                            
-                            specularTextureComputeUniforms.update()
-                            specularTextureCompute.update(commandBuffer)
-                            
-                            commandBuffer.commit()
-                            commandBuffer.waitUntilCompleted()
-                        }
-                        
-                        if let commandBuffer = commandQueue.makeCommandBuffer() {
-                            if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                                if let texture = specularTextureCompute.texture {
-                                    blitEncoder.copy(from: texture, sourceSlice: 0, sourceLevel: 0, to: cubeTexture, destinationSlice: slice, destinationLevel: level, sliceCount: 1, levelCount: 1)
-                                }
-                                blitEncoder.endEncoding()
-                            }
-                            commandBuffer.commit()
-                            commandBuffer.waitUntilCompleted()
-                        }
-                    }
-                }
-                size /= 2
-            }
-        }
-        catch {
-            print(error)
-        }
-    }
 }
