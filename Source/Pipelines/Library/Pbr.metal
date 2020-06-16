@@ -43,11 +43,11 @@ float geometryNeumann(float NdotV, float NdotL) {
     return nom / denom;
 }
 
-float geometryCookTorrance(float NdotV, float NdotL, float NdotH, float VdotH) {
-    const float g0 = (2.0 * NdotH * NdotV) / VdotH;
-    const float g1 = (2.0 * NdotH * NdotL) / VdotH;
-    return min(1.0, min(g0, g1));
-}
+//float geometryCookTorrance(float NdotV, float NdotL, float NdotH, float VdotH) {
+//    const float g0 = (2.0 * NdotH * NdotV) / VdotH;
+//    const float g1 = (2.0 * NdotH * NdotL) / VdotH;
+//    return min(1.0, min(g0, g1));
+//}
 
 float geometryKelemen(float NdotV, float NdotL, float VdotH) {
     return (NdotL * NdotV) / (VdotH * VdotH);

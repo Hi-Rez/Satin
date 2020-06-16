@@ -8,6 +8,7 @@
 import Metal
 
 open class TextureComputeSystem {
+    public var label: String = "Satin Texture Compute Encoder"
     public var textureDescriptor: MTLTextureDescriptor {
         didSet {
             _reset = true
@@ -37,7 +38,13 @@ open class TextureComputeSystem {
 
     public var textures: [MTLTexture] = []
 
-    public var resetPipeline: MTLComputePipelineState?
+    public var resetPipeline: MTLComputePipelineState? {
+        didSet {
+            if resetPipeline != nil {
+                _reset = true
+            }
+        }
+    }
     public var updatePipeline: MTLComputePipelineState?
 
     public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
@@ -150,8 +157,11 @@ open class TextureComputeSystem {
             _setupTextures = false
         }
 
+        
         let count = textures.count
-        if count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
+        if count > 0, (resetPipeline != nil || updatePipeline != nil), let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
+            computeEncoder.label = label
+            
             if feedback, _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 for i in 0...count {
@@ -160,6 +170,7 @@ open class TextureComputeSystem {
                     preCompute?(computeEncoder, offset)
                     dispatch(computeEncoder, pipeline)
                 }
+                print("reset")
                 _reset = false
             }
 
