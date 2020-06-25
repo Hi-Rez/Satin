@@ -192,18 +192,14 @@ public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> m
     let sx = sy / aspect
     let rz = far - near
     let sz = -(far + near) / rz
-    let sw = -far * near / rz
+    let sw = -2.0 * far * near / rz
+    
+    let P = simd_make_float4(sx, 0.0, 0.0, 0.0)
+    let Q = simd_make_float4(0.0, sy, 0.0, 0.0)
+    let R = simd_make_float4(0.0, 0.0, sz, -1.0)
+    let S = simd_make_float4(0.0, 0.0, sw, 0.0)
 
-    var result = matrix_identity_float4x4
-
-    result[0].x = sx
-    result[1].y = sy
-    result[2].z = sz
-    result[2].w = -1.0
-    result[3].z = sw
-    result[3].w = 0.0
-
-    return result
+    return matrix_float4x4(columns: (P, Q, R, S))
 }
 
 // MARK: - Orthographic (Float)

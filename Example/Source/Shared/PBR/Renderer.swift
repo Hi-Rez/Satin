@@ -247,7 +247,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.sampleCount = 8
+        metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm

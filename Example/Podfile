@@ -8,16 +8,24 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
-target 'PBR-macOS' do
+target 'DepthMaterial-macOS' do
   platform :osx, '10.14'
 end
 
-target 'PBR-iOS' do
+target 'DepthMaterial-iOS' do
   platform :ios, '12.4'
 end
 
-target 'PBR-tvOS' do
-  platform :ios, '12.4'
+target 'DepthMaterial-tvOS' do
+  platform :tvos, '12.4'
+end
+
+target 'PBR-macOS' do
+  platform :osx, '10.15'
+end
+
+target 'PBR-iOS' do
+  platform :ios, '13.0'
 end
 
 target 'TextureCompute-macOS' do
