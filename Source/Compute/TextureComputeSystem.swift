@@ -170,7 +170,6 @@ open class TextureComputeSystem {
                     preCompute?(computeEncoder, offset)
                     dispatch(computeEncoder, pipeline)
                 }
-                print("reset")
                 _reset = false
             }
 
