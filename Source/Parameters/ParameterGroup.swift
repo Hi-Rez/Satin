@@ -376,6 +376,64 @@ open class ParameterGroup: Codable {
         source += "} \(structName);\n\n"
         return source
     }
+
+    public func set(_ name: String, _ value: Float) {
+        if let param = paramsMap[name], let p = param as? FloatParameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_float2) {
+        if let param = paramsMap[name], let p = param as? Float2Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_float3) {
+        if let param = paramsMap[name], let p = param as? Float3Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_float4) {
+        if let param = paramsMap[name], let p = param as? Float4Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: Int) {
+        if let param = paramsMap[name], let p = param as? IntParameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_int2) {
+        if let param = paramsMap[name], let p = param as? Int2Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_int3) {
+        if let param = paramsMap[name], let p = param as? Int3Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: simd_int4) {
+        if let param = paramsMap[name], let p = param as? Int4Parameter {
+            p.value = value
+        }
+    }
+
+    public func set(_ name: String, _ value: Bool) {
+        if let param = paramsMap[name], let p = param as? BoolParameter {
+            p.value = value
+        }
+    }
+
+    public func get(_ name: String) -> Parameter? {
+        return paramsMap[name]
+    }
 }
 
 extension ParameterGroup: Equatable {

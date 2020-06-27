@@ -156,7 +156,6 @@ open class TextureComputeSystem {
             _index = 0
             _setupTextures = false
         }
-
         
         let count = textures.count
         if count > 0, (resetPipeline != nil || updatePipeline != nil), let computeEncoder = commandBuffer.makeComputeCommandEncoder() {

@@ -10,7 +10,7 @@ import simd
 open class PointGeometry: Geometry {
     public override init() {
         super.init()
-        self.setup()
+        self.setupData()
     }
 
     func setupData() {

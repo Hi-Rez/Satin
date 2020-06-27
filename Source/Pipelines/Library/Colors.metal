@@ -23,6 +23,13 @@ float3 temperature(float n) {
     );
 }
 
+float3 spectrum( float f )
+{
+    f = f * 3.0 - 1.5;
+    return pow( saturate( float3( -f, 1.0 - abs( f ), f ) ), 1.0 / 2.2 );
+}
+
+
 // Copyright 2019 Google LLC.
 // SPDX-License-Identifier: Apache-2.0
 

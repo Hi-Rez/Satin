@@ -1,19 +1,19 @@
 //
-//  ComputeSystem.swift
+//  BufferComputeSystem.swift
 //  Satin
 //
 //  Created by Reza Ali on 4/13/20.
 //
 
-#if os(iOS) || os(macOS)
-
 import Metal
 
-open class ComputeSystem {
+open class BufferComputeSystem {
     var _reset: Bool = true
     var _setupBuffers: Bool = false
     var _index: Int = 0
     var _count: Int = 0
+
+    private var _useDispatchThreads: Bool = false
 
     public var count: Int = 0 {
         didSet {
@@ -71,6 +71,31 @@ open class ComputeSystem {
         self.context = context
         self.count = count
         self._count = count
+        setup()
+    }
+
+    private func setup() {
+        checkFeatures()
+    }
+
+    private func checkFeatures() {
+        _useDispatchThreads = false
+        let device = context.device
+        if #available(macOS 10.15, iOS 13, tvOS 13, *) {
+            if device.supportsFamily(.common3) || device.supportsFamily(.apple4) || device.supportsFamily(.apple5) || device.supportsFamily(.mac1) || device.supportsFamily(.mac2) {
+                _useDispatchThreads = true
+            }
+        } else {
+            #if os(macOS)
+            if device.supportsFeatureSet(.macOS_GPUFamily1_v1) || device.supportsFeatureSet(.macOS_GPUFamily2_v1) {
+                _useDispatchThreads = true
+            }
+            #elseif os(iOS)
+            if device.supportsFeatureSet(.iOS_GPUFamily4_v1) || device.supportsFeatureSet(.iOS_GPUFamily5_v1) {
+                _useDispatchThreads = true
+            }
+            #endif
+        }
     }
 
     deinit {
@@ -171,12 +196,35 @@ open class ComputeSystem {
         return (buffer: bufferIndex, texture: 0)
     }
 
-    func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    private func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+        #if os(iOS) || os(macOS)
+        if _useDispatchThreads {
+            _dispatchThreads(computeEncoder, pipeline)
+        } else {
+            _dispatchThreadgroups(computeEncoder, pipeline)
+        }
+        #elseif os(tvOS)
+        _dispatchThreadgroups(computeEncoder, pipeline)
+        #endif
+    }
+
+    #if os(iOS) || os(macOS)
+    private func _dispatchThreads(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         let gridSize = MTLSizeMake(_count, 1, 1)
         var threadGroupSize = pipeline.maxTotalThreadsPerThreadgroup
         threadGroupSize = threadGroupSize > _count ? _count : threadGroupSize
         let threadsPerThreadgroup = MTLSizeMake(threadGroupSize, 1, 1)
         computeEncoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadsPerThreadgroup)
+    }
+    #endif
+
+    private func _dispatchThreadgroups(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+        let m = pipeline.maxTotalThreadsPerThreadgroup
+        let threadsPerThreadgroup = MTLSizeMake(m, 1, 1)
+        let threadgroupsPerGrid = MTLSize(width: (count + m - 1) / m,
+                                          height: 1,
+                                          depth: 1)
+        computeEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
     }
 
     func ping() -> Int {
@@ -191,5 +239,3 @@ open class ComputeSystem {
         _index = (_index + 1) % 2
     }
 }
-
-#endif
