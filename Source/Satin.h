@@ -16,5 +16,8 @@ FOUNDATION_EXPORT const unsigned char SatinVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Satin/PublicHeader.h>
 
-#include "Vertex.h"
-#include "GeometryUtilities.h"
+#include "Types.h"
+#include "Geometry.h"
+#include "Generators.h"
+#include "Bezier.h"
+#include "Triangulator.h"

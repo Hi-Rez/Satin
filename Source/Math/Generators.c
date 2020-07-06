@@ -1,22 +1,14 @@
 //
-//  GeometryUtilities.c
+//  Generators.c
 //  Satin
 //
 //  Created by Reza Ali on 6/5/20.
 //
 
-#include "GeometryUtilities.h"
+#include "Generators.h"
 
 #include <malloc/_malloc.h>
 #include <simd/simd.h>
-
-void freeGeometryData(GeometryData geometry) {
-    if (geometry.vertexCount > 0 && geometry.vertexData == NULL) { return; }
-    free(geometry.vertexData);
-
-    if (geometry.indexCount > 0 && geometry.indexData == NULL) { return; }
-    free(geometry.indexData);
-}
 
 GeometryData generateIcoSphereGeometryData(float radius, int res) {
     const float phi = (1.0 + sqrt(5)) * 0.5;

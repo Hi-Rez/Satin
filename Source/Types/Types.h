@@ -1,15 +1,21 @@
 //
-//  GeometryUtilities.h
+//  Types.h
 //  Satin
 //
-//  Created by Reza Ali on 6/5/20.
+//  Created by Reza Ali on 6/4/20.
 //
 
-#ifndef GeometryUtilities_h
-#define GeometryUtilities_h
+#ifndef Vertex_h
+#define Vertex_h
 
-#include <stdio.h>
-#include "Vertex.h"
+#include <stdbool.h>
+#include <simd/simd.h>
+
+typedef struct {
+    simd_float4 position;
+    simd_float3 normal;
+    simd_float2 uv;
+} Vertex;
 
 typedef struct {
     uint32_t i0;
@@ -26,6 +32,4 @@ typedef struct {
 
 void freeGeometryData( GeometryData geometry );
 
-GeometryData generateIcoSphereGeometryData(float radius, int res);
-
-#endif /* GeometryUtilities_h */
+#endif /* Types_h */
