@@ -363,7 +363,7 @@ public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, 
 
 // based on http://antigrain.com/research/adaptive_bezier/
 // based on https://github.com/mattdesl/adaptive-quadratic-curve/
-public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ pts: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.0125, _ angleTolerance: Float = 0.1, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
+public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ pts: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.05, _ angleTolerance: Float = 1.0, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
     if level > maxLevel {
         return
     }
@@ -378,11 +378,13 @@ public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_floa
     
     if dist > .ulpOfOne {
         if dist < _distanceTolerance {
-            let da = quadraticAngle(a, b, c)
-            if da < angleTolerance {
-                pts.append(abc)
-                return
-            }
+            pts.append(abc)
+            return
+//            let da = quadraticAngle(a, b, c)
+//            if da < angleTolerance {
+//                pts.append(abc)
+//                return
+//            }
         }
     }
     else {
