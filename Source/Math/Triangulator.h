@@ -10,6 +10,6 @@
 
 #include "Types.h"
 
-void triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
+int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
 
 #endif /* Triangulator_h */

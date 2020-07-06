@@ -414,10 +414,7 @@ bool combineOuterAndInnerPaths(tsPath *outerPath, tsPath *innerPath, tsVertex *p
 }
 
 // added represents the number of addition verticies added to connect an outer path to an inner path
-TriangulationData _triangulate(tsVertex *vertices, int count, int added) {
-
-    TriangulationData data = (TriangulationData){.indexCount = 0, .indexData = NULL };
-
+int _triangulate(tsVertex *vertices, int count, int added, TriangulationData *data) {
     printf("\n\n\n");
     int ears = initalizeEars(vertices);
     if (ears == 0) {
@@ -427,8 +424,8 @@ TriangulationData _triangulate(tsVertex *vertices, int count, int added) {
     printf("\n\n\n");
 
     int triangleIndex = 0;
-    data.indexCount = count + added - 2;
-    data.indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * data.indexCount);
+    data->indexCount = count + added - 2;
+    data->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * data->indexCount);
 
     tsVertex *v0, *v1, *v2 = vertices, *v3, *v4;
     int n = count + added;
@@ -458,7 +455,7 @@ TriangulationData _triangulate(tsVertex *vertices, int count, int added) {
 
         if (nCache > 1 && indexCache > 1) {
             printf("\n\n\nbreaking at n: %d index: %d\n\n\n", n, v2->index);
-            break;
+            return 1;
         }
 
         printf("\nIndex: %d, %d\n", v2->index, n);
@@ -473,8 +470,7 @@ TriangulationData _triangulate(tsVertex *vertices, int count, int added) {
                 printf("\nAdding Triangle: %d, %d, %d\n", v1->index, v2->index, v3->index);
 
                 // add triangle
-                data.indexData[triangleIndex] =
-                    (TriangleIndices){.i0 = v1->index, .i1 = v2->index, .i2 = v3->index };
+                data->indexData[triangleIndex] = (TriangleIndices){.i0 = v1->index, .i1 = v2->index, .i2 = v3->index };
                 triangleIndex++;
 
                 v1->ear = _isDiagonal(vertices, v0, v3);
@@ -495,16 +491,17 @@ TriangulationData _triangulate(tsVertex *vertices, int count, int added) {
     v3 = v2->next;
     v1 = v2->prev;
     printf("\nAdding Triangle: %d, %d, %d\n", v1->index, v2->index, v3->index);
-    data.indexData[triangleIndex] =
+    data->indexData[triangleIndex] =
         (TriangleIndices){.i0 = v1->index, .i1 = v2->index, .i2 = v3->index };
     triangleIndex++;
 
-    return data;
+    return 0;
 }
 
-void triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData) {
+int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData) {
     printf("number of paths:%d\n", count);
 
+    int success = 0;
     GeometryData geometryData =
         (GeometryData){.vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL };
 
@@ -612,9 +609,10 @@ void triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gDa
         }
 
         if (triangulate) {
-            printf("Doing Triangulation for path: %d, clockwise: %d\n", path->index,
+            printf("Triangulating path: %d, clockwise: %d\n", path->index,
                    path->clockwise);
-            TriangulationData triData = _triangulate(path->v, path->length, path->added);
+            TriangulationData triData = (TriangulationData) { .indexCount = 0, .indexData = NULL };
+            success += _triangulate(path->v, path->length, path->added, &triData);
             appendTriangulationData(&geometryData, &triData);
             freeTriangulationData(triData);
         }
@@ -627,4 +625,6 @@ void triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gDa
         free(pData);
     }
     if (poolLength > 0) { free(pool); }
+    
+    return success;
 }
