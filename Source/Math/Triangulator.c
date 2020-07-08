@@ -338,7 +338,7 @@ bool combineOuterAndInnerPaths(tsPath *outerPath, tsPath *innerPath, tsVertex *p
             intersectionCount++;
             float dist = pointLineDistance2(outer->v, outer->next->v, rightInner->v);
             printf("intersection %d, %d time: %f\n", outer->index, outer->next->index, dist);
-            if (dist < intersectionDistance) {
+            if (dist <= intersectionDistance) {
                 intersectionDistance = dist;
                 tsVertex *candidate = outer->v.x >= outer->next->v.x ? outer : outer->next;
                 // in case the intersection happens right on the vertex
