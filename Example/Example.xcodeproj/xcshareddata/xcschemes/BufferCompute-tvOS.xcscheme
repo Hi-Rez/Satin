@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E12EDEA324A6E31B00E58E58"
-               BuildableName = "BufferCompute-tvOS.app"
+               BuildableName = "BufferCompute.app"
                BlueprintName = "BufferCompute-tvOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E12EDEA324A6E31B00E58E58"
-            BuildableName = "BufferCompute-tvOS.app"
+            BuildableName = "BufferCompute.app"
             BlueprintName = "BufferCompute-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E12EDEA324A6E31B00E58E58"
-            BuildableName = "BufferCompute-tvOS.app"
+            BuildableName = "BufferCompute.app"
             BlueprintName = "BufferCompute-tvOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

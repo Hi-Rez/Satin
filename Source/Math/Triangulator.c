@@ -357,9 +357,9 @@ bool combineOuterAndInnerPaths(tsPath *outerPath, tsPath *innerPath, tsVertex *p
     printf("\nIntersections: %d at: %d\n\n", intersectionCount,
            rightOuter == NULL ? -1 : rightOuter->index);
 
-    //    if (intersectionCount %2 == 0) {
-    //        rightOuter = NULL;
-    //    }
+    if (intersectionCount %2 == 0) {
+        rightOuter = NULL;
+    }
 
     printf("right most inner index: %d %f %f\n", rightInner->index, rightInner->v.x,
            rightInner->v.y);
@@ -419,7 +419,7 @@ int _triangulate(tsVertex *vertices, int count, int added, TriangulationData *da
     int ears = initalizeEars(vertices);
     if (ears == 0) {
         printf("invalid polygon\n");
-        return data;
+        return 1;
     }
     printf("\n\n\n");
 

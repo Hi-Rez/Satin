@@ -78,7 +78,6 @@ class Renderer: Forge.Renderer {
     var startTime: CFAbsoluteTime = 0.0
     
     // MARK: Render to Texture
-    
     var renderTexture: MTLTexture!
     var updateRenderTexture: Bool = true
     
