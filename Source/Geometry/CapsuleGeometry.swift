@@ -72,7 +72,7 @@ open class CapsuleGeometry: Geometry {
                 case .y:
                     position = simd_make_float4(x, y + halfHeight, z, 1.0)
                 case .z:
-                    position = simd_make_float4(x, z, y + halfHeight, 1.0)
+                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
                 }
                 
                 vertexData.append(
@@ -95,6 +95,7 @@ open class CapsuleGeometry: Geometry {
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
+                    
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(br))
                     indexData.append(UInt32(bl))
@@ -126,7 +127,7 @@ open class CapsuleGeometry: Geometry {
                 case .y:
                     position = simd_make_float4(x, y - halfHeight, z, 1.0)
                 case .z:
-                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
+                    position = simd_make_float4(x, z, y + halfHeight, 1.0)
                 }
                 
                 vertexData.append(
@@ -149,6 +150,7 @@ open class CapsuleGeometry: Geometry {
                     indexData.append(UInt32(tl))
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(tr))
+                    
                     indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(br))
@@ -177,7 +179,7 @@ open class CapsuleGeometry: Geometry {
                 case .y:
                     position = simd_make_float4(x, y - halfHeight, z, 1.0)
                 case .z:
-                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
+                    position = simd_make_float4(z, x, y - halfHeight, 1.0)
                 }
                 
                 vertexData.append(

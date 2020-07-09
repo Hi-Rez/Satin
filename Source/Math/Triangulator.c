@@ -323,31 +323,26 @@ bool combineOuterAndInnerPaths(tsPath *outerPath, tsPath *innerPath, tsVertex *p
     //        return false;
     //    }
 
-    tsVertex *rightOuter = NULL;
+    tsVertex *rightOuter = NULL;    
     tsVertex *outer = oData;
 
     float intersectionDistance = FLT_MAX;
     simd_float2 rightInnerPosExt = rightInner->v + simd_make_float2(FLT_MAX - rightInner->v.x, 0.0);
     int intersectionCount = 0;
     do {
-        //        if (intersects(rightInner->v, rightInnerPosExt, outer->v, outer->next->v)) {
-        if (!isColinear2(rightInner->v, outer->v, outer->next->v) &&
-            intersects(rightInner->v, rightInnerPosExt, outer->v, outer->next->v)) {
-            printf("\nIntersection at: %d %d %d\n\n", rightInner->index, outer->index,
-                   outer->next->index);
+        if (!isColinear2(rightInner->v, outer->v, outer->next->v) && intersects(rightInner->v, rightInnerPosExt, outer->v, outer->next->v)) {
+            
             intersectionCount++;
+            if(rightOuter != NULL && isColinear2(rightInner->v, rightOuter->next->v, outer->v)) {
+                intersectionCount--;
+            }
+            
             float dist = pointLineDistance2(outer->v, outer->next->v, rightInner->v);
             printf("intersection %d, %d time: %f\n", outer->index, outer->next->index, dist);
             if (dist <= intersectionDistance) {
                 intersectionDistance = dist;
-                tsVertex *candidate = outer->v.x >= outer->next->v.x ? outer : outer->next;
                 // in case the intersection happens right on the vertex
-                if (rightOuter == candidate) {
-                    printf("edge case: %d, %d, %f\n", outer->index, outer->next->index, dist);
-                    intersectionCount--;
-                } else {
-                    rightOuter = candidate;
-                }
+                rightOuter = outer;
             }
             printf("found an intersection: %d, %d, %f\n", outer->index, outer->next->index, dist);
         }
