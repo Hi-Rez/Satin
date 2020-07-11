@@ -58,6 +58,10 @@ open class Geometry {
         }
     }
     
+    func update() {
+    
+    }
+    
     func setupVertexBuffer() {
         guard let context = self.context else { return }
         let device = context.device

@@ -10,6 +10,7 @@
 #include <float.h>
 #include <string.h>
 #include <math.h>
+#include <malloc/_malloc.h>
 
 #include "Triangulator.h"
 #include "Geometry.h"
@@ -142,17 +143,15 @@ tsVertex *createVertexStructure(simd_float2 *path, int length, int indexOffset, 
 
 tsPath *createPathStructure(simd_float2 **paths, int *lengths, int count, int indexOffset,
                             GeometryData *data) {
-
-    for (int i = 0; i < count; i++) {
-        int length = lengths[i];
-        simd_float2 *path = paths[i];
-        printf("createPathStructure Path Index: %d, Length: %d\n", i, length);
-        for (int j = 0; j < length; j++) {
-            printf("(%f, %f)\n", path[j].x, path[j].y);
-        }
-        printf("\n");
-    }
-
+//    for (int i = 0; i < count; i++) {
+//        int length = lengths[i];
+//        simd_float2 *path = paths[i];
+//        printf("createPathStructure Path Index: %d, Length: %d\n", i, length);
+//        for (int j = 0; j < length; j++) {
+//            printf("(%f, %f)\n", path[j].x, path[j].y);
+//        }
+//        printf("\n");
+//    }
     tsPath *result = (tsPath *)malloc(sizeof(tsPath) * count);
     int localOffset = 0;
     for (int i = 0; i < count; i++) {

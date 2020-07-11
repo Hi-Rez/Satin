@@ -117,6 +117,7 @@ open class Mesh: Object {
     }
     
     open override func update() {
+        geometry.update()
         material?.update()
         updateUniformsBuffer()
         super.update()

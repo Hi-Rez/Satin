@@ -5,6 +5,8 @@
 //  Created by Reza Ali on 7/5/20.
 //
 
+#include <malloc/_malloc.h>
+
 #include "Types.h"
 
 void freeGeometryData(GeometryData geometry) {

@@ -217,36 +217,6 @@ public func orthographic(left: Float, right: Float, bottom: Float, top: Float, n
 
 // MARK: - Sample Cubic Bezier
 
-// public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ d: simd_float2, _ pts: inout [simd_float2], _ level: Int, _ maxLevel: Int = 16)
-// {
-//    if level > maxLevel
-//    {
-//        return
-//    }
-//
-//    let ab = (a + b) * 0.5
-//    let bc = (b + c) * 0.5
-//    let cd = (c + d) * 0.5
-//    let abc = (ab + bc) * 0.5
-//    let bcd = (bc + cd) * 0.5
-//    let abcd = (abc + bcd) * 0.5
-//
-//    if level > 0 {
-//        let adDist = length(d - a)
-//        let bDist = pointLineDistance2(a, d, b)
-//        let cDist = pointLineDistance2(a, d, c)
-//        let m_distance_tolerance: Float = 0.01
-//        if (cDist + bDist) < m_distance_tolerance * adDist
-//        {
-//            pts.append(abcd)
-//            return
-//        }
-//    }
-//
-//    adaptiveCubic(a, ab, abc, abcd, &pts, level + 1)
-//    adaptiveCubic(abcd, bcd, cd, d, &pts, level + 1)
-// }
-
 public func quadraticAngle(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2) -> Float {
     let ab = b - a
     let bc = c - b
@@ -276,7 +246,7 @@ public func cubicAngle(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ d
 
 // based on http://antigrain.com/research/adaptive_bezier/
 // based on https://github.com/mattdesl/adaptive-bezier-curve
-public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ d: simd_float2, _ pts: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.0125, _ angleTolerance: Float = 0.1, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
+public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ d: simd_float2, _ points: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.0125, _ angleTolerance: Float = 0.1, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
     if level > maxLevel {
         return
     }
@@ -299,16 +269,16 @@ public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, 
         if bDist > .ulpOfOne, cDist > .ulpOfOne {
             if (cDist + bDist) < _distanceTolerance {
                 if (da1 + da2) < angleTolerance {
-                    pts.append(abcd)
+                    points.append(abcd)
                     return
                 }
                 if cuspLimit != 0.0 {
                     if da1 > cuspLimit {
-                        pts.append(b)
+                        points.append(b)
                         return
                     }
                     if da2 > cuspLimit {
-                        pts.append(c)
+                        points.append(c)
                         return
                     }
                 }
@@ -318,13 +288,13 @@ public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, 
             if bDist > .ulpOfOne {
                 if bDist <= _distanceTolerance {
                     if da1 < angleTolerance {
-                        pts.append(b)
-                        pts.append(c)
+                        points.append(b)
+                        points.append(c)
                         return
                     }
                     if cuspLimit != 0.0 {
                         if da1 > cuspLimit {
-                            pts.append(b)
+                            points.append(b)
                             return
                         }
                     }
@@ -333,13 +303,13 @@ public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, 
             else if cDist > .ulpOfOne {
                 if cDist <= _distanceTolerance {
                     if da2 < angleTolerance {
-                        pts.append(b)
-                        pts.append(c)
+                        points.append(b)
+                        points.append(c)
                         return
                     }
                     if cuspLimit != 0.0 {
                         if da2 > cuspLimit {
-                            pts.append(c)
+                            points.append(c)
                             return
                         }
                     }
@@ -348,22 +318,22 @@ public func adaptiveCubic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, 
             else {
                 let mc = abcd - (a + d) * 0.5
                 if simd_length_squared(mc) <= _distanceTolerance {
-                    pts.append(abcd)
+                    points.append(abcd)
                     return
                 }
             }
         }
     }
 
-    adaptiveCubic(a, ab, abc, abcd, &pts, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
-    adaptiveCubic(abcd, bcd, cd, d, &pts, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
+    adaptiveCubic(a, ab, abc, abcd, &points, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
+    adaptiveCubic(abcd, bcd, cd, d, &points, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
 }
 
 // MARK: - Sample Quadratic Bezier
 
 // based on http://antigrain.com/research/adaptive_bezier/
 // based on https://github.com/mattdesl/adaptive-quadratic-curve/
-public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ pts: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.05, _ angleTolerance: Float = 1.0, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
+public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_float2, _ points: inout [simd_float2], _ level: Int, _ distanceTolerance: Float = 0.05, _ angleTolerance: Float = 1.0, _ cuspLimit: Float = 0.235, _ maxLevel: Int = 16) {
     if level > maxLevel {
         return
     }
@@ -378,7 +348,7 @@ public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_floa
     
     if dist > .ulpOfOne {
         if dist < _distanceTolerance {
-            pts.append(abc)
+            points.append(abc)
             return
 //            let da = quadraticAngle(a, b, c)
 //            if da < angleTolerance {
@@ -390,16 +360,16 @@ public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_floa
     else {
         let mc = abc - (a + c) * 0.5
         if simd_length(mc) <= _distanceTolerance {
-            pts.append(abc)
+            points.append(abc)
             return
         }
     }
 
-    adaptiveQuadratic(a, ab, abc, &pts, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
-    adaptiveQuadratic(abc, bc, c, &pts, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
+    adaptiveQuadratic(a, ab, abc, &points, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
+    adaptiveQuadratic(abc, bc, c, &points, level + 1, distanceTolerance, angleTolerance, cuspLimit, maxLevel)
 }
 
-public func adaptiveLinear(_ a: simd_float2, _ b: simd_float2, _ pts: inout [simd_float2], _ distanceThreshold: Float, _ minSegments: Int = 3, _ addLast: Bool = true) {
+public func adaptiveLinear(_ a: simd_float2, _ b: simd_float2, _ points: inout [simd_float2], _ distanceThreshold: Float, _ minSegments: Int = 3, _ addLast: Bool = true) {
     let distance = length(a - b)
     if distance > distanceThreshold {
         let segments = max(minSegments, Int(ceil(distance / distanceThreshold)))
@@ -408,7 +378,7 @@ public func adaptiveLinear(_ a: simd_float2, _ b: simd_float2, _ pts: inout [sim
         let through = addLast ? 1.0 : 1.0 - by
         let times = stride(from: from, through: through, by: by)
         for time in times {
-            pts.append(mix(a, b, t: Float(time)))
+            points.append(mix(a, b, t: Float(time)))
         }
     }
     else {
@@ -418,7 +388,66 @@ public func adaptiveLinear(_ a: simd_float2, _ b: simd_float2, _ pts: inout [sim
         let through = addLast ? 1.0 : 1.0 - by
         let times = stride(from: from, through: through, by: by)
         for time in times {
-            pts.append(mix(a, b, t: Float(time)))
+            points.append(mix(a, b, t: Float(time)))
+        }
+    }
+}
+public func cgPathToPoints(_ path: CGPath, _ paths: inout [[simd_float2]], _ maxStraightDistance: Float = 1.0)
+{
+    var currentPath: [simd_float2] = []
+    path.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
+        let element = elementPtr.pointee
+        var pointsPtr = element.points
+        let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+        
+        switch element.type {
+        case .moveToPoint:
+            print("moveToPoint:\(pt)")
+            currentPath.append(pt)
+            
+        case .addLineToPoint:
+            print("addLineToPoint:\(pt)")
+            let a = currentPath[currentPath.count - 1]
+            adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
+            
+        case .addQuadCurveToPoint:
+            let a = currentPath[currentPath.count - 1]
+            let b = pt
+            pointsPtr += 1
+            let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+            print("addQuadCurveToPoint: \(a), \(b), \(c)")
+            
+            adaptiveQuadratic(a, b, c, &currentPath, 0)
+            currentPath.append(c)
+            
+        case .addCurveToPoint:
+            let a = currentPath[currentPath.count - 1]
+            let b = pt
+            pointsPtr += 1
+            let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+            pointsPtr += 1
+            let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+            print("addCurveToPoint: \(a), \(b), \(c), \(d)")
+            
+            adaptiveCubic(a, b, c, d, &currentPath, 0)
+            currentPath.append(d)
+            
+        case .closeSubpath:
+            print("closeSubpath")
+            // remove repeated last point
+            var a = currentPath[currentPath.count - 1]
+            let b = currentPath[0]
+            if isEqual2(a, b) {
+                currentPath.remove(at: currentPath.count - 1)
+            }
+            a = currentPath[currentPath.count - 1]
+            // sample start and end
+            adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
+            paths.append(currentPath)
+            currentPath = []
+            
+        default:
+            break
         }
     }
 }
