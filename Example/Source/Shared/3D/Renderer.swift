@@ -1,13 +1,10 @@
 //
 //  Renderer.swift
-//  Example Shared
+//  Example
 //
-//  Created by Reza Ali on 8/22/19.
-//  Copyright © 2019 Reza Ali. All rights reserved.
+//  Created by Reza Ali on 6/27/20.
+//  Copyright © 2020 Hi-Rez. All rights reserved.
 //
-
-import CoreGraphics
-import CoreText
 
 import Metal
 import MetalKit
@@ -16,7 +13,23 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
-    var scene = Object()
+    #if os(macOS) || os(iOS)
+    lazy var raycaster: Raycaster = {
+        Raycaster(context: context)
+    }()
+    #endif
+    
+    lazy var mesh: Mesh = {
+//        Mesh(geometry: BoxGeometry(), material: UvColorMaterial())
+//         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial(true))
+        Mesh(geometry: BoxGeometry(), material: BasicColorMaterial(simd_make_float4(1.0, 0.0, 0.0, 1.0)))
+    }()
+    
+    lazy var scene: Object = {
+        let scene = Object()
+        scene.add(mesh)
+        return scene
+    }()
     
     lazy var context: Context = {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -24,9 +37,9 @@ class Renderer: Forge.Renderer {
     
     lazy var camera: ArcballPerspectiveCamera = {
         let camera = ArcballPerspectiveCamera()
-        camera.position = simd_make_float3(0.0, 0.0, 40.0)
+        camera.position = simd_make_float3(0.0, 0.0, 9.0)
         camera.near = 0.001
-        camera.far = 1000.0
+        camera.far = 100.0
         return camera
     }()
     
@@ -35,9 +48,7 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var renderer: Satin.Renderer = {
-        let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
-        renderer.clearColor = .init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        return renderer
+        Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
     
     required init?(metalKitView: MTKView) {
@@ -47,53 +58,28 @@ class Renderer: Forge.Renderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
+        #if os(iOS)
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            metalKitView.preferredFramesPerSecond = 120
+        case .phone:
+            metalKitView.preferredFramesPerSecond = 60
+        case .unspecified:
+            metalKitView.preferredFramesPerSecond = 60
+        case .tv:
+            metalKitView.preferredFramesPerSecond = 60
+        case .carPlay:
+            metalKitView.preferredFramesPerSecond = 60
+        @unknown default:
+            metalKitView.preferredFramesPerSecond = 60
+        }
+        #else
         metalKitView.preferredFramesPerSecond = 60
+        #endif
     }
     
     override func setup() {
-        setupText()
-    }
-    
-    func setupText() {
-        let input = "HELLO\nWORLD"
-        
-        /*
-         Times
-         AvenirNext-UltraLight
-         Helvetica
-         SFMono-HeavyItalic
-         SFProRounded-Thin
-         SFProRounded-Heavy
-         */
-        
-        let geo = TextGeometry(
-            text: input,
-            fontName: "SFProRounded-Heavy",
-            fontSize: 8,
-            bounds: CGSize(width: -1, height: -1),
-            pivot:[0,0],
-            textAlignment: .center,
-            verticalAlignment: .center
-        )
-        
-        let mat = BasicColorMaterial([1.0, 1.0, 1.0, 0.25], .additive)
-        mat.depthWriteEnabled = false
-        let mesh = Mesh(geometry: geo, material: mat)
-        scene.add(mesh)
-                
-        let pGeo = Geometry()
-        pGeo.vertexData = geo.vertexData
-        pGeo.primitiveType = .point
-        let pmat = BasicPointMaterial([1, 1, 1, 0.5], 6, .alpha)
-        pmat.depthWriteEnabled = false
-        let pmesh = Mesh(geometry: pGeo, material: pmat)
-        scene.add(pmesh)
-        
-        let fmat = BasicColorMaterial([1, 1, 1, 0.125], .additive)
-        fmat.depthWriteEnabled = false
-        let fmesh = Mesh(geometry: geo, material: fmat)
-        fmesh.triangleFillMode = .lines
-        scene.add(fmesh)
+        // Setup things here
     }
     
     override func update() {
@@ -109,5 +95,43 @@ class Renderer: Forge.Renderer {
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
+    }
+    
+    #if !targetEnvironment(simulator)
+    #if os(macOS)
+    override func mouseDown(with event: NSEvent) {
+        let m = event.locationInWindow
+        let pt = normalizePoint(m, mtkView.frame.size)
+        raycaster.setFromCamera(camera, pt)
+        let results = raycaster.intersect(scene)
+        for result in results {
+            print(result.object.label)
+            print(result.position)
+        }
+    }
+    
+    #elseif os(iOS)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let first = touches.first {
+            let point = first.location(in: mtkView)
+            let size = mtkView.frame.size
+            let pt = normalizePoint(point, size)
+            raycaster.setFromCamera(camera, pt)
+            let results = raycaster.intersect(scene, true)
+            for result in results {
+                print(result.object.label)
+                print(result.position)
+            }
+        }
+    }
+    #endif
+    #endif
+    
+    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
+        #if os(macOS)
+        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
+        #else
+        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
+        #endif
     }
 }
