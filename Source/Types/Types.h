@@ -30,6 +30,7 @@ typedef struct {
     TriangleIndices *indexData;
 } GeometryData;
 
-void freeGeometryData( GeometryData geometry );
+void freeGeometryData( GeometryData *data );
+void combineGeometryData( GeometryData *dest, GeometryData *src, simd_float3 offset );
 
 #endif /* Types_h */

@@ -23,7 +23,7 @@ open class IcoSphereGeometry: Geometry {
     }
     
     func setupData(radius: Float, res: Int) {
-        let geometryData = generateIcoSphereGeometryData(radius, Int32(res))
+        var geometryData = generateIcoSphereGeometryData(radius, Int32(res))
         let vertexCount = Int(geometryData.vertexCount)
         if vertexCount > 0, let data = geometryData.vertexData {
             vertexData = Array(UnsafeBufferPointer(start: data, count: vertexCount))
@@ -35,6 +35,6 @@ open class IcoSphereGeometry: Geometry {
                 indexData = Array(UnsafeBufferPointer(start: ptr, count: indexCount))
             }
         }
-        freeGeometryData(geometryData)
+        freeGeometryData(&geometryData)
     }
 }

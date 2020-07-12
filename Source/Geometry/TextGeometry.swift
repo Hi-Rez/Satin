@@ -17,7 +17,7 @@ open class TextGeometry: Geometry {
     var verticalAlignment: VerticalAlignment = .center {
         didSet {
             if verticalAlignment != oldValue {
-                needsLayout = true
+                needsSetup = true
             }
         }
     }
@@ -25,7 +25,7 @@ open class TextGeometry: Geometry {
     var textAlignment: CTTextAlignment = .natural {
         didSet {
             if textAlignment != oldValue {
-                needsLayout = true
+                needsSetup = true
             }
         }
     }
@@ -41,7 +41,7 @@ open class TextGeometry: Geometry {
     public var pivot: simd_float2 = simd_float2(repeating: 0.0) {
         didSet {
             if pivot != oldValue {
-                needsLayout = true
+                needsSetup = true
             }
         }
     }
@@ -66,6 +66,7 @@ open class TextGeometry: Geometry {
         didSet {
             if fontName != oldValue {
                 ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
+                clearGeometryCache()
                 needsSetup = true
             }
         }
@@ -75,6 +76,7 @@ open class TextGeometry: Geometry {
         didSet {
             if fontSize != oldValue {
                 ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
+                clearGeometryCache()
                 needsSetup = true
             }
         }
@@ -124,6 +126,20 @@ open class TextGeometry: Geometry {
         Float(CTFontGetXHeight(ctFont))
     }
     
+    public var suggestFrameSize: CGSize? {
+        guard let attributedText = attributedText else { return nil }
+        var bnds = bounds
+        if bnds.width < 0 {
+            bnds.width = CGFloat.greatestFiniteMagnitude
+        }
+        if bnds.height < 0 {
+            bnds.height = CGFloat.greatestFiniteMagnitude
+        }
+        
+        let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
+        return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
+    }
+    
     private var attributedText: CFAttributedString? {
         // Text Attributes
         let attributes: [NSAttributedString.Key: Any] = [
@@ -146,25 +162,9 @@ open class TextGeometry: Geometry {
         return attributedText
     }
     
-    public var suggestFrameSize: CGSize? {
-        guard let attributedText = attributedText else { return nil }
-        var bnds = bounds
-        if bnds.width < 0 {
-            bnds.width = CGFloat.greatestFiniteMagnitude
-        }
-        if bnds.height < 0 {
-            bnds.height = CGFloat.greatestFiniteMagnitude
-        }
-        
-        let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
-        return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
-    }
-    
     private var ctFont: CTFont
-    private var needsSetup: Bool = true
-    private var needsLayout: Bool = false
-    
-    private var geometryCache: [String: GeometryData] = [:]
+    private var needsSetup: Bool = false
+    private var geometryCache: [CGGlyph: GeometryData] = [:]
     
     public init(text: String, fontName: String, fontSize: Float, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0) {
         self.text = text
@@ -177,6 +177,7 @@ open class TextGeometry: Geometry {
         self.kern = kern
         self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
         super.init()
+        setupData()
     }
     
     override func update() {
@@ -184,17 +185,13 @@ open class TextGeometry: Geometry {
             setupData()
             needsSetup = false
         }
-        if needsLayout {
-            setupLayout()
-            needsLayout = false
-        }
     }
     
     func setupData() {
-        var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
         let maxStraightDistance = Float(fontSize / 10.0)
-        
+        var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
         if let attributedString = self.attributedText {
+            // Calculate Suggested Bounds
             var bnds = bounds
             if bnds.width < 0 {
                 bnds.width = CGFloat.greatestFiniteMagnitude
@@ -205,7 +202,6 @@ open class TextGeometry: Geometry {
             
             let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
             let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
-            print("suggestedSize: \(suggestedSize)")
             
             bnds.width = suggestedSize.width
             bnds.height = suggestedSize.height
@@ -219,42 +215,26 @@ open class TextGeometry: Geometry {
             var origins: [CGPoint] = Array(repeating: CGPoint(), count: lines.count)
             CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &origins)
             
-            let lineSpacing: CGFloat = origins.count > 1 ? abs(origins[1].y - origins[0].y) : CGFloat(lineHeight)
-            print("Line Spacing: \(lineSpacing)")
-            
             let pvt = pivot * 0.5 + 0.5
             let pivotOffsetX: CGFloat = (bounds.width >= 0 ? bounds.width : bnds.width) * CGFloat(pvt.x)
             let pivotOffsetY: CGFloat = (bounds.height >= 0 ? bounds.height : bnds.height) * CGFloat(pvt.y)
             
+            var verticalOffset: CGFloat
+            switch verticalAlignment {
+            case .top:
+                verticalOffset = 0
+            case .center:
+                verticalOffset = ((bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height) * 0.5
+            case .bottom:
+                verticalOffset = (bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height
+            }
+                        
             for (lineIndex, line) in lines.enumerated() {
                 let origin = origins[lineIndex]
-                
-                let rect = CTLineGetBoundsWithOptions(line, .useGlyphPathBounds)
-                print("Rect: \(rect)")
-                print("Origin: \(origin)")
-//                print("Line: \(line)")
-                
-                let imageBounds = CTLineGetImageBounds(line, nil)
-                print("ImageBounds: \(imageBounds)")
-                
-                var ascent: CGFloat = 0
-                var decent: CGFloat = 0
-                var leading: CGFloat = 0
-                let typographicBounds = CTLineGetTypographicBounds(line, &ascent, &decent, &leading)
-                print("TypographicBounds: \(typographicBounds)")
-                print("ascent: \(ascent)")
-                print("decent: \(decent)")
-                print("leading: \(leading)")
-                
-                let whitespaceWidth = CTLineGetTrailingWhitespaceWidth(line)
-                print("whitespaceWidth: \(whitespaceWidth)")
-                
                 let runs: [CTRun] = CTLineGetGlyphRuns(line) as! [CTRun]
-                for (runIndex, run) in runs.enumerated() {
-                    print("run: \(run), index: \(runIndex)")
-                    
+                
+                for run in runs {
                     let glyphCount = CTRunGetGlyphCount(run)
-                    print("glyphCount: \(glyphCount)")
                     
                     let glyphPositions = UnsafeMutablePointer<CGPoint>.allocate(capacity: glyphCount)
                     CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions)
@@ -263,107 +243,84 @@ open class TextGeometry: Geometry {
                     CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs)
                     
                     for glyphIndex in 0..<glyphCount {
-                        print("glyphIndex: \(glyphIndex)")
-                        let glyphPosition = glyphPositions[glyphIndex]
-                        print("glyphPosition: \(glyphPosition)")
-                        
-                        var verticalOffset: CGFloat
-                        switch verticalAlignment {
-                        case .top:
-                            verticalOffset = 0
-                        case .center:
-                            verticalOffset = ((bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height) * 0.5
-                        case .bottom:
-                            verticalOffset = (bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height
-                        }
-                        
-                        var transform = CGAffineTransform(
-                            translationX: glyphPosition.x + origin.x - pivotOffsetX,
-                            y: glyphPosition.y + origin.y - pivotOffsetY - verticalOffset
-                        )
-                        
-//                        var transform = CGAffineTransform(
-//                            translationX: 0,
-//                            y: 0
-//                        )
-                        print("transform: \(transform)")
-                        
                         let glyph = glyphs[glyphIndex]
-                        guard let path = CTFontCreatePathForGlyph(ctFont, glyph, &transform) else { continue }
                         
-                        var allPaths: [[simd_float2]] = []
-                        var currentPath: [simd_float2] = []
-                        path.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
-                            let element = elementPtr.pointee
-                            var pointsPtr = element.points
-                            let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                            
-                            switch element.type {
-                            case .moveToPoint:
-                                print("moveToPoint:\(pt)")
-                                currentPath.append(pt)
-                                
-                            case .addLineToPoint:
-                                print("addLineToPoint:\(pt)")
-                                let a = currentPath[currentPath.count - 1]
-                                adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
-                                
-                            case .addQuadCurveToPoint:
-                                let a = currentPath[currentPath.count - 1]
-                                let b = pt
-                                pointsPtr += 1
-                                let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                print("addQuadCurveToPoint: \(a), \(b), \(c)")
-                                
-                                adaptiveQuadratic(a, b, c, &currentPath, 0)
-                                currentPath.append(c)
-                                
-                            case .addCurveToPoint:
-                                let a = currentPath[currentPath.count - 1]
-                                let b = pt
-                                pointsPtr += 1
-                                let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                pointsPtr += 1
-                                let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                print("addCurveToPoint: \(a), \(b), \(c), \(d)")
-                                
-                                adaptiveCubic(a, b, c, d, &currentPath, 0)
-                                currentPath.append(d)
-                                
-                            case .closeSubpath:
-                                print("closeSubpath")
-                                // remove repeated last point
-                                var a = currentPath[currentPath.count - 1]
-                                let b = currentPath[0]
-                                if isEqual2(a, b) {
-                                    currentPath.remove(at: currentPath.count - 1)
-                                }
-                                a = currentPath[currentPath.count - 1]
-                                // sample start and end
-                                adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
-                                allPaths.append(currentPath)
-                                currentPath = []
-                                
-                            default:
-                                break
-                            }
-                        }
+                        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
                         
-                        var paths: [UnsafeMutablePointer<simd_float2>?] = []
-                        var lengths: [Int32] = []
-                        for i in 0..<allPaths.count {
-                            allPaths[i].withUnsafeMutableBufferPointer { ptr in
-                                paths.append(ptr.baseAddress!)
-                            }
-                            lengths.append(Int32(allPaths[i].count))
-                        }
-                        
-                        let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
-                        if triangulate(&paths, &lengths, Int32(lengths.count), &gData) == 0 {
-                            print("Triangulation for \(char) SUCCEEDED!")
+                        if let cacheData = geometryCache[glyph] {
+                            cData = cacheData
                         } else {
-                            print("Triangulation for \(char) FAILED!")
+                            guard let path = CTFontCreatePathForGlyph(ctFont, glyph, nil) else { continue }
+                            
+                            var allPaths: [[simd_float2]] = []
+                            var currentPath: [simd_float2] = []
+                            path.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
+                                let element = elementPtr.pointee
+                                var pointsPtr = element.points
+                                let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                                
+                                switch element.type {
+                                case .moveToPoint:
+                                    currentPath.append(pt)
+                                case .addLineToPoint:
+                                    let a = currentPath[currentPath.count - 1]
+                                    adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
+                                case .addQuadCurveToPoint:
+                                    let a = currentPath[currentPath.count - 1]
+                                    let b = pt
+                                    pointsPtr += 1
+                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                                    adaptiveQuadratic(a, b, c, &currentPath, 0)
+                                    currentPath.append(c)
+                                case .addCurveToPoint:
+                                    let a = currentPath[currentPath.count - 1]
+                                    let b = pt
+                                    pointsPtr += 1
+                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                                    pointsPtr += 1
+                                    let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                                    adaptiveCubic(a, b, c, d, &currentPath, 0)
+                                    currentPath.append(d)
+                                case .closeSubpath:
+                                    // remove repeated last point
+                                    var a = currentPath[currentPath.count - 1]
+                                    let b = currentPath[0]
+                                    if isEqual2(a, b) {
+                                        currentPath.remove(at: currentPath.count - 1)
+                                    }
+                                    a = currentPath[currentPath.count - 1]
+                                    // sample start and end
+                                    adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
+                                    allPaths.append(currentPath)
+                                    currentPath = []
+                                default:
+                                    break
+                                }
+                            }
+                            
+                            var paths: [UnsafeMutablePointer<simd_float2>?] = []
+                            var lengths: [Int32] = []
+                            for i in 0..<allPaths.count {
+                                allPaths[i].withUnsafeMutableBufferPointer { ptr in
+                                    paths.append(ptr.baseAddress!)
+                                }
+                                lengths.append(Int32(allPaths[i].count))
+                            }
+                            
+                            if triangulate(&paths, &lengths, Int32(lengths.count), &cData) != 0 {
+                                let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
+                                print("Triangulation for \(char) FAILED!")
+                            }
+                            
+                            geometryCache[glyph] = cData
                         }
+                        
+                        let glyphPosition = glyphPositions[glyphIndex]
+                        combineGeometryData(&gData, &cData, simd_make_float3(
+                            Float(glyphPosition.x + origin.x - pivotOffsetX),
+                            Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
+                            0.0
+                        ))
                     }
                     
                     glyphPositions.deallocate()
@@ -385,11 +342,20 @@ open class TextGeometry: Geometry {
                 }
             }
             
-            freeGeometryData(gData)
+            freeGeometryData(&gData)
         }
     }
     
-    func setupLayout() {
-        print("layout geometry here")
+    func clearGeometryCache()
+    {
+        for var (_, data) in geometryCache {
+            freeGeometryData(&data)
+        }
+        
+        geometryCache = [:]
+    }
+    
+    deinit {
+        clearGeometryCache()
     }
 }

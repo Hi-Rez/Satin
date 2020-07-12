@@ -116,9 +116,7 @@ bool isClockwise(simd_float2 *polygon, int length) {
         simd_float2 b = polygon[i1];
         area += (b.x - a.x) * (b.y + a.y);
     }
-    printf("clockwise ? area: %f\n", area);
     return !signbit(area);
-//    return (area < 0 ? false : true);
 }
 
 float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point) {
