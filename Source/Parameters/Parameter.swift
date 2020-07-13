@@ -33,10 +33,11 @@ public enum ControlType: String, Codable {
     case colorpicker
     case dropdown
     case label
+    case filepicker
 }
 
 public enum ParameterType: String, Codable {
-    case float, float2, float3, float4, bool, int, int2, int3, int4, double, string, packedfloat3, uint32
+    case float, float2, float3, float4, bool, int, int2, int3, int4, double, string, packedfloat3, uint32, file
 
     var metatype: Parameter.Type {
         switch self {
@@ -66,6 +67,8 @@ public enum ParameterType: String, Codable {
             return PackedFloat3Parameter.self
         case .uint32:
             return UInt32Parameter.self
+        case .file:
+            return FileParameter.self
         }
     }
 }

@@ -331,6 +331,20 @@ open class ParameterGroup: Codable {
                 }
             }
         }
+        else if param is FileParameter {
+            let p = param as! FileParameter
+            if let mp = paramsMap[label] {
+                if let mbp = mp as? FileParameter {
+                    if setValue {
+                        mbp.value = p.value
+                        mbp.recents = p.recents
+                    }
+                    if setOptions {
+                        mbp.allowedTypes = p.allowedTypes
+                    }
+                }
+            }
+        }
     }
 
     public var size: Int {
