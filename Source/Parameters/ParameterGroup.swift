@@ -103,9 +103,15 @@ open class ParameterGroup: Codable {
         try container.encode(params.map(AnyParameter.init), forKey: .params)
     }
 
-    public func save(_ url: URL) {
+    public func save(_ url: URL, baseURL: URL? = nil) {
         do {
+            var userInfo = [CodingUserInfoKey:Any]()
+            if let baseURL = baseURL {
+                userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
+            }
+            
             let jsonEncoder = JSONEncoder()
+            jsonEncoder.userInfo = userInfo
             jsonEncoder.outputFormatting = .prettyPrinted
             let payload: Data = try jsonEncoder.encode(self)
             try payload.write(to: url)
@@ -116,10 +122,18 @@ open class ParameterGroup: Codable {
         }
     }
 
-    public func load(_ url: URL, append: Bool = true) {
+    public func load(_ url: URL, append: Bool = true, baseURL: URL? = nil) {
         do {
+            var userInfo = [CodingUserInfoKey:Any]()
+            if let baseURL = baseURL {
+                userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
+            }
+            
+            let jsonDecoder = JSONDecoder()
+            jsonDecoder.userInfo = userInfo
+            
             let data = try Data(contentsOf: url)
-            let loaded = try JSONDecoder().decode(ParameterGroup.self, from: data)
+            let loaded = try jsonDecoder.decode(ParameterGroup.self, from: data)
             for param in loaded.params {
                 setParameterFrom(param: param, setValue: true, setOptions: false, append: append)
             }
