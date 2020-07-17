@@ -29,6 +29,19 @@ float3 spectrum( float f )
     return pow( saturate( float3( -f, 1.0 - abs( f ), f ) ), 1.0 / 2.2 );
 }
 
+// https://www.shadertoy.com/view/3dXfWH
+float3 scatter(float g, float3 c) //gradient, color
+{
+    float3 g3 = float3(g);
+    float3 g1 = pow(c, g3);
+    float3 g2 = 1.0 - pow(1.0 - c, 1.0 - g3);
+    
+    float3 a = g1 * (1.0 - g1);
+    float3 b = g2 * (1.0 - g2);
+    
+    return 4.5 * mix(a, b, g3);
+}
+
 
 // Copyright 2019 Google LLC.
 // SPDX-License-Identifier: Apache-2.0
