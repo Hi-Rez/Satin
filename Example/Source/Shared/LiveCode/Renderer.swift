@@ -90,12 +90,8 @@ class Renderer: Forge.Renderer {
     }
 
     func openEditor() {
-        if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
-            if let editorURL = URL(string: editorPath) {
-                openEditor(at: editorURL)
-            } else {
-                assertionFailure("Could not construct editor URL from \(editorPath)")
-            }
+        if let editorURL = UserDefaults.standard.url(forKey: "Editor") {
+            openEditor(at: editorURL)
         }
         else {
             let openPanel = NSOpenPanel()
@@ -105,8 +101,7 @@ class Renderer: Forge.Renderer {
             openPanel.begin(completionHandler: { [unowned self] (result: NSApplication.ModalResponse) in
                 if result == .OK {
                     if let editorUrl = openPanel.url {
-                        let editorPath = editorUrl.path
-                        UserDefaults.standard.set(editorPath, forKey: "Editor")
+                        UserDefaults.standard.set(editorUrl, forKey: "Editor")
                         self.openEditor(at: editorUrl)
                     }
                 }
