@@ -88,10 +88,10 @@ class Renderer: Forge.Renderer {
             }
         }
     }
-    
+
     func openEditor() {
-        if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
-            NSWorkspace.shared.openFile(self.assetsURL.path, withApplication: editorPath)
+        if let editorURL = UserDefaults.standard.url(forKey: "Editor") {
+            openEditor(at: editorURL)
         }
         else {
             let openPanel = NSOpenPanel()
@@ -101,16 +101,23 @@ class Renderer: Forge.Renderer {
             openPanel.begin(completionHandler: { [unowned self] (result: NSApplication.ModalResponse) in
                 if result == .OK {
                     if let editorUrl = openPanel.url {
-                        let editorPath = editorUrl.path
-                        UserDefaults.standard.set(editorPath, forKey: "Editor")
-                        NSWorkspace.shared.openFile(self.assetsURL.path, withApplication: editorPath)
+                        UserDefaults.standard.set(editorUrl, forKey: "Editor")
+                        self.openEditor(at: editorUrl)
                     }
                 }
                 openPanel.close()
             })
         }
     }
-    
+
+    func openEditor(at editorURL: URL) {
+        do {
+            try NSWorkspace.shared.open([self.assetsURL], withApplicationAt: editorURL, options: [], configuration: [:])
+        } catch {
+            print(error)
+        }
+    }
+
     override func update() {
         // Uniforms are parsed and title cases, i.e. time -> Time, appResolution -> App Resolution, etc
         if let material = mesh.material {
