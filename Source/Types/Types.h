@@ -31,6 +31,14 @@ typedef struct {
 } GeometryData;
 
 void freeGeometryData( GeometryData *data );
-void combineGeometryData( GeometryData *dest, GeometryData *src, simd_float3 offset );
+void copyGeometryData( GeometryData *dest, GeometryData *src );
+
+void combineGeometryData( GeometryData *dest, GeometryData *src );
+void combineAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 offset );
+void combineAndScaleGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale );
+void combineAndScaleAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale, simd_float3 offset );
+
+void computeNormalsOfGeometryData( GeometryData *data );
+void reverseFacesOfGeometryData( GeometryData *data );
 
 #endif /* Types_h */

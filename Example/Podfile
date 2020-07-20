@@ -8,12 +8,28 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
+target 'ExtrudedText-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'ExtrudedText-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'ExtrudedText-tvOS' do
+    platform :tvos, '12.4'
+end
+
 target 'Text-macOS' do
   platform :osx, '10.14'
 end
 
 target 'Text-iOS' do
     platform :ios, '12.4'
+end
+
+target 'Text-tvOS' do
+    platform :tvos, '12.4'
 end
 
 target 'DepthMaterial-macOS' do

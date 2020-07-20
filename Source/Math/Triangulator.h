@@ -11,5 +11,6 @@
 #include "Types.h"
 
 int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
+int extrudePaths(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
 
 #endif /* Triangulator_h */

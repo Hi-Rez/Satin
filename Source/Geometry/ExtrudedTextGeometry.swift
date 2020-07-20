@@ -1,193 +1,28 @@
 //
-//  TextGeometry.swift
+//  ExtrudedTextGeometry.swift
 //  Satin
 //
-//  Created by Reza Ali on 7/5/20.
+//  Created by Reza Ali on 7/19/20.
 //
 
-import CoreText
-
-open class TextGeometry: Geometry {
-    public enum VerticalAlignment {
-        case top
-        case center
-        case bottom
-    }
-    
-    public var verticalAlignment: VerticalAlignment = .center {
+open class ExtrudedTextGeometry: TextGeometry {
+    public var distance: Float {
         didSet {
-            if verticalAlignment != oldValue {
+            if oldValue != distance {
                 needsSetup = true
             }
         }
     }
     
-    public var textAlignment: CTTextAlignment = .natural {
-        didSet {
-            if textAlignment != oldValue {
-                needsSetup = true
-            }
-        }
+    var geometryExtrudeCache: [CGGlyph: GeometryData] = [:]
+    var geometryReverseCache: [CGGlyph: GeometryData] = [:]
+    
+    public init(text: String, fontName: String, fontSize: Float, distance: Float = 1.0, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0) {
+        self.distance = distance
+        super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern)
     }
     
-    public var text: String = "" {
-        didSet {
-            if text != oldValue {
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var pivot: simd_float2 = simd_float2(repeating: 0.0) {
-        didSet {
-            if pivot != oldValue {
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var bounds: CGSize = CGSize(width: -1, height: -1) {
-        didSet {
-            if bounds != oldValue {
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var kern: Float = 0.0 {
-        didSet {
-            if oldValue != kern {
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var fontName: String = "Helvetica" {
-        didSet {
-            if fontName != oldValue {
-                ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-                clearGeometryCache()
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var fontSize: Float = 1 {
-        didSet {
-            if fontSize != oldValue {
-                ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-                clearGeometryCache()
-                needsSetup = true
-            }
-        }
-    }
-    
-    public var lineHeight: Float {
-        ascent + descent + leading
-    }
-    
-    public var ascent: Float {
-        Float(CTFontGetAscent(ctFont))
-    }
-    
-    public var descent: Float {
-        Float(CTFontGetDescent(ctFont))
-    }
-    
-    public var leading: Float {
-        Float(CTFontGetLeading(ctFont))
-    }
-    
-    public var unitsPerEm: Float {
-        Float(CTFontGetUnitsPerEm(ctFont))
-    }
-    
-    public var glyphCount: Float {
-        Float(CTFontGetGlyphCount(ctFont))
-    }
-    
-    public var underlinePosition: Float {
-        Float(CTFontGetUnderlinePosition(ctFont))
-    }
-    
-    public var underlineThickness: Float {
-        Float(CTFontGetUnderlineThickness(ctFont))
-    }
-    
-    public var slantAngle: Float {
-        Float(CTFontGetSlantAngle(ctFont))
-    }
-    
-    public var capHeight: Float {
-        Float(CTFontGetCapHeight(ctFont))
-    }
-    
-    public var xHeight: Float {
-        Float(CTFontGetXHeight(ctFont))
-    }
-    
-    public var suggestFrameSize: CGSize? {
-        guard let attributedText = attributedText else { return nil }
-        var bnds = bounds
-        if bnds.width < 0 {
-            bnds.width = CGFloat.greatestFiniteMagnitude
-        }
-        if bnds.height < 0 {
-            bnds.height = CGFloat.greatestFiniteMagnitude
-        }
-        
-        let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
-        return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
-    }
-    
-    var attributedText: CFAttributedString? {
-        // Text Attributes
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: ctFont,
-            .kern: NSNumber(value: kern)
-        ]
-        
-        let attributedText = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0)
-        CFAttributedStringReplaceString(attributedText, CFRangeMake(0, 0), text as CFString)
-        CFAttributedStringSetAttributes(attributedText, CFRangeMake(0, text.count), attributes as CFDictionary, false)
-        
-        // Paragraph Attributes
-        let alignment = UnsafeMutablePointer<CTTextAlignment>.allocate(capacity: 1)
-        alignment.pointee = textAlignment
-        let settings = [CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: alignment)]
-        let style = CTParagraphStyleCreate(settings, 1)
-        CFAttributedStringSetAttribute(attributedText, CFRangeMake(0, text.count), kCTParagraphStyleAttributeName, style)
-        alignment.deallocate()
-        
-        return attributedText
-    }
-    
-    var ctFont: CTFont
-    var needsSetup: Bool = true
-    var geometryCache: [CGGlyph: GeometryData] = [:]
-    
-    public init(text: String, fontName: String, fontSize: Float, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0) {
-        self.text = text
-        self.fontName = fontName
-        self.fontSize = fontSize
-        self.bounds = bounds
-        self.pivot = pivot
-        self.textAlignment = textAlignment
-        self.verticalAlignment = verticalAlignment
-        self.kern = kern
-        self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-        super.init()
-//        setupData()
-    }
-    
-    override func update() {
-        if needsSetup {
-            setupData()
-            needsSetup = false
-        }
-    }
-    
-    func setupData() {
+    override func setupData() {
         let maxStraightDistance = Float(fontSize / 10.0)
         var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
         if let attributedString = self.attributedText {
@@ -245,10 +80,20 @@ open class TextGeometry: Geometry {
                     for glyphIndex in 0..<glyphCount {
                         let glyph = glyphs[glyphIndex]
                         
+                        // front face character data
                         var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
                         
-                        if let cacheData = geometryCache[glyph] {
+                        // back face character data
+                        var bData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+                        
+                        // side faces character data
+                        var sData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+                        
+                        if let cacheData = geometryCache[glyph], let cacheReverseData = geometryReverseCache[glyph],
+                            let cacheExtrudeData = geometryExtrudeCache[glyph] {
                             cData = cacheData
+                            bData = cacheReverseData
+                            sData = cacheExtrudeData
                         } else {
                             guard let path = CTFontCreatePathForGlyph(ctFont, glyph, nil) else { continue }
                             
@@ -307,20 +152,47 @@ open class TextGeometry: Geometry {
                                 lengths.append(Int32(allPaths[i].count))
                             }
                             
-                            if triangulate(&paths, &lengths, Int32(lengths.count), &cData) != 0 {
-                                let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
+                            let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
+                            
+                            let counts = Int32(lengths.count)
+                            if triangulate(&paths, &lengths, counts, &cData) != 0 {
                                 print("Triangulation for \(char) FAILED!")
                             }
-                            
                             geometryCache[glyph] = cData
+                            
+                            copyGeometryData(&bData, &cData)
+                            reverseFacesOfGeometryData(&bData)
+                            geometryReverseCache[glyph] = bData
+                            
+                            if extrudePaths(&paths, &lengths, counts, &sData) != 0 {
+                                print("Path Extrusion for \(char) FAILED!")
+                            }
+                            
+                            computeNormalsOfGeometryData(&sData)
+                            geometryExtrudeCache[glyph] = sData
                         }
                         
                         let glyphPosition = glyphPositions[glyphIndex]
+                        
                         combineAndOffsetGeometryData(&gData, &cData, simd_make_float3(
                             Float(glyphPosition.x + origin.x - pivotOffsetX),
                             Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
-                            0.0
+                            distance * 0.5
                         ))
+                        
+                        combineAndOffsetGeometryData(&gData, &bData, simd_make_float3(
+                            Float(glyphPosition.x + origin.x - pivotOffsetX),
+                            Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
+                            -distance * 0.5
+                        ))
+                        
+                        combineAndScaleAndOffsetGeometryData(&gData, &sData,
+                                                             simd_make_float3(1.0, 1.0, distance * 0.5),
+                                                             simd_make_float3(
+                                                                 Float(glyphPosition.x + origin.x - pivotOffsetX),
+                                                                 Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
+                                                                 0
+                                                             ))
                     }
                     
                     glyphPositions.deallocate()
@@ -346,14 +218,17 @@ open class TextGeometry: Geometry {
         }
     }
     
-    func clearGeometryCache() {
-        for var (_, data) in geometryCache {
+    override func clearGeometryCache() {
+        super.clearGeometryCache()
+        
+        for var (_, data) in geometryReverseCache {
             freeGeometryData(&data)
         }
-        geometryCache = [:]
-    }
-    
-    deinit {
-        clearGeometryCache()
+        geometryReverseCache = [:]
+        
+        for var (_, data) in geometryExtrudeCache {
+            freeGeometryData(&data)
+        }
+        geometryExtrudeCache = [:]
     }
 }

@@ -9,10 +9,10 @@ import Metal
 import simd
 
 open class DepthMaterial: Material {
-    var invert = BoolParameter("Invert", .toggle)
-    var color = BoolParameter("Color", .toggle)
-    var near = FloatParameter("Near", -1, .inputfield)
-    var far = FloatParameter("Far", -1, .inputfield)
+    public var invert = BoolParameter("Invert", .toggle)
+    public var color = BoolParameter("Color", .toggle)
+    public var near = FloatParameter("Near", -1, .inputfield)
+    public var far = FloatParameter("Far", -1, .inputfield)
     
     public init(_ color: Bool = true, _ invert: Bool = false) {
         super.init()
