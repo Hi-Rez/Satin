@@ -8,6 +8,18 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
+target 'BufferCompute-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'BufferCompute-iOS' do
+    platform :ios, '12.4'
+end
+
+target 'BufferCompute-tvOS' do
+    platform :tvos, '12.4'
+end
+
 target 'ExtrudedText-macOS' do
   platform :osx, '10.14'
 end
