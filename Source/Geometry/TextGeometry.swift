@@ -62,6 +62,14 @@ open class TextGeometry: Geometry {
         }
     }
     
+    public var lineSpacing: Float = 0.0 {
+        didSet {
+            if oldValue != kern {
+                needsSetup = true
+            }
+        }
+    }
+    
     public var fontName: String = "Helvetica" {
         didSet {
             if fontName != oldValue {
@@ -154,10 +162,20 @@ open class TextGeometry: Geometry {
         // Paragraph Attributes
         let alignment = UnsafeMutablePointer<CTTextAlignment>.allocate(capacity: 1)
         alignment.pointee = textAlignment
-        let settings = [CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: alignment)]
-        let style = CTParagraphStyleCreate(settings, 1)
+        
+        let lineSpace = UnsafeMutablePointer<Float>.allocate(capacity: 1)
+        lineSpace.pointee = lineSpacing
+        
+        let settings = [
+            CTParagraphStyleSetting(spec: .alignment, valueSize: MemoryLayout<CTTextAlignment>.size, value: alignment),
+            CTParagraphStyleSetting(spec: .lineSpacingAdjustment, valueSize: MemoryLayout<Float>.size, value: lineSpace)
+        ]
+        
+        let style = CTParagraphStyleCreate(settings, settings.count)
         CFAttributedStringSetAttribute(attributedText, CFRangeMake(0, text.count), kCTParagraphStyleAttributeName, style)
+        
         alignment.deallocate()
+        lineSpace.deallocate()
         
         return attributedText
     }
@@ -166,7 +184,7 @@ open class TextGeometry: Geometry {
     var needsSetup: Bool = true
     var geometryCache: [CGGlyph: GeometryData] = [:]
     
-    public init(text: String, fontName: String, fontSize: Float, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0) {
+    public init(text: String, fontName: String, fontSize: Float, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0.0) {
         self.text = text
         self.fontName = fontName
         self.fontSize = fontSize
@@ -175,6 +193,7 @@ open class TextGeometry: Geometry {
         self.textAlignment = textAlignment
         self.verticalAlignment = verticalAlignment
         self.kern = kern
+        self.lineSpacing = lineSpacing
         self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
         super.init()
 //        setupData()
