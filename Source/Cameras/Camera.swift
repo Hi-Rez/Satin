@@ -58,6 +58,14 @@ open class Camera: Object
     var updateProjectionMatrix: Bool = true
     var updateViewMatrix: Bool = true
     
+    override var updateMatrix: Bool
+    {
+        didSet
+        {
+            updateViewMatrix = true
+        }
+    }
+    
     public override init()
     {
         super.init()
@@ -91,7 +99,7 @@ open class Camera: Object
     {
         var wc = simd_make_float4(worldCoordinate, 1.0)
         wc = projectionMatrix * viewMatrix * wc
-        return simd_make_float2(wc)/wc.w
+        return simd_make_float2(wc) / wc.w
     }
     
     // Projects a point from world space into the camera's normalized device coordinate (NDC) space.

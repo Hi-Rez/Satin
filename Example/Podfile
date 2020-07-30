@@ -8,6 +8,14 @@ pod 'Satin', :path => '../'
 
 use_frameworks!
 
+target 'Camera-macOS' do
+  platform :osx, '10.14'
+end
+
+target 'Camera-iOS' do
+    platform :ios, '12.4'
+end
+
 target 'BufferCompute-macOS' do
   platform :osx, '10.14'
 end

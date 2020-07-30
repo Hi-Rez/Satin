@@ -1,24 +1,28 @@
 //
-//  ArcballCameraController.swift
+//  PerspectiveCameraController.swift
 //  Satin
 //
-//  Created by Reza Ali on 9/16/19.
+//  Created by Reza Ali on 7/29/20.
 //
 
 import MetalKit
 import simd
 
-public enum ArcballCameraControllerState {
-    case panning
-    case rotating
-    case zooming
-    case rolling
+public enum PerspectiveCameraControllerState {
+    case panning // moves the camera either up to right
+    case rotating // rotates the camera around an arcball
+    case dollying // moves the camera forward
+    case zooming // moves the camera closer to target
+    case rolling // rotates the camera around its forward axis
     case inactive
 }
 
-open class ArcballCameraController {
-    public weak var camera: ArcballPerspectiveCamera!
+open class PerspectiveCameraController {
+    public weak var camera: PerspectiveCamera!
     public weak var view: MTKView!
+    
+    open var mouseDeltaSensitivity: Float = 600.0
+    open var scrollDeltaSensitivity: Float = 600.0
     
     #if os(macOS)
     
@@ -42,6 +46,7 @@ open class ArcballCameraController {
     
     #elseif os(iOS)
     
+    var pinchScale: Float = 1.0
     var rollGestureRecognizer: UIRotationGestureRecognizer!
     var rotateGestureRecognizer: UIPanGestureRecognizer!
     var panGestureRecognizer: UIPanGestureRecognizer!
@@ -52,37 +57,61 @@ open class ArcballCameraController {
     
     #endif
     
-    var state: ArcballCameraControllerState = .inactive
+    var state: PerspectiveCameraControllerState = .inactive
     
+    // Rotation
     open var rotationDamping: Float = 0.9
     #if os(macOS)
     open var rotationScalar: Float = 5.0
     #elseif os(iOS)
-    open var rotationScalar: Float = 2.0
+    open var rotationScalar: Float = 3.0
     #endif
     
     var rotationAxis = simd_make_float3(1.0, 0.0, 0.0)
     var rotationAngle: Float = 0.0
     var rotationVelocity: Float = 0.0
     
+    // Translation (Panning & Dolly)
     open var translationDamping: Float = 0.9
     #if os(macOS)
-    open var translationScalar: Float = 1.5
+    open var translationScalar: Float = 0.5
     #elseif os(iOS)
     open var translationScalar: Float = 0.5
     #endif
     var translationVelocity: simd_float3 = simd_make_float3(0.0)
     
+    // Zoom
+    open var minimumZoomDistance: Float = 1.0 {
+        didSet {
+            if minimumZoomDistance < 1.0 {
+                minimumZoomDistance = oldValue
+            }
+        }
+    }
+    
+    open var zoomScalar: Float = 1.0
+    open var zoomDamping: Float = 0.9
+    var zoomVelocity: Float = 0.0
+    
+    // Roll
+    open var rollScalar: Float = 0.25
+    open var rollDamping: Float = 0.9
+    var rollVelocity: Float = 0.0
+    
     open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
-    open var defaultOrientation: simd_quatf = simd_quaternion(Float.pi, simd_make_float3(0, 1, 0))
+    open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
     
     var insideArcBall: Bool = false
     var previouArcballPoint = simd_make_float3(0.0)
     var currentArcballPoint = simd_make_float3(0.0)
     
-    public init(camera: ArcballPerspectiveCamera, view: MTKView, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
+    public var target = Object()
+    
+    public init(camera: PerspectiveCamera, view: MTKView, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
         self.camera = camera
         self.view = view
+        
+        target.add(camera)
         
         self.defaultPosition = defaultPosition
         self.defaultOrientation = defaultOrientation
@@ -90,9 +119,11 @@ open class ArcballCameraController {
         enable()
     }
     
-    public init(camera: ArcballPerspectiveCamera, view: MTKView) {
+    public init(camera: PerspectiveCamera, view: MTKView) {
         self.camera = camera
         self.view = view
+        
+        target.add(camera)
         
         defaultPosition = self.camera.position
         defaultOrientation = self.camera.orientation
@@ -100,33 +131,71 @@ open class ArcballCameraController {
         enable()
     }
     
+    deinit {
+        disable()
+    }
+    
+    // MARK: - Updates
+    
     open func update() {
         guard camera != nil else { return }
+        
+        target.update()
         
         if length(translationVelocity) > Float.ulpOfOne {
             updatePosition()
             translationVelocity *= translationDamping
         }
         
-        if abs(rotationVelocity) > 0.001, length(rotationAxis) > 0.9 {
+        if abs(zoomVelocity) > Float.ulpOfOne {
+            updateZoom()
+            zoomVelocity *= zoomDamping
+        }
+        
+        if abs(rotationVelocity) > Float.ulpOfOne, length(rotationAxis) > 0.9 {
             updateOrientation()
             rotationVelocity *= rotationDamping
+        }
+        
+        if abs(rollVelocity) > Float.ulpOfOne {
+            updateRoll()
+            rollVelocity *= rollDamping
         }
     }
     
     func updateOrientation() {
         let quat = simd_quaternion(-rotationVelocity, rotationAxis)
-        camera.arcballOrientation *= quat
+        target.orientation *= quat
+    }
+    
+    func updateRoll() {
+        let quat = simd_quaternion(rollVelocity, camera.forwardDirection)
+        target.orientation *= quat
+    }
+    
+    func updateZoom() {
+        let offset = simd_make_float3(camera.forwardDirection * zoomVelocity)
+        let offsetDistance = length(offset)
+        let targetDistance = length(camera.worldPosition - target.position)
+        if (targetDistance + offsetDistance * sign(zoomVelocity)) > minimumZoomDistance {
+            camera.position += offset
+        }
+        else {
+            zoomVelocity *= 0.0
+        }
     }
     
     func updatePosition() {
-        camera.position += simd_make_float3(camera.forwardDirection * translationVelocity.z)
-        camera.position -= simd_make_float3(camera.rightDirection * translationVelocity.x)
-        camera.position += simd_make_float3(camera.upDirection * translationVelocity.y)
+        target.position += simd_make_float3(target.forwardDirection * translationVelocity.z)
+        target.position -= simd_make_float3(target.rightDirection * translationVelocity.x)
+        target.position += simd_make_float3(target.upDirection * translationVelocity.y)
     }
+    
+    // MARK: - Events
     
     open func enable() {
         #if os(macOS)
+        
         leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] in
             self.mouseDown(with: $0)
             return $0
@@ -282,36 +351,7 @@ open class ArcballCameraController {
     
     #if os(macOS)
     
-    @objc func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
-        let newMagnification = Float(gestureRecognizer.magnification)
-        if gestureRecognizer.state == .began {
-            state = .zooming
-            magnification = newMagnification
-        }
-        else if gestureRecognizer.state == .changed, state == .zooming {
-            let cameraDistance = max(length(camera.position) * 0.175, 1.0)
-            let velocity = newMagnification - magnification
-            translationVelocity.z -= 0.25 * translationScalar * velocity * cameraDistance
-            magnification = newMagnification
-        }
-        else {
-            state = .inactive
-        }
-    }
-    
-    @objc func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            state = .rolling
-        }
-        else if gestureRecognizer.state == .changed, state == .rolling {
-            let roll = simd_quatf(angle: -Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
-            camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
-            gestureRecognizer.rotation = 0.0
-        }
-        else {
-            state = .inactive
-        }
-    }
+    // MARK: - Mouse
     
     func mouseDown(with event: NSEvent) {
         if event.window == view.window {
@@ -352,22 +392,22 @@ open class ArcballCameraController {
         }
     }
     
+    // MARK: - Right Mouse
+    
     func rightMouseDown(with event: NSEvent) {
         if event.window == view.window {}
     }
     
     func rightMouseDragged(with event: NSEvent) {
         if event.window == view.window {
-            if abs(event.deltaX) > abs(event.deltaY) {
-                state = .rolling
-                let roll = simd_quatf(angle: Float(event.deltaX / (0.5 * view.frame.width)), axis: camera.forwardDirection)
-                camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
+            let dy = Float(event.deltaY) / mouseDeltaSensitivity
+            if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
+                state = .dollying
+                translationVelocity.z -= dy * translationScalar
             }
             else {
                 state = .zooming
-                let cameraDistance = max(length(camera.worldPosition) * 0.25, 1.0)
-                translationVelocity.z -= 2.5 * Float(event.deltaY / (0.5 * view.frame.height)) * translationScalar * cameraDistance
-                translationVelocity.z /= 2.0
+                zoomVelocity -= dy * zoomScalar
             }
         }
     }
@@ -378,6 +418,8 @@ open class ArcballCameraController {
         }
     }
     
+    // MARK: - Other Mouse
+    
     func otherMouseDown(with event: NSEvent) {
         if event.window == view.window {
             state = .panning
@@ -386,12 +428,11 @@ open class ArcballCameraController {
     
     func otherMouseDragged(with event: NSEvent) {
         if event.window == view.window {
+            let dx = Float(event.deltaX) / mouseDeltaSensitivity
+            let dy = Float(event.deltaY) / mouseDeltaSensitivity
             state = .panning
-            let cameraDistance = max(length(camera.worldPosition) * 0.5, 1.0)
-            translationVelocity.x += Float(event.deltaX / 200.0) * translationScalar * cameraDistance
-            translationVelocity.y += Float(event.deltaY / 200.0) * translationScalar * cameraDistance
-            translationVelocity.x /= 2.0
-            translationVelocity.y /= 2.0
+            translationVelocity.x += dx * translationScalar
+            translationVelocity.y += dy * translationScalar
         }
     }
     
@@ -401,38 +442,70 @@ open class ArcballCameraController {
         }
     }
     
+    // MARK: - Scroll Wheel
+    
     func scrollWheel(with event: NSEvent) {
         if event.window == view.window {
             if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
                 state = .inactive
             }
-            else if event.phase == .changed {
-                if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
-                    if abs(event.deltaX) > abs(event.deltaY) {
-                        state = .rolling
-                        let roll = simd_quatf(angle: Float(event.deltaX / 200.0), axis: camera.forwardDirection)
-                        camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
-                    }
-                    else {
-                        state = .zooming
-                        let cameraDistance = max(length(camera.worldPosition) * 0.25, 1.0)
-                        translationVelocity.z -= 2.5 * Float(event.deltaY / 100.0) * translationScalar * cameraDistance
-                        translationVelocity.z /= 2.0
-                    }
+            else if event.modifierFlags.contains(NSEvent.ModifierFlags.command) && (event.phase == .began || event.phase == .changed) {
+                if abs(event.deltaX) > abs(event.deltaY) {
+                    state = .rolling
+                    let sdx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
+                    rollVelocity += sdx * rollScalar
                 }
-                else if event.phase == .changed {
-                    state = .panning
-                    let cameraDistance = max(length(camera.worldPosition) * 0.5, 1.0)
-                    translationVelocity.x += Float(event.deltaX / 100.0) * translationScalar * cameraDistance
-                    translationVelocity.y += Float(event.deltaY / 100.0) * translationScalar * cameraDistance
-                    translationVelocity.x /= 2.0
-                    translationVelocity.y /= 2.0
+                else {
+                    state = .zooming
+                    let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
+                    zoomVelocity -= sdy * zoomScalar
                 }
+            }
+            else if event.phase == .began || event.phase == .changed {
+                state = .panning
+                let cd = length(camera.worldPosition - target.position)/10.0
+                let dx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
+                let dy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
+                translationVelocity.x += dx * translationScalar * cd
+                translationVelocity.y += dy * translationScalar * cd
             }
         }
     }
     
+    // MARK: - Gestures macOS
+    
+    @objc func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+        let newMagnification = Float(gestureRecognizer.magnification)
+        if gestureRecognizer.state == .began {
+            state = .zooming
+            magnification = newMagnification
+        }
+        else if gestureRecognizer.state == .changed, state == .zooming {
+            let velocity = newMagnification - magnification
+            zoomVelocity -= velocity * zoomScalar
+            magnification = newMagnification
+        }
+        else {
+            state = .inactive
+        }
+    }
+    
+    @objc func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            state = .rolling
+        }
+        else if gestureRecognizer.state == .changed, state == .rolling {
+            rollVelocity -= Float(gestureRecognizer.rotation) * rollScalar * 0.5
+            gestureRecognizer.rotation = 0.0
+        }
+        else {
+            state = .inactive
+        }
+    }
+    
     #elseif os(iOS)
+    
+    // MARK: - Gestures iOS
     
     @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         if gestureRecognizer.state == .ended {
@@ -445,8 +518,7 @@ open class ArcballCameraController {
             state = .rolling
         }
         else if gestureRecognizer.state == .changed, state == .rolling {
-            let roll = simd_quatf(angle: Float(gestureRecognizer.rotation), axis: camera.forwardDirection)
-            camera.arcballOrientation = simd_mul(roll, camera.arcballOrientation)
+            rollVelocity += Float(gestureRecognizer.rotation) * rollScalar * 0.5
             gestureRecognizer.rotation = 0.0
         }
         else {
@@ -508,22 +580,21 @@ open class ArcballCameraController {
         }
     }
     
+    var panCurrentPoint = simd_float2(repeating: 0.0)
+    var panPreviousPoint = simd_float2(repeating: 0.0)
+    
     @objc func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .panning
+            panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
         }
         else if gestureRecognizer.state == .changed, state == .panning {
-            var velocity = gestureRecognizer.velocity(in: view)
-            velocity.x /= view.frame.width
-            velocity.y /= view.frame.height
-            
-            let cameraDistance = CGFloat(max(length(camera.worldPosition) * 0.175, 1.0))
-            
-            velocity.x *= cameraDistance
-            velocity.y *= cameraDistance
-            
-            translationVelocity.x += 0.01 * translationScalar * Float(velocity.x)
-            translationVelocity.y += 0.01 * translationScalar * Float(velocity.y)
+            panCurrentPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
+            let delta = panCurrentPoint - panPreviousPoint
+            let cd = length(camera.worldPosition - target.position)/10.0
+            translationVelocity.x += translationScalar * delta.x * cd
+            translationVelocity.y -= translationScalar * delta.y * cd
+            panPreviousPoint = panCurrentPoint
         }
         else {
             state = .inactive
@@ -533,11 +604,13 @@ open class ArcballCameraController {
     @objc func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .zooming
+            pinchScale = Float(gestureRecognizer.scale)
         }
         else if gestureRecognizer.state == .changed, state == .zooming {
-            let cameraDistance = max(length(camera.worldPosition) * 0.175, 1.0)
-            translationVelocity.z -= 0.01 * translationScalar * Float(gestureRecognizer.velocity) * cameraDistance
-            gestureRecognizer.scale = 1.0
+            let newScale = Float(gestureRecognizer.scale)
+            let delta = pinchScale - newScale
+            zoomVelocity += delta * zoomScalar
+            pinchScale = newScale
         }
         else {
             state = .inactive
@@ -545,6 +618,8 @@ open class ArcballCameraController {
     }
     
     #endif
+    
+    // MARK: - Helpers
     
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
         #if os(macOS)
@@ -582,15 +657,13 @@ open class ArcballCameraController {
             self.rotationVelocity = 0.0
             self.translationVelocity = simd_make_float3(0.0)
             
+            self.target.position = simd_float3(repeating: 0.0)
+            self.target.orientation = simd_quatf(matrix_identity_float4x4)
+            
             guard let camera = self.camera else { return }
             camera.position = self.defaultPosition
             camera.orientation = self.defaultOrientation
-            camera.arcballOrientation = simd_quatf(matrix_identity_float4x4)
             camera.updateMatrix = true
         }
-    }
-    
-    deinit {
-        disable()
     }
 }

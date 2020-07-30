@@ -8,8 +8,8 @@
 
 #ifndef IcoSphereGenerator_h
 #define IcoSphereGenerator_h
- 
-#include "GeometryUtilities.h"
+
+#include "Types.h"
 
 GeometryData generateIcosahedronGeometryData(float radius, int res);
 

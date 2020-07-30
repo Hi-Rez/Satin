@@ -88,9 +88,9 @@ open class FPSCameraController {
         }
         
         if length(rotateVelocity) > Float.ulpOfOne {
-            camera.orientation *= simd_quaternion(rotateVelocity.x * rotateScalar, worldUpDirection)
-            camera.orientation *= simd_quaternion(-rotateVelocity.y * rotateScalar, worldRightDirection)
-            camera.orientation *= simd_quaternion(rotateVelocity.z, worldForwardDirection)
+            camera.orientation *= simd_quaternion(rotateVelocity.x * rotateScalar, Satin.worldUpDirection)
+            camera.orientation *= simd_quaternion(-rotateVelocity.y * rotateScalar, Satin.worldRightDirection)
+            camera.orientation *= simd_quaternion(rotateVelocity.z, Satin.worldForwardDirection)
             rotateVelocity *= damping
         }
     }

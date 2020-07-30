@@ -36,17 +36,16 @@ class Renderer: Forge.Renderer {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    lazy var camera: ArcballPerspectiveCamera = {
-        let camera = ArcballPerspectiveCamera()
-        camera.arcballOrientation = simd_quatf(angle: -Float.pi * 0.175, axis: simd_normalize(simd_make_float3(-0.50, 1.0, -0.50)))
+    lazy var camera: PerspectiveCamera = {
+        let camera = PerspectiveCamera()
         camera.position = simd_make_float3(0.0, 0.0, 6.0)
         camera.near = 0.001
         camera.far = 200.0
         return camera
     }()
     
-    lazy var cameraController: ArcballCameraController = {
-        ArcballCameraController(camera: camera, view: mtkView, defaultPosition: camera.position, defaultOrientation: camera.orientation)
+    lazy var cameraController: PerspectiveCameraController = {
+        PerspectiveCameraController(camera: camera, view: mtkView)
     }()
     
     lazy var renderer: Satin.Renderer = {

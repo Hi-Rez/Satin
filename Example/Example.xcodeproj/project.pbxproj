@@ -48,6 +48,7 @@
 		9289AB361E42B671E3920892 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		9562006863F7061C8724A0CD /* Pods_LiveCode_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */; };
 		97375F1B270BCC17B718BBBE /* Pods_Obj_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */; };
+		993B7398B4892D0D24C63D85 /* Pods_Camera_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32F1725F2257B9CB84496951 /* Pods_Camera_iOS.framework */; };
 		99944A954CFDF4CA65C627CA /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		9B4DBE9591B397351E1304FB /* Pods_ExtrudedText_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6DF26B044BE2C98806250 /* Pods_ExtrudedText_macOS.framework */; };
 		9F04983EDFBABD9BB6FBF4D1 /* Pods_Geometry_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */; };
@@ -60,6 +61,7 @@
 		B4F8357A538D9DFA67BA813B /* Pods_Cubemap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8934F08CC243E05BBD2CD3BE /* Pods_Cubemap_macOS.framework */; };
 		B6A96F3AB029F68F44F41A20 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74FE1571C49B6B4128542E10 /* Pods_3D_macOS.framework */; };
 		BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */; };
+		C0CF7F26AC5EC213F8E69F44 /* Pods_Camera_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E794B61AD21911B3ED0F50E /* Pods_Camera_macOS.framework */; };
 		C3740FB4DB417C46C907A5EF /* Pods_DepthMaterial_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF84C29078A2759FB28D8C6D /* Pods_DepthMaterial_tvOS.framework */; };
 		D700143DFDF0ABBB7ACD6EC6 /* Pods_2D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */; };
 		D8E4CB724BDB5D09DE3AEFD9 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
@@ -75,6 +77,14 @@
 		E12EDEAE24A6E31B00E58E58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E12EDEB624A6E37000E58E58 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1FA709824A5D3FC001BFE4B /* Assets */; };
 		E12EDEB724A6E37300E58E58 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FA708224A5D394001BFE4B /* Renderer.swift */; };
+		E144FA3224D0D56D0072D456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E144FA3A24D0D56D0072D456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E144FA3B24D0D56D0072D456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E144FA4324D0D64E0072D456 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144FA2D24D0D5550072D456 /* Renderer.swift */; };
+		E144FA5E24D21FAB0072D456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
+		E144FA6624D21FAB0072D456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
+		E144FA6724D21FAB0072D456 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E144FA6F24D21FD90072D456 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144FA2D24D0D5550072D456 /* Renderer.swift */; };
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
@@ -247,6 +257,7 @@
 		16EC31E8366407F744E978A1 /* Pods-DepthMaterial-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-iOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-iOS/Pods-DepthMaterial-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		17385F406F994A0302025134 /* Pods-ExtrudedText-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExtrudedText-macOS.release.xcconfig"; path = "Target Support Files/Pods-ExtrudedText-macOS/Pods-ExtrudedText-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		18228B5BD75C6221873A2902 /* Pods-Text-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Text-iOS/Pods-Text-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		19F902804E2FF7509377AA7D /* Pods-3D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.release.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		1A079DF6584439B81F72CF84 /* Pods-ExtrudedText-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExtrudedText-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ExtrudedText-tvOS/Pods-ExtrudedText-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1C77B973E7A44A9C1C95B499 /* Pods-2D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1C84A2DEF5941D908AD76C67 /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -264,17 +275,18 @@
 		2CF6A5EDCC4F9A85D0852CDE /* Pods-Example-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02B1F0B61F07A320EF1211 /* Pods-LiveCode-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiveCode-macOS.release.xcconfig"; path = "Target Support Files/Pods-LiveCode-macOS/Pods-LiveCode-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		32171FD5C7FFE7703C1A3520 /* Pods-Geometry-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Geometry-macOS/Pods-Geometry-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		32F1725F2257B9CB84496951 /* Pods_Camera_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Camera_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		32FF045D739918D97A6B6325 /* Pods-2D-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-tvOS/Pods-2D-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		3385C0480F71FE4E7697B712 /* Pods-Camera-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Camera-iOS.release.xcconfig"; path = "Target Support Files/Pods-Camera-iOS/Pods-Camera-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		34567C856858AFE27DE1365E /* Pods-BufferCompute-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BufferCompute-iOS.release.xcconfig"; path = "Target Support Files/Pods-BufferCompute-iOS/Pods-BufferCompute-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		352049314E4E59FED3ADBF47 /* Pods-MatCap-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.debug.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		360D1A73A006CE3BFF13C922 /* Pods-Camera-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Camera-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Camera-iOS/Pods-Camera-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE8AA4C9E440280480CE239 /* Pods-PBR-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-iOS.debug.xcconfig"; path = "Target Support Files/Pods-PBR-iOS/Pods-PBR-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		4066A95FFF70C2733839E729 /* Pods-TextureCompute-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-macOS.debug.xcconfig"; path = "Target Support Files/Pods-TextureCompute-macOS/Pods-TextureCompute-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		45BEAA3FE448ED3CB0CE2906 /* Pods-PBR-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-macOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-macOS/Pods-PBR-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		473B9737E72F07A9D3A77584 /* Pods-3D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.release.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		47E9F0988B708E23A0AB8C85 /* Pods_Obj_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C23C7743AA624B4CC30ED52 /* Pods_TextureCompute_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TextureCompute_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E067150D74C1BFD3635C859 /* Pods-3D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		4F0A09A1C58285DE24DEBB8B /* Pods-PBR-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-iOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-iOS/Pods-PBR-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		528D8A1A8FE62168A56059D1 /* Pods-Geometry-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-tvOS/Pods-Geometry-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		576DCD9208123272EEF6180D /* Pods-MatCap-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-tvOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-tvOS/Pods-MatCap-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -297,6 +309,7 @@
 		6917F7FA959B4DA63E388BBC /* Pods-PBR-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-tvOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-tvOS/Pods-PBR-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		695459B55DD3B58DB2DFE2A8 /* Pods_ExtrudedText_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExtrudedText_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A01AB904D419FC0DE156901 /* Pods-Text-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-iOS.release.xcconfig"; path = "Target Support Files/Pods-Text-iOS/Pods-Text-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		74111599CBCCB06145E3D30E /* Pods-DepthMaterial-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-tvOS/Pods-DepthMaterial-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		74FE1571C49B6B4128542E10 /* Pods_3D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7535A5B536B5D637C3DF615C /* Pods-2D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.release.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -304,7 +317,7 @@
 		80980545C11C4C193B17A42F /* Pods-MatCap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		84A915D34485E0EA833046C4 /* Pods-MatCap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-macOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-macOS/Pods-MatCap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		85E91E5770546AD36D98FC61 /* Pods-3D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.release.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.release.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		8715FBBCB72C5F898B4DD46D /* Pods-Example-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		88AA69A983B914637F5537BC /* Pods-TextureCompute-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-macOS.release.xcconfig"; path = "Target Support Files/Pods-TextureCompute-macOS/Pods-TextureCompute-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -322,12 +335,13 @@
 		93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LiveCode_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C3F7B7750D8E89A27A4C1DC /* Pods-3D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-iOS/Pods-3D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		9CC66356186F5CEE48FFDEF0 /* Pods-TextureCompute-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-tvOS.release.xcconfig"; path = "Target Support Files/Pods-TextureCompute-tvOS/Pods-TextureCompute-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		9CD2A5A15F237FC62BB84B19 /* Pods-Geometry-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-macOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-macOS/Pods-Geometry-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		9E682D4F6EA748BCF876D712 /* Pods_PBR_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PBR_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E794B61AD21911B3ED0F50E /* Pods_Camera_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Camera_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A12B375D33C54DB5572F16 /* Pods-Obj-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Obj-iOS/Pods-Obj-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A72A74863D8AA9BE95A4FB8A /* Pods_Text_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Text_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A87A36C3EF9C427208F1518C /* Pods-3D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_2D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADE46710BE2063129B8119D5 /* Pods-Geometry-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-iOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-iOS/Pods-Geometry-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		B17F9CBC8BC03BB7E98CCFFF /* Pods-PBR-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-macOS.debug.xcconfig"; path = "Target Support Files/Pods-PBR-macOS/Pods-PBR-macOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -338,6 +352,7 @@
 		BE190F9DDFF26F1262F9ADB9 /* Pods-BufferCompute-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BufferCompute-tvOS.release.xcconfig"; path = "Target Support Files/Pods-BufferCompute-tvOS/Pods-BufferCompute-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		BF3FB5D7A3C9A43BB1A57A92 /* Pods_Text_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Text_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF84C29078A2759FB28D8C6D /* Pods_DepthMaterial_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DepthMaterial_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C071FB55CAF1BB5BD748E2FD /* Pods-Camera-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Camera-macOS.release.xcconfig"; path = "Target Support Files/Pods-Camera-macOS/Pods-Camera-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		C15979D0D864845084DE9530 /* Pods-ExtrudedText-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExtrudedText-iOS.release.xcconfig"; path = "Target Support Files/Pods-ExtrudedText-iOS/Pods-ExtrudedText-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		C234F12EC5C421603D01C0DD /* Pods_TextureCompute_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TextureCompute_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2361E1A2834033E4A34FD40 /* Pods_BufferCompute_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BufferCompute_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -359,6 +374,9 @@
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E12EDE9F24A6E1B800E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12EDEB424A6E31B00E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E144FA2D24D0D5550072D456 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E144FA4124D0D56D0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E144FA6D24D21FAB0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E160CA4F24876781005D37A4 /* MatCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E168FC70248ECC5F004B8407 /* PBR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PBR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E168FC74248ECC97004B8407 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
@@ -430,6 +448,7 @@
 		F3318F0A78EF92CF79B5CBF9 /* Pods-2D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-macOS.release.xcconfig"; path = "Target Support Files/Pods-2D-macOS/Pods-2D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		F38D71A13DA4068116DB2CFD /* Pods-Text-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-macOS.release.xcconfig"; path = "Target Support Files/Pods-Text-macOS/Pods-Text-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		F68D6FFD9AE7C9C940ECAE04 /* Pods-2D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-macOS/Pods-2D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		FF35F30D6626124905E0A12E /* Pods-Camera-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Camera-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Camera-macOS/Pods-Camera-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		FF8A3054CC80D058B83E41CA /* Pods-DepthMaterial-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-macOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-macOS/Pods-DepthMaterial-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -482,6 +501,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CACA5A072823A5E70B2F77C /* Pods_BufferCompute_tvOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E144FA3324D0D56D0072D456 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0CF7F26AC5EC213F8E69F44 /* Pods_Camera_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E144FA5F24D21FAB0072D456 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				993B7398B4892D0D24C63D85 /* Pods_Camera_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,6 +832,8 @@
 				E18280AB24C520AB000810D1 /* ExtrudedText.app */,
 				E18280BE24C5216C000810D1 /* ExtrudedText.app */,
 				E18280CC24C5225E000810D1 /* ExtrudedText.app */,
+				E144FA4124D0D56D0072D456 /* Camera.app */,
+				E144FA6D24D21FAB0072D456 /* Camera.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -837,6 +874,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E144FA2C24D0D5350072D456 /* Camera */,
 				E182809A24C52041000810D1 /* ExtrudedText */,
 				E17E82FF24A8210A00F23EAD /* Text */,
 				E1FA708124A5D377001BFE4B /* BufferCompute */,
@@ -917,10 +955,6 @@
 				B2FC8804E31710E1B9E9B1DD /* Pods-DepthMaterial-macOS.release.xcconfig */,
 				74111599CBCCB06145E3D30E /* Pods-DepthMaterial-tvOS.debug.xcconfig */,
 				203932A6D212D62774DBBAE0 /* Pods-DepthMaterial-tvOS.release.xcconfig */,
-				4E067150D74C1BFD3635C859 /* Pods-3D-iOS.debug.xcconfig */,
-				473B9737E72F07A9D3A77584 /* Pods-3D-iOS.release.xcconfig */,
-				A87A36C3EF9C427208F1518C /* Pods-3D-macOS.debug.xcconfig */,
-				85E91E5770546AD36D98FC61 /* Pods-3D-macOS.release.xcconfig */,
 				E8005381B203CE5C420C803D /* Pods-Text-macOS.debug.xcconfig */,
 				F38D71A13DA4068116DB2CFD /* Pods-Text-macOS.release.xcconfig */,
 				18228B5BD75C6221873A2902 /* Pods-Text-iOS.debug.xcconfig */,
@@ -941,8 +975,24 @@
 				8C173E0358DC789DE1D0A41D /* Pods-BufferCompute-macOS.release.xcconfig */,
 				2B1EF9EC741A27A8D5BBA708 /* Pods-BufferCompute-tvOS.debug.xcconfig */,
 				BE190F9DDFF26F1262F9ADB9 /* Pods-BufferCompute-tvOS.release.xcconfig */,
+				9C3F7B7750D8E89A27A4C1DC /* Pods-3D-iOS.debug.xcconfig */,
+				19F902804E2FF7509377AA7D /* Pods-3D-iOS.release.xcconfig */,
+				6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */,
+				86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */,
+				360D1A73A006CE3BFF13C922 /* Pods-Camera-iOS.debug.xcconfig */,
+				3385C0480F71FE4E7697B712 /* Pods-Camera-iOS.release.xcconfig */,
+				FF35F30D6626124905E0A12E /* Pods-Camera-macOS.debug.xcconfig */,
+				C071FB55CAF1BB5BD748E2FD /* Pods-Camera-macOS.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E144FA2C24D0D5350072D456 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				E144FA2D24D0D5550072D456 /* Renderer.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 		E160CA5124876998005D37A4 /* Geometry */ = {
@@ -1131,6 +1181,8 @@
 				C2361E1A2834033E4A34FD40 /* Pods_BufferCompute_iOS.framework */,
 				6701E8FF8344B814408F7601 /* Pods_BufferCompute_macOS.framework */,
 				09C22978103F4BF87145300A /* Pods_BufferCompute_tvOS.framework */,
+				32F1725F2257B9CB84496951 /* Pods_Camera_iOS.framework */,
+				9E794B61AD21911B3ED0F50E /* Pods_Camera_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1236,6 +1288,46 @@
 			name = "BufferCompute-tvOS";
 			productName = "Example-tvOS";
 			productReference = E12EDEB424A6E31B00E58E58 /* BufferCompute.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E144FA2E24D0D56D0072D456 /* Camera-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E144FA3E24D0D56D0072D456 /* Build configuration list for PBXNativeTarget "Camera-macOS" */;
+			buildPhases = (
+				517EE33F1FB7A8253B8DFFCC /* [CP] Check Pods Manifest.lock */,
+				E144FA3024D0D56D0072D456 /* Sources */,
+				E144FA3324D0D56D0072D456 /* Frameworks */,
+				E144FA3924D0D56D0072D456 /* Resources */,
+				E144FA3C24D0D56D0072D456 /* Touch Frameworks */,
+				3B0D9FFACAEA532CB14BA080 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Camera-macOS";
+			productName = Example;
+			productReference = E144FA4124D0D56D0072D456 /* Camera.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E144FA5A24D21FAB0072D456 /* Camera-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E144FA6A24D21FAB0072D456 /* Build configuration list for PBXNativeTarget "Camera-iOS" */;
+			buildPhases = (
+				754545063CE22E6C6732D0C6 /* [CP] Check Pods Manifest.lock */,
+				E144FA5C24D21FAB0072D456 /* Sources */,
+				E144FA5F24D21FAB0072D456 /* Frameworks */,
+				E144FA6524D21FAB0072D456 /* Resources */,
+				E144FA6824D21FAB0072D456 /* Touch Frameworks */,
+				CD0A8ECA986661AFE2123EF8 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Camera-iOS";
+			productName = "Example-iOS";
+			productReference = E144FA6D24D21FAB0072D456 /* Camera.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E160CA3F24876781005D37A4 /* MatCap-iOS */ = {
@@ -1934,6 +2026,8 @@
 				E182809C24C520AB000810D1 /* ExtrudedText-macOS */,
 				E18280AF24C5216C000810D1 /* ExtrudedText-iOS */,
 				E18280C124C5225E000810D1 /* ExtrudedText-tvOS */,
+				E144FA2E24D0D56D0072D456 /* Camera-macOS */,
+				E144FA5A24D21FAB0072D456 /* Camera-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -1981,6 +2075,24 @@
 			files = (
 				E12EDEAE24A6E31B00E58E58 /* Assets.xcassets in Resources */,
 				E12EDEB624A6E37000E58E58 /* Assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E144FA3924D0D56D0072D456 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E144FA3A24D0D56D0072D456 /* Assets.xcassets in Resources */,
+				E144FA3B24D0D56D0072D456 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E144FA6524D21FAB0072D456 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E144FA6624D21FAB0072D456 /* Assets.xcassets in Resources */,
+				E144FA6724D21FAB0072D456 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2334,6 +2446,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		3B0D9FFACAEA532CB14BA080 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Camera-macOS/Pods-Camera-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Camera-macOS/Pods-Camera-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Camera-macOS/Pods-Camera-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3B57726DBC1D0C2C2D7745E8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2389,6 +2518,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-BufferCompute-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		517EE33F1FB7A8253B8DFFCC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Camera-macOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2527,6 +2678,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		754545063CE22E6C6732D0C6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Camera-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7A3A9CD8E1DC3773DCC52172 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2656,6 +2829,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-3D-iOS/Pods-3D-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		CD0A8ECA986661AFE2123EF8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Camera-iOS/Pods-Camera-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Camera-iOS/Pods-Camera-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Camera-iOS/Pods-Camera-iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D08156DBE131A5485482F81B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2714,6 +2904,42 @@
 			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
 		};
 		E12EDEAF24A6E31B00E58E58 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E144FA3C24D0D56D0072D456 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E144FA6824D21FAB0072D456 /* Touch Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4373,6 +4599,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E144FA3024D0D56D0072D456 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E144FA4324D0D64E0072D456 /* Renderer.swift in Sources */,
+				E144FA3224D0D56D0072D456 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E144FA5C24D21FAB0072D456 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E144FA6F24D21FD90072D456 /* Renderer.swift in Sources */,
+				E144FA5E24D21FAB0072D456 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E160CA4124876781005D37A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4786,7 +5030,7 @@
 		};
 		66E67898243EC73B0070B294 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A87A36C3EF9C427208F1518C /* Pods-3D-macOS.debug.xcconfig */;
+			baseConfigurationReference = 6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
@@ -4807,7 +5051,7 @@
 		};
 		66E67899243EC73B0070B294 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85E91E5770546AD36D98FC61 /* Pods-3D-macOS.release.xcconfig */;
+			baseConfigurationReference = 86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
@@ -4828,7 +5072,7 @@
 		};
 		66E678AF243EC8FE0070B294 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4E067150D74C1BFD3635C859 /* Pods-3D-iOS.debug.xcconfig */;
+			baseConfigurationReference = 9C3F7B7750D8E89A27A4C1DC /* Pods-3D-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -4849,7 +5093,7 @@
 		};
 		66E678B0243EC8FE0070B294 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 473B9737E72F07A9D3A77584 /* Pods-3D-iOS.release.xcconfig */;
+			baseConfigurationReference = 19F902804E2FF7509377AA7D /* Pods-3D-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -4994,6 +5238,91 @@
 			};
 			name = Release;
 		};
+		E144FA3F24D0D56D0072D456 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FF35F30D6626124905E0A12E /* Pods-Camera-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_NAME = Camera;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E144FA4024D0D56D0072D456 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C071FB55CAF1BB5BD748E2FD /* Pods-Camera-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_NAME = Camera;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E144FA6B24D21FAB0072D456 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 360D1A73A006CE3BFF13C922 /* Pods-Camera-iOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_NAME = Camera;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E144FA6C24D21FAB0072D456 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3385C0480F71FE4E7697B712 /* Pods-Camera-iOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_NAME = Camera;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		E160CA4D24876781005D37A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 352049314E4E59FED3ADBF47 /* Pods-MatCap-iOS.debug.xcconfig */;
@@ -5045,7 +5374,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5068,7 +5397,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5173,7 +5502,7 @@
 			baseConfigurationReference = 8CF5412A3380A67027D1A8FA /* Pods-Obj-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5193,7 +5522,7 @@
 			baseConfigurationReference = 57CA93238F58BC90BDB4B24A /* Pods-Obj-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5213,7 +5542,7 @@
 			baseConfigurationReference = F68D6FFD9AE7C9C940ECAE04 /* Pods-2D-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5233,7 +5562,7 @@
 			baseConfigurationReference = F3318F0A78EF92CF79B5CBF9 /* Pods-2D-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5253,7 +5582,7 @@
 			baseConfigurationReference = E8005381B203CE5C420C803D /* Pods-Text-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5274,7 +5603,7 @@
 			baseConfigurationReference = F38D71A13DA4068116DB2CFD /* Pods-Text-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5295,7 +5624,7 @@
 			baseConfigurationReference = EAE772400ACACBF9993F5773 /* Pods-ExtrudedText-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5316,7 +5645,7 @@
 			baseConfigurationReference = 17385F406F994A0302025134 /* Pods-ExtrudedText-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5465,7 +5794,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5488,7 +5817,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5597,7 +5926,7 @@
 			baseConfigurationReference = 2BD220542626ED9752C1993F /* Pods-LiveCode-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5617,7 +5946,7 @@
 			baseConfigurationReference = 2D02B1F0B61F07A320EF1211 /* Pods-LiveCode-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5638,7 +5967,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5661,7 +5990,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
@@ -5813,7 +6142,7 @@
 			baseConfigurationReference = 4066A95FFF70C2733839E729 /* Pods-TextureCompute-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5834,7 +6163,7 @@
 			baseConfigurationReference = 88AA69A983B914637F5537BC /* Pods-TextureCompute-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5941,7 +6270,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5966,7 +6295,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -5988,7 +6317,7 @@
 			baseConfigurationReference = FF8A3054CC80D058B83E41CA /* Pods-DepthMaterial-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -6009,7 +6338,7 @@
 			baseConfigurationReference = B2FC8804E31710E1B9E9B1DD /* Pods-DepthMaterial-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -6282,7 +6611,7 @@
 			baseConfigurationReference = CCC6FAEC3463B2485AD58D58 /* Pods-BufferCompute-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -6303,7 +6632,7 @@
 			baseConfigurationReference = 8C173E0358DC789DE1D0A41D /* Pods-BufferCompute-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Example-macOS/Example.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -6372,6 +6701,24 @@
 			buildConfigurations = (
 				E12EDEB224A6E31B00E58E58 /* Debug */,
 				E12EDEB324A6E31B00E58E58 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E144FA3E24D0D56D0072D456 /* Build configuration list for PBXNativeTarget "Camera-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E144FA3F24D0D56D0072D456 /* Debug */,
+				E144FA4024D0D56D0072D456 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E144FA6A24D21FAB0072D456 /* Build configuration list for PBXNativeTarget "Camera-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E144FA6B24D21FAB0072D456 /* Debug */,
+				E144FA6C24D21FAB0072D456 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

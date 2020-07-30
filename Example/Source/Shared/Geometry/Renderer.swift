@@ -22,7 +22,7 @@ open class IcosahedronGeometry: Geometry {
     
     func setupData(size: Float, res: Int) {
         primitiveType = .triangle
-        let geo = generateIcosahedronGeometryData(size, Int32(res))
+        var geo = generateIcosahedronGeometryData(size, Int32(res))
         let vCount = Int(geo.vertexCount)
         if vCount > 0, let data = geo.vertexData {
             vertexData = Array(UnsafeBufferPointer(start: data, count: vCount))
@@ -34,7 +34,7 @@ open class IcosahedronGeometry: Geometry {
                 indexData = Array(UnsafeBufferPointer(start: ptr, count: indexCount))
             }
         }
-        freeGeometryData(geo)
+        freeGeometryData(&geo)
     }
 }
 
@@ -58,16 +58,16 @@ class Renderer: Forge.Renderer {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    lazy var camera: ArcballPerspectiveCamera = {
-        let camera = ArcballPerspectiveCamera()
+    lazy var camera: PerspectiveCamera = {
+        let camera = PerspectiveCamera()
         camera.position = simd_make_float3(0.0, 0.0, 6.0)
         camera.near = 0.001
         camera.far = 100.0
         return camera
     }()
     
-    lazy var cameraController: ArcballCameraController = {
-        ArcballCameraController(camera: camera, view: mtkView, defaultPosition: camera.position, defaultOrientation: camera.orientation)
+    lazy var cameraController: PerspectiveCameraController = {
+        PerspectiveCameraController(camera: camera, view: mtkView)
     }()
     
     lazy var renderer: Satin.Renderer = {

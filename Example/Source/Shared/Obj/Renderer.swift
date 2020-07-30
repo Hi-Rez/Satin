@@ -18,16 +18,16 @@ class Renderer: Forge.Renderer {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    lazy var camera: ArcballPerspectiveCamera = {
-        let camera = ArcballPerspectiveCamera()
+    lazy var camera: PerspectiveCamera = {
+        let camera = PerspectiveCamera()
         camera.position = simd_make_float3(0.0, 0.0, 9.0)
         camera.near = 0.001
         camera.far = 100.0
         return camera
     }()
     
-    lazy var cameraController: ArcballCameraController = {
-        ArcballCameraController(camera: camera, view: mtkView, defaultPosition: camera.position, defaultOrientation: camera.orientation)
+    lazy var cameraController: PerspectiveCameraController = {
+        PerspectiveCameraController(camera: camera, view: mtkView)
     }()
     
     var scene = Object()
@@ -79,12 +79,13 @@ class Renderer: Forge.Renderer {
         guard let url = Bundle.main.resourceURL?.appendingPathComponent("Assets/suzanne.obj") else { return }
         
         let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
-        let mesh = Mesh(geometry: Geometry(), material: NormalColorMaterial())
+        let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial())
         mesh.label = "Suzanne"
         
         let geo = mesh.geometry
         let object0 = asset.object(at: 0)
         if let objMesh = object0 as? MDLMesh {
+            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 1)
             let vertexData = objMesh.vertexBuffers[0].map().bytes.bindMemory(to: Vertex.self, capacity: objMesh.vertexCount)
             geo.vertexData = Array(UnsafeBufferPointer(start: vertexData, count: objMesh.vertexCount))
             geo.vertexBuffer = (objMesh.vertexBuffers[0] as! MTKMeshBuffer).buffer
@@ -95,6 +96,7 @@ class Renderer: Forge.Renderer {
             geo.indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
         }
         
+        mesh.scale = simd_float3(repeating: 2.0)
         scene.add(mesh)
     }
     

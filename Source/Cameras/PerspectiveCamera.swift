@@ -102,11 +102,11 @@ open class PerspectiveCamera: Camera
         case aspect
     }
     
-    //Projects a point from the camera's normalized device coordinate (NDC) space into world space, the returned point is at a distance equal to the near property of the camera
+    // Projects a point from the camera's normalized device coordinate (NDC) space into world space, the returned point is at a distance equal to the near property of the camera
     open override func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
     {
         let farMinusNear = far - near
-        let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, near/farMinusNear, 1.0)
-        return simd_make_float3(wc)/wc.w
+        let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, near / farMinusNear, 1.0)
+        return simd_make_float3(wc) / wc.w
     }
 }
