@@ -184,9 +184,9 @@ open class PerspectiveCameraController {
     }
     
     func updatePosition() {
-        target.position += simd_make_float3(target.forwardDirection * translationVelocity.z)
-        target.position -= simd_make_float3(target.rightDirection * translationVelocity.x)
-        target.position += simd_make_float3(target.upDirection * translationVelocity.y)
+        target.position = target.position + simd_make_float3(target.forwardDirection * translationVelocity.z)
+        target.position = target.position - simd_make_float3(target.rightDirection * translationVelocity.x)
+        target.position = target.position + simd_make_float3(target.upDirection * translationVelocity.y)
     }
     
     // MARK: - Events

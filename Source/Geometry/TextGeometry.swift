@@ -196,7 +196,6 @@ open class TextGeometry: Geometry {
         self.lineSpacing = lineSpacing
         self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
         super.init()
-//        setupData()
     }
     
     override func update() {

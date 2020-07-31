@@ -13,8 +13,8 @@ open class Renderer
 {
     public var label: String = "Satin Renderer"
     
-    public var preDraw: ((_ renderEncoder: MTLParallelRenderCommandEncoder) -> ())?
-    public var postDraw: ((_ renderEncoder: MTLParallelRenderCommandEncoder) -> ())?
+    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
+    public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
     public var scene: Object = Object()
     {
@@ -201,17 +201,17 @@ open class Renderer
         
         if scene.visible
         {
-            guard let parellelRenderEncoder = commandBuffer.makeParallelRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+            guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
             
-            parellelRenderEncoder.pushDebugGroup(label + " Pass")
-            parellelRenderEncoder.label = label + " Encoder"
+            renderEncoder.pushDebugGroup(label + " Pass")
+            renderEncoder.label = label + " Encoder"
             
-            preDraw?(parellelRenderEncoder)
-            draw(parellelRenderEncoder: parellelRenderEncoder, object: scene)
-            postDraw?(parellelRenderEncoder)
+            preDraw?(renderEncoder)
+            draw(renderEncoder: renderEncoder, object: scene)
+            postDraw?(renderEncoder)
             
-            parellelRenderEncoder.popDebugGroup()
-            parellelRenderEncoder.endEncoding()
+            renderEncoder.popDebugGroup()
+            renderEncoder.endEncoding()
         }
         
         renderPassDescriptor.colorAttachments[0].texture = inColorTexture
@@ -220,7 +220,7 @@ open class Renderer
         renderPassDescriptor.stencilAttachment.texture = inStencilTexture
     }
     
-    public func draw(parellelRenderEncoder: MTLParallelRenderCommandEncoder, object: Object)
+    public func draw(renderEncoder: MTLRenderCommandEncoder, object: Object)
     {
         if object.context == nil
         {
@@ -231,7 +231,6 @@ open class Renderer
         {
             mesh.update(camera: camera)
             
-            guard let renderEncoder = parellelRenderEncoder.makeRenderCommandEncoder() else { return }
             let label = mesh.label
             
             renderEncoder.pushDebugGroup(label)
@@ -241,19 +240,15 @@ open class Renderer
             renderEncoder.setRenderPipelineState(pipeline)
             
             material.bind(renderEncoder)
-            
+    
             mesh.draw(renderEncoder: renderEncoder)
-            
-            renderEncoder.popDebugGroup()
-            
-            renderEncoder.endEncoding()
         }
         
         for child in object.children
         {
             if child.visible
             {
-                draw(parellelRenderEncoder: parellelRenderEncoder, object: child)
+                draw(renderEncoder: renderEncoder, object: child)
             }
         }
     }
