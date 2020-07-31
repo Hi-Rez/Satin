@@ -35,31 +35,31 @@ extension Renderer {
             let levels = cubemapTexture.mipmapLevelCount
             
             var size = cubemapTexture.width
+            // Compute for each mipmap level in the Cubemap
             for level in 0..<levels {
-                print()
-                print("Skybox - Level: \(level)")
-                print("Skybox - Size: \(size)")
-                skyboxTextureCompute.textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+                print("Skybox - Level: \(level) - Size: \(size)")
+                
+                // Setup Textures
+                let desc = MTLTextureDescriptor.texture2DDescriptor(
                     pixelFormat: cubemapTexture.pixelFormat,
                     width: size,
                     height: size,
                     mipmapped: false
                 )
+                skyboxTextureCompute.textureDescriptors = Array(repeating: desc, count: 6)
                 
+                // Compute
+                if let commandBuffer = commandQueue.makeCommandBuffer() {
+                    skyboxTextureCompute.update(commandBuffer)
+                    commandBuffer.commit()
+                    commandBuffer.waitUntilCompleted()
+                }
+                
+                // Copy textures to Cubemap
                 for slice in 0..<6 {
-                    print("Skybox - Slice: \(slice)")
-                    faceParameter.value = slice
-                    skyboxTextureComputeUniforms.update()
-                    
-                    if let commandBuffer = commandQueue.makeCommandBuffer() {
-                        skyboxTextureCompute.update(commandBuffer)
-                        commandBuffer.commit()
-                        commandBuffer.waitUntilCompleted()
-                    }
-                    
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = skyboxTextureCompute.texture {
+                            if let texture = skyboxTextureCompute.texture[slice] {
                                 blitEncoder.copy(
                                     from: texture,
                                     sourceSlice: 0,
@@ -78,8 +78,8 @@ extension Renderer {
                     }
                 }
                 size /= 2
-                print()
             }
+            print()
         }
         catch {
             print(error)
@@ -96,25 +96,28 @@ extension Renderer {
             
             var size = cubemapTexture.width
             for level in 0..<levels {
-                print()
-                print("Cubemap - Level: \(level)")
-                print("Cubemap - Size: \(size)")
-                cubemapTextureCompute.textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: size, height: size, mipmapped: false)
+                print("Cubemap - Level: \(level) - Size: \(size)")
+                
+                // Setup Textures
+                let desc = MTLTextureDescriptor.texture2DDescriptor(
+                    pixelFormat: .rgba32Float,
+                    width: size,
+                    height: size,
+                    mipmapped: false
+                )
+                cubemapTextureCompute.textureDescriptors = Array(repeating: desc, count: 6)
+                
+                // Compute
+                if let commandBuffer = commandQueue.makeCommandBuffer() {
+                    cubemapTextureCompute.update(commandBuffer)
+                    commandBuffer.commit()
+                    commandBuffer.waitUntilCompleted()
+                }
                 
                 for slice in 0..<6 {
-                    print("Cubemap - Slice: \(slice)")
-                    faceParameter.value = slice
-                    cubemapTextureComputeUniforms.update()
-                    
-                    if let commandBuffer = commandQueue.makeCommandBuffer() {
-                        cubemapTextureCompute.update(commandBuffer)
-                        commandBuffer.commit()
-                        commandBuffer.waitUntilCompleted()
-                    }
-                    
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = cubemapTextureCompute.texture {
+                            if let texture = cubemapTextureCompute.texture[slice] {
                                 blitEncoder.copy(
                                     from: texture,
                                     sourceSlice: 0,
@@ -133,8 +136,8 @@ extension Renderer {
                     }
                 }
                 size /= 2
-                print()
             }
+            print()
         }
         catch {
             print(error)
@@ -151,25 +154,29 @@ extension Renderer {
             
             var size = cubemapTexture.width
             for level in 0..<levels {
-                print()
-                print("Diffuse - Level: \(level)")
-                print("Diffuse - Size: \(size)")
-                diffuseTextureCompute.textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: size, height: size, mipmapped: false)
+                print("Diffuse - Level: \(level) - Size: \(size)")
                 
+                // Setup Textures
+                let desc = MTLTextureDescriptor.texture2DDescriptor(
+                    pixelFormat: .rgba32Float,
+                    width: size,
+                    height: size,
+                    mipmapped: false
+                )
+                diffuseTextureCompute.textureDescriptors = Array(repeating: desc, count: 6)
+                
+                // Compute
+                if let commandBuffer = commandQueue.makeCommandBuffer() {
+                    diffuseTextureCompute.update(commandBuffer)
+                    commandBuffer.commit()
+                    commandBuffer.waitUntilCompleted()
+                }
+                
+                // Copy textures to cubemap
                 for slice in 0..<6 {
-                    print("Diffuse - Slice: \(slice)")
-                    faceParameter.value = slice
-                    diffuseTextureComputeUniforms.update()
-                    
-                    if let commandBuffer = commandQueue.makeCommandBuffer() {
-                        diffuseTextureCompute.update(commandBuffer)
-                        commandBuffer.commit()
-                        commandBuffer.waitUntilCompleted()
-                    }
-                    
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = diffuseTextureCompute.texture {
+                            if let texture = diffuseTextureCompute.texture[slice] {
                                 blitEncoder.copy(
                                     from: texture,
                                     sourceSlice: 0,
@@ -188,14 +195,13 @@ extension Renderer {
                     }
                 }
                 size /= 2
-                print()
             }
+            print()
         }
         catch {
             print(error)
         }
     }
-    
     
     func setupSpecularCompute(_ library: MTLLibrary) {
         do {
@@ -207,48 +213,53 @@ extension Renderer {
             
             var size = cubeTexture.width
             for level in 0..<levels {
-                roughnessParameter.value = Float(level) / Float(levels - 1)
-                print()
-                print("Specular - Level: \(level)")
-                print("Specular - Size: \(size)")
-                specularTextureCompute.textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: size, height: size, mipmapped: false)
+                print("Specular - Level: \(level) - Size: \(size)")
                 
-                if let commandQueue = self.device.makeCommandQueue() {
-                    for slice in 0..<6 {
-                        print("Specular - Slice: \(slice)")
-                        faceParameter.value = slice
-                        specularTextureComputeUniforms.update()
-                        
-                        if let commandBuffer = commandQueue.makeCommandBuffer() {
-                            specularTextureCompute.update(commandBuffer)
-                            commandBuffer.commit()
-                            commandBuffer.waitUntilCompleted()
-                        }
-                        
-                        if let commandBuffer = commandQueue.makeCommandBuffer() {
-                            if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                                if let texture = specularTextureCompute.texture {
-                                    blitEncoder.copy(
-                                        from: texture,
-                                        sourceSlice: 0,
-                                        sourceLevel: 0,
-                                        to: cubeTexture,
-                                        destinationSlice: slice,
-                                        destinationLevel: level,
-                                        sliceCount: 1,
-                                        levelCount: 1
-                                    )
-                                }
-                                blitEncoder.endEncoding()
+                // Update Uniforms Per Level
+                roughnessParameter.value = Float(level) / Float(levels - 1)
+                specularTextureComputeUniforms.update()
+                
+                // Setup Textures
+                let desc = MTLTextureDescriptor.texture2DDescriptor(
+                    pixelFormat: .rgba32Float,
+                    width: size,
+                    height: size,
+                    mipmapped: false
+                )
+                specularTextureCompute.textureDescriptors = Array(repeating: desc, count: 6)
+                
+                // Compute
+                if let commandBuffer = commandQueue.makeCommandBuffer() {
+                    specularTextureCompute.update(commandBuffer)
+                    commandBuffer.commit()
+                    commandBuffer.waitUntilCompleted()
+                }
+                
+                // Copy textures to Cubemap
+                for slice in 0..<6 {
+                    if let commandBuffer = commandQueue.makeCommandBuffer() {
+                        if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
+                            if let texture = specularTextureCompute.texture[slice] {
+                                blitEncoder.copy(
+                                    from: texture,
+                                    sourceSlice: 0,
+                                    sourceLevel: 0,
+                                    to: cubeTexture,
+                                    destinationSlice: slice,
+                                    destinationLevel: level,
+                                    sliceCount: 1,
+                                    levelCount: 1
+                                )
                             }
-                            commandBuffer.commit()
-                            commandBuffer.waitUntilCompleted()
+                            blitEncoder.endEncoding()
                         }
+                        commandBuffer.commit()
+                        commandBuffer.waitUntilCompleted()
                     }
                 }
                 size /= 2
-                print()
             }
+            print()
         }
         catch {
             print(error)

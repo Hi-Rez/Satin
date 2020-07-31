@@ -106,50 +106,27 @@ class Renderer: Forge.Renderer {
     
     // Diffuse (Irradiance) Computation
     
-    lazy var diffuseTextureComputeParameters: ParameterGroup = {
-        let params = ParameterGroup("DiffuseParameters")
-        params.append(faceParameter)
-        return params
-    }()
-    
-    lazy var diffuseTextureComputeUniforms: Buffer = {
-        Buffer(context: context, parameters: diffuseTextureComputeParameters)
-    }()
-    
-    lazy var diffuseTextureCompute: TextureComputeSystem = {
-        let compute = TextureComputeSystem(
+    lazy var diffuseTextureCompute: MultipleTextureComputeSystem = {
+        let compute = MultipleTextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 64, height: 64, mipmapped: false)
+            textureDescriptors: []
         )
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdrCubemapTexture, index: offset)
-            computeEncoder.setBuffer(self.diffuseTextureComputeUniforms.buffer, offset: 0, index: 0)
         }
-        
         return compute
     }()
     
     // HDRI to Cubemap Computation
     
-    lazy var cubemapTextureComputeParameters: ParameterGroup = {
-        let params = ParameterGroup("CubemapParameters")
-        params.append(faceParameter)
-        return params
-    }()
-    
-    lazy var cubemapTextureComputeUniforms: Buffer = {
-        Buffer(context: context, parameters: cubemapTextureComputeParameters)
-    }()
-    
-    lazy var cubemapTextureCompute: TextureComputeSystem = {
-        let compute = TextureComputeSystem(
+    lazy var cubemapTextureCompute: MultipleTextureComputeSystem = {
+        let compute = MultipleTextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
+            textureDescriptors: []
         )
         
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdriTexture, index: offset)
-            computeEncoder.setBuffer(self.cubemapTextureComputeUniforms.buffer, offset: 0, index: 0)
         }
         
         return compute
@@ -158,12 +135,10 @@ class Renderer: Forge.Renderer {
     // Specular Computation
     
     var roughnessParameter = FloatParameter("roughness", 0)
-    var faceParameter = IntParameter("face", 0)
     
     lazy var specularTextureComputeParameters: ParameterGroup = {
         let params = ParameterGroup("SpecularParameters")
         params.append(roughnessParameter)
-        params.append(faceParameter)
         return params
     }()
     
@@ -172,11 +147,12 @@ class Renderer: Forge.Renderer {
         return buffer
     }()
     
-    lazy var specularTextureCompute: TextureComputeSystem = {
-        let compute = TextureComputeSystem(
+    lazy var specularTextureCompute: MultipleTextureComputeSystem = {
+        let compute = MultipleTextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
+            textureDescriptors:[]
         )
+        
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdrCubemapTexture, index: offset)
             computeEncoder.setBuffer(self.specularTextureComputeUniforms.buffer, offset: 0, index: 0)
@@ -186,25 +162,10 @@ class Renderer: Forge.Renderer {
     
     // HDRI to Skybox Texture
     
-    lazy var skyboxTextureComputeParameters: ParameterGroup = {
-        let params = ParameterGroup("SkyboxParameters")
-        params.append(faceParameter)
-        return params
-    }()
-    
-    lazy var skyboxTextureComputeUniforms: Buffer = {
-        Buffer(context: context, parameters: skyboxTextureComputeParameters)
-    }()
-    
-    lazy var skyboxTextureCompute: TextureComputeSystem = {
-        let compute = TextureComputeSystem(
-            context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba32Float, width: 512, height: 512, mipmapped: false)
-        )
-        
+    lazy var skyboxTextureCompute: MultipleTextureComputeSystem = {
+        let compute = MultipleTextureComputeSystem(context: context, textureDescriptors: [])
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdriTexture, index: offset)
-            computeEncoder.setBuffer(self.skyboxTextureComputeUniforms.buffer, offset: 0, index: 0)
         }
         
         return compute
