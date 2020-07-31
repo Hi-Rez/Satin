@@ -142,35 +142,33 @@ open class PerspectiveCameraController {
         
         target.update()
         
-        if length(translationVelocity) > Float.ulpOfOne {
+        if length(translationVelocity) > 0.0001 {
             updatePosition()
             translationVelocity *= translationDamping
         }
         
-        if abs(zoomVelocity) > Float.ulpOfOne {
+        if abs(zoomVelocity) > 0.0001 {
             updateZoom()
             zoomVelocity *= zoomDamping
         }
         
-        if abs(rotationVelocity) > Float.ulpOfOne, length(rotationAxis) > 0.9 {
+        if abs(rotationVelocity) > 0.0001, length(rotationAxis) > 0.9 {
             updateOrientation()
             rotationVelocity *= rotationDamping
         }
         
-        if abs(rollVelocity) > Float.ulpOfOne {
+        if abs(rollVelocity) > 0.0001 {
             updateRoll()
             rollVelocity *= rollDamping
         }
     }
     
     func updateOrientation() {
-        let quat = simd_quaternion(-rotationVelocity, rotationAxis)
-        target.orientation *= quat
+        target.orientation = simd_mul(target.orientation, simd_quatf(angle: -rotationVelocity, axis: rotationAxis))
     }
     
     func updateRoll() {
-        let quat = simd_quaternion(rollVelocity, camera.forwardDirection)
-        target.orientation *= quat
+        target.orientation = simd_mul(target.orientation, simd_quatf(angle: rollVelocity, axis: camera.forwardDirection))
     }
     
     func updateZoom() {
