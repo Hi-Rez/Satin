@@ -58,9 +58,7 @@ open class Geometry {
         }
     }
     
-    func update() {
-    
-    }
+    func update() {}
     
     func setupVertexBuffer() {
         guard let context = self.context else { return }
@@ -125,6 +123,20 @@ open class Geometry {
                     v2.normal *= 0.5
                 }
                 vertexData[i2].normal = v2.normal
+            }
+        }
+    }
+    
+    public func setFrom(_ geometryData: GeometryData) {
+        let vertexCount = Int(geometryData.vertexCount)
+        if vertexCount > 0, let data = geometryData.vertexData {
+            vertexData = Array(UnsafeBufferPointer(start: data, count: vertexCount))
+        }
+        
+        let indexCount = Int(geometryData.indexCount) * 3
+        if indexCount > 0, let data = geometryData.indexData {
+            data.withMemoryRebound(to: UInt32.self, capacity: indexCount) { ptr in
+                indexData = Array(UnsafeBufferPointer(start: ptr, count: indexCount))
             }
         }
     }

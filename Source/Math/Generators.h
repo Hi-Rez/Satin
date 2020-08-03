@@ -13,4 +13,6 @@
 
 GeometryData generateIcoSphereGeometryData(float radius, int res);
 
+GeometryData generateSquircleGeometryData(float size, float p, int angularResolution, int radialResolution);
+
 #endif /* Generators_h */
