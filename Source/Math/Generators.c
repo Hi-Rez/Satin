@@ -1,7 +1,4 @@
- 
-
-
-//
+ //
 //  Generators.c
 //  Satin
 //
@@ -13,7 +10,6 @@
 
 #include "Generators.h"
 #include "Geometry.h"
-#include "Math.h"
 
 GeometryData generateIcoSphereGeometryData(float radius, int res) {
     const float phi = (1.0 + sqrt(5)) * 0.5;

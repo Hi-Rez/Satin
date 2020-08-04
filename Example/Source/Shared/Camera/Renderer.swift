@@ -92,11 +92,12 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        cameraController.target.add(targetMesh)
         scene.add(cameraController.target)
+        scene.add(targetMesh)
     }
     
     override func update() {
+        targetMesh.position = cameraController.target.position
         cameraController.update()
         renderer.update()
     }

@@ -9,6 +9,10 @@
 #include <float.h>
 #include "Geometry.h"
 
+float map(float input, float inMin, float inMax, float outMin, float outMax) {
+    return ((input - inMin) / (inMax - inMin) * (outMax - outMin)) + outMin;
+}
+
 bool greaterThanZero(float a) { return a > FLT_EPSILON; }
 
 bool isZero(float a) { return a == 0 || fabsf(a) < FLT_EPSILON; }
