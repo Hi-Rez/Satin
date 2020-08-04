@@ -16,8 +16,7 @@ open class SquircleGeometry: Geometry {
     func setupData(size: Float, p: Float, res: (angular: Int, radial: Int)) {
         self.primitiveType = .triangle
         var geometryData = generateSquircleGeometryData(size, p, Int32(res.angular), Int32(res.radial))
-        setFrom(geometryData)        
+        setFrom(&geometryData)        
         freeGeometryData(&geometryData)
     }
 }
-

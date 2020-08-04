@@ -346,20 +346,7 @@ open class TextGeometry: Geometry {
                 }
             }
             
-            let vertexCount = Int(gData.vertexCount)
-            if vertexCount > 0, let data = gData.vertexData {
-                data.withMemoryRebound(to: Vertex.self, capacity: vertexCount) { ptr in
-                    vertexData = Array(UnsafeBufferPointer(start: ptr, count: vertexCount))
-                }
-            }
-            
-            let indexCount = Int(gData.indexCount) * 3
-            if indexCount > 0, let data = gData.indexData {
-                data.withMemoryRebound(to: UInt32.self, capacity: indexCount) { ptr in
-                    indexData = Array(UnsafeBufferPointer(start: ptr, count: indexCount))
-                }
-            }
-            
+            setFrom(&gData)
             freeGeometryData(&gData)
         }
     }

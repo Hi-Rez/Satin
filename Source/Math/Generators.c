@@ -1,3 +1,6 @@
+ 
+
+
 //
 //  Generators.c
 //  Satin
@@ -7,9 +10,9 @@
 
 #include <malloc/_malloc.h>
 #include <simd/simd.h>
-#include <Math.h>
 
 #include "Generators.h"
+#include "Geometry.h"
 #include "Math.h"
 
 GeometryData generateIcoSphereGeometryData(float radius, int res) {
@@ -186,3 +189,219 @@ GeometryData generateSquircleGeometryData(float size, float p, int angularResolu
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 }
+
+GeometryData generateRoundedRectGeometryData(float width, float height, float radius, int angularResolution,
+                                             int edgeXResolution, int edgeYResolution,
+                                             int radialResolution) {
+    float twoPi = M_PI * 2.0;
+    float halfPi = M_PI * 0.5;
+
+    int angular = angularResolution > 2 ? angularResolution : 3;
+    int radial = radialResolution > 1 ? radialResolution : 2;
+    int edgeX = edgeXResolution > 1 ? edgeXResolution : 2;
+    edgeX += edgeX % 2 == 0 ? 1 : 0;
+    int edgeY = edgeYResolution > 1 ? edgeYResolution : 2;
+    edgeY += edgeY % 2 == 0 ? 1 : 0;
+    int edgeYHalf = ceil(((float)edgeY + 0.5) / 2.0);
+
+    int perLoop = angular * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
+    int vertices = perLoop * radial;
+    int triangles = 2.0 * perLoop * (radial - 1) - 2.0 * (radial - 1);
+    
+//    printf("per loop: %d\n", perLoop);
+
+    Vertex *vtx = (Vertex *)malloc(sizeof(Vertex) * vertices);
+    TriangleIndices *ind = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangles);
+
+    int index = 0;
+
+    float widthHalf = width * 0.5;
+    float heightHalf = height * 0.5;
+
+    float minDim = widthHalf > heightHalf ? widthHalf : heightHalf;
+    radius = radius > minDim ? minDim : radius;
+
+    for (int j = 0; j < radial; j++) {
+        float n = (float)j / (float)(radial - 1);
+
+        simd_float2 start = simd_make_float2(widthHalf, 0.0);
+        simd_float2 end = simd_make_float2(widthHalf, heightHalf - radius);
+        for (int i = 0; i < edgeYHalf; i++) {
+            float t = (float)i / (float)(edgeYHalf - 1);
+            simd_float2 pos = simd_mix(start, end, t);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- edge 0\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 4
+
+        // corner 0
+        for (int i = 0; i < angular; i++) {
+            float t = (float)i / (float)(angular - 1);
+            float theta = t * halfPi;
+            float x = radius * cos(theta);
+            float y = radius * sin(theta);
+            simd_float2 pos = simd_make_float2(widthHalf - radius + x, heightHalf - radius + y);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- corner 0\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 12
+
+        start = simd_make_float2(widthHalf - radius, heightHalf);
+        end = simd_make_float2(-widthHalf + radius, heightHalf);
+        for (int i = 0; i < edgeX; i++) {
+            float t = (float)i / (float)(edgeX - 1);
+            simd_float2 pos = simd_mix(start, end, t);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- edge 1\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 20
+
+        // corner 1
+        for (int i = 0; i < angular; i++) {
+            float t = (float)i / (float)(angular - 1);
+            float theta = t * halfPi + halfPi;
+            float x = radius * cos(theta);
+            float y = radius * sin(theta);
+            simd_float2 pos = simd_make_float2(-widthHalf + radius + x, heightHalf - radius + y);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- corner 1\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 28
+
+        start = simd_make_float2(-widthHalf, heightHalf - radius);
+        end = simd_make_float2(-widthHalf, -heightHalf + radius);
+        for (int i = 0; i < edgeY; i++) {
+            float t = (float)i / (float)(edgeY - 1);
+            simd_float2 pos = simd_mix(start, end, t);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- edge 2\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 36
+
+        // corner 2
+        for (int i = 0; i < angular; i++) {
+            float t = (float)i / (float)(angular - 1);
+            float theta = t * halfPi + M_PI;
+            float x = radius * cos(theta);
+            float y = radius * sin(theta);
+            simd_float2 pos = simd_make_float2(-widthHalf + radius + x, -heightHalf + radius + y);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- corner 2\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 44
+
+        start = simd_make_float2(-widthHalf + radius, -heightHalf);
+        end = simd_make_float2(widthHalf - radius, -heightHalf);
+        for (int i = 0; i < edgeX; i++) {
+            float t = (float)i / (float)(edgeX - 1);
+            simd_float2 pos = simd_mix(start, end, t);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+//            printf("angle: %d, %f -- edge 3\n", index, angle);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+        // 8 -- 52
+
+        // corner 3
+        for (int i = 0; i < angular; i++) {
+            float t = (float)i / (float)(angular - 1);
+            float theta = t * halfPi + 1.5 * M_PI;
+            float x = radius * cos(theta);
+            float y = radius * sin(theta);
+            simd_float2 pos = simd_make_float2(widthHalf - radius + x, -heightHalf + radius + y);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+            angle = isZero(angle) ? twoPi : angle;
+//            printf("angle: %d, %f %f -- corner 3\n", index, angle, theta);
+            float uvx = angle / twoPi;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+
+        start = simd_make_float2(widthHalf, -heightHalf + radius);
+        end = simd_make_float2(widthHalf, 0.0);
+        for (int i = 0; i < edgeYHalf; i++) {
+            float t = (float)i / (float)(edgeYHalf - 1);
+            simd_float2 pos = simd_mix(start, end, t);
+            vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
+            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
+            float angle = angle2(pos);
+            angle = isZero(angle) ? twoPi : angle;
+//            printf("angle: %d, %f -- edge 4\n", index, angle);
+            float uvx = angle / twoPi;
+            uvx = (i == (edgeYHalf - 1)) ? 1.0 : uvx;
+            float uvy = n * 0.0;
+            vtx[index].uv = simd_make_float2(uvx, uvy);
+            index++;
+        }
+    }
+    
+    int triIndex = 0;
+    for (int j = 0; j < radial; j++) {
+        for (int i = 0; i < perLoop; i++) {
+
+            if (((j + 1) != radial) && ((i + 1) != perLoop)) {
+                int currLoop = j * perLoop;
+                int nextLoop = (j + 1) * perLoop;
+
+                int i0 = currLoop + i;
+                int i1 = currLoop + i + 1;
+
+                int i2 = nextLoop + i;
+                int i3 = nextLoop + i + 1;
+
+                ind[triIndex] = (TriangleIndices){ i0, i2, i3 };
+                triIndex++;
+                ind[triIndex] = (TriangleIndices){ i0, i3, i1 };
+                triIndex++;
+            }
+        }
+    }
+    
+    return (GeometryData){
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+

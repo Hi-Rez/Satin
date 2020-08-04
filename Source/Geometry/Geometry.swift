@@ -127,7 +127,7 @@ open class Geometry {
         }
     }
     
-    public func setFrom(_ geometryData: GeometryData) {
+    public func setFrom(_ geometryData: inout GeometryData) {
         let vertexCount = Int(geometryData.vertexCount)
         if vertexCount > 0, let data = geometryData.vertexData {
             vertexData = Array(UnsafeBufferPointer(start: data, count: vertexCount))
