@@ -230,17 +230,10 @@ open class Renderer
         if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
         {
             mesh.update(camera: camera)
-            
-            let label = mesh.label
-            
-            renderEncoder.pushDebugGroup(label)
-            
             renderEncoder.label = label
             renderEncoder.setViewport(viewport)
             renderEncoder.setRenderPipelineState(pipeline)
-            
             material.bind(renderEncoder)
-    
             mesh.draw(renderEncoder: renderEncoder)
         }
         
@@ -248,7 +241,10 @@ open class Renderer
         {
             if child.visible
             {
+                let label = child.label
+                renderEncoder.pushDebugGroup(label)
                 draw(renderEncoder: renderEncoder, object: child)
+                renderEncoder.popDebugGroup()
             }
         }
     }
