@@ -187,9 +187,9 @@ open class Raycaster {
         }
     }
     
-    func getMeshes(_ object: Object, _ recursive: Bool) -> [Mesh] {
+    func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Mesh] {
         var results: [Mesh] = []
-        if object.visible {
+        if  invisible || object.visible {
             if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let _ = material.pipeline {
                 let geometry = mesh.geometry
                 if !geometry.vertexData.isEmpty, geometry.primitiveType == .triangle {
@@ -200,7 +200,7 @@ open class Raycaster {
             if recursive {
                 let children = object.children
                 for child in children {
-                    results.append(contentsOf: getMeshes(child, recursive))
+                    results.append(contentsOf: getMeshes(child, recursive, invisible))
                 }
             }
         }
@@ -217,8 +217,8 @@ open class Raycaster {
         intersectionBuffer = Buffer(context: context, parameters: intersectionParams, count: _count)
     }
     
-    public func intersect(_ object: Object, _ recursive: Bool = true) -> [RaycastResult] {
-        let meshes: [Mesh] = getMeshes(object, recursive)
+    public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
+        let meshes: [Mesh] = getMeshes(object, recursive, invisible)
         
         var count = 0
         var intersectables: [Any] = []
