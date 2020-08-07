@@ -20,4 +20,9 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
                                              int angularResolution, int edgeXResolution,
                                              int edgeYResolution, int radialResolution);
 
+GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, float depth,
+                                                     float radius, int angularResolution,
+                                                     int edgeXResolution, int edgeYResolution,
+                                                     int edgeZResolution, int radialResolution);
+
 #endif /* Generators_h */

@@ -144,18 +144,28 @@ void combineAndScaleAndOffsetGeometryData(GeometryData *dest, GeometryData *src,
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
-void copyGeometryData(GeometryData *dest, GeometryData *src) {
+void copyGeometryVertexData( GeometryData *dest, GeometryData *src, int start, int count )
+{
     if (src->vertexCount > 0) {
-        dest->vertexCount = src->vertexCount;
-        dest->vertexData = (Vertex *)malloc(src->vertexCount * sizeof(Vertex));
-        memcpy(dest->vertexData, src->vertexData, src->vertexCount * sizeof(Vertex));
+        dest->vertexCount = count;
+        dest->vertexData = (Vertex *)malloc(count * sizeof(Vertex));
+        memcpy(dest->vertexData, src->vertexData + start, count * sizeof(Vertex));
     }
+}
 
+void copyGeometryIndexData( GeometryData *dest, GeometryData *src, int start, int count )
+{
     if (src->indexCount > 0) {
-        dest->indexCount = src->indexCount;
-        dest->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * src->indexCount);
-        memcpy(dest->indexData, src->indexData, sizeof(TriangleIndices) * src->indexCount);
+        dest->indexCount = count;
+        dest->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * count);
+        memcpy(dest->indexData, src->indexData + start, count * sizeof(TriangleIndices) );
     }
+}
+
+void copyGeometryData(GeometryData *dest, GeometryData *src) {
+    
+    copyGeometryVertexData(dest, src, 0, src->vertexCount);
+    copyGeometryIndexData(dest, src, 0, src->indexCount);
 }
 
 void computeNormalsOfGeometryData(GeometryData *data) {

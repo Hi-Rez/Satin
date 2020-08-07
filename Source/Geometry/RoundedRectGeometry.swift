@@ -11,8 +11,8 @@ open class RoundedRectGeometry: Geometry {
     
     public init(size: (width: Float, height: Float), radius: Float = 0.5, res: (angular: Int, radial: Int) = (32, 32)) {
         super.init()
-        let edgeX = Int(Float(res.angular) * size.width / radius)/2
-        let edgeY = Int(Float(res.angular) * size.height / radius)/2
+        let edgeX = Int(Float(res.angular) * size.width / radius) / 2
+        let edgeY = Int(Float(res.angular) * size.height / radius) / 2
         self.setupData(size: size, radius: radius, res: (res.angular, edgeX, edgeY, res.radial))
     }
     

@@ -1,4 +1,4 @@
- //
+//
 //  Generators.c
 //  Satin
 //
@@ -21,8 +21,8 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
     int vertices = 12;
     int triangles = 20;
 
-    Vertex *vtx = (Vertex *)malloc(sizeof(Vertex) * vertices);
-    TriangleIndices *ind = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangles);
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
 
     vtx[0].position = simd_make_float4(0.0, h, w, 1.0);
     vtx[1].position = simd_make_float4(0.0, h, -w, 1.0);
@@ -139,8 +139,8 @@ GeometryData generateSquircleGeometryData(float size, float p, int angularResolu
     int vertices = radial * perLoop;
     int triangles = angular * 2.0 * radial;
 
-    Vertex *vtx = (Vertex *)malloc(sizeof(Vertex) * vertices);
-    TriangleIndices *ind = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangles);
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
 
     int triIndex = 0;
     for (int j = 0; j < radial; j++) {
@@ -186,9 +186,9 @@ GeometryData generateSquircleGeometryData(float size, float p, int angularResolu
     };
 }
 
-GeometryData generateRoundedRectGeometryData(float width, float height, float radius, int angularResolution,
-                                             int edgeXResolution, int edgeYResolution,
-                                             int radialResolution) {
+GeometryData generateRoundedRectGeometryData(float width, float height, float radius,
+                                             int angularResolution, int edgeXResolution,
+                                             int edgeYResolution, int radialResolution) {
     float twoPi = M_PI * 2.0;
     float halfPi = M_PI * 0.5;
 
@@ -200,14 +200,14 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
     edgeY += edgeY % 2 == 0 ? 1 : 0;
     int edgeYHalf = ceil(((float)edgeY + 0.5) / 2.0);
 
-    int perLoop = angular * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
+    int perLoop = (angular - 2) * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
     int vertices = perLoop * radial;
     int triangles = 2.0 * perLoop * (radial - 1) - 2.0 * (radial - 1);
-    
-//    printf("per loop: %d\n", perLoop);
 
-    Vertex *vtx = (Vertex *)malloc(sizeof(Vertex) * vertices);
-    TriangleIndices *ind = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangles);
+    //    printf("per loop: %d\n", perLoop);
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
 
     int index = 0;
 
@@ -228,16 +228,16 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- edge 0\n", index, angle);
+            //            printf("angle: %d, %f -- edge 0\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
         // 4
 
         // corner 0
-        for (int i = 0; i < angular; i++) {
+        for (int i = 1; i < angular-1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi;
             float x = radius * cos(theta);
@@ -246,9 +246,9 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- corner 0\n", index, angle);
+            //            printf("angle: %d, %f -- corner 0\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
@@ -262,16 +262,16 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- edge 1\n", index, angle);
+            //            printf("angle: %d, %f -- edge 1\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
         // 8 -- 20
 
         // corner 1
-        for (int i = 0; i < angular; i++) {
+        for (int i = 1; i < angular-1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + halfPi;
             float x = radius * cos(theta);
@@ -280,9 +280,9 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- corner 1\n", index, angle);
+            //            printf("angle: %d, %f -- corner 1\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
@@ -296,16 +296,16 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- edge 2\n", index, angle);
+            //            printf("angle: %d, %f -- edge 2\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
         // 8 -- 36
 
         // corner 2
-        for (int i = 0; i < angular; i++) {
+        for (int i = 1; i < angular-1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + M_PI;
             float x = radius * cos(theta);
@@ -314,9 +314,9 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- corner 2\n", index, angle);
+            //            printf("angle: %d, %f -- corner 2\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
@@ -330,16 +330,16 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].position = simd_make_float4(n * pos, 0.0, 1.0);
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
-//            printf("angle: %d, %f -- edge 3\n", index, angle);
+            //            printf("angle: %d, %f -- edge 3\n", index, angle);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
         // 8 -- 52
 
         // corner 3
-        for (int i = 0; i < angular; i++) {
+        for (int i = 1; i < angular-1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + 1.5 * M_PI;
             float x = radius * cos(theta);
@@ -349,9 +349,9 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
             angle = isZero(angle) ? twoPi : angle;
-//            printf("angle: %d, %f %f -- corner 3\n", index, angle, theta);
+            //            printf("angle: %d, %f %f -- corner 3\n", index, angle, theta);
             float uvx = angle / twoPi;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
@@ -365,15 +365,15 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
             float angle = angle2(pos);
             angle = isZero(angle) ? twoPi : angle;
-//            printf("angle: %d, %f -- edge 4\n", index, angle);
+            //            printf("angle: %d, %f -- edge 4\n", index, angle);
             float uvx = angle / twoPi;
             uvx = (i == (edgeYHalf - 1)) ? 1.0 : uvx;
-            float uvy = n * 0.0;
+            float uvy = n;
             vtx[index].uv = simd_make_float2(uvx, uvy);
             index++;
         }
     }
-    
+
     int triIndex = 0;
     for (int j = 0; j < radial; j++) {
         for (int i = 0; i < perLoop; i++) {
@@ -395,9 +395,108 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
             }
         }
     }
-    
+
     return (GeometryData){
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 }
 
+GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, float depth,
+                                                     float radius, int angularResolution,
+                                                     int edgeXResolution, int edgeYResolution,
+                                                     int edgeZResolution, int radialResolution) {
+    GeometryData faceData =
+        generateRoundedRectGeometryData(width, height, radius, angularResolution, edgeXResolution,
+                                        edgeYResolution, radialResolution);
+
+    GeometryData result = {
+        .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL
+    };
+
+    float depthHalf = depth * 0.5;
+    combineAndOffsetGeometryData(&result, &faceData, simd_make_float3(0.0, 0.0, depthHalf));
+
+    // Calculations from RoundedRectGeometry
+    int angular = angularResolution > 2 ? angularResolution : 3;
+    int radial = radialResolution > 1 ? radialResolution : 2;
+    int edgeX = edgeXResolution > 1 ? edgeXResolution : 2;
+    edgeX += edgeX % 2 == 0 ? 1 : 0;
+    int edgeY = edgeYResolution > 1 ? edgeYResolution : 2;
+    edgeY += edgeY % 2 == 0 ? 1 : 0;
+    int edgeYHalf = ceil(((float)edgeY + 0.5) / 2.0);
+    int edgeZ = edgeZResolution > 0 ? edgeZResolution : 1;
+
+    int perLoop = (angular - 2) * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
+    int vertices = perLoop * radial;
+    
+//    printf("perloop: %d\n", perLoop);
+//    printf("vertices: %d\n", vertices);
+    
+    GeometryData edgeData = {
+        .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL
+    };
+
+    copyGeometryVertexData(&edgeData, &result, vertices - perLoop, perLoop);
+    
+    int extrudeTriangles = (perLoop - 1) * 2 * edgeZ;
+    TriangleIndices *ind = (TriangleIndices *)malloc(extrudeTriangles * sizeof(TriangleIndices));
+
+    GeometryData extrudeData = {
+        .vertexCount = 0, .vertexData = NULL, .indexCount = extrudeTriangles, .indexData = ind
+    };
+
+    int triIndex = 0;
+    for (int j = 0; j <= edgeZ; j++) {
+        float z = j * depth / (float)(edgeZ + 1);
+        float uvx = (float)j / (float)edgeZ;
+        int currLoop = j * perLoop;
+        int nextLoop = (j + 1) * perLoop;
+        for (int i = 0; i < perLoop; i++) {
+            float uvy = (float)i/(float)perLoop;
+            edgeData.vertexData[i].uv = simd_make_float2(uvx, uvy);
+            edgeData.vertexData[i].position.z -= z;
+            
+            int prev = i - 1;
+            prev = prev < 0 ? (perLoop - 1) : prev;
+            int curr = i;
+            int next = (i + 1) % perLoop;
+            
+            simd_float4 prevPos = edgeData.vertexData[prev].position;
+            simd_float4 currPos = edgeData.vertexData[curr].position;
+            simd_float4 nextPos = edgeData.vertexData[next].position;
+            
+            simd_float4 d0 = prevPos - currPos;
+            simd_float4 d1 = currPos - nextPos;
+            
+            d0 += d1;
+            edgeData.vertexData[i].normal = simd_normalize(simd_make_float3(-d0.y, d0.x, 0.0));
+            
+            if((j != edgeZ) && ((i + 1) != perLoop)) {
+                int i0 = currLoop + curr;
+                int i1 = currLoop + next;
+
+                int i2 = nextLoop + curr;
+                int i3 = nextLoop + next;
+
+                ind[triIndex] = (TriangleIndices){ i0, i2, i3 };
+                triIndex++;
+                ind[triIndex] = (TriangleIndices){ i0, i3, i1 };
+                triIndex++;
+            }
+        }
+        combineGeometryData(&extrudeData, &edgeData);
+    }
+        
+//    printf("triangles: %d\n", extrudeTriangles);
+//    printf("triindex: %d\n", triIndex);
+
+    combineGeometryData(&result, &extrudeData);
+    reverseFacesOfGeometryData(&faceData);
+    combineAndOffsetGeometryData(&result, &faceData, simd_make_float3(0.0, 0.0, -depthHalf));
+
+    freeGeometryData(&edgeData);
+    freeGeometryData(&extrudeData);
+    freeGeometryData(&faceData);
+
+    return result;
+}
