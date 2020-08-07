@@ -428,10 +428,7 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
 
     int perLoop = (angular - 2) * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
     int vertices = perLoop * radial;
-    
-//    printf("perloop: %d\n", perLoop);
-//    printf("vertices: %d\n", vertices);
-    
+        
     GeometryData edgeData = {
         .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL
     };
@@ -446,8 +443,9 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
     };
 
     int triIndex = 0;
+    float zInc = depth / edgeZ;
     for (int j = 0; j <= edgeZ; j++) {
-        float z = j * depth / (float)(edgeZ + 1);
+        float z = j * zInc;
         float uvx = (float)j / (float)edgeZ;
         int currLoop = j * perLoop;
         int nextLoop = (j + 1) * perLoop;
@@ -487,9 +485,6 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
         combineGeometryData(&extrudeData, &edgeData);
     }
         
-//    printf("triangles: %d\n", extrudeTriangles);
-//    printf("triindex: %d\n", triIndex);
-
     combineGeometryData(&result, &extrudeData);
     reverseFacesOfGeometryData(&faceData);
     combineAndOffsetGeometryData(&result, &faceData, simd_make_float3(0.0, 0.0, -depthHalf));
