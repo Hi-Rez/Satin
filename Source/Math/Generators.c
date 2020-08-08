@@ -214,7 +214,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
     float widthHalf = width * 0.5;
     float heightHalf = height * 0.5;
 
-    float minDim = widthHalf > heightHalf ? widthHalf : heightHalf;
+    float minDim = (widthHalf < heightHalf ? widthHalf : heightHalf);    
     radius = radius > minDim ? minDim : radius;
 
     for (int j = 0; j < radial; j++) {
@@ -428,7 +428,7 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
 
     int perLoop = (angular - 2) * 4 + edgeX * 2 + edgeY + edgeYHalf * 2;
     int vertices = perLoop * radial;
-        
+
     GeometryData edgeData = {
         .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL
     };

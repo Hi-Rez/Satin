@@ -89,7 +89,7 @@ open class PerspectiveCameraController {
         }
     }
     
-    open var zoomScalar: Float = 1.0
+    open var zoomScalar: Float = 2.0
     open var zoomDamping: Float = 0.9
     var zoomVelocity: Float = 0.0
     
