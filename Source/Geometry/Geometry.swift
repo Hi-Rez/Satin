@@ -141,6 +141,24 @@ open class Geometry {
         }
     }
     
+    public func getGeometryData() -> GeometryData {
+        var data = GeometryData()
+        data.vertexCount = Int32(vertexData.count)
+        data.indexCount = Int32(indexData.count/3)
+        
+        vertexData.withUnsafeMutableBufferPointer { vtxPtr in
+            data.vertexData = vtxPtr.baseAddress!
+        }
+        
+        indexData.withUnsafeMutableBufferPointer { indPtr in
+            indPtr.withMemoryRebound(to: TriangleIndices.self) { indTriPtr in
+                data.indexData = indTriPtr.baseAddress!
+            }
+        }
+        
+        return data
+    }
+    
     deinit {
         indexData = []
         vertexData = []

@@ -40,8 +40,11 @@ void combineGeometryData( GeometryData *dest, GeometryData *src );
 void combineAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 offset );
 void combineAndScaleGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale );
 void combineAndScaleAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale, simd_float3 offset );
+void combineAndTransformGeometryData( GeometryData *dest, GeometryData *src, simd_float4x4 transform ); 
 
 void computeNormalsOfGeometryData( GeometryData *data );
 void reverseFacesOfGeometryData( GeometryData *data );
+
+void transformGeometryData( GeometryData *data, simd_float4x4 transform ); 
 
 #endif /* Types_h */

@@ -144,6 +144,37 @@ void combineAndScaleAndOffsetGeometryData(GeometryData *dest, GeometryData *src,
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
+void combineAndTransformGeometryData( GeometryData *dest, GeometryData *src, simd_float4x4 transform )
+{
+    int destPreCombineVertexCount = dest->vertexCount;
+    simd_float4x4 rotation = simd_transpose(simd_inverse(transform));
+    simd_float3x3 rot = simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]), simd_make_float3(rotation.columns[2]));
+    
+    if (src->vertexCount > 0) {
+        if (dest->vertexCount > 0) {
+            int totalCount = src->vertexCount + dest->vertexCount;
+            dest->vertexData = realloc(dest->vertexData, totalCount * sizeof(Vertex));
+            memcpy(dest->vertexData + dest->vertexCount, src->vertexData,
+                   src->vertexCount * sizeof(Vertex));
+            for (int i = dest->vertexCount; i < totalCount; i++) {
+                dest->vertexData[i].position = simd_mul(transform, dest->vertexData[i].position);
+                dest->vertexData[i].normal = simd_mul(rot, dest->vertexData[i].normal);
+            }
+            dest->vertexCount += src->vertexCount;
+        } else {
+            dest->vertexData = (Vertex *)malloc(src->vertexCount * sizeof(Vertex));
+            memcpy(dest->vertexData, src->vertexData, src->vertexCount * sizeof(Vertex));
+            for (int i = 0; i < src->vertexCount; i++) {
+                dest->vertexData[i].position = simd_mul(transform, dest->vertexData[i].position);
+                dest->vertexData[i].normal = simd_mul(rot, dest->vertexData[i].normal);
+            }
+            dest->vertexCount = src->vertexCount;
+        }
+    }
+
+    combineIndexGeometryData(dest, src, destPreCombineVertexCount);
+}
+
 void copyGeometryVertexData( GeometryData *dest, GeometryData *src, int start, int count )
 {
     if (src->vertexCount > 0) {
@@ -222,5 +253,16 @@ void reverseFacesOfGeometryData(GeometryData *data) {
         for (int i = 0; i < vertexCount; i++) {
             data->vertexData[i].normal *= -1.0;
         }
+    }
+}
+
+void transformGeometryData( GeometryData *data, simd_float4x4 transform )
+{
+    simd_float4x4 rotation = simd_transpose(simd_inverse(transform));
+    simd_float3x3 rot = simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]), simd_make_float3(rotation.columns[2]));
+    int count = data->vertexCount;
+    for(int i = 0; i < count; i++) {
+        data->vertexData[i].position = simd_mul(transform, data->vertexData[i].position);
+        data->vertexData[i].normal = simd_mul(rot, data->vertexData[i].normal);
     }
 }
