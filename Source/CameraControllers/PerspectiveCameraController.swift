@@ -21,6 +21,8 @@ open class PerspectiveCameraController {
     public weak var camera: PerspectiveCamera!
     public weak var view: MTKView!
     
+    public var onChange: (() -> ())?
+    
     open var mouseDeltaSensitivity: Float = 600.0
     open var scrollDeltaSensitivity: Float = 600.0
     
@@ -140,26 +142,36 @@ open class PerspectiveCameraController {
     open func update() {
         guard camera != nil else { return }
         
+        var changed = false
+        
         target.update()
         
         if length(translationVelocity) > 0.0001 {
             updatePosition()
             translationVelocity *= translationDamping
+            changed = true
         }
         
         if abs(zoomVelocity) > 0.0001 {
             updateZoom()
             zoomVelocity *= zoomDamping
+            changed = true
         }
         
         if abs(rotationVelocity) > 0.0001, length(rotationAxis) > 0.9 {
             updateOrientation()
             rotationVelocity *= rotationDamping
+            changed = true
         }
         
         if abs(rollVelocity) > 0.0001 {
             updateRoll()
             rollVelocity *= rollDamping
+            changed = true
+        }
+        
+        if changed {
+            onChange?()
         }
     }
     
@@ -461,7 +473,7 @@ open class PerspectiveCameraController {
             }
             else if event.phase == .began || event.phase == .changed {
                 state = .panning
-                let cd = length(camera.worldPosition - target.position)/10.0
+                let cd = length(camera.worldPosition - target.position) / 10.0
                 let dx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
                 let dy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
                 translationVelocity.x += dx * translationScalar * cd
@@ -589,7 +601,7 @@ open class PerspectiveCameraController {
         else if gestureRecognizer.state == .changed, state == .panning {
             panCurrentPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
             let delta = panCurrentPoint - panPreviousPoint
-            let cd = length(camera.worldPosition - target.position)/10.0
+            let cd = length(camera.worldPosition - target.position) / 10.0
             translationVelocity.x += translationScalar * delta.x * cd
             translationVelocity.y -= translationScalar * delta.y * cd
             panPreviousPoint = panCurrentPoint
@@ -654,6 +666,8 @@ open class PerspectiveCameraController {
             self.state = .inactive
             self.rotationVelocity = 0.0
             self.translationVelocity = simd_make_float3(0.0)
+            self.zoomVelocity = 0.0
+            self.rollVelocity = 0.0
             
             self.target.position = simd_float3(repeating: 0.0)
             self.target.orientation = simd_quatf(matrix_identity_float4x4)
@@ -662,6 +676,8 @@ open class PerspectiveCameraController {
             camera.position = self.defaultPosition
             camera.orientation = self.defaultOrientation
             camera.updateMatrix = true
+                        
+            self.onChange?()
         }
     }
 }

@@ -161,9 +161,9 @@ open class TextureComputeSystem {
         if count > 0, (resetPipeline != nil || updatePipeline != nil), let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
             
-            if feedback, _reset, let pipeline = self.resetPipeline {
+            if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0...count {
+                for i in 0..<count {
                     let offset = setTextures(computeEncoder, i)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)
@@ -186,17 +186,18 @@ open class TextureComputeSystem {
     }
 
     private func setTextures(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
-        var index = 0
+        var offset = 0
         if feedback {
-            computeEncoder.setTexture(textures[ping()], index: index)
-            index += 1
-            computeEncoder.setTexture(textures[pong()], index: index)
+            computeEncoder.setTexture(textures[ping(index)], index: offset)
+            offset += 1
+            computeEncoder.setTexture(textures[pong(index)], index: offset)
+            offset += 1
         } else {
-            computeEncoder.setTexture(textures[0], index: index)
-            index += 1
+            computeEncoder.setTexture(textures[ping(index)], index: offset)
+            offset += 1
         }
 
-        return index
+        return offset
     }
 
     private func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
@@ -254,7 +255,7 @@ open class TextureComputeSystem {
     }
 
     private func ping() -> Int {
-        return _index
+        return (_index % count)
     }
 
     private func pong() -> Int {
@@ -263,5 +264,13 @@ open class TextureComputeSystem {
 
     private func pingPong() {
         _index = (_index + 1) % count
+    }
+    
+    private func ping(_ index: Int) -> Int {
+        return (index % count)
+    }
+    
+    private func pong(_ index: Int) -> Int {
+        return ((index + 1) % count)
     }
 }

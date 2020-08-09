@@ -20,6 +20,7 @@ open class ExtrudedTextGeometry: TextGeometry {
     public init(text: String, fontName: String, fontSize: Float, distance: Float = 1.0, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0) {
         self.distance = distance
         super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
+        setupData()
     }
     
     override func setupData() {
