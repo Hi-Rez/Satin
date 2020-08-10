@@ -174,7 +174,7 @@ open class TextureComputeSystem {
 
             if let pipeline = self.updatePipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                let offset = setTextures(computeEncoder, _index)
+                let offset = setTextures(computeEncoder)
                 preUpdate?(computeEncoder, offset)
                 preCompute?(computeEncoder, offset)
                 dispatch(computeEncoder, pipeline)
@@ -185,6 +185,21 @@ open class TextureComputeSystem {
         }
     }
 
+    private func setTextures(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
+        var offset = 0
+        if feedback {
+            computeEncoder.setTexture(textures[ping()], index: offset)
+            offset += 1
+            computeEncoder.setTexture(textures[pong()], index: offset)
+            offset += 1
+        } else {
+            computeEncoder.setTexture(textures[0], index: offset)
+            offset += 1
+        }
+
+        return offset
+    }
+    
     private func setTextures(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
         var offset = 0
         if feedback {
@@ -193,7 +208,7 @@ open class TextureComputeSystem {
             computeEncoder.setTexture(textures[pong(index)], index: offset)
             offset += 1
         } else {
-            computeEncoder.setTexture(textures[ping(index)], index: offset)
+            computeEncoder.setTexture(textures[index], index: offset)
             offset += 1
         }
 
