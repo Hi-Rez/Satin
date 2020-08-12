@@ -16,23 +16,20 @@ float3 generatePosition( uint index, uint count )
 }
 
 kernel void resetCompute( uint index [[thread_position_in_grid]],
-    device Particle *inBuffer [[buffer( 0 )]],
-    device Particle *outBuffer [[buffer( 1 )]],
-    const device ComputeUniforms &uniforms [[buffer( 2 )]] )
+    device Particle *outBuffer [[buffer( ComputeBufferCustom0 )]],
+    const device ComputeUniforms &uniforms [[buffer( ComputeBufferCustom1 )]] )
 {
     Particle out;
     out.position = generatePosition( index, uint( uniforms.count ) );
     out.velocity = float3( 0.0, 0.0, 0.25 + random( float2( float( index ), 0.0 ) ) );
     outBuffer[index] = out;
-    inBuffer[index] = out;
 }
 
 kernel void updateCompute( uint index [[thread_position_in_grid]],
-    const device Particle *inBuffer [[buffer( 0 )]],
-    device Particle *outBuffer [[buffer( 1 )]],
-    const device ComputeUniforms &uniforms [[buffer( 2 )]] )
+    device Particle *outBuffer [[buffer( ComputeBufferCustom0 )]],
+    const device ComputeUniforms &uniforms [[buffer( ComputeBufferCustom1 )]] )
 {
-    Particle in = inBuffer[index];
+    Particle in = outBuffer[index];
     Particle out;
     out.position = in.position + in.velocity;
     out.velocity = in.velocity;

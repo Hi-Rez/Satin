@@ -15,7 +15,16 @@ open class BufferComputeSystem {
 
     private var _useDispatchThreads: Bool = false
 
+    public var label: String = "Satin Buffer Compute Encoder"
+
     public var count: Int = 0 {
+        didSet {
+            _reset = true
+            _setupBuffers = true
+        }
+    }
+
+    public var feedback: Bool {
         didSet {
             _reset = true
             _setupBuffers = true
@@ -24,6 +33,10 @@ open class BufferComputeSystem {
 
     public var index: Int {
         return pong()
+    }
+
+    public var bufferCount: Int {
+        return feedback ? 2 : 1
     }
 
     public var bufferMap: [String: [MTLBuffer]] = [:]
@@ -44,21 +57,22 @@ open class BufferComputeSystem {
                 resetPipeline: MTLComputePipelineState?,
                 updatePipeline: MTLComputePipelineState?,
                 params: [ParameterGroup],
-                count: Int) {
+                count: Int,
+                feedback: Bool = false) {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
         }
-
         self.context = context
         self.resetPipeline = resetPipeline
         self.updatePipeline = updatePipeline
         self.params = params
         self.count = count
         self._count = count
+        self.feedback = feedback
         setupBuffers()
     }
 
-    public init(context: Context, count: Int) {
+    public init(context: Context, count: Int, feedback: Bool = false) {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
         }
@@ -66,6 +80,7 @@ open class BufferComputeSystem {
         self.context = context
         self.count = count
         self._count = count
+        self.feedback = feedback
         setup()
     }
 
@@ -116,7 +131,7 @@ open class BufferComputeSystem {
                 bufferMap[label] = []
                 bufferOrder.append(label)
                 var buffers: [MTLBuffer] = []
-                for i in 0..<2 {
+                for i in 0..<bufferCount {
                     if let buffer = context.device.makeBuffer(length: stride * count, options: [.storageModePrivate]) {
                         buffer.label = param.label + " \(i)"
                         buffers.append(buffer)
@@ -148,9 +163,10 @@ open class BufferComputeSystem {
         }
 
         if bufferMap.count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
+            computeEncoder.label = label
             if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0...1 {
+                for i in 0..<bufferCount {
                     let offset = setBuffers(computeEncoder, i)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)
@@ -172,29 +188,49 @@ open class BufferComputeSystem {
         }
     }
 
-    func setBuffers(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
+    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
         var offset = 0
-        for key in bufferOrder {
-            if let buffers = bufferMap[key] {
-                let inBuffer = buffers[ping()]
-                let outBuffer = buffers[pong()]
-                computeEncoder.setBuffer(inBuffer, offset: 0, index: offset)
-                offset += 1
-                computeEncoder.setBuffer(outBuffer, offset: 0, index: offset)
-                offset += 1
+        if feedback {
+            for key in bufferOrder {
+                if let buffers = bufferMap[key] {
+                    let inBuffer = buffers[ping()]
+                    let outBuffer = buffers[pong()]
+                    computeEncoder.setBuffer(inBuffer, offset: 0, index: offset)
+                    offset += 1
+                    computeEncoder.setBuffer(outBuffer, offset: 0, index: offset)
+                    offset += 1
+                }
+            }
+        } else {
+            for key in bufferOrder {
+                if let buffers = bufferMap[key] {
+                    computeEncoder.setBuffer(buffers[ping()], offset: 0, index: offset)
+                    offset += 1
+                }
             }
         }
         return offset
     }
 
-    func setBuffers(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
+    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
         var offset = 0
-        for key in bufferOrder {
-            if let buffers = bufferMap[key] {
-                computeEncoder.setBuffer(buffers[ping(index)], offset: 0, index: offset)
-                offset += 1
-                computeEncoder.setBuffer(buffers[pong(index)], offset: 0, index: offset)
-                offset += 1
+        if feedback {
+            for key in bufferOrder {
+                if let buffers = bufferMap[key] {
+                    let inBuffer = buffers[ping(index)]
+                    let outBuffer = buffers[pong(index)]
+                    computeEncoder.setBuffer(inBuffer, offset: 0, index: offset)
+                    offset += 1
+                    computeEncoder.setBuffer(outBuffer, offset: 0, index: offset)
+                    offset += 1
+                }
+            }
+        } else {
+            for key in bufferOrder {
+                if let buffers = bufferMap[key] {
+                    computeEncoder.setBuffer(buffers[ping(index)], offset: 0, index: offset)
+                    offset += 1
+                }
             }
         }
         return offset
@@ -236,18 +272,18 @@ open class BufferComputeSystem {
     }
 
     private func pong() -> Int {
-        return ((_index + 1) % 2)
+        return ((_index + 1) % bufferCount)
     }
 
     private func pingPong() {
-        _index = (_index + 1) % 2
+        _index = (_index + 1) % bufferCount
     }
 
     private func ping(_ index: Int) -> Int {
-        return (index % 2)
+        return (index % bufferCount)
     }
 
     private func pong(_ index: Int) -> Int {
-        return ((index + 1) % 2)
+        return ((index + 1) % bufferCount)
     }
 }

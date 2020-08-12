@@ -30,7 +30,15 @@ class Renderer: Forge.Renderer {
     var countParam = IntParameter("Count", 4096, .inputfield)
     
     lazy var computeSystem: BufferComputeSystem = {
-        BufferComputeSystem(context: context, count: countParam.value)
+        let compute = BufferComputeSystem(context: context, count: countParam.value, feedback: false)
+        compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, bufferOffset: Int) in
+            var offset = bufferOffset
+            if let uniforms = self.computeUniforms {
+                computeEncoder.setBuffer(uniforms.buffer, offset: uniforms.offset, index: offset)
+                offset += 1
+            }
+        }
+        return compute
     }()
     
     var computeParams: ParameterGroup?
@@ -46,6 +54,11 @@ class Renderer: Forge.Renderer {
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: PointGeometry(), material: spriteMaterial)
         mesh.instanceCount = countParam.value
+        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
+            if let buffer = self.computeSystem.getBuffer("Particle") {
+                renderEncoder.setVertexBuffer(buffer, offset: 0, index: VertexBufferIndex.Custom0.rawValue)
+            }
+        }
         return mesh
     }()
     
@@ -56,7 +69,7 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
+        Context(device, sampleCount, colorPixelFormat, .invalid, .invalid)
     }()
     
     lazy var camera: PerspectiveCamera = {
@@ -78,6 +91,7 @@ class Renderer: Forge.Renderer {
     var startTime: CFAbsoluteTime = 0.0
     
     // MARK: Render to Texture
+    
     var renderTexture: MTLTexture!
     var updateRenderTexture: Bool = true
     
@@ -102,15 +116,13 @@ class Renderer: Forge.Renderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm
-        metalKitView.depthStencilPixelFormat = .depth32Float
+        metalKitView.depthStencilPixelFormat = .invalid
         metalKitView.preferredFramesPerSecond = 60
     }
     
     override func setup() {
         setupMetalCompiler()
         setupLibrary()
-        setupMeshPreDraw()
-        setupBufferComputePreCompute()
         startTime = CFAbsoluteTimeGetCurrent()
     }
     
@@ -123,7 +135,7 @@ class Renderer: Forge.Renderer {
         var time = Float(CFAbsoluteTimeGetCurrent() - startTime)
         chromaMaterial.set("Time", time)
         
-        time *= 0.25;
+        time *= 0.25
         let radius: Float = 10.0 * sin(time * 0.5) * cos(time)
         camera.position = simd_make_float3(radius * sin(time), radius * cos(time), 100.0)
         
@@ -148,7 +160,7 @@ class Renderer: Forge.Renderer {
         chromaticProcessor.resize(size)
         updateRenderTexture = true
     }
-        
+    
     #if os(macOS)
     func openEditor() {
         if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
@@ -179,13 +191,7 @@ class Renderer: Forge.Renderer {
     }
     #endif
     
-    func setupMeshPreDraw() {
-        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
-            if let buffer = self.computeSystem.getBuffer("Particle") {
-                renderEncoder.setVertexBuffer(buffer, offset: 0, index: VertexBufferIndex.Custom0.rawValue)
-            }
-        }
-    }
+    func setupMeshPreDraw() {}
     
     func setupMetalCompiler() {
         metalFileCompiler.onUpdate = { [unowned self] in
@@ -229,16 +235,6 @@ class Renderer: Forge.Renderer {
         }
         catch {
             print(error.localizedDescription)
-        }
-    }
-    
-    func setupBufferComputePreCompute() {
-        computeSystem.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, bufferOffset: Int) in
-            var offset = bufferOffset
-            if let uniforms = self.computeUniforms {
-                computeEncoder.setBuffer(uniforms.buffer, offset: uniforms.offset, index: offset)
-                offset += 1
-            }
         }
     }
     
