@@ -91,7 +91,6 @@ class Renderer: Forge.Renderer {
         pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) -> Void in
             renderEncoder.setFragmentTexture(self.renderTexture, index: FragmentTextureIndex.Custom0.rawValue)
         }
-//        pp.mesh.material = chromaMaterial
         pp.label = "Chroma Processor"
         return pp
     }()
@@ -112,7 +111,6 @@ class Renderer: Forge.Renderer {
         setupLibrary()
         setupMeshPreDraw()
         setupBufferComputePreCompute()
-        setupChromaticProcessor()
         startTime = CFAbsoluteTimeGetCurrent()
     }
     
@@ -235,9 +233,8 @@ class Renderer: Forge.Renderer {
     }
     
     func setupBufferComputePreCompute() {
-        computeSystem.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, bufferOffset: Int, _: Int) in
+        computeSystem.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, bufferOffset: Int) in
             var offset = bufferOffset
-            
             if let uniforms = self.computeUniforms {
                 computeEncoder.setBuffer(uniforms.buffer, offset: uniforms.offset, index: offset)
                 offset += 1
@@ -269,8 +266,4 @@ class Renderer: Forge.Renderer {
         }
         return nil
     }
-    
-    func setupChromaticProcessor() {}
-    
-    func setupChromaticMeshPreDraw() {}
 }
