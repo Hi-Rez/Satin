@@ -43,6 +43,10 @@ open class Geometry {
     
     public init() {}
     
+    public init(_ geometryData: inout GeometryData) {
+        self.setFrom(&geometryData)
+    }
+    
     public init(primitiveType: MTLPrimitiveType, windingOrder: MTLWinding, indexType: MTLIndexType) {
         self.primitiveType = primitiveType
         self.windingOrder = windingOrder

@@ -10,7 +10,12 @@
 
 #include "Types.h"
 
-int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
 int extrudePaths(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
 
+int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gData);
+
+int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *faceLengths,
+                    int faceCount, GeometryData *gData, TriangleFaceMap *triangleFaceMap);
+
 #endif /* Triangulator_h */
+

@@ -24,6 +24,13 @@ typedef struct {
 } TriangleIndices;
 
 typedef struct {
+    int count;
+    uint32_t *data;
+} TriangleFaceMap;
+
+void freeTriangleFaceMap( TriangleFaceMap *map );
+
+typedef struct {
     int vertexCount;
     Vertex *vertexData;
     int indexCount;

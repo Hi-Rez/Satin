@@ -11,12 +11,20 @@
 #include "Geometry.h"
 #include "Types.h"
 
+void freeTriangleFaceMap( TriangleFaceMap *map ) {
+    if (map->count > 0 && map->data == NULL) { return; }
+    free(map->data);
+    map->count = 0;
+}
+
 void freeGeometryData(GeometryData *data) {
     if (data->vertexCount > 0 && data->vertexData == NULL) { return; }
     free(data->vertexData);
+    data->vertexCount = 0;
 
     if (data->indexCount > 0 && data->indexData == NULL) { return; }
     free(data->indexData);
+    data->indexCount = 0;
 }
 
 void combineIndexGeometryData(GeometryData *dest, GeometryData *src,
