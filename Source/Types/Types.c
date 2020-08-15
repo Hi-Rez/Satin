@@ -11,7 +11,7 @@
 #include "Geometry.h"
 #include "Types.h"
 
-void freeTriangleFaceMap( TriangleFaceMap *map ) {
+void freeTriangleFaceMap(TriangleFaceMap *map) {
     if (map->count > 0 && map->data == NULL) { return; }
     free(map->data);
     map->count = 0;
@@ -152,12 +152,14 @@ void combineAndScaleAndOffsetGeometryData(GeometryData *dest, GeometryData *src,
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
-void combineAndTransformGeometryData( GeometryData *dest, GeometryData *src, simd_float4x4 transform )
-{
+void combineAndTransformGeometryData(GeometryData *dest, GeometryData *src,
+                                     simd_float4x4 transform) {
     int destPreCombineVertexCount = dest->vertexCount;
     simd_float4x4 rotation = simd_transpose(simd_inverse(transform));
-    simd_float3x3 rot = simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]), simd_make_float3(rotation.columns[2]));
-    
+    simd_float3x3 rot =
+        simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]),
+                    simd_make_float3(rotation.columns[2]));
+
     if (src->vertexCount > 0) {
         if (dest->vertexCount > 0) {
             int totalCount = src->vertexCount + dest->vertexCount;
@@ -183,8 +185,7 @@ void combineAndTransformGeometryData( GeometryData *dest, GeometryData *src, sim
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
-void copyGeometryVertexData( GeometryData *dest, GeometryData *src, int start, int count )
-{
+void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int count) {
     if (src->vertexCount > 0) {
         dest->vertexCount = count;
         dest->vertexData = (Vertex *)malloc(count * sizeof(Vertex));
@@ -192,55 +193,65 @@ void copyGeometryVertexData( GeometryData *dest, GeometryData *src, int start, i
     }
 }
 
-void copyGeometryIndexData( GeometryData *dest, GeometryData *src, int start, int count )
-{
+void copyGeometryIndexData(GeometryData *dest, GeometryData *src, int start, int count) {
     if (src->indexCount > 0) {
         dest->indexCount = count;
         dest->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * count);
-        memcpy(dest->indexData, src->indexData + start, count * sizeof(TriangleIndices) );
+        memcpy(dest->indexData, src->indexData + start, count * sizeof(TriangleIndices));
     }
 }
 
 void copyGeometryData(GeometryData *dest, GeometryData *src) {
-    
+
     copyGeometryVertexData(dest, src, 0, src->vertexCount);
     copyGeometryIndexData(dest, src, 0, src->indexCount);
 }
 
 void computeNormalsOfGeometryData(GeometryData *data) {
-    int count = data->indexCount;
-    if (count > 0) {
+    if (data->indexCount > 0) {
+        int count = data->indexCount;
         for (int i = 0; i < count; i++) {
             uint32_t i0 = data->indexData[i].i0;
             uint32_t i1 = data->indexData[i].i1;
             uint32_t i2 = data->indexData[i].i2;
 
-            Vertex v0 = data->vertexData[i0];
-            Vertex v1 = data->vertexData[i1];
-            Vertex v2 = data->vertexData[i2];
+            Vertex *v0 = &data->vertexData[i0];
+            Vertex *v1 = &data->vertexData[i1];
+            Vertex *v2 = &data->vertexData[i2];
 
-            simd_float3 p0 = simd_make_float3(v0.position);
-            simd_float3 p1 = simd_make_float3(v1.position);
-            simd_float3 p2 = simd_make_float3(v2.position);
+            simd_float3 p0 = simd_make_float3(v0->position);
+            simd_float3 p1 = simd_make_float3(v1->position);
+            simd_float3 p2 = simd_make_float3(v2->position);
+
+            simd_float3 normal = simd_normalize(simd_cross(p1 - p0, p2 - p0));
+            
+            v0->normal += normal;
+            v1->normal += normal;
+            v2->normal += normal;
+        }
+        
+        count = data->vertexCount;
+        for(int i = 0; i < count; i++) {
+            Vertex *v = &data->vertexData[i];
+            v->normal = simd_normalize(v->normal);
+        }
+        
+    } else {
+        int count = data->vertexCount;
+        for (int i = 0; i < count; i += 3) {
+            Vertex *v0 = &data->vertexData[i];
+            Vertex *v1 = &data->vertexData[i+1];
+            Vertex *v2 = &data->vertexData[i+2];
+
+            simd_float3 p0 = simd_make_float3(v0->position);
+            simd_float3 p1 = simd_make_float3(v1->position);
+            simd_float3 p2 = simd_make_float3(v2->position);
 
             simd_float3 normal = simd_normalize(simd_cross(p1 - p0, p2 - p0));
 
-            if (simd_length(normal) > 0) {
-                float l0 = simd_length(v0.normal);
-                v0.normal += normal;
-                if (l0 > 0.0) { v0.normal *= 0.5; }
-                data->vertexData[i0].normal = v0.normal;
-
-                float l1 = simd_length(v1.normal);
-                v1.normal += normal;
-                if (l1 > 0.0) { v1.normal *= 0.5; }
-                data->vertexData[i1].normal = v1.normal;
-
-                float l2 = simd_length(v2.normal);
-                v2.normal += normal;
-                if (l2 > 0.0) { v2.normal *= 0.5; }
-                data->vertexData[i2].normal = v2.normal;
-            }
+            v0->normal = normal;
+            v1->normal = normal;
+            v2->normal = normal;
         }
     }
 }
@@ -264,13 +275,37 @@ void reverseFacesOfGeometryData(GeometryData *data) {
     }
 }
 
-void transformGeometryData( GeometryData *data, simd_float4x4 transform )
-{
+void transformGeometryData(GeometryData *data, simd_float4x4 transform) {
     simd_float4x4 rotation = simd_transpose(simd_inverse(transform));
-    simd_float3x3 rot = simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]), simd_make_float3(rotation.columns[2]));
+    simd_float3x3 rot =
+        simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]),
+                    simd_make_float3(rotation.columns[2]));
     int count = data->vertexCount;
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         data->vertexData[i].position = simd_mul(transform, data->vertexData[i].position);
         data->vertexData[i].normal = simd_mul(rot, data->vertexData[i].normal);
     }
+}
+
+void deindexGeometryData( GeometryData *dest, GeometryData *src )
+{
+    int triangleCount = src->indexCount;
+    int newVertexCount = triangleCount * 3;
+    Vertex *vertices = (Vertex *)malloc(newVertexCount * sizeof(Vertex));
+    
+    int vertexIndex = 0;
+    for(int i = 0; i < triangleCount; i++) {
+        TriangleIndices t = src->indexData[i];
+        Vertex v0 = src->vertexData[t.i0];
+        Vertex v1 = src->vertexData[t.i1];
+        Vertex v2 = src->vertexData[t.i2];
+        vertices[vertexIndex++] = v0;
+        vertices[vertexIndex++] = v1;
+        vertices[vertexIndex++] = v2;
+    }
+    
+    dest->indexCount = 0;
+    dest->indexData = NULL;
+    dest->vertexCount = vertexIndex;
+    dest->vertexData = vertices;
 }

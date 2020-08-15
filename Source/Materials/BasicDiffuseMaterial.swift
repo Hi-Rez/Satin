@@ -9,12 +9,12 @@ import Metal
 import simd
 
 open class BasicDiffuseMaterial: Material {
-    var absolute = BoolParameter("Absolute", .toggle)
+    var hardness = FloatParameter("Hardness", .toggle)
 
-    public init(_ absolute: Bool = false) {
+    public init(_ hardness: Float = 0.75) {
         super.init()
-        self.absolute.value = absolute
-        parameters.append(self.absolute)
+        self.hardness.value = hardness
+        parameters.append(self.hardness)
     }
 
     open override func compileSource() -> String? {
