@@ -105,8 +105,8 @@ bool insidePath2(tsPath *path, tsVertex *vertex) {
 
 /* Creator Functions */
 
-tsVertex *createVertexStructureFromPath(simd_float2 *path, int length, int indexOffset, int localOffset,
-                                GeometryData *data) {
+tsVertex *createVertexStructureFromPath(simd_float2 *path, int length, int indexOffset,
+                                        int localOffset, GeometryData *data) {
 
     tsVertex *vertices = (tsVertex *)malloc(sizeof(tsVertex) * length);
 
@@ -163,16 +163,16 @@ tsPath *createPathStructure(simd_float2 **paths, int *lengths, int count, int in
         int length = lengths[i];
         int next = (i + 1) % count;
         int prev = (i - 1) < 0 ? (count - 1) : (i - 1);
-        result[i] =
-            (tsPath){.index = i,
-                     .length = length,
-                     .added = 0,
-                     .points = path,
-                     .clockwise = isClockwise(path, length),
-                     .parent = NULL,
-                     .next = &result[next],
-                     .prev = &result[prev],
-                     .v = createVertexStructureFromPath(path, length, indexOffset, localOffset, data) };
+        result[i] = (tsPath){.index = i,
+                             .length = length,
+                             .added = 0,
+                             .points = path,
+                             .clockwise = isClockwise(path, length),
+                             .parent = NULL,
+                             .next = &result[next],
+                             .prev = &result[prev],
+                             .v = createVertexStructureFromPath(path, length, indexOffset,
+                                                                localOffset, data) };
         indexOffset += length;
         localOffset += length;
     }
@@ -237,18 +237,16 @@ void appendIndexData(GeometryData *gDataDest, GeometryData *gDataSrc) {
 }
 
 void appendTriangulationData(GeometryData *gDataDest, TriangulationData *tDataSrc) {
-    
+
     if (tDataSrc->indexCount > 0) {
         if (gDataDest->indexCount > 0) {
             int totalCount = tDataSrc->indexCount + gDataDest->indexCount;
             gDataDest->indexData =
                 realloc(gDataDest->indexData, totalCount * sizeof(TriangleIndices));
-            
-            
-            memcpy(gDataDest->indexData + gDataDest->indexCount, tDataSrc->indexData, tDataSrc->indexCount * sizeof(TriangleIndices));
-            
-            
-            
+
+            memcpy(gDataDest->indexData + gDataDest->indexCount, tDataSrc->indexData,
+                   tDataSrc->indexCount * sizeof(TriangleIndices));
+
             gDataDest->indexCount += tDataSrc->indexCount;
         } else {
             gDataDest->indexData =
@@ -503,7 +501,6 @@ int _triangulate(tsVertex *vertices, int count, int added, TriangulationData *da
     return 0;
 }
 
-
 int extrudePaths(simd_float2 **paths, int *lengths, int count, GeometryData *gData) {
     GeometryData geometryData =
         (GeometryData){.vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL };
@@ -718,16 +715,15 @@ int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gDat
     return success;
 }
 
-
 tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int length) {
-//    printf("face length: %d\n", length);
-    
+    //    printf("face length: %d\n", length);
+
     // Calculate normal
     uint32_t i0 = face[0];
     uint32_t i1 = face[1];
     uint32_t i2 = face[2];
-    
-//    printf("faces: %d, %d, %d\n", i0, i1, i2);
+
+    //    printf("faces: %d, %d, %d\n", i0, i1, i2);
 
     Vertex *v0 = &vertices[i0];
     Vertex *v1 = &vertices[i1];
@@ -741,21 +737,21 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
     simd_float3 b = p0 - p1;
     simd_float3 n = simd_normalize(simd_cross(a, b));
 
-//    printf("normal: %f, %f, %f\n", n.x, n.y, n.z);
+    //    printf("normal: %f, %f, %f\n", n.x, n.y, n.z);
 
     simd_quatf q = simd_quaternion(n, simd_make_float3(0.0, 0.0, 1.0));
 
     tsVertex *structure = (tsVertex *)malloc(length * sizeof(tsVertex));
     for (int i = 0; i < length; i++) {
-        uint32_t i0 = face[i];
-        simd_float3 p = simd_act(q, simd_make_float3(vertices[i0].position));
-//        printf("pos: %f, %f, %f\n", p.x, p.y, p.z);
+        uint32_t index = face[i];
+        simd_float3 p = simd_act(q, simd_make_float3(vertices[index].position));
+        //        printf("pos: %f, %f, %f\n", p.x, p.y, p.z);
 
         int next = (i + 1) % length;
         int prev = (i - 1) < 0 ? (length - 1) : (i - 1);
 
         structure[i] = (tsVertex){
-            .index = i0,
+            .index = index,
             .v = simd_make_float2(p),
             .ear = false,
             .next = &structure[next],
@@ -766,16 +762,16 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
     return structure;
 }
 
-
 int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *faceLengths,
                     int faceCount, GeometryData *gData, TriangleFaceMap *triangleFaceMap) {
-    
-    //Copy Vertex Data
-    GeometryData rData =
-    (GeometryData){.vertexCount = vertexCount, .vertexData = vertices, .indexCount = 0, .indexData = NULL };
+
+    // Copy Vertex Data
+    GeometryData rData = (GeometryData){
+        .vertexCount = vertexCount, .vertexData = vertices, .indexCount = 0, .indexData = NULL
+    };
     copyGeometryData(gData, &rData);
-    
-    //Create Vertex Structures & Calculate Total Number of Triangles
+
+    // Create Vertex Structures & Calculate Total Number of Triangles
     tsVertex **structures = malloc(faceCount * sizeof(tsVertex *));
     int triangleCount = 0;
     for (int i = 0; i < faceCount; i++) {
@@ -784,38 +780,39 @@ int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *fa
         const uint32_t *face = faces[i];
         structures[i] = createVertexStructure(gData->vertexData, face, len);
     }
-    
-    //Set & Allocate Triangle Face Map Data -- this map correlate triangle(s) to the faces they came from
+
+    // Set & Allocate Triangle Face Map Data -- this map correlate triangle(s) to the faces they
+    // came from
     triangleFaceMap->count = triangleCount;
     triangleFaceMap->data = calloc(triangleCount, sizeof(uint32_t));
-        
+
     int success = 0;
     int triangles = 0;
-    
+
     for (int i = 0; i < faceCount; i++) {
         // Perform Triangulation
         TriangulationData triData = (TriangulationData){.indexCount = 0, .indexData = NULL };
         success += _triangulate(structures[i], faceLengths[i], 0, &triData);
-        
+
         // Set Triangle Face Map Data
         int triangleCount = triData.indexCount;
-        for(int t = 0; t < triangleCount; t++) {
+        for (int t = 0; t < triangleCount; t++) {
             triangleFaceMap->data[triangles + t] = i;
         }
         triangles += triangleCount;
-        
+
         // Append Triangles to Geometry Data
         appendTriangulationData(gData, &triData);
         freeTriangulationData(triData);
     }
-    
+
     // Free Vertex Structures
     for (int i = 0; i < faceCount; i++) {
         tsVertex *structure = structures[i];
         free(structure);
     }
     free(structures);
-    
+
     // Return if all the triangulations were successful
     return success;
 }
