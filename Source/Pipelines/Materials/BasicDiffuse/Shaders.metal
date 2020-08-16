@@ -1,3 +1,5 @@
+#include "../../Library/Dither.metal"
+
 typedef struct {
     float4 position [[position]];
     float3 viewPosition;
@@ -31,5 +33,7 @@ fragment float4 basicDiffuseFragment(DiffuseVertexData in [[stage_in]],
     const float3 normal = normalize( cross( dx, dy ) );
     const float soft = dot( in.normal, float3( 0.0, 0.0, 1.0 ) );
     const float hard = dot( normal, float3( 0.0, 0.0, -1.0 ) );
-    return float4( float3( mix( soft, hard, uniforms.hardness ) ), 1.0 );
+    float3 color = float3( mix( soft, hard, uniforms.hardness ) );
+    color = dither8x8(in.position.xy, color);
+    return float4( color, 1.0 );
 }

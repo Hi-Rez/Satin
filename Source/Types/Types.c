@@ -214,6 +214,8 @@ void computeNormalsOfGeometryData(GeometryData *data) {
             uint32_t i0 = data->indexData[i].i0;
             uint32_t i1 = data->indexData[i].i1;
             uint32_t i2 = data->indexData[i].i2;
+            
+            printf("normal face indicies -- %d %d %d\n", i0, i1, i2);
 
             Vertex *v0 = &data->vertexData[i0];
             Vertex *v1 = &data->vertexData[i1];

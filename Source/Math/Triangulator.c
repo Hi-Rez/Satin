@@ -418,7 +418,7 @@ int _triangulate(tsVertex *vertices, int count, int added, TriangulationData *da
     //    printf("\n\n\n");
     int ears = initalizeEars(vertices);
     if (ears == 0) {
-        //        printf("invalid polygon\n");
+        printf("invalid polygon\n");
         return 1;
     }
     //    printf("\n\n\n");
@@ -717,13 +717,20 @@ int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gDat
 
 tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int length) {
     //    printf("face length: %d\n", length);
+    printf("CREATING VERTEX STRUCTURE!\n\n");
+
+    printf("face indicies: ");
+    for (int i = 0; i < length; i++) {
+        printf("%d ", face[i]);
+    }
+    printf("\n");
 
     // Calculate normal
     uint32_t i0 = face[0];
     uint32_t i1 = face[1];
     uint32_t i2 = face[2];
 
-    //    printf("faces: %d, %d, %d\n", i0, i1, i2);
+    printf("faces: %d, %d, %d\n\n", i0, i1, i2);
 
     Vertex *v0 = &vertices[i0];
     Vertex *v1 = &vertices[i1];
@@ -737,7 +744,7 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
     simd_float3 b = p0 - p1;
     simd_float3 n = simd_normalize(simd_cross(a, b));
 
-    //    printf("normal: %f, %f, %f\n", n.x, n.y, n.z);
+    printf("normal: %f, %f, %f\n", n.x, n.y, n.z);
 
     simd_quatf q = simd_quaternion(n, simd_make_float3(0.0, 0.0, 1.0));
 
@@ -759,11 +766,25 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
         };
     }
 
+    printf("DONE CREATING VERTEX STRUCTURE!\n\n");
+
     return structure;
 }
 
-int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *faceLengths,
+int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, int *faceLengths,
                     int faceCount, GeometryData *gData, TriangleFaceMap *triangleFaceMap) {
+
+    printf("Vertex Count: %d\n", vertexCount);
+
+    for (int i = 0; i < faceCount; i++) {
+        const uint32_t *face = faces[i];
+        printf("face index: %d -- ", i);
+        for (int j = 0; j < faceLengths[i]; j++) {
+            printf("%d ", face[j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
 
     // Copy Vertex Data
     GeometryData rData = (GeometryData){
@@ -774,11 +795,15 @@ int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *fa
     // Create Vertex Structures & Calculate Total Number of Triangles
     tsVertex **structures = malloc(faceCount * sizeof(tsVertex *));
     int triangleCount = 0;
-    for (int i = 0; i < faceCount; i++) {
+    for (int i = faceCount - 1; i >= 0; i--) {
         int len = faceLengths[i];
         triangleCount += len - 2;
-        const uint32_t *face = faces[i];
-        structures[i] = createVertexStructure(gData->vertexData, face, len);
+        printf("face index: %d -- ", i);
+        for (int j = 0; j < len; j++) {
+            printf("%d ", faces[i][j]);
+        }
+        printf("\n");
+        structures[i] = createVertexStructure(gData->vertexData, faces[i], len);
     }
 
     // Set & Allocate Triangle Face Map Data -- this map correlate triangle(s) to the faces they
@@ -790,10 +815,24 @@ int triangulateMesh(Vertex *vertices, int vertexCount, uint32_t **faces, int *fa
     int triangles = 0;
 
     for (int i = 0; i < faceCount; i++) {
-        // Perform Triangulation
         TriangulationData triData = (TriangulationData){.indexCount = 0, .indexData = NULL };
-        success += _triangulate(structures[i], faceLengths[i], 0, &triData);
-
+        
+        int len = faceLengths[i];
+        tsVertex *structure = structures[i];
+        if (len == 3) {
+            // If three faces only, then add manually
+            triData.indexCount = 1;
+            triData.indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices));
+            triData.indexData[0].i0 = structure->index;
+            structure = structure->next;
+            triData.indexData[0].i1 = structure->index;
+            structure = structure->next;
+            triData.indexData[0].i2 = structure->index;
+        } else {
+            // Perform Triangulation
+            success += _triangulate(structures[i], len, 0, &triData);
+        }
+        
         // Set Triangle Face Map Data
         int triangleCount = triData.indexCount;
         for (int t = 0; t < triangleCount; t++) {
