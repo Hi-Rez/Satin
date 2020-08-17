@@ -46,7 +46,7 @@ public func findStructName(_ key: String, _ source: String) -> String? {
 func _parseStruct(source: String, key: String) -> String? {
     do {
         let patterns = [
-            "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)",
+            "\\{((?:(.|\\n)(?!\\{))+)\\} \(key)\\s*;",
             key + "\\W*\\{\\W(?:((.*|\\n)+))\\W\\}"
         ]
         for pattern in patterns {
