@@ -189,7 +189,7 @@ open class Raycaster {
     
     func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Mesh] {
         var results: [Mesh] = []
-        if  invisible || object.visible {
+        if invisible || object.visible {
             if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let _ = material.pipeline {
                 let geometry = mesh.geometry
                 if !geometry.vertexData.isEmpty, geometry.primitiveType == .triangle {
@@ -217,11 +217,50 @@ open class Raycaster {
         intersectionBuffer = Buffer(context: context, parameters: intersectionParams, count: _count)
     }
     
-    public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
-        let meshes: [Mesh] = getMeshes(object, recursive, invisible)
+    func _intersect(_ intersectables: [Any]) -> MTLCommandBuffer? {
+        guard let commandBuffer = commandQueue?.makeCommandBuffer() else { return nil }
         
-        var count = 0
+        commandBuffer.label = "Raycaster Command Buffer"
+        
+        for (index, object) in intersectables.enumerated() {
+            if let mesh = object as? Mesh {
+                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, nil, index)
+            }
+            else if let submesh = object as? Submesh, let mesh = submesh.parent {
+                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, submesh, index)
+            }
+        }
+        
+        if _rebuildStructures {
+            _rebuildStructures = false
+        }
+        
+        return commandBuffer
+    }
+    
+    public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false, _ callback: @escaping (_ results: [RaycastResult]) -> ()) {
+        let intersectables = getIntersectables(object, recursive, invisible)
+        guard let commandBuffer = _intersect(intersectables) else { return }
+        commandBuffer.addCompletedHandler { [weak self] _ in
+            if let self = self {
+                callback(self.getResults(intersectables))
+            }
+        }
+        commandBuffer.commit()
+    }
+    
+    public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
+        let intersectables = getIntersectables(object, recursive, invisible)
+        guard let commandBuffer = _intersect(intersectables) else { return [] }
+        commandBuffer.commit()
+        commandBuffer.waitUntilCompleted()
+        return getResults(intersectables)
+    }
+    
+    func getIntersectables(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [Any] {
+        let meshes: [Mesh] = getMeshes(object, recursive, invisible)
         var intersectables: [Any] = []
+        var count = 0
         for mesh in meshes {
             let submeshes = mesh.submeshes
             count += max(mesh.submeshes.count, 1)
@@ -242,26 +281,10 @@ open class Raycaster {
             _count = count
         }
         
-        guard let commandBuffer = commandQueue?.makeCommandBuffer() else { return [] }
-        commandBuffer.label = "Raycaster Command Buffer"
-        
-        for (index, object) in intersectables.enumerated() {
-            if let mesh = object as? Mesh {
-                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, nil, index)
-            }
-            else if let submesh = object as? Submesh, let mesh = submesh.parent
-            {
-                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, submesh, index)
-            }
-        }
-        
-        commandBuffer.commit()
-        commandBuffer.waitUntilCompleted()
-        
-        if _rebuildStructures {
-            _rebuildStructures = false
-        }
-        
+        return intersectables
+    }
+    
+    func getResults(_ intersectables: [Any]) -> [RaycastResult] {
         var results: [RaycastResult] = []
         for (index, object) in intersectables.enumerated() {
             if let mesh = object as? Mesh {
@@ -269,8 +292,7 @@ open class Raycaster {
                     results.append(result)
                 }
             }
-            else if let submesh = object as? Submesh, let mesh = submesh.parent
-            {
+            else if let submesh = object as? Submesh, let mesh = submesh.parent {
                 if let result = calculateResult(mesh, submesh, index) {
                     results.append(result)
                 }
@@ -280,16 +302,15 @@ open class Raycaster {
         results.sort {
             $0.distance < $1.distance
         }
-        
         return results
     }
     
     func calculateResult(_ mesh: Mesh,
-                _ submesh: Submesh?,
-                _ index: Int) -> RaycastResult? {
+                         _ submesh: Submesh?,
+                         _ index: Int) -> RaycastResult? {
         intersectionBuffer.sync(index)
         let distance = distanceParam.value
-        if distance >= 0 {            
+        if distance >= 0 {
             let primitiveIndex = indexParam.value
             let index = Int(primitiveIndex) * 3
             
