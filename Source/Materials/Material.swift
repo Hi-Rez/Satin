@@ -13,6 +13,18 @@ public protocol MaterialDelegate: AnyObject {
     func materialUpdated(material: Material)
 }
 
+public struct DepthBias {
+    var bias: Float
+    var slope: Float
+    var clamp: Float
+    
+    public init(bias: Float, slope: Float, clamp: Float) {
+        self.bias = bias
+        self.slope = slope
+        self.clamp = clamp
+    }
+}
+
 open class Material: ParameterGroupDelegate {
     public enum Blending {
         case disabled
@@ -82,6 +94,8 @@ open class Material: ParameterGroupDelegate {
             }
         }
     }
+    
+    public var depthBias: DepthBias = DepthBias(bias: 0.0, slope: 0.0, clamp: 0.0)
     
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
@@ -216,6 +230,7 @@ open class Material: ParameterGroupDelegate {
     open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let depthStencilState = self.depthStencilState else { return }
         renderEncoder.setDepthStencilState(depthStencilState)
+        renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
     }
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
