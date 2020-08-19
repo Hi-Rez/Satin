@@ -795,7 +795,7 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
     // Create Vertex Structures & Calculate Total Number of Triangles
     tsVertex **structures = malloc(faceCount * sizeof(tsVertex *));
     int triangleCount = 0;
-    for (int i = faceCount - 1; i >= 0; i--) {
+    for (int i = (faceCount - 1); i >= 0; i--) {
         int len = faceLengths[i];
         triangleCount += len - 2;
 //        printf("face index: %d -- ", i);

@@ -132,6 +132,15 @@ float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point) 
     return acLength * sin(angle);
 }
 
+float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point) {
+    simd_float3 ab = simd_normalize(end - start);
+    simd_float3 ac = point - start;
+    float acLength = simd_length(ac);
+    ac /= acLength;
+    float angle = acos(simd_dot(ab, ac));
+    return acLength * sin(angle);
+}
+
 
 float angle2(simd_float2 a)
 {

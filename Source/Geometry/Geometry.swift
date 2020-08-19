@@ -32,7 +32,7 @@ open class Geometry {
     
     public var context: Context? {
         didSet {
-            if oldValue != context {
+            if context != nil {
                 setup()
             }
         }
@@ -54,12 +54,8 @@ open class Geometry {
     }
     
     func setup() {
-        if vertexBuffer == nil {
-            setupVertexBuffer()
-        }
-        if indexBuffer == nil {
-            setupIndexBuffer()
-        }
+        setupVertexBuffer()
+        setupIndexBuffer()
     }
     
     func update() {}
@@ -67,7 +63,7 @@ open class Geometry {
     func setupVertexBuffer() {
         guard let context = self.context else { return }
         let device = context.device
-        if !vertexData.isEmpty {
+        if !vertexData.isEmpty {            
             let stride = MemoryLayout<Vertex>.stride
             let verticesSize = vertexData.count * stride
             vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
