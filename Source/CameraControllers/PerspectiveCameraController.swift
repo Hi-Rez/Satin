@@ -643,7 +643,7 @@ open class PerspectiveCameraController {
         var inside = false
         var pt2d = normalizePoint(point, size)
         let aspect = size.width > size.height ? Float(size.width / size.height) : Float(size.height / size.width)
-        pt2d.x /= aspect
+        pt2d.x *= aspect
         
         var ptOnArcBall: simd_float3
         
