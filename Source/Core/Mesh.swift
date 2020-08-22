@@ -132,7 +132,7 @@ open class Mesh: Object {
     }
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard let vertexBuffer = geometry.vertexBuffer else { return }
+        guard instanceCount > 0, let vertexBuffer = geometry.vertexBuffer else { return }
         
         preDraw?(renderEncoder)
         
