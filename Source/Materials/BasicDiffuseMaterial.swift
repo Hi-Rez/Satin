@@ -8,7 +8,7 @@
 import Metal
 import simd
 
-open class BasicDiffuseMaterial: Material {
+open class BasicDiffuseMaterial: BasicColorMaterial {
     var hardness = FloatParameter("Hardness", .toggle)
 
     public init(_ hardness: Float = 0.75) {

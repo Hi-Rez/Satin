@@ -11,12 +11,14 @@ import Metal
 open class LiveMaterial: Material {
     public var compiler = MetalFileCompiler()
     public var instance: String = ""
+    public var source: String?
     public var pipelineURL: URL
 
     public init(pipelineURL: URL, instance: String = "") {
         self.pipelineURL = pipelineURL
         self.instance = instance
         super.init()
+        self.source = compileSource()
     }
     
     public init(pipelinesURL: URL, instance: String = "") {
@@ -24,6 +26,7 @@ open class LiveMaterial: Material {
         self.instance = instance
         super.init()
         self.pipelineURL = self.pipelineURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal")
+        self.source = compileSource()
     }
 
     open override func setup() {
@@ -33,25 +36,32 @@ open class LiveMaterial: Material {
 
     open func setupCompiler() {
         compiler.onUpdate = { [unowned self] in
+            self.source = nil
             self.setupPipeline()
         }
     }
 
     open override func compileSource() -> String? {
-        guard let satinURL = getPipelinesSatinUrl() else { return nil }
-        let includesURL = satinURL.appendingPathComponent("Includes.metal")
-        do {
-            var source = try compiler.parse(includesURL)
-            var shaderSource = try compiler.parse(pipelineURL)
-            parseUniforms(shaderSource)
-            injectPassThroughVertex(source: &shaderSource)
-            source += shaderSource
+        if let source = self.source {
             return source
         }
-        catch {
-            print(error)
+        else {
+            guard let satinURL = getPipelinesSatinUrl() else { return nil }
+            let includesURL = satinURL.appendingPathComponent("Includes.metal")
+            do {
+                var source = try compiler.parse(includesURL)
+                var shaderSource = try compiler.parse(pipelineURL)
+                parseUniforms(shaderSource)
+                injectPassThroughVertex(source: &shaderSource)
+                source += shaderSource
+                self.source = source
+                return source
+            }
+            catch {
+                print(error)
+            }
+            return nil
         }
-        return nil
     }
 
     open func parseUniforms(_ source: String) {
