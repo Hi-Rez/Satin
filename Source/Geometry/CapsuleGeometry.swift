@@ -72,7 +72,7 @@ open class CapsuleGeometry: Geometry {
                 case .y:
                     position = simd_make_float4(x, y + halfHeight, z, 1.0)
                 case .z:
-                    position = simd_make_float4(x, z, y - halfHeight, 1.0)
+                    position = simd_make_float4(z, x, y + halfHeight, 1.0)
                 }
                 
                 vertexData.append(
@@ -127,7 +127,7 @@ open class CapsuleGeometry: Geometry {
                 case .y:
                     position = simd_make_float4(x, y - halfHeight, z, 1.0)
                 case .z:
-                    position = simd_make_float4(x, z, y + halfHeight, 1.0)
+                    position = simd_make_float4(z, x, y - halfHeight, 1.0)
                 }
                 
                 vertexData.append(

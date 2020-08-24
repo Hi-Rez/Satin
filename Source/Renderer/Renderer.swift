@@ -90,6 +90,11 @@ open class Renderer
         self.context = context
     }
     
+    public func setClearColor(_ color: simd_float4)
+    {
+        clearColor = .init(red: Double(color.x), green: Double(color.y), blue: Double(color.z), alpha: Double(color.w))
+    }
+    
     public func update()
     {
         setupColorTexture()

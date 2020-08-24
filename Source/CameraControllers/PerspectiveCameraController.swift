@@ -28,6 +28,8 @@ open class PerspectiveCameraController {
     
     #if os(macOS)
     
+    open var modifierFlags: NSEvent.ModifierFlags = .init()
+    
     var leftMouseDownHandler: Any?
     var leftMouseDraggedHandler: Any?
     var leftMouseUpHandler: Any?
@@ -206,54 +208,104 @@ open class PerspectiveCameraController {
     open func enable() {
         #if os(macOS)
         
-        leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] in
-            self.mouseDown(with: $0)
-            return $0
+        leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.mouseDown(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.mouseDown(with: event)
+            }
+            return event
         }
         
-        leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDragged) { [unowned self] in
-            self.mouseDragged(with: $0)
-            return $0
+        leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDragged) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.mouseDragged(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.mouseDragged(with: event)
+            }
+            return event
         }
         
-        leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [unowned self] in
-            self.mouseUp(with: $0)
-            return $0
+        leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.mouseUp(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.mouseUp(with: event)
+            }
+            return event
         }
         
-        rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] in
-            self.rightMouseDown(with: $0)
-            return $0
+        rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.rightMouseDown(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.rightMouseDown(with: event)
+            }
+            return event
         }
         
-        rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] in
-            self.rightMouseDragged(with: $0)
-            return $0
+        rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.rightMouseDragged(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.rightMouseDragged(with: event)
+            }
+            return event
         }
         
-        rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] in
-            self.rightMouseUp(with: $0)
-            return $0
+        rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.rightMouseUp(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.rightMouseUp(with: event)
+            }
+            return event
         }
         
-        otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] in
-            self.otherMouseDown(with: $0)
-            return $0
+        otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.otherMouseDown(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.otherMouseDown(with: event)
+            }
+            return event
         }
         
-        otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] in
-            self.otherMouseDragged(with: $0)
-            return $0
+        otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.otherMouseDragged(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.otherMouseDragged(with: event)
+            }
+            return event
         }
         
-        otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] in
-            self.otherMouseUp(with: $0)
-            return $0
+        otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.otherMouseUp(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.otherMouseUp(with: event)
+            }
+            return event
         }
         
-        scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] in
-            self.scrollWheel(with: $0)
-            return $0
+        scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] event in
+            if self.modifierFlags.isEmpty {
+                self.scrollWheel(with: event)
+            }
+            else if event.modifierFlags.contains(self.modifierFlags) {
+                self.scrollWheel(with: event)
+            }            
+            return event
         }
         
         magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))

@@ -40,6 +40,8 @@ bool isBetween(simd_float2 a, simd_float2 b, simd_float2 c);
 bool intersectsProper(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
 bool intersects(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
 
+bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection); 
+
 float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point);
 float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point);
 

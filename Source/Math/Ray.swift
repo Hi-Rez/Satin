@@ -24,6 +24,23 @@ open class Ray {
     public func at(_ t: Float) -> simd_float3 {
         return direction * t + origin
     }
+    
+    
+    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2)
+    {
+        if camera is PerspectiveCamera {
+            self.origin = camera.worldPosition
+            let unproject = camera.unProject(coordinate)
+            self.direction = normalize(simd_make_float3(unproject.x - origin.x, unproject.y - origin.y, unproject.z - origin.z))
+        }
+        else if camera is OrthographicCamera {
+            self.origin = camera.unProject(coordinate)
+            self.direction = normalize(simd_make_float3(camera.worldMatrix * simd_float4(0.0, 0.0, -1.0, 0.0)))
+        }
+        else {
+            fatalError("Ray has not implemented this type of Camera")
+        }
+    }
 }
 
 extension Ray: Equatable {

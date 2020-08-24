@@ -80,6 +80,16 @@ bool intersects(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d) {
     }
 }
 
+bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection)
+{
+    simd_float3 o = planeOrigin - origin;
+    const float oProj = simd_dot(o, planeNormal);
+    const float dProj = simd_dot(direction, planeNormal);
+    const float t = oProj / dProj;
+    *intersection = origin + direction * t;
+    return (dProj < 0);
+}
+
 bool isDiagonalie(simd_float2 a, simd_float2 b, simd_float2 *polygon, int count) {
 
     for (int i = 0; i < count; i++) {
