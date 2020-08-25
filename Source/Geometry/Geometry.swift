@@ -32,7 +32,7 @@ open class Geometry {
     
     public var context: Context? {
         didSet {
-            if context != nil {
+            if context != nil, context != oldValue {
                 setup()
             }
         }

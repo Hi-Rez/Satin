@@ -17,9 +17,71 @@ public enum PerspectiveCameraControllerState {
     case inactive
 }
 
-open class PerspectiveCameraController {
-    public weak var camera: PerspectiveCamera!
-    public weak var view: MTKView!
+open class PerspectiveCameraController: Codable {
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        camera = try values.decode(PerspectiveCamera.self, forKey: .camera)
+        target = try values.decode(Object.self, forKey: .target)
+        mouseDeltaSensitivity = try values.decode(Float.self, forKey: .mouseDeltaSensitivity)
+        scrollDeltaSensitivity = try values.decode(Float.self, forKey: .scrollDeltaSensitivity)
+        rotationDamping = try values.decode(Float.self, forKey: .rotationDamping)
+        rotationScalar = try values.decode(Float.self, forKey: .rotationScalar)
+        translationDamping = try values.decode(Float.self, forKey: .translationDamping)
+        translationScalar = try values.decode(Float.self, forKey: .translationScalar)
+        zoomScalar = try values.decode(Float.self, forKey: .zoomScalar)
+        zoomDamping = try values.decode(Float.self, forKey: .zoomDamping)
+        rollScalar = try values.decode(Float.self, forKey: .rollScalar)
+        rollDamping = try values.decode(Float.self, forKey: .rollDamping)
+        setup()
+    }
+    
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(camera, forKey: .camera)
+        try container.encode(target, forKey: .target)
+        try container.encode(mouseDeltaSensitivity, forKey: .mouseDeltaSensitivity)
+        try container.encode(scrollDeltaSensitivity, forKey: .scrollDeltaSensitivity)
+        try container.encode(rotationDamping, forKey: .rotationDamping)
+        try container.encode(rotationScalar, forKey: .rotationScalar)
+        try container.encode(translationDamping, forKey: .translationDamping)
+        try container.encode(translationScalar, forKey: .translationScalar)
+        try container.encode(zoomScalar, forKey: .zoomScalar)
+        try container.encode(zoomDamping, forKey: .zoomDamping)
+        try container.encode(rollScalar, forKey: .rollScalar)
+        try container.encode(rollDamping, forKey: .rollDamping)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case camera
+        case target
+        case mouseDeltaSensitivity
+        case scrollDeltaSensitivity
+        case modifierFlags
+        case rotationDamping
+        case rotationScalar
+        case translationDamping
+        case translationScalar
+        case zoomScalar
+        case zoomDamping
+        case rollScalar
+        case rollDamping
+    }
+    
+    public private(set) var enabled: Bool = false
+    
+    public var camera: PerspectiveCamera?
+    public var view: MTKView? {
+        willSet {
+            if view != nil, enabled {
+                disable()
+            }
+        }
+        didSet {
+            if view != nil {
+                enable()
+            }
+        }
+    }
     
     public var onChange: (() -> ())?
     
@@ -115,28 +177,28 @@ open class PerspectiveCameraController {
         self.camera = camera
         self.view = view
         
-        target.add(camera)
-        
         self.defaultPosition = defaultPosition
         self.defaultOrientation = defaultOrientation
         
-        enable()
+        setup()
     }
     
     public init(camera: PerspectiveCamera, view: MTKView) {
         self.camera = camera
         self.view = view
-        
+        setup()
+    }
+    
+    func setup() {
+        guard let camera = self.camera else { return }
         target.add(camera)
-        
-        defaultPosition = self.camera.position
-        defaultOrientation = self.camera.orientation
-        
         enable()
     }
     
     deinit {
         disable()
+        camera = nil
+        view = nil
     }
     
     // MARK: - Updates
@@ -182,10 +244,12 @@ open class PerspectiveCameraController {
     }
     
     func updateRoll() {
+        guard let camera = self.camera else { return }
         target.orientation = simd_mul(target.orientation, simd_quatf(angle: rollVelocity, axis: camera.forwardDirection))
     }
     
     func updateZoom() {
+        guard let camera = self.camera else { return }
         let offset = simd_make_float3(camera.forwardDirection * zoomVelocity)
         let offsetDistance = length(offset)
         let targetDistance = length(camera.worldPosition - target.position)
@@ -206,6 +270,8 @@ open class PerspectiveCameraController {
     // MARK: - Events
     
     open func enable() {
+        guard let view = self.view else { return }
+        
         #if os(macOS)
         
         leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] event in
@@ -304,7 +370,7 @@ open class PerspectiveCameraController {
             }
             else if event.modifierFlags.contains(self.modifierFlags) {
                 self.scrollWheel(with: event)
-            }            
+            }
             return event
         }
         
@@ -350,9 +416,13 @@ open class PerspectiveCameraController {
         view.addGestureRecognizer(pinchGestureRecognizer)
         
         #endif
+        
+        enabled = true
     }
     
     open func disable() {
+        guard let view = self.view else { return }
+        
         #if os(macOS)
         
         if let leftMouseDownHandler = self.leftMouseDownHandler {
@@ -409,6 +479,8 @@ open class PerspectiveCameraController {
         view.removeGestureRecognizer(pinchGestureRecognizer)
         
         #endif
+        
+        enabled = false
     }
     
     #if os(macOS)
@@ -416,6 +488,7 @@ open class PerspectiveCameraController {
     // MARK: - Mouse
     
     func mouseDown(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             if event.clickCount == 2 {
                 reset()
@@ -430,6 +503,7 @@ open class PerspectiveCameraController {
     }
     
     func mouseDragged(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             let result = arcballPoint(event.locationInWindow, view.frame.size)
             let point = result.point
@@ -449,6 +523,7 @@ open class PerspectiveCameraController {
     }
     
     func mouseUp(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
         }
@@ -457,10 +532,12 @@ open class PerspectiveCameraController {
     // MARK: - Right Mouse
     
     func rightMouseDown(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {}
     }
     
     func rightMouseDragged(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             let dy = Float(event.deltaY) / mouseDeltaSensitivity
             if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
@@ -475,6 +552,7 @@ open class PerspectiveCameraController {
     }
     
     func rightMouseUp(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
         }
@@ -483,12 +561,14 @@ open class PerspectiveCameraController {
     // MARK: - Other Mouse
     
     func otherMouseDown(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             state = .panning
         }
     }
     
     func otherMouseDragged(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             let dx = Float(event.deltaX) / mouseDeltaSensitivity
             let dy = Float(event.deltaY) / mouseDeltaSensitivity
@@ -499,6 +579,7 @@ open class PerspectiveCameraController {
     }
     
     func otherMouseUp(with event: NSEvent) {
+        guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
         }
@@ -507,6 +588,7 @@ open class PerspectiveCameraController {
     // MARK: - Scroll Wheel
     
     func scrollWheel(with event: NSEvent) {
+        guard let camera = self.camera, let view = self.view else { return }
         if event.window == view.window {
             if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
                 state = .inactive
@@ -728,7 +810,7 @@ open class PerspectiveCameraController {
             camera.position = self.defaultPosition
             camera.orientation = self.defaultOrientation
             camera.updateMatrix = true
-                        
+            
             self.onChange?()
         }
     }
