@@ -22,6 +22,8 @@ open class PerspectiveCameraController: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         camera = try values.decode(PerspectiveCamera.self, forKey: .camera)
         target = try values.decode(Object.self, forKey: .target)
+        defaultPosition = try values.decode(simd_float3.self, forKey: .defaultPosition)
+        defaultOrientation = try values.decode(simd_quatf.self, forKey: .defaultOrientation)
         mouseDeltaSensitivity = try values.decode(Float.self, forKey: .mouseDeltaSensitivity)
         scrollDeltaSensitivity = try values.decode(Float.self, forKey: .scrollDeltaSensitivity)
         rotationDamping = try values.decode(Float.self, forKey: .rotationDamping)
@@ -39,6 +41,8 @@ open class PerspectiveCameraController: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(camera, forKey: .camera)
         try container.encode(target, forKey: .target)
+        try container.encode(defaultPosition, forKey: .defaultPosition)
+        try container.encode(defaultOrientation, forKey: .defaultOrientation)
         try container.encode(mouseDeltaSensitivity, forKey: .mouseDeltaSensitivity)
         try container.encode(scrollDeltaSensitivity, forKey: .scrollDeltaSensitivity)
         try container.encode(rotationDamping, forKey: .rotationDamping)
@@ -54,6 +58,8 @@ open class PerspectiveCameraController: Codable {
     private enum CodingKeys: String, CodingKey {
         case camera
         case target
+        case defaultPosition
+        case defaultOrientation
         case mouseDeltaSensitivity
         case scrollDeltaSensitivity
         case modifierFlags
@@ -186,6 +192,10 @@ open class PerspectiveCameraController: Codable {
     public init(camera: PerspectiveCamera, view: MTKView) {
         self.camera = camera
         self.view = view
+        
+        self.defaultPosition = camera.position
+        self.defaultOrientation = camera.orientation
+        
         setup()
     }
     
@@ -593,7 +603,7 @@ open class PerspectiveCameraController: Codable {
             if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
                 state = .inactive
             }
-            else if event.modifierFlags.contains(NSEvent.ModifierFlags.command) && (event.phase == .began || event.phase == .changed) {
+            else if event.modifierFlags.contains(NSEvent.ModifierFlags.option) && (event.phase == .began || event.phase == .changed) {
                 if abs(event.deltaX) > abs(event.deltaY) {
                     state = .rolling
                     let sdx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity

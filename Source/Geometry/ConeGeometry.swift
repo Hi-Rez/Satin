@@ -14,6 +14,11 @@ open class ConeGeometry: Geometry {
         self.setupData(size: (1, 2), res: (60, 1, 1))
     }
     
+    public init(size: (radius: Float, height: Float)) {
+        super.init()
+        self.setupData(size: size, res: (60, 1, 1))
+    }
+    
     public init(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int)) {
         super.init()
         self.setupData(size: size, res: res)
