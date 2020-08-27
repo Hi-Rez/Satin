@@ -681,6 +681,7 @@ open class PerspectiveCameraController: Codable {
     }
     
     @objc func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        guard let view = self.view else { return }
         if gestureRecognizer.numberOfTouches == gestureRecognizer.minimumNumberOfTouches {
             if gestureRecognizer.state == .began {
                 state = .rotating
@@ -738,6 +739,7 @@ open class PerspectiveCameraController: Codable {
     var panPreviousPoint = simd_float2(repeating: 0.0)
     
     @objc func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        guard let camera = self.camera, let view = self.view else { return }
         if gestureRecognizer.state == .began {
             state = .panning
             panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
