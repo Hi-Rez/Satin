@@ -6,7 +6,7 @@ Satin is a 3D graphics framework (inspired by threejs) that helps designers and 
 
 ## Examples
 
-![2D Example](/Images/2D Example.png){:height="33%" width="33%"}
+![2D Example](./Images/2D Example.png){:height="33%" width="33%"}
 
 ## Getting Started
 
