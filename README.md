@@ -6,7 +6,18 @@ Satin is a 3D graphics framework (inspired by threejs) that helps designers and 
 
 ## Examples
 
-![2D Example](./Images/2D Example.png)
+![2D Example](./Images/2DExample.png)
+![2D Example](./Images/3DExample.png)
+![2D Example](./Images/Cubemap.png)
+![2D Example](./Images/CustomGeometry.png)
+![2D Example](./Images/DepthMaterial.png)
+![2D Example](./Images/ExtrudedTextGeometry.png)
+![2D Example](./Images/MatcapMaterial.png)
+![2D Example](./Images/ModelLoading.png)
+![2D Example](./Images/ParticleSystem.png)
+![2D Example](./Images/PhysicallyBasedShading.png)
+![2D Example](./Images/TextGeometry.png)
+
 
 ## Getting Started
 
