@@ -45,11 +45,6 @@ open class Raycaster {
     public var rebuildStructures: Bool = false {
         didSet {
             _rebuildStructures = rebuildStructures
-            if _rebuildStructures {
-                for structure in accelerationStructures {
-                    structure.rebuild()
-                }
-            }
         }
     }
     
