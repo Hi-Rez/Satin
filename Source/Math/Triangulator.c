@@ -716,33 +716,47 @@ int triangulate(simd_float2 **paths, int *lengths, int count, GeometryData *gDat
 }
 
 tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int length) {
-//    printf("face length: %d\n", length);
-//    printf("CREATING VERTEX STRUCTURE!\n\n");
-//
-//    printf("face indicies: ");
-//    for (int i = 0; i < length; i++) {
-//        printf("%d ", face[i]);
-//    }
-//    printf("\n");
+    //    printf("face length: %d\n", length);
+    //    printf("CREATING VERTEX STRUCTURE!\n\n");
+    //
+    //    printf("face indicies: ");
+    //    for (int i = 0; i < length; i++) {
+    //        printf("%d ", face[i]);
+    //    }
+    //    printf("\n");
 
     // Calculate normal
-    uint32_t i0 = face[0];
-    uint32_t i1 = face[1];
-    uint32_t i2 = face[2];
+    simd_float3 n = simd_make_float3(0.0, 0.0, 0.0);
 
-//    printf("faces: %d, %d, %d\n\n", i0, i1, i2);
+    for (int i = 0; i < length; i++) {
+        int i0 = i;
+        int i1 = (i + 1) % length;
+        int i2 = (i + 2) % length;
 
-    Vertex *v0 = &vertices[i0];
-    Vertex *v1 = &vertices[i1];
-    Vertex *v2 = &vertices[i2];
+        uint32_t index0 = face[i0];
+        uint32_t index1 = face[i1];
+        uint32_t index2 = face[i2];
 
-    simd_float3 p0 = simd_make_float3(v0->position);
-    simd_float3 p1 = simd_make_float3(v1->position);
-    simd_float3 p2 = simd_make_float3(v2->position);
+        Vertex *v0 = &vertices[index0];
+        Vertex *v1 = &vertices[index1];
+        Vertex *v2 = &vertices[index2];
 
-    simd_float3 a = p2 - p1;
-    simd_float3 b = p0 - p1;
-    simd_float3 n = simd_normalize(simd_cross(a, b));
+        simd_float3 p0 = simd_make_float3(v0->position);
+        simd_float3 p1 = simd_make_float3(v1->position);
+        simd_float3 p2 = simd_make_float3(v2->position);
+
+        if (isColinear3(p0, p1, p2)) {
+//            printf("colinear, trying another set of verts\n");
+            continue;
+        } else {
+            simd_float3 a = p2 - p1;
+            simd_float3 b = p0 - p1;
+            n = simd_normalize(simd_cross(a, b));
+            break;
+        }
+    }
+
+    //    printf("faces: %d, %d, %d\n\n", i0, i1, i2);
 
 //    printf("normal: %f, %f, %f\n", n.x, n.y, n.z);
 
@@ -766,7 +780,7 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
         };
     }
 
-//    printf("DONE CREATING VERTEX STRUCTURE!\n\n");
+    //    printf("DONE CREATING VERTEX STRUCTURE!\n\n");
 
     return structure;
 }
@@ -774,17 +788,17 @@ tsVertex *createVertexStructure(Vertex *vertices, const uint32_t *face, int leng
 int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, int *faceLengths,
                     int faceCount, GeometryData *gData, TriangleFaceMap *triangleFaceMap) {
 
-//    printf("Vertex Count: %d\n", vertexCount);
-//
-//    for (int i = 0; i < faceCount; i++) {
-//        const uint32_t *face = faces[i];
-//        printf("face index: %d -- ", i);
-//        for (int j = 0; j < faceLengths[i]; j++) {
-//            printf("%d ", face[j]);
-//        }
-//        printf("\n");
-//    }
-//    printf("\n");
+    //    printf("Vertex Count: %d\n", vertexCount);
+    //
+    //    for (int i = 0; i < faceCount; i++) {
+    //        const uint32_t *face = faces[i];
+    //        printf("face index: %d -- ", i);
+    //        for (int j = 0; j < faceLengths[i]; j++) {
+    //            printf("%d ", face[j]);
+    //        }
+    //        printf("\n");
+    //    }
+    //    printf("\n");
 
     // Copy Vertex Data
     GeometryData rData = (GeometryData){
@@ -798,11 +812,11 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
     for (int i = (faceCount - 1); i >= 0; i--) {
         int len = faceLengths[i];
         triangleCount += len - 2;
-//        printf("face index: %d -- ", i);
-//        for (int j = 0; j < len; j++) {
-//            printf("%d ", faces[i][j]);
-//        }
-//        printf("\n");
+        //        printf("face index: %d -- ", i);
+        //        for (int j = 0; j < len; j++) {
+        //            printf("%d ", faces[i][j]);
+        //        }
+        //        printf("\n");
         structures[i] = createVertexStructure(gData->vertexData, faces[i], len);
     }
 
@@ -816,7 +830,7 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
 
     for (int i = 0; i < faceCount; i++) {
         TriangulationData triData = (TriangulationData){.indexCount = 0, .indexData = NULL };
-        
+
         int len = faceLengths[i];
         tsVertex *structure = structures[i];
         if (len == 3) {
@@ -832,7 +846,7 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
             // Perform Triangulation
             success += _triangulate(structures[i], len, 0, &triData);
         }
-        
+
         // Set Triangle Face Map Data
         int triangleCount = triData.indexCount;
         for (int t = 0; t < triangleCount; t++) {
