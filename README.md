@@ -6,18 +6,7 @@ Satin is a 3D graphics framework (inspired by threejs) that helps designers and 
 
 ## Examples
 
-![2D Example](./Images/2DExample.png)
-![2D Example](./Images/3DExample.png)
-![2D Example](./Images/Cubemap.png)
-![2D Example](./Images/CustomGeometry.png)
-![2D Example](./Images/DepthMaterial.png)
-![2D Example](./Images/ExtrudedTextGeometry.png)
-![2D Example](./Images/MatcapMaterial.png)
-![2D Example](./Images/ModelLoading.png)
-![2D Example](./Images/ParticleSystem.png)
-![2D Example](./Images/PhysicallyBasedShading.png)
-![2D Example](./Images/TextGeometry.png)
-
+<img src="./Images/2DExample.png" width="25%"><img src="./Images/3DExample.png" width="25%"><img src="./Images/Cubemap.png" width="25%"><img src="./Images/CustomGeometry.png" width="25%"><img src="./Images/DepthMaterial.png" width="25%"><img src="./Images/ExtrudedTextGeometry.png" width="25%"><img src="./Images/MatcapMaterial.png" width="25%"><img src="./Images/ModelLoading.png" width="25%"><img src="./Images/ParticleSystem.png" width="25%"><img src="./Images/PhysicallyBasedShading.png" width="25%"><img src="./Images/TextGeometry.png" width="25%">
 
 ## Getting Started
 
