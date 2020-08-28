@@ -14,7 +14,7 @@ import Satin
 
 class Renderer: Forge.Renderer {
     lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 500), material: UvColorMaterial())
+        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: UvColorMaterial())
         mesh.label = "Quad"
         return mesh
     }()

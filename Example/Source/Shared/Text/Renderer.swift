@@ -55,7 +55,7 @@ class Renderer: Forge.Renderer {
     }
     
     func setupText() {
-        let input = "HELLO\nWORLD"
+        let input = "BLACK\nLIVES\nMATTER"
         
         /*
          Times
@@ -76,7 +76,7 @@ class Renderer: Forge.Renderer {
             verticalAlignment: .center
         )
         
-        let mat = BasicColorMaterial([1.0, 1.0, 1.0, 0.25], .additive)
+        let mat = BasicColorMaterial([1.0, 1.0, 1.0, 0.125], .additive)
         mat.depthWriteEnabled = false
         let mesh = Mesh(geometry: geo, material: mat)
         scene.add(mesh)
@@ -89,7 +89,7 @@ class Renderer: Forge.Renderer {
         let pmesh = Mesh(geometry: pGeo, material: pmat)
         scene.add(pmesh)
         
-        let fmat = BasicColorMaterial([1, 1, 1, 0.125], .additive)
+        let fmat = BasicColorMaterial([1, 1, 1, 0.025], .additive)
         fmat.depthWriteEnabled = false
         let fmesh = Mesh(geometry: geo, material: fmat)
         fmesh.triangleFillMode = .lines

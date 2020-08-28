@@ -1,8 +1,12 @@
-# Satin
+# Satin - A 3D Graphics Gramework built on Apple's Metal
 
 ## About
 
-Satin is an experimental framework that helps designers and developers work with Apple's Metal API. Satin provides helpful classes for creating meshes, geometries, pipelines (shaders) and render them on screen or to textures. The api is a constant work in progress, so proceed with caution.
+Satin is a 3D graphics framework (inspired by threejs) that helps designers and developers work with Apple's Metal API. Satin provides helpful classes for creating meshes, materials, buffers, uniforms, geometries, pipelines (shaders), compute kernels, etc and render them on screen or to textures. The api is a constant work in progress, so proceed with caution. There is no documentation, but there are tons of examples that show how to use the APIs.
+
+## Examples
+
+![2D Example](/Images/2D Example.png){:height="33%" width="33%"}
 
 ## Getting Started
 

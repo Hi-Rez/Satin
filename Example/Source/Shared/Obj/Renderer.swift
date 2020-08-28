@@ -49,24 +49,7 @@ class Renderer: Forge.Renderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
-        #if os(iOS)
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            metalKitView.preferredFramesPerSecond = 120
-        case .phone:
-            metalKitView.preferredFramesPerSecond = 60
-        case .unspecified:
-            metalKitView.preferredFramesPerSecond = 60
-        case .tv:
-            metalKitView.preferredFramesPerSecond = 60
-        case .carPlay:
-            metalKitView.preferredFramesPerSecond = 60
-        @unknown default:
-            metalKitView.preferredFramesPerSecond = 60
-        }
-        #else
         metalKitView.preferredFramesPerSecond = 60
-        #endif
     }
     
     override func setup() {
@@ -79,7 +62,7 @@ class Renderer: Forge.Renderer {
         guard let url = Bundle.main.resourceURL?.appendingPathComponent("Assets/suzanne.obj") else { return }
         
         let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
-        let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial())
+        let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.9))
         mesh.label = "Suzanne"
         
         let geo = mesh.geometry

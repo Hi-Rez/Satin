@@ -20,9 +20,7 @@ class Renderer: Forge.Renderer {
     #endif
     
     lazy var mesh: Mesh = {
-//        Mesh(geometry: BoxGeometry(), material: UvColorMaterial())
-//         Mesh(geometry: BoxGeometry(), material: NormalColorMaterial(true))
-        Mesh(geometry: BoxGeometry(), material: BasicColorMaterial(simd_make_float4(1.0, 0.0, 0.0, 1.0)))
+        Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 0), material: BasicDiffuseMaterial(0.7))
     }()
     
     lazy var scene: Object = {
@@ -58,24 +56,7 @@ class Renderer: Forge.Renderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
-        #if os(iOS)
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            metalKitView.preferredFramesPerSecond = 120
-        case .phone:
-            metalKitView.preferredFramesPerSecond = 60
-        case .unspecified:
-            metalKitView.preferredFramesPerSecond = 60
-        case .tv:
-            metalKitView.preferredFramesPerSecond = 60
-        case .carPlay:
-            metalKitView.preferredFramesPerSecond = 60
-        @unknown default:
-            metalKitView.preferredFramesPerSecond = 60
-        }
-        #else
         metalKitView.preferredFramesPerSecond = 60
-        #endif
     }
     
     override func setup() {

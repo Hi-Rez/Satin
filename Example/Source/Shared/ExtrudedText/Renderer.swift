@@ -24,6 +24,7 @@ class Renderer: Forge.Renderer {
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera()
         camera.position = simd_make_float3(0.0, 0.0, 30.0)
+        camera.fov = 60
         camera.near = 0.001
         camera.far = 100.0
         return camera
@@ -35,7 +36,7 @@ class Renderer: Forge.Renderer {
     
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
-        renderer.clearColor = .init(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        renderer.clearColor = .init(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         return renderer
     }()
     
