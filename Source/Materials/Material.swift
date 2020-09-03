@@ -37,7 +37,7 @@ open class Material: ParameterGroupDelegate {
     
     public var label: String {
         var label = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
-        if let bundleName = Bundle(for: type(of: self)).displayName {
+        if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != label {
             label = label.replacingOccurrences(of: bundleName, with: "")
         }
         label = label.replacingOccurrences(of: ".", with: "")
