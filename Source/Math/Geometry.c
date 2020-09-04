@@ -133,6 +133,29 @@ bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float
     return (dProj < 0);
 }
 
+bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times)
+{
+    const simd_float3 l = center - origin;
+    const float tca = simd_dot(l, direction);
+    if( tca < 0 ) {
+        return false;
+    }
+    
+    const float r2 = radius * radius;
+    const float d2 = simd_dot(l,l) - tca * tca;
+    if( d2 < 0 || d2 > r2 ) {
+        return false;
+    }
+    
+    const float thc = sqrt( r2 - d2 );
+    
+    const float t0 = tca - thc;
+    const float t1 = tca + thc;
+    
+    *times = simd_make_float2(t0, t1);
+    return true;
+}
+
 simd_float3 projectPointOnPlane( simd_float3 origin, simd_float3 normal, simd_float3 point )
 {
     simd_float3 v = point - origin;
