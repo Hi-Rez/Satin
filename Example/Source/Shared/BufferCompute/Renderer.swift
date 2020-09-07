@@ -109,10 +109,6 @@ class Renderer: Forge.Renderer {
         return pp
     }()
     
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm

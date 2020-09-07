@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         viewController = Forge.ViewController(nibName: .init("ViewController"), bundle: Bundle(for: Forge.ViewController.self))
-        viewController?.rendererClassName = "Renderer"
+        viewController.renderer = Renderer()
 
         guard let view = self.viewController?.view else { return false }
         self.viewController.renderer = Renderer(metalKitView: view as! MTKView)        

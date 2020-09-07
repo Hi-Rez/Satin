@@ -127,6 +127,7 @@ open class PerspectiveCameraController: Codable {
     var twoTapGestureRecognizer: UITapGestureRecognizer!
     var threeTapGestureRecognizer: UITapGestureRecognizer!
     
+    
     #endif
     
     var state: PerspectiveCameraControllerState = .inactive
@@ -136,6 +137,8 @@ open class PerspectiveCameraController: Codable {
     #if os(macOS)
     open var rotationScalar: Float = 5.0
     #elseif os(iOS)
+    open var rotationScalar: Float = 3.0
+    #elseif os(tvOS)
     open var rotationScalar: Float = 3.0
     #endif
     
@@ -148,6 +151,8 @@ open class PerspectiveCameraController: Codable {
     #if os(macOS)
     open var translationScalar: Float = 0.5
     #elseif os(iOS)
+    open var translationScalar: Float = 0.5
+    #elseif os(tvOS)
     open var translationScalar: Float = 0.5
     #endif
     var translationVelocity: simd_float3 = simd_make_float3(0.0)

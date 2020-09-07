@@ -73,31 +73,10 @@ class Renderer: Forge.Renderer {
     }()
     #endif
     
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
-        #if os(iOS)
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            metalKitView.preferredFramesPerSecond = 120
-        case .phone:
-            metalKitView.preferredFramesPerSecond = 60
-        case .unspecified:
-            metalKitView.preferredFramesPerSecond = 60
-        case .tv:
-            metalKitView.preferredFramesPerSecond = 60
-        case .carPlay:
-            metalKitView.preferredFramesPerSecond = 60
-        @unknown default:
-            metalKitView.preferredFramesPerSecond = 60
-        }
-        #else
         metalKitView.preferredFramesPerSecond = 60
-        #endif
     }
     
     override func setup() {

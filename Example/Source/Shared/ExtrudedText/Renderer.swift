@@ -39,11 +39,7 @@ class Renderer: Forge.Renderer {
         renderer.clearColor = .init(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         return renderer
     }()
-    
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float

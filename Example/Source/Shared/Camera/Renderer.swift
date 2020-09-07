@@ -80,11 +80,7 @@ class Renderer: Forge.Renderer {
     lazy var renderer: Satin.Renderer = {
         Satin.Renderer(context: context, scene: scene, camera: camera)
     }()
-    
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 4
         metalKitView.depthStencilPixelFormat = .depth32Float

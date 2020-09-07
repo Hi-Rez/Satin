@@ -41,11 +41,7 @@ class Renderer: Forge.Renderer {
         Raycaster(context: context)
     }()
     #endif
-    
-    required init?(metalKitView: MTKView) {
-        super.init(metalKitView: metalKitView)
-    }
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
