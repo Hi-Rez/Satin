@@ -193,8 +193,8 @@ open class PerspectiveCameraController: Codable {
         self.camera = camera
         self.view = view
         
-        self.defaultPosition = camera.position
-        self.defaultOrientation = camera.orientation
+        defaultPosition = camera.position
+        defaultOrientation = camera.orientation
         
         setup()
     }
@@ -785,26 +785,20 @@ open class PerspectiveCameraController: Codable {
         #endif
     }
     
-    func arcballPoint(_ point: CGPoint, _ size: CGSize) -> (point: simd_float3, inside: Bool) {
+    func arcballPoint(_ point: CGPoint, _ size: CGSize) -> (inside: Bool, point: simd_float3) {
         var inside = false
-        var pt2d = normalizePoint(point, size)
-        let aspect = size.width > size.height ? Float(size.width / size.height) : Float(size.height / size.width)
-        pt2d.x *= aspect
-        
-        var ptOnArcBall: simd_float3
-        
-        if simd_length(pt2d) > 1.0 {
-            pt2d = simd_normalize(pt2d)
-            ptOnArcBall = simd_make_float3(pt2d.x, pt2d.y, 0.0)
+        let pt = normalizePoint(point, size)
+        var result: simd_float3
+        let r = pt.x * pt.x + pt.y * pt.y
+        if r > 1.0 {
+            let s = 1.0 / sqrt(r)
+            result = s * simd_make_float3(pt)
         }
         else {
-            let circleRadius = sqrt(1.0 - pow(pt2d.y, 2.0))
-            ptOnArcBall = simd_make_float3(pt2d.x, pt2d.y, sqrt(circleRadius - pow(pt2d.x, 2.0)))
-            ptOnArcBall = simd_normalize(ptOnArcBall)
+            result = simd_make_float3(pt.x, pt.y, sqrt(1.0 - r))
             inside = true
         }
-        
-        return (point: ptOnArcBall, inside: inside)
+        return (inside: inside, point: result)
     }
     
     open func reset() {
