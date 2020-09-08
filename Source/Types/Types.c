@@ -222,12 +222,13 @@ void computeNormalsOfGeometryData(GeometryData *data) {
             simd_float3 p0 = simd_make_float3(v0->position);
             simd_float3 p1 = simd_make_float3(v1->position);
             simd_float3 p2 = simd_make_float3(v2->position);
-
-            simd_float3 normal = simd_normalize(simd_cross(p1 - p0, p2 - p0));
-            
-            v0->normal += normal;
-            v1->normal += normal;
-            v2->normal += normal;
+                        
+            simd_float3 normal = simd_cross(p1 - p0, p2 - p0);
+            if(simd_length(normal) > 0) {
+                v0->normal += normal;
+                v1->normal += normal;
+                v2->normal += normal;
+            }
         }
         
         count = data->vertexCount;

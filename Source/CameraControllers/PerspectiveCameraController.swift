@@ -127,7 +127,6 @@ open class PerspectiveCameraController: Codable {
     var twoTapGestureRecognizer: UITapGestureRecognizer!
     var threeTapGestureRecognizer: UITapGestureRecognizer!
     
-    
     #endif
     
     var state: PerspectiveCameraControllerState = .inactive
@@ -287,150 +286,152 @@ open class PerspectiveCameraController: Codable {
     open func enable() {
         guard let view = self.view else { return }
         
-        #if os(macOS)
-        
-        leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.mouseDown(with: event)
+        if !enabled {
+            #if os(macOS)
+            
+            leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.mouseDown(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.mouseDown(with: event)
+                }
+                return event
             }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.mouseDown(with: event)
+            
+            leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDragged) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.mouseDragged(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.mouseDragged(with: event)
+                }
+                return event
             }
-            return event
+            
+            leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.mouseUp(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.mouseUp(with: event)
+                }
+                return event
+            }
+            
+            rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.rightMouseDown(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.rightMouseDown(with: event)
+                }
+                return event
+            }
+            
+            rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.rightMouseDragged(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.rightMouseDragged(with: event)
+                }
+                return event
+            }
+            
+            rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.rightMouseUp(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.rightMouseUp(with: event)
+                }
+                return event
+            }
+            
+            otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.otherMouseDown(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.otherMouseDown(with: event)
+                }
+                return event
+            }
+            
+            otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.otherMouseDragged(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.otherMouseDragged(with: event)
+                }
+                return event
+            }
+            
+            otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.otherMouseUp(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.otherMouseUp(with: event)
+                }
+                return event
+            }
+            
+            scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] event in
+                if self.modifierFlags.isEmpty {
+                    self.scrollWheel(with: event)
+                }
+                else if event.modifierFlags.contains(self.modifierFlags) {
+                    self.scrollWheel(with: event)
+                }
+                return event
+            }
+            
+            magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))
+            view.addGestureRecognizer(magnifyGestureRecognizer)
+            
+            rollGestureRecognizer = NSRotationGestureRecognizer(target: self, action: #selector(rollGesture))
+            view.addGestureRecognizer(rollGestureRecognizer)
+            
+            #elseif os(iOS)
+            
+            view.isMultipleTouchEnabled = true
+            
+            rollGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rollGesture))
+            view.addGestureRecognizer(rollGestureRecognizer)
+            
+            rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
+            rotateGestureRecognizer.minimumNumberOfTouches = 1
+            rotateGestureRecognizer.maximumNumberOfTouches = 1
+            view.addGestureRecognizer(rotateGestureRecognizer)
+            
+            panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
+            panGestureRecognizer.minimumNumberOfTouches = 2
+            panGestureRecognizer.maximumNumberOfTouches = 2
+            view.addGestureRecognizer(panGestureRecognizer)
+            
+            oneTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            oneTapGestureRecognizer.numberOfTouchesRequired = 1
+            oneTapGestureRecognizer.numberOfTapsRequired = 2
+            view.addGestureRecognizer(oneTapGestureRecognizer)
+            
+            twoTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            twoTapGestureRecognizer.numberOfTouchesRequired = 2
+            twoTapGestureRecognizer.numberOfTapsRequired = 2
+            view.addGestureRecognizer(twoTapGestureRecognizer)
+            
+            threeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            threeTapGestureRecognizer.numberOfTouchesRequired = 3
+            threeTapGestureRecognizer.numberOfTapsRequired = 2
+            view.addGestureRecognizer(threeTapGestureRecognizer)
+            
+            pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
+            view.addGestureRecognizer(pinchGestureRecognizer)
+            
+            #endif
         }
-        
-        leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDragged) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.mouseDragged(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.mouseDragged(with: event)
-            }
-            return event
-        }
-        
-        leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.mouseUp(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.mouseUp(with: event)
-            }
-            return event
-        }
-        
-        rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.rightMouseDown(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.rightMouseDown(with: event)
-            }
-            return event
-        }
-        
-        rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.rightMouseDragged(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.rightMouseDragged(with: event)
-            }
-            return event
-        }
-        
-        rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.rightMouseUp(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.rightMouseUp(with: event)
-            }
-            return event
-        }
-        
-        otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.otherMouseDown(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.otherMouseDown(with: event)
-            }
-            return event
-        }
-        
-        otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.otherMouseDragged(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.otherMouseDragged(with: event)
-            }
-            return event
-        }
-        
-        otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.otherMouseUp(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.otherMouseUp(with: event)
-            }
-            return event
-        }
-        
-        scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] event in
-            if self.modifierFlags.isEmpty {
-                self.scrollWheel(with: event)
-            }
-            else if event.modifierFlags.contains(self.modifierFlags) {
-                self.scrollWheel(with: event)
-            }
-            return event
-        }
-        
-        magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))
-        view.addGestureRecognizer(magnifyGestureRecognizer)
-        
-        rollGestureRecognizer = NSRotationGestureRecognizer(target: self, action: #selector(rollGesture))
-        view.addGestureRecognizer(rollGestureRecognizer)
-        
-        #elseif os(iOS)
-        
-        view.isMultipleTouchEnabled = true
-        
-        rollGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rollGesture))
-        view.addGestureRecognizer(rollGestureRecognizer)
-        
-        rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
-        rotateGestureRecognizer.minimumNumberOfTouches = 1
-        rotateGestureRecognizer.maximumNumberOfTouches = 1
-        view.addGestureRecognizer(rotateGestureRecognizer)
-        
-        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
-        panGestureRecognizer.minimumNumberOfTouches = 2
-        panGestureRecognizer.maximumNumberOfTouches = 2
-        view.addGestureRecognizer(panGestureRecognizer)
-        
-        oneTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-        oneTapGestureRecognizer.numberOfTouchesRequired = 1
-        oneTapGestureRecognizer.numberOfTapsRequired = 2
-        view.addGestureRecognizer(oneTapGestureRecognizer)
-        
-        twoTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-        twoTapGestureRecognizer.numberOfTouchesRequired = 2
-        twoTapGestureRecognizer.numberOfTapsRequired = 2
-        view.addGestureRecognizer(twoTapGestureRecognizer)
-        
-        threeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-        threeTapGestureRecognizer.numberOfTouchesRequired = 3
-        threeTapGestureRecognizer.numberOfTapsRequired = 2
-        view.addGestureRecognizer(threeTapGestureRecognizer)
-        
-        pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
-        view.addGestureRecognizer(pinchGestureRecognizer)
-        
-        #endif
         
         enabled = true
     }
@@ -438,62 +439,64 @@ open class PerspectiveCameraController: Codable {
     open func disable() {
         guard let view = self.view else { return }
         
-        #if os(macOS)
-        
-        if let leftMouseDownHandler = self.leftMouseDownHandler {
-            NSEvent.removeMonitor(leftMouseDownHandler)
+        if enabled {
+            #if os(macOS)
+            
+            if let leftMouseDownHandler = self.leftMouseDownHandler {
+                NSEvent.removeMonitor(leftMouseDownHandler)
+            }
+            
+            if let leftMouseDraggedHandler = self.leftMouseDraggedHandler {
+                NSEvent.removeMonitor(leftMouseDraggedHandler)
+            }
+            
+            if let leftMouseUpHandler = self.leftMouseUpHandler {
+                NSEvent.removeMonitor(leftMouseUpHandler)
+            }
+            
+            if let rightMouseDownHandler = self.rightMouseDownHandler {
+                NSEvent.removeMonitor(rightMouseDownHandler)
+            }
+            
+            if let rightMouseDraggedHandler = self.rightMouseDraggedHandler {
+                NSEvent.removeMonitor(rightMouseDraggedHandler)
+            }
+            
+            if let rightMouseUpHandler = self.rightMouseUpHandler {
+                NSEvent.removeMonitor(rightMouseUpHandler)
+            }
+            
+            if let otherMouseDownHandler = self.otherMouseDownHandler {
+                NSEvent.removeMonitor(otherMouseDownHandler)
+            }
+            
+            if let otherMouseDraggedHandler = self.otherMouseDraggedHandler {
+                NSEvent.removeMonitor(otherMouseDraggedHandler)
+            }
+            
+            if let otherMouseUpHandler = self.otherMouseUpHandler {
+                NSEvent.removeMonitor(otherMouseUpHandler)
+            }
+            
+            if let scrollWheelHandler = self.scrollWheelHandler {
+                NSEvent.removeMonitor(scrollWheelHandler)
+            }
+            
+            view.removeGestureRecognizer(magnifyGestureRecognizer)
+            view.removeGestureRecognizer(rollGestureRecognizer)
+            
+            #elseif os(iOS)
+            
+            view.removeGestureRecognizer(rollGestureRecognizer)
+            view.removeGestureRecognizer(rotateGestureRecognizer)
+            view.removeGestureRecognizer(panGestureRecognizer)
+            view.removeGestureRecognizer(oneTapGestureRecognizer)
+            view.removeGestureRecognizer(twoTapGestureRecognizer)
+            view.removeGestureRecognizer(threeTapGestureRecognizer)
+            view.removeGestureRecognizer(pinchGestureRecognizer)
+            
+            #endif
         }
-        
-        if let leftMouseDraggedHandler = self.leftMouseDraggedHandler {
-            NSEvent.removeMonitor(leftMouseDraggedHandler)
-        }
-        
-        if let leftMouseUpHandler = self.leftMouseUpHandler {
-            NSEvent.removeMonitor(leftMouseUpHandler)
-        }
-        
-        if let rightMouseDownHandler = self.rightMouseDownHandler {
-            NSEvent.removeMonitor(rightMouseDownHandler)
-        }
-        
-        if let rightMouseDraggedHandler = self.rightMouseDraggedHandler {
-            NSEvent.removeMonitor(rightMouseDraggedHandler)
-        }
-        
-        if let rightMouseUpHandler = self.rightMouseUpHandler {
-            NSEvent.removeMonitor(rightMouseUpHandler)
-        }
-        
-        if let otherMouseDownHandler = self.otherMouseDownHandler {
-            NSEvent.removeMonitor(otherMouseDownHandler)
-        }
-        
-        if let otherMouseDraggedHandler = self.otherMouseDraggedHandler {
-            NSEvent.removeMonitor(otherMouseDraggedHandler)
-        }
-        
-        if let otherMouseUpHandler = self.otherMouseUpHandler {
-            NSEvent.removeMonitor(otherMouseUpHandler)
-        }
-        
-        if let scrollWheelHandler = self.scrollWheelHandler {
-            NSEvent.removeMonitor(scrollWheelHandler)
-        }
-        
-        view.removeGestureRecognizer(magnifyGestureRecognizer)
-        view.removeGestureRecognizer(rollGestureRecognizer)
-        
-        #elseif os(iOS)
-        
-        view.removeGestureRecognizer(rollGestureRecognizer)
-        view.removeGestureRecognizer(rotateGestureRecognizer)
-        view.removeGestureRecognizer(panGestureRecognizer)
-        view.removeGestureRecognizer(oneTapGestureRecognizer)
-        view.removeGestureRecognizer(twoTapGestureRecognizer)
-        view.removeGestureRecognizer(threeTapGestureRecognizer)
-        view.removeGestureRecognizer(pinchGestureRecognizer)
-        
-        #endif
         
         enabled = false
     }
