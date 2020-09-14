@@ -399,35 +399,43 @@ open class PerspectiveCameraController: Codable {
             
             view.isMultipleTouchEnabled = true
             
+            let allowedTouchTypes: [NSNumber] = [UITouch.TouchType.direct.rawValue as NSNumber]
             rollGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rollGesture))
+            rollGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             view.addGestureRecognizer(rollGestureRecognizer)
             
             rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
+            rotateGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             rotateGestureRecognizer.minimumNumberOfTouches = 1
             rotateGestureRecognizer.maximumNumberOfTouches = 1
             view.addGestureRecognizer(rotateGestureRecognizer)
             
             panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
+            panGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             panGestureRecognizer.minimumNumberOfTouches = 2
             panGestureRecognizer.maximumNumberOfTouches = 2
             view.addGestureRecognizer(panGestureRecognizer)
             
             oneTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            oneTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             oneTapGestureRecognizer.numberOfTouchesRequired = 1
             oneTapGestureRecognizer.numberOfTapsRequired = 2
             view.addGestureRecognizer(oneTapGestureRecognizer)
             
             twoTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            twoTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             twoTapGestureRecognizer.numberOfTouchesRequired = 2
             twoTapGestureRecognizer.numberOfTapsRequired = 2
             view.addGestureRecognizer(twoTapGestureRecognizer)
             
             threeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+            threeTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             threeTapGestureRecognizer.numberOfTouchesRequired = 3
             threeTapGestureRecognizer.numberOfTapsRequired = 2
             view.addGestureRecognizer(threeTapGestureRecognizer)
             
             pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
+            pinchGestureRecognizer.allowedTouchTypes = allowedTouchTypes
             view.addGestureRecognizer(pinchGestureRecognizer)
             
             #endif

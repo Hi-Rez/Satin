@@ -17,6 +17,8 @@ open class BoolParameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<Bool>.stride }
     public var alignment: Int { return MemoryLayout<Bool>.alignment }
     public var count: Int { return 1 }
+    public var actions: [(Bool) -> Void] = []
+    
     public subscript<Bool>(index: Int) -> Bool {
         get {
             return value as! Bool
@@ -25,22 +27,53 @@ open class BoolParameter: NSObject, Parameter {
             value = newValue as! Swift.Bool
         }
     }
-
+    
     public func dataType<Bool>() -> Bool.Type {
         return Bool.self
     }
-
+    
     @objc public dynamic var value: Bool
-
-    public init(_ label: String, _ value: Bool = false, _ controlType: ControlType = .unknown) {
+    
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+    }
+    
+    var observers: [NSKeyValueObservation] = []
+    
+    public init(_ label: String, _ value: Bool = false, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         self.value = value
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
     }
-
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         self.value = false
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
+    }
+    
+    func setup()
+    {
+        observers.append(observe(\.value) { [unowned self] _, _ in
+            for action in self.actions {
+                action(self.value)
+            }
+        })
+    }
+    
+    deinit {
+        observers = []
     }
 }
