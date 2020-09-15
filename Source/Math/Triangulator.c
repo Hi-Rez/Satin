@@ -418,7 +418,7 @@ int _triangulate(tsVertex *vertices, int count, int added, TriangulationData *da
     //    printf("\n\n\n");
     int ears = initalizeEars(vertices);
     if (ears == 0) {
-        printf("invalid polygon\n");
+        printf("invalid polygon, doesn't have any ears\n");
         return 1;
     }
     //    printf("\n\n\n");
@@ -856,14 +856,13 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
         int len = faceLengths[i];
         tsPath *structure = structures[i];
         if (len == 3) {
+            tsVertex *vertices = structure->v;
             // If three faces only, then add manually
             triData.indexCount = 1;
             triData.indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices));
-            triData.indexData[0].i0 = structure->index;
-            structure = structure->next;
-            triData.indexData[0].i1 = structure->index;
-            structure = structure->next;
-            triData.indexData[0].i2 = structure->index;
+            triData.indexData[0].i0 = vertices[0].index;
+            triData.indexData[0].i1 = vertices[1].index;
+            triData.indexData[0].i2 = vertices[2].index;
         } else {
             // Perform Triangulation
             success += _triangulate(structures[i]->v, len, 0, &triData);
