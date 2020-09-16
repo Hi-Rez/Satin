@@ -268,6 +268,12 @@ open class Object: Codable {
 
 extension Object: Equatable {
     public static func == (lhs: Object, rhs: Object) -> Bool {
-        return lhs.id == rhs.id
+        return lhs === rhs
+    }
+}
+
+extension Object: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
     }
 }
