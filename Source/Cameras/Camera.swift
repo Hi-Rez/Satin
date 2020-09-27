@@ -21,22 +21,37 @@ open class Camera: Object
     
     public var viewMatrix: matrix_float4x4
     {
-        if updateViewMatrix
+        get
         {
-            _viewMatrix = matrix_identity_float4x4
-            updateViewMatrix = false
+            if updateViewMatrix
+            {
+                _viewMatrix = matrix_identity_float4x4
+                updateViewMatrix = false
+            }
+            return _viewMatrix
         }
-        return _viewMatrix
+        set
+        {
+            _viewMatrix = newValue
+            localMatrix = newValue.inverse
+        }
     }
     
     public var projectionMatrix: matrix_float4x4
     {
-        if updateProjectionMatrix
+        get
         {
-            _projectionMatrix = matrix_identity_float4x4
-            updateProjectionMatrix = false
+            if updateProjectionMatrix
+            {
+                _projectionMatrix = matrix_identity_float4x4
+                updateProjectionMatrix = false
+            }
+            return _projectionMatrix
         }
-        return _projectionMatrix
+        set
+        {
+            _projectionMatrix = newValue
+        }
     }
     
     public var near: Float = 0.01

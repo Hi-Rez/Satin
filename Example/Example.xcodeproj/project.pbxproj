@@ -68,6 +68,18 @@
 		D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E124FB40243F8E5100380783 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E129CC2F25200928009B237A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
+		E129CC3125200928009B237A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E129CC3225200928009B237A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E129CC3325200928009B237A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E129CC3425200928009B237A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E129CC3525200928009B237A /* Pods_3D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D793D685A5EFDD91AFE8798E /* Pods_3D_iOS.framework */; };
+		E129CC3725200928009B237A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
+		E129CC3825200928009B237A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E129CCB6252009CC009B237A /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E129CCB5252009CC009B237A /* Renderer.swift */; };
+		E129CCDF25200A57009B237A /* Renderer+AR.swift in Sources */ = {isa = PBXBuildFile; fileRef = E129CCDE25200A57009B237A /* Renderer+AR.swift */; };
+		E129CDF925200C7D009B237A /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E129CDF825200C7D009B237A /* Assets */; };
+		E129CE22252011E4009B237A /* Renderer+Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = E129CE21252011E4009B237A /* Renderer+Background.swift */; };
 		E12EDE9124A6E1B800E58E58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E12EDE9824A6E1B800E58E58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E12EDE9924A6E1B800E58E58 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
@@ -372,6 +384,12 @@
 		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E129CC3E25200928009B237A /* AR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AR.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E129CCB5252009CC009B237A /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E129CCDE25200A57009B237A /* Renderer+AR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Renderer+AR.swift"; sourceTree = "<group>"; };
+		E129CD0725200B1C009B237A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E129CDF825200C7D009B237A /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		E129CE21252011E4009B237A /* Renderer+Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Renderer+Background.swift"; sourceTree = "<group>"; };
 		E12EDE9F24A6E1B800E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12EDEB424A6E31B00E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E144FA2D24D0D5550072D456 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
@@ -485,6 +503,18 @@
 				9242AAC1B56D7677A947725C /* (null) in Frameworks */,
 				4A2657C6B59E878F1CF14921 /* (null) in Frameworks */,
 				AA54D3FF36DAE5E69435CC2E /* Pods_3D_tvOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E129CC3025200928009B237A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E129CC3125200928009B237A /* (null) in Frameworks */,
+				E129CC3225200928009B237A /* (null) in Frameworks */,
+				E129CC3325200928009B237A /* (null) in Frameworks */,
+				E129CC3425200928009B237A /* (null) in Frameworks */,
+				E129CC3525200928009B237A /* Pods_3D_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +864,7 @@
 				E18280CC24C5225E000810D1 /* ExtrudedText.app */,
 				E144FA4124D0D56D0072D456 /* Camera.app */,
 				E144FA6D24D21FAB0072D456 /* Camera.app */,
+				E129CC3E25200928009B237A /* AR.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -874,6 +905,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E129CBDE2520090E009B237A /* AR */,
 				E17B986D2451488100216411 /* 2D */,
 				E17B9870245148AC00216411 /* 3D */,
 				E168FC5E248ECC4D004B8407 /* PBR */,
@@ -985,6 +1017,18 @@
 				C071FB55CAF1BB5BD748E2FD /* Pods-Camera-macOS.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E129CBDE2520090E009B237A /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				E129CDF825200C7D009B237A /* Assets */,
+				E129CD0725200B1C009B237A /* Info.plist */,
+				E129CCB5252009CC009B237A /* Renderer.swift */,
+				E129CCDE25200A57009B237A /* Renderer+AR.swift */,
+				E129CE21252011E4009B237A /* Renderer+Background.swift */,
+			);
+			path = AR;
 			sourceTree = "<group>";
 		};
 		E144FA2C24D0D5350072D456 /* Camera */ = {
@@ -1248,6 +1292,26 @@
 			name = "3D-tvOS";
 			productName = "Example-tvOS";
 			productReference = 66E678B6243EC9FD0070B294 /* 3D.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E129CC2B25200928009B237A /* AR-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E129CC3B25200928009B237A /* Build configuration list for PBXNativeTarget "AR-iOS" */;
+			buildPhases = (
+				E129CC2C25200928009B237A /* [CP] Check Pods Manifest.lock */,
+				E129CC2D25200928009B237A /* Sources */,
+				E129CC3025200928009B237A /* Frameworks */,
+				E129CC3625200928009B237A /* Resources */,
+				E129CC3925200928009B237A /* Touch Frameworks */,
+				E129CC3A25200928009B237A /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AR-iOS";
+			productName = "Example-iOS";
+			productReference = E129CC3E25200928009B237A /* AR.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E12EDE8D24A6E1B800E58E58 /* BufferCompute-iOS */ = {
@@ -2028,6 +2092,7 @@
 				E18280C124C5225E000810D1 /* ExtrudedText-tvOS */,
 				E144FA2E24D0D56D0072D456 /* Camera-macOS */,
 				E144FA5A24D21FAB0072D456 /* Camera-iOS */,
+				E129CC2B25200928009B237A /* AR-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -2056,6 +2121,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				66E678E6243EE7670070B294 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E129CC3625200928009B237A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E129CC3725200928009B237A /* Assets.xcassets in Resources */,
+				E129CDF925200C7D009B237A /* Assets in Resources */,
+				E129CC3825200928009B237A /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2883,6 +2958,63 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-2D-tvOS/Pods-2D-tvOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E129CC2C25200928009B237A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-3D-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E129CC3925200928009B237A /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E129CC3A25200928009B237A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-iOS/Pods-3D-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-iOS/Pods-3D-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-3D-iOS/Pods-3D-iOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E12EDE9A24A6E1B800E58E58 /* Touch Frameworks */ = {
@@ -4581,6 +4713,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E129CC2D25200928009B237A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E129CCB6252009CC009B237A /* Renderer.swift in Sources */,
+				E129CC2F25200928009B237A /* AppDelegate.swift in Sources */,
+				E129CE22252011E4009B237A /* Renderer+Background.swift in Sources */,
+				E129CCDF25200A57009B237A /* Renderer+AR.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E12EDE8F24A6E1B800E58E58 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5150,6 +5293,49 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.4;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E129CC3C25200928009B237A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C3F7B7750D8E89A27A4C1DC /* Pods-3D-iOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/Shared/AR/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.ar;
+				PRODUCT_NAME = AR;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E129CC3D25200928009B237A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19F902804E2FF7509377AA7D /* Pods-3D-iOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/Shared/AR/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.ar;
+				PRODUCT_NAME = AR;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -6683,6 +6869,15 @@
 			buildConfigurations = (
 				66E678C6243EC9FD0070B294 /* Debug */,
 				66E678C7243EC9FD0070B294 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E129CC3B25200928009B237A /* Build configuration list for PBXNativeTarget "AR-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E129CC3C25200928009B237A /* Debug */,
+				E129CC3D25200928009B237A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

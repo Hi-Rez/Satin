@@ -55,22 +55,37 @@ open class PerspectiveCamera: Camera
     
     public override var projectionMatrix: matrix_float4x4
     {
-        if updateProjectionMatrix
+        get
         {
-            _projectionMatrix = perspective(fov: fov, aspect: aspect, near: near, far: far)
-            updateProjectionMatrix = false
+            if updateProjectionMatrix
+            {
+                _projectionMatrix = perspective(fov: fov, aspect: aspect, near: near, far: far)
+                updateProjectionMatrix = false
+            }
+            return _projectionMatrix
         }
-        return _projectionMatrix
+        set
+        {
+            _projectionMatrix = newValue
+        }
     }
     
     public override var viewMatrix: matrix_float4x4
     {
-        if updateViewMatrix
+        get
         {
-            _viewMatrix = worldMatrix.inverse
-            updateViewMatrix = false
+            if updateViewMatrix
+            {
+                _viewMatrix = worldMatrix.inverse
+                updateViewMatrix = false
+            }
+            return _viewMatrix
         }
-        return _viewMatrix
+        set
+        {
+            _viewMatrix = newValue
+            localMatrix = newValue.inverse
+        }
     }
     
     public override init()

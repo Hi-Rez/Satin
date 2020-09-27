@@ -28,8 +28,8 @@ fragment float4 basicDiffuseFragment(DiffuseVertexData in [[stage_in]],
                                     constant BasicDiffuseUniforms &uniforms
                                     [[buffer(FragmentBufferMaterialUniforms)]]) {
     const float3 pos = in.viewPosition;
-    const float3 dx = dfdx( pos );
-    const float3 dy = dfdy( pos );
+    const float3 dx = normalize(dfdx( pos ));
+    const float3 dy = normalize(dfdy( pos ));
     const float3 normal = normalize( cross( dx, dy ) );
     const float soft = dot( in.normal, float3( 0.0, 0.0, 1.0 ) );
     const float hard = dot( normal, float3( 0.0, 0.0, -1.0 ) );
