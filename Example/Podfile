@@ -159,3 +159,7 @@ end
 target '2D-tvOS' do
   platform :tvos, '12.4'
 end
+
+target 'AR-iOS' do
+  platform :ios, '13.0'
+end

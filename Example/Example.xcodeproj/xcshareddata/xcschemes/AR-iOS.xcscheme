@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E129CC2B25200928009B237A"
-               BuildableName = "AR-iOS.app"
+               BuildableName = "AR.app"
                BlueprintName = "AR-iOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E129CC2B25200928009B237A"
-            BuildableName = "AR-iOS.app"
+            BuildableName = "AR.app"
             BlueprintName = "AR-iOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E129CC2B25200928009B237A"
-            BuildableName = "AR-iOS.app"
+            BuildableName = "AR.app"
             BlueprintName = "AR-iOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

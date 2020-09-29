@@ -1,6 +1,6 @@
 PODS:
-  - Forge (0.1.0)
-  - Satin (0.2.0)
+  - Forge (1.0.3)
+  - Satin (1.0.0)
 
 DEPENDENCIES:
   - Forge (from `https://github.com/Hi-Rez/Forge.git`)
@@ -14,13 +14,13 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Forge:
-    :commit: 6b644119e138ef228406a11551ec9907cc7cfe1e
+    :commit: 7061c72755483087f43b4ea9bda83cfc47b34de3
     :git: https://github.com/Hi-Rez/Forge.git
 
 SPEC CHECKSUMS:
-  Forge: 235ac8e6a6ac48d2db3be3bae3723ec6180b0ba1
-  Satin: 38cd644e7cb1a7defabc2d18ccb27c40223fdc1e
+  Forge: e5a75483f93cbb8176d0e05dd31c75e24f08985e
+  Satin: 7a2d89efe3e539446960b69083e835c320069d58
 
-PODFILE CHECKSUM: e8b027d71077a4a07b46435204da196f61c15f89
+PODFILE CHECKSUM: 980ff1a2d251898f8bb9bc7fde7a49b1b949eeb1
 
 COCOAPODS: 1.8.4

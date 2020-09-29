@@ -89,9 +89,19 @@ class Renderer: Forge.Renderer, ARSessionDelegate {
         metalKitView.preferredFramesPerSecond = 60
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+        session.pause()
+    }
+    
     override func setup() {        
         setupARSession()
         setupBackgroundTextureCache()
+        NotificationCenter.default.addObserver(self, selector: #selector(Renderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc func rotated() {
+        _updateBackgroundGeometry = true
     }
     
     override func update() {
@@ -133,9 +143,5 @@ class Renderer: Forge.Renderer, ARSessionDelegate {
             
             scene.add(mesh)
         }
-    }
-    
-    deinit {
-        session.pause()
     }
 }

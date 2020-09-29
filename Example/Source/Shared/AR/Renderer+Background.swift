@@ -33,7 +33,8 @@ extension Renderer {
     func updateBackgroundGeometry(_ frame: ARFrame)
     {
         // Update the texture coordinates of our image plane to aspect fill the viewport
-        let displayToCameraTransform = frame.displayTransform(for: .landscapeRight, viewportSize: viewportSize).inverted()
+        let orientation = UIApplication.shared.statusBarOrientation
+        let displayToCameraTransform = frame.displayTransform(for: orientation, viewportSize: viewportSize).inverted()
 
         let geo = QuadGeometry()
         for (index, vertex) in geo.vertexData.enumerated() {

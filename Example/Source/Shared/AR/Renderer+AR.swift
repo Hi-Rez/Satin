@@ -29,9 +29,9 @@ extension Renderer {
         guard let frame = session.currentFrame else {
             return
         }
-        
-        camera.viewMatrix = frame.camera.viewMatrix(for: .landscapeRight)
-        camera.projectionMatrix = frame.camera.projectionMatrix(for: .landscapeRight, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
+        let orientation = UIApplication.shared.statusBarOrientation
+        camera.viewMatrix = frame.camera.viewMatrix(for: orientation)
+        camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
     }
     
     // MARK: - ARSessionDelegate
