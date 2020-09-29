@@ -32,9 +32,11 @@ extension Renderer {
     
     func updateBackgroundGeometry(_ frame: ARFrame)
     {
+        guard let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else { return }
+        
+                
         // Update the texture coordinates of our image plane to aspect fill the viewport
-        let orientation = UIApplication.shared.statusBarOrientation
-        let displayToCameraTransform = frame.displayTransform(for: orientation, viewportSize: viewportSize).inverted()
+        let displayToCameraTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewportSize).inverted()
 
         let geo = QuadGeometry()
         for (index, vertex) in geo.vertexData.enumerated() {

@@ -9,11 +9,9 @@
 import ARKit
 
 extension Renderer {
-    
     // MARK: - Setup AR Session
     
-    func setupARSession()
-    {
+    func setupARSession() {
         session = ARSession()
         session.delegate = self
         
@@ -24,12 +22,11 @@ extension Renderer {
         session.run(configuration)
     }
     
-    func updateCamera()
-    {
-        guard let frame = session.currentFrame else {
+    func updateCamera() {
+        guard let frame = session.currentFrame, let orientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else {
             return
         }
-        let orientation = UIApplication.shared.statusBarOrientation
+        
         camera.viewMatrix = frame.camera.viewMatrix(for: orientation)
         camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
     }

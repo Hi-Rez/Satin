@@ -21,9 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController = Forge.ViewController(nibName: .init("ViewController"), bundle: Bundle(for: Forge.ViewController.self))
         viewController.renderer = Renderer()
 
-        guard let view = self.viewController?.view else { return false }
-        self.viewController.renderer = Renderer(metalKitView: view as! MTKView)        
-
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         window?.rootViewController = viewController

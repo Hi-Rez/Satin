@@ -9,59 +9,59 @@ pod 'Satin', :path => '../'
 use_frameworks!
 
 target 'Camera-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'Camera-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'BufferCompute-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'BufferCompute-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'BufferCompute-tvOS' do
-    platform :tvos, '12.4'
+    platform :tvos, '13.0'
 end
 
 target 'ExtrudedText-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'ExtrudedText-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'ExtrudedText-tvOS' do
-    platform :tvos, '12.4'
+    platform :tvos, '13.0'
 end
 
 target 'Text-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'Text-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'Text-tvOS' do
-    platform :tvos, '12.4'
+    platform :tvos, '13.0'
 end
 
 target 'DepthMaterial-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'DepthMaterial-iOS' do
-  platform :ios, '12.4'
+  platform :ios, '13.0'
 end
 
 target 'DepthMaterial-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'PBR-macOS' do
@@ -73,91 +73,91 @@ target 'PBR-iOS' do
 end
 
 target 'TextureCompute-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'TextureCompute-iOS' do
-  platform :ios, '12.4'
+  platform :ios, '13.0'
 end
 
 target 'TextureCompute-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'Cubemap-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'Cubemap-iOS' do
-  platform :ios, '12.4'
+  platform :ios, '13.0'
 end
 
 target 'Cubemap-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'Geometry-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'Geometry-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'Geometry-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'LiveCode-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'MatCap-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'MatCap-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'MatCap-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target '3D-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target '3D-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target '3D-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'Obj-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target 'Obj-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target 'Obj-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target '2D-iOS' do
-    platform :ios, '12.4'
+    platform :ios, '13.0'
 end
 
 target '2D-macOS' do
-  platform :osx, '10.14'
+  platform :osx, '10.15'
 end
 
 target '2D-tvOS' do
-  platform :tvos, '12.4'
+  platform :tvos, '13.0'
 end
 
 target 'AR-iOS' do
