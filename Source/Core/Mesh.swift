@@ -123,15 +123,15 @@ open class Mesh: Object {
         super.update()
     }
     
-    public func update(camera: Camera) {
+    open func update(camera: Camera) {
         updateUniforms(camera: camera)
     }
     
-    public func draw(renderEncoder: MTLRenderCommandEncoder) {
+    open func draw(renderEncoder: MTLRenderCommandEncoder) {
         draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
     
-    public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
+    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard instanceCount > 0, let vertexBuffer = geometry.vertexBuffer else { return }
         
         preDraw?(renderEncoder)
@@ -174,7 +174,7 @@ open class Mesh: Object {
         }
     }
     
-    public func addSubmesh(_ submesh: Submesh) {
+    open func addSubmesh(_ submesh: Submesh) {
         submesh.parent = self
         submeshes.append(submesh)
     }
