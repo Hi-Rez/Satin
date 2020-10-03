@@ -88,6 +88,13 @@ open class PerspectiveCamera: Camera
         }
     }
     
+    public convenience init(position: simd_float3, near: Float, far: Float) {
+        self.init()
+        self.position = position
+        self.near = near
+        self.far = far
+    }
+    
     public override init()
     {
         super.init()

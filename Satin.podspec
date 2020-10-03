@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                   = "Satin"
-  spec.version                = "1.0.2"
+  spec.version                = "1.0.3"
   spec.summary                = "Satin is a Swift based creative coding toolkit built on top of Metal"
   spec.description            = <<-DESC
   Satin is a swift based creative coding toolkit built on top of Metal. Satin contains classes & helpers that make create graphics with Metal fun and fast!
@@ -11,9 +11,9 @@ Pod::Spec.new do |spec|
   spec.social_media_url       = "https://twitter.com/rezaali"
   spec.source                 = { :git => "https://github.com/Hi-Rez/Satin.git", :tag => spec.version.to_s }
 
-  spec.osx.deployment_target  = "10.14"
-  spec.ios.deployment_target  = "12.4"
-  spec.tvos.deployment_target = "12.4"
+  spec.osx.deployment_target  = "10.15"
+  spec.ios.deployment_target  = "13.0"
+  spec.tvos.deployment_target = "13.0"
 
   spec.public_header_files    = ["Source/*.h", "Source/**/*.h"]
 
