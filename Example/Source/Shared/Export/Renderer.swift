@@ -79,7 +79,10 @@ class Renderer: Forge.Renderer {
     func exportObj(_ url: URL) {
         guard let indexBuffer = mesh.geometry.indexBuffer else { return }
         
-        let allocator = MTKMeshBufferAllocator(device: device)
+        
+        
+//        let allocator = MTKMeshBufferAllocator(device: device)
+        let allocator = MDLMeshBufferDataAllocator()
         let asset = MDLAsset(bufferAllocator: allocator)
         
         let geometry = mesh.geometry
