@@ -187,8 +187,6 @@ class Renderer: Forge.Renderer {
     }
     #endif
     
-    func setupMeshPreDraw() {}
-    
     func setupMetalCompiler() {
         metalFileCompiler.onUpdate = { [unowned self] in
             self.setupLibrary()

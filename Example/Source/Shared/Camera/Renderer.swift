@@ -22,7 +22,7 @@ class Renderer: Forge.Renderer {
         let intervalsf = Float(intervals)
         let geometryX = CapsuleGeometry(size: (0.0125, intervalsf), axis: .x)
         let geometryZ = CapsuleGeometry(size: (0.0125, intervalsf), axis: .z)
-        for i in 0...intervals {
+        for i in 0 ... intervals {
             let fi = Float(i)
             let meshX = Mesh(geometry: geometryX, material: material)
             let offset = map(fi, 0.0, Float(intervals), -intervalsf * 0.5, intervalsf * 0.5)
@@ -65,11 +65,18 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var camera: PerspectiveCamera = {
-        let camera = PerspectiveCamera()
-        camera.label = "Camera"
-        camera.position = simd_make_float3(0.0, 0.0, 9.0)
-        camera.near = 0.001
-        camera.far = 100.0
+        let pos = simd_make_float3(5.0, 5.0, 5.0)
+        let camera = PerspectiveCamera(position: pos, near: 0.001, far: 200.0)
+        
+        camera.orientation = simd_quatf(from: [0, 0, 1], to: simd_normalize(pos))
+        
+        let forward = simd_normalize(camera.forwardDirection)
+        let worldUp = Satin.worldUpDirection
+        let right = -simd_normalize(simd_cross(forward, worldUp))
+        let angle = acos(simd_dot(simd_normalize(camera.rightDirection), right))
+        
+        camera.orientation = simd_quatf(angle: angle, axis: forward) * camera.orientation
+        
         return camera
     }()
     

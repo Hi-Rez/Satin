@@ -205,6 +205,9 @@ open class PerspectiveCameraController: Codable {
     
     func setup() {
         guard let camera = self.camera else { return }
+        target.orientation = defaultOrientation
+        camera.orientation = simd_quatf(matrix_identity_float4x4)
+        camera.position = [0, 0, simd_length(defaultPosition)]
         target.add(camera)
         enable()
     }
@@ -825,12 +828,13 @@ open class PerspectiveCameraController: Codable {
             self.zoomVelocity = 0.0
             self.rollVelocity = 0.0
             
+            
+            self.target.orientation = defaultOrientation
             self.target.position = simd_float3(repeating: 0.0)
-            self.target.orientation = simd_quatf(matrix_identity_float4x4)
             
             guard let camera = self.camera else { return }
-            camera.position = self.defaultPosition
-            camera.orientation = self.defaultOrientation
+            camera.orientation = simd_quatf(matrix_identity_float4x4)
+            camera.position = [0, 0, simd_length(defaultPosition)]
             camera.updateMatrix = true
             
             self.onChange?()
