@@ -239,6 +239,22 @@ open class Material: ParameterGroupDelegate {
         onBind?(renderEncoder)
     }
     
+    public func set(_ name: String, _ value: [Float]) {
+        let count = value.count
+        if count == 1 {
+            set(name, value[0])
+        }
+        else if count == 2 {
+            set(name, simd_make_float2(value[0], value[1]))
+        }
+        else if count == 3 {
+            set(name, simd_make_float3(value[0], value[1], value[2]))
+        }
+        else if count == 4 {
+            set(name, simd_make_float4(value[0], value[1], value[2], value[3]))
+        }
+    }
+    
     public func set(_ name: String, _ value: Float) {
         parameters.set(name, value)
     }
