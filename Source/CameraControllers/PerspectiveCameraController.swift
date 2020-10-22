@@ -569,7 +569,7 @@ open class PerspectiveCameraController: Codable {
         guard let view = self.view else { return }
         if event.window == view.window {
             let dy = Float(event.deltaY) / mouseDeltaSensitivity
-            if event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
+            if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
                 state = .dollying
                 translationVelocity.z -= dy * translationScalar
             }
