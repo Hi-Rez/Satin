@@ -244,6 +244,11 @@ open class Object: Codable {
         }
     }
     
+    open func removeAll()
+    {
+        children = []
+    }
+    
     public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
         fn(self)
         if recursive {
@@ -263,6 +268,15 @@ open class Object: Codable {
             return results
         }
         return children
+    }
+    
+    public func isVisible() -> Bool {        
+        if let parent = self.parent {
+            return (parent.isVisible() && visible)
+        }
+        else {
+            return visible
+        }
     }
 }
 
