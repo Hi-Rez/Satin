@@ -17,6 +17,7 @@ public enum PerspectiveCameraControllerState {
     case inactive
 }
 
+
 open class PerspectiveCameraController: Codable {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -129,7 +130,7 @@ open class PerspectiveCameraController: Codable {
     
     #endif
     
-    var state: PerspectiveCameraControllerState = .inactive
+    public private(set) var state: PerspectiveCameraControllerState = .inactive 
     
     // Rotation
     open var rotationDamping: Float = 0.9
@@ -224,28 +225,29 @@ open class PerspectiveCameraController: Codable {
         guard camera != nil else { return }
         
         var changed = false
+        let changeLimit: Float = 0.001
         
         target.update()
         
-        if length(translationVelocity) > 0.0001 {
+        if length(translationVelocity) > changeLimit {
             updatePosition()
             translationVelocity *= translationDamping
             changed = true
         }
         
-        if abs(zoomVelocity) > 0.0001 {
+        if abs(zoomVelocity) > changeLimit {
             updateZoom()
             zoomVelocity *= zoomDamping
             changed = true
         }
         
-        if abs(rotationVelocity) > 0.0001, length(rotationAxis) > 0.9 {
+        if abs(rotationVelocity) > changeLimit, length(rotationAxis) > 0.9 {
             updateOrientation()
             rotationVelocity *= rotationDamping
             changed = true
         }
         
-        if abs(rollVelocity) > 0.0001 {
+        if abs(rollVelocity) > changeLimit {
             updateRoll()
             rollVelocity *= rollDamping
             changed = true
