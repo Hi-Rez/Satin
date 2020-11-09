@@ -90,18 +90,15 @@ open class Object: Codable {
     }
     
     public var worldForwardDirection: simd_float3 {
-        let q = simd_quatf(worldMatrix)
-        return simd_matrix3x3(q) * Satin.worldForwardDirection
+        return simd_matrix3x3(worldOrientation) * Satin.worldForwardDirection
     }
 
     public var worldUpDirection: simd_float3 {
-        let q = simd_quatf(worldMatrix)
-        return simd_matrix3x3(q) * Satin.worldUpDirection
+        return simd_matrix3x3(worldOrientation) * Satin.worldUpDirection
     }
 
     public var worldRightDirection: simd_float3 {
-        let q = simd_quatf(worldMatrix)
-        return simd_matrix3x3(q) * Satin.worldRightDirection
+        return simd_matrix3x3(worldOrientation) * Satin.worldRightDirection
     }
     
     public weak var parent: Object? {
