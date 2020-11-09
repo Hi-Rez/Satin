@@ -78,27 +78,27 @@ open class Object: Codable {
     }
     
     public var forwardDirection: simd_float3 {
-        return simd_matrix3x3(orientation) * Satin.worldForwardDirection
+        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldForwardDirection)
     }
     
     public var upDirection: simd_float3 {
-        return simd_matrix3x3(orientation) * Satin.worldUpDirection
+        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldUpDirection)
     }
     
     public var rightDirection: simd_float3 {
-        return simd_matrix3x3(orientation) * Satin.worldRightDirection
+        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldRightDirection)
     }
     
     public var worldForwardDirection: simd_float3 {
-        return simd_matrix3x3(worldOrientation) * Satin.worldForwardDirection
+        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldForwardDirection)
     }
 
     public var worldUpDirection: simd_float3 {
-        return simd_matrix3x3(worldOrientation) * Satin.worldUpDirection
+        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldUpDirection)
     }
 
     public var worldRightDirection: simd_float3 {
-        return simd_matrix3x3(worldOrientation) * Satin.worldRightDirection
+        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldRightDirection)
     }
     
     public weak var parent: Object? {
