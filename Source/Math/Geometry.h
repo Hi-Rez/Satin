@@ -45,6 +45,7 @@ bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float
 bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times);
 
 simd_float3 projectPointOnPlane( simd_float3 origin, simd_float3 normal, simd_float3 point );
+simd_float2 projectedPointOnLine2(simd_float2 start, simd_float2 end, simd_float2 point);
 
 float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point);
 float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point);

@@ -92,11 +92,11 @@ open class Object: Codable {
     public var worldForwardDirection: simd_float3 {
         return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldForwardDirection)
     }
-
+    
     public var worldUpDirection: simd_float3 {
         return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldUpDirection)
     }
-
+    
     public var worldRightDirection: simd_float3 {
         return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldRightDirection)
     }
@@ -241,8 +241,7 @@ open class Object: Codable {
         }
     }
     
-    open func removeAll()
-    {
+    open func removeAll() {
         children = []
     }
     
@@ -256,18 +255,29 @@ open class Object: Codable {
     }
     
     public func getChildren(_ recursive: Bool = true) -> [Object] {
-        if recursive {
-            var results: [Object] = []
-            for child in children {
-                results.append(child)
+        var results: [Object] = []
+        for child in children {
+            results.append(child)
+            if recursive {
                 results.append(contentsOf: child.getChildren(recursive))
             }
-            return results
         }
-        return children
+        return results
     }
     
-    public func isVisible() -> Bool {        
+    public func getChild(_ name: String, _ recursive: Bool = true) -> Object? {
+        for child in children {
+            if child.label == name {
+                return child
+            }
+            else if recursive, let found = child.getChild(name, recursive) {
+                return found
+            }
+        }
+        return nil
+    }
+    
+    public func isVisible() -> Bool {
         if let parent = self.parent {
             return (parent.isVisible() && visible)
         }

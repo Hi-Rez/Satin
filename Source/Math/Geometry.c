@@ -172,6 +172,14 @@ float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point) 
     return acLength * sin(angle);
 }
 
+simd_float2 projectedPointOnLine2(simd_float2 start, simd_float2 end, simd_float2 point) {
+    simd_float2 ab = end - start;
+    float lengthAB = simd_length(ab);
+    simd_float2 ac = point - start;
+    float projectedLength = simd_dot(ab, ac)/ lengthAB;
+    return start + projectedLength * (ab/lengthAB);
+}
+
 float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point) {
     simd_float3 ab = simd_normalize(end - start);
     simd_float3 ac = point - start;
@@ -180,7 +188,6 @@ float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point) 
     float angle = acos(simd_dot(ab, ac));
     return acLength * sin(angle);
 }
-
 
 float angle2(simd_float2 a)
 {
