@@ -150,7 +150,7 @@ open class Mesh: Object {
                         indexCount: submesh.indexCount,
                         indexType: submesh.indexType,
                         indexBuffer: indexBuffer,
-                        indexBufferOffset: 0,
+                        indexBufferOffset: submesh.indexBufferOffset,
                         instanceCount: instanceCount
                     )
                 }

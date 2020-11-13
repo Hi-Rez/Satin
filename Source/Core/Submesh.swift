@@ -21,6 +21,7 @@ open class Submesh {
     public var indexCount: Int {
         return indexData.count
     }
+    public var indexBufferOffset: Int = 0
     public var indexType: MTLIndexType = .uint32
     public var indexBuffer: MTLBuffer?
     public var indexData: [UInt32] = [] {
@@ -31,9 +32,10 @@ open class Submesh {
         }
     }
     
-    public init(indexData:[UInt32], indexBuffer: MTLBuffer) {
+    public init(indexData:[UInt32], indexBuffer: MTLBuffer, indexBufferOffset: Int = 0) {
         self.indexData = indexData
         self.indexBuffer = indexBuffer
+        self.indexBufferOffset = indexBufferOffset
     }
     
     weak var parent: Mesh!
