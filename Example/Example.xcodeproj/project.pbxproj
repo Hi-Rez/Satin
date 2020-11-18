@@ -254,12 +254,13 @@
 		E1FAC0052527E6C9008569F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E1FAC0072527E6C9008569F7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E1FAC05F2527E79A008569F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FABFFC2527E698008569F7 /* Renderer.swift */; };
-		EBB451C7F01049D7FC8B4D7B /* Pods_Export_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64993170B7EEF0BD6E7E3247 /* Pods_Export_macOS.framework */; };
+		EBB451C7F01049D7FC8B4D7B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		F0CEA7DD0FC0F2AB5822FB64 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */; };
 		F36F4114CCF20A419289D7AE /* Pods_ExtrudedText_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBB33F25CEB86E717EB31B7 /* Pods_ExtrudedText_tvOS.framework */; };
 		F4525EB6D2853E367A61EA5F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		F8600421B47B20340EFAD160 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		F9953B371692605694F6DAB9 /* Pods_Export_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F11BF3C16367ED3603971B7 /* Pods_Export_macOS.framework */; };
 		F9FFD7952CDDB7BC22CC8FCB /* Pods_2D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -281,6 +282,7 @@
 		1C77B973E7A44A9C1C95B499 /* Pods-2D-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.debug.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1C84A2DEF5941D908AD76C67 /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		1CACD28442789DD4C7F6A0B1 /* Pods_DepthMaterial_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DepthMaterial_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F11BF3C16367ED3603971B7 /* Pods_Export_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Export_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FBB33F25CEB86E717EB31B7 /* Pods_ExtrudedText_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExtrudedText_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		20078319F761B0FBD2A630BB /* Pods-Cubemap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-iOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-iOS/Pods-Cubemap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		203932A6D212D62774DBBAE0 /* Pods-DepthMaterial-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-tvOS.release.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-tvOS/Pods-DepthMaterial-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -840,7 +842,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBB451C7F01049D7FC8B4D7B /* Pods_Export_macOS.framework in Frameworks */,
+				EBB451C7F01049D7FC8B4D7B /* BuildFile in Frameworks */,
+				F9953B371692605694F6DAB9 /* Pods_Export_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1290,6 +1293,7 @@
 				9D3B7B598E3F1E668CABD952 /* Pods_AR_iOS.framework */,
 				A2E4F654A3B2C203B8BD162F /* Pods_Obj_macOS.framework */,
 				B7981F2C80C6136A33C34227 /* Pods_FXAA_macOS.framework */,
+				1F11BF3C16367ED3603971B7 /* Pods_Export_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
