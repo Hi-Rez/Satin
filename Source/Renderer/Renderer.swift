@@ -16,7 +16,7 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var scene: Object = Object()
+    public var scene = Object()
     {
         didSet
         {
@@ -27,7 +27,7 @@ open class Renderer
         }
     }
     
-    public var camera: Camera = Camera()
+    public var camera = Camera()
     public var context: Context?
     {
         didSet
@@ -74,7 +74,7 @@ open class Renderer
     public var stencilStoreAction: MTLStoreAction = .dontCare
     public var clearStencil: UInt32 = 0
     
-    public var viewport: MTLViewport = MTLViewport()
+    public var viewport = MTLViewport()
     
     public init(context: Context,
                 scene: Object,
@@ -171,7 +171,8 @@ open class Renderer
             }
         }
         
-        if sampleCount > 1 {
+        if sampleCount > 1
+        {
             if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
             {
                 renderPassDescriptor.colorAttachments[0].storeAction = .storeAndMultisampleResolve
@@ -204,20 +205,17 @@ open class Renderer
         renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
         renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
         
+        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
+        renderEncoder.pushDebugGroup(label + " Pass")
+        renderEncoder.label = label + " Encoder"
         if scene.visible
         {
-            guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
-            
-            renderEncoder.pushDebugGroup(label + " Pass")
-            renderEncoder.label = label + " Encoder"
-            
             preDraw?(renderEncoder)
             draw(renderEncoder: renderEncoder, object: scene)
             postDraw?(renderEncoder)
-            
-            renderEncoder.popDebugGroup()
-            renderEncoder.endEncoding()
         }
+        renderEncoder.popDebugGroup()
+        renderEncoder.endEncoding()
         
         renderPassDescriptor.colorAttachments[0].texture = inColorTexture
         renderPassDescriptor.colorAttachments[0].resolveTexture = inColorResolveTexture
@@ -316,7 +314,8 @@ open class Renderer
         guard let context = self.context, updateColorTexture else { return }
         let sampleCount = context.sampleCount
         let colorPixelFormat = context.colorPixelFormat
-        if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1 {
+        if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1
+        {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = colorPixelFormat
             descriptor.width = Int(size.width)

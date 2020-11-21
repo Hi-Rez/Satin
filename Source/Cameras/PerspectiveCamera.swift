@@ -26,7 +26,7 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public override var scale: simd_float3
+    override public var scale: simd_float3
     {
         didSet
         {
@@ -35,7 +35,7 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public override var position: simd_float3
+    override public var position: simd_float3
     {
         didSet
         {
@@ -44,7 +44,7 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public override var orientation: simd_quatf
+    override public var orientation: simd_quatf
     {
         didSet
         {
@@ -53,7 +53,7 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public override var projectionMatrix: matrix_float4x4
+    override public var projectionMatrix: matrix_float4x4
     {
         get
         {
@@ -70,7 +70,7 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public override var viewMatrix: matrix_float4x4
+    override public var viewMatrix: matrix_float4x4
     {
         get
         {
@@ -88,14 +88,15 @@ open class PerspectiveCamera: Camera
         }
     }
     
-    public convenience init(position: simd_float3, near: Float, far: Float) {
+    public convenience init(position: simd_float3, near: Float, far: Float)
+    {
         self.init()
         self.position = position
         self.near = near
         self.far = far
     }
     
-    public override init()
+    override public init()
     {
         super.init()
         orientation = simd_quatf(matrix_identity_float4x4)
@@ -110,7 +111,7 @@ open class PerspectiveCamera: Camera
         aspect = try values.decode(Float.self, forKey: .aspect)
     }
     
-    open override func encode(to encoder: Encoder) throws
+    override open func encode(to encoder: Encoder) throws
     {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -125,7 +126,7 @@ open class PerspectiveCamera: Camera
     }
     
     // Projects a point from the camera's normalized device coordinate (NDC) space into world space, the returned point is at a distance equal to the near property of the camera
-    open override func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
+    override open func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
     {
         let farMinusNear = far - near
         let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, near / farMinusNear, 1.0)

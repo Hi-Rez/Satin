@@ -10,7 +10,7 @@ import simd
 
 open class OrthographicCamera: Camera
 {
-    public override var scale: simd_float3
+    override public var scale: simd_float3
     {
         didSet
         {
@@ -19,7 +19,7 @@ open class OrthographicCamera: Camera
         }
     }
     
-    public override var position: simd_float3
+    override public var position: simd_float3
     {
         didSet
         {
@@ -60,7 +60,7 @@ open class OrthographicCamera: Camera
         }
     }
     
-    public override var projectionMatrix: matrix_float4x4
+    override public var projectionMatrix: matrix_float4x4
     {
         get
         {
@@ -77,7 +77,7 @@ open class OrthographicCamera: Camera
         }
     }
     
-    public override var viewMatrix: matrix_float4x4
+    override public var viewMatrix: matrix_float4x4
     {
         get
         {
@@ -95,7 +95,7 @@ open class OrthographicCamera: Camera
         }
     }
     
-    public override init()
+    override public init()
     {
         super.init()
         left = -1
@@ -147,7 +147,7 @@ open class OrthographicCamera: Camera
         far = try values.decode(Float.self, forKey: .far)
     }
     
-    open override func encode(to encoder: Encoder) throws
+    override open func encode(to encoder: Encoder) throws
     {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -167,5 +167,13 @@ open class OrthographicCamera: Camera
         case top
         case near
         case far
+    }
+    
+    // Projects a point from the camera's normalized device coordinate (NDC) space into world space, the returned point is at a distance equal to the near property of the camera
+    override open func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
+    {
+        let farMinusNear = far - near
+        let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, near / farMinusNear, 1.0)
+        return simd_make_float3(wc) / wc.w
     }
 }
