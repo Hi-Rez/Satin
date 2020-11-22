@@ -1,6 +1,6 @@
 PODS:
   - Forge (1.0.6)
-  - Satin (1.0.4)
+  - Satin (1.0.5)
 
 DEPENDENCIES:
   - Forge (from `https://github.com/Hi-Rez/Forge.git`)
@@ -19,7 +19,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Forge: 51249d32e43237a51047404ff698dc633f3ac584
-  Satin: 76e5134e62afd8d24be5befa21fe418a412f1e9e
+  Satin: b97dd5d57eb4ff0a8a4a1ab79d761657a2608d9d
 
 PODFILE CHECKSUM: bc341e917d00f27bf46c14ec90c98f56e60359ab
 

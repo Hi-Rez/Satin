@@ -8,18 +8,13 @@
 import MetalKit
 import simd
 
-public enum PerspectiveCameraControllerState {
-    case panning // moves the camera either up to right
-    case rotating // rotates the camera around an arcball
-    case dollying // moves the camera forward
-    case zooming // moves the camera closer to target
-    case rolling // rotates the camera around its forward axis
-    case inactive
-}
+open class PerspectiveCameraController: CameraController {
+    #if os(iOS)
+    var rotateGestureRecognizer: UIPanGestureRecognizer!
+    #endif
 
-
-open class PerspectiveCameraController: Codable {
-    public required init(from decoder: Decoder) throws {
+    public required convenience init(from decoder: Decoder) throws {
+        try self.init(from: decoder)
         let values = try decoder.container(keyedBy: CodingKeys.self)
         camera = try values.decode(PerspectiveCamera.self, forKey: .camera)
         target = try values.decode(Object.self, forKey: .target)
@@ -35,10 +30,12 @@ open class PerspectiveCameraController: Codable {
         zoomDamping = try values.decode(Float.self, forKey: .zoomDamping)
         rollScalar = try values.decode(Float.self, forKey: .rollScalar)
         rollDamping = try values.decode(Float.self, forKey: .rollDamping)
+        
         setup()
     }
     
-    open func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(camera, forKey: .camera)
         try container.encode(target, forKey: .target)
@@ -74,63 +71,10 @@ open class PerspectiveCameraController: Codable {
         case rollDamping
     }
     
-    public private(set) var enabled: Bool = false
-    
-    public var camera: PerspectiveCamera?
-    public var view: MTKView? {
-        willSet {
-            if view != nil, enabled {
-                disable()
-            }
-        }
-        didSet {
-            if view != nil {
-                enable()
-            }
-        }
-    }
-    
-    public var onChange: (() -> ())?
-    
     open var mouseDeltaSensitivity: Float = 600.0
     open var scrollDeltaSensitivity: Float = 600.0
     
-    #if os(macOS)
-    
-    open var modifierFlags: NSEvent.ModifierFlags = .init()
-    
-    var leftMouseDownHandler: Any?
-    var leftMouseDraggedHandler: Any?
-    var leftMouseUpHandler: Any?
-    
-    var rightMouseDownHandler: Any?
-    var rightMouseDraggedHandler: Any?
-    var rightMouseUpHandler: Any?
-    
-    var otherMouseDownHandler: Any?
-    var otherMouseDraggedHandler: Any?
-    var otherMouseUpHandler: Any?
-    
-    var scrollWheelHandler: Any?
-    
-    var magnification: Float = 1.0
-    var magnifyGestureRecognizer: NSMagnificationGestureRecognizer!
-    var rollGestureRecognizer: NSRotationGestureRecognizer!
-    
-    #elseif os(iOS)
-    
-    var pinchScale: Float = 1.0
-    var rollGestureRecognizer: UIRotationGestureRecognizer!
-    var rotateGestureRecognizer: UIPanGestureRecognizer!
-    var panGestureRecognizer: UIPanGestureRecognizer!
-    var pinchGestureRecognizer: UIPinchGestureRecognizer!
-    var oneTapGestureRecognizer: UITapGestureRecognizer!
-    var twoTapGestureRecognizer: UITapGestureRecognizer!
-    var threeTapGestureRecognizer: UITapGestureRecognizer!
-    
-    #endif
-    
-    public private(set) var state: PerspectiveCameraControllerState = .inactive 
+    public var camera: PerspectiveCamera?
     
     // Rotation
     open var rotationDamping: Float = 0.9
@@ -185,8 +129,9 @@ open class PerspectiveCameraController: Codable {
     public var target = Object()
     
     public init(camera: PerspectiveCamera, view: MTKView, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
+        super.init(view: view)
+        
         self.camera = camera
-        self.view = view
         
         self.defaultPosition = defaultPosition
         self.defaultOrientation = defaultOrientation
@@ -195,8 +140,9 @@ open class PerspectiveCameraController: Codable {
     }
     
     public init(camera: PerspectiveCamera, view: MTKView) {
+        super.init(view: view)
+        
         self.camera = camera
-        self.view = view
         
         defaultPosition = camera.position
         defaultOrientation = camera.orientation
@@ -213,15 +159,37 @@ open class PerspectiveCameraController: Codable {
         enable()
     }
     
+    override func _enable(_ view: MTKView) {
+        super._enable(view)
+    
+        #if os(iOS)
+        let allowedTouchTypes: [NSNumber] = [UITouch.TouchType.direct.rawValue as NSNumber]
+        rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
+        rotateGestureRecognizer.allowedTouchTypes = allowedTouchTypes
+        rotateGestureRecognizer.minimumNumberOfTouches = 1
+        rotateGestureRecognizer.maximumNumberOfTouches = 1
+        view.addGestureRecognizer(rotateGestureRecognizer)
+        
+        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.maximumNumberOfTouches = 2
+        #endif
+    }
+    
+    override func _disable(_ view: MTKView) {
+        super._disable(view)
+        
+        #if os(iOS)
+        view.removeGestureRecognizer(rotateGestureRecognizer)
+        #endif
+    }
+    
     deinit {
-        disable()
         camera = nil
-        view = nil
     }
     
     // MARK: - Updates
     
-    open func update() {
+    override open func update() {
         guard camera != nil else { return }
         
         var changed = false
@@ -258,6 +226,28 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
+    // MARK: - Reset
+    
+    override open func reset() {
+        DispatchQueue.main.async { [unowned self] in
+            self.state = .inactive
+            self.rotationVelocity = 0.0
+            self.translationVelocity = simd_make_float3(0.0)
+            self.zoomVelocity = 0.0
+            self.rollVelocity = 0.0
+            
+            self.target.orientation = defaultOrientation
+            self.target.position = simd_float3(repeating: 0.0)
+            
+            guard let camera = self.camera else { return }
+            camera.orientation = simd_quatf(matrix_identity_float4x4)
+            camera.position = [0, 0, simd_length(defaultPosition)]
+            camera.updateMatrix = true
+            
+            self.onChange?()
+        }
+    }
+    
     func updateOrientation() {
         target.orientation = simd_mul(target.orientation, simd_quatf(angle: -rotationVelocity, axis: rotationAxis))
     }
@@ -286,239 +276,11 @@ open class PerspectiveCameraController: Codable {
         target.position = target.position + simd_make_float3(target.upDirection * translationVelocity.y)
     }
     
-    // MARK: - Events
-    
-    open func enable() {
-        guard let view = self.view else { return }
-        
-        if !enabled {
-            #if os(macOS)
-            
-            leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDown) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.mouseDown(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.mouseDown(with: event)
-                }
-                return event
-            }
-            
-            leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseDragged) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.mouseDragged(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.mouseDragged(with: event)
-                }
-                return event
-            }
-            
-            leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.mouseUp(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.mouseUp(with: event)
-                }
-                return event
-            }
-            
-            rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDown) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.rightMouseDown(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.rightMouseDown(with: event)
-                }
-                return event
-            }
-            
-            rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseDragged) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.rightMouseDragged(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.rightMouseDragged(with: event)
-                }
-                return event
-            }
-            
-            rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.rightMouseUp(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.rightMouseUp(with: event)
-                }
-                return event
-            }
-            
-            otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.otherMouseDown(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.otherMouseDown(with: event)
-                }
-                return event
-            }
-            
-            otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseDragged) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.otherMouseDragged(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.otherMouseDragged(with: event)
-                }
-                return event
-            }
-            
-            otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(matching: .otherMouseUp) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.otherMouseUp(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.otherMouseUp(with: event)
-                }
-                return event
-            }
-            
-            scrollWheelHandler = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [unowned self] event in
-                if self.modifierFlags.isEmpty {
-                    self.scrollWheel(with: event)
-                }
-                else if event.modifierFlags.contains(self.modifierFlags) {
-                    self.scrollWheel(with: event)
-                }
-                return event
-            }
-            
-            magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))
-            view.addGestureRecognizer(magnifyGestureRecognizer)
-            
-            rollGestureRecognizer = NSRotationGestureRecognizer(target: self, action: #selector(rollGesture))
-            view.addGestureRecognizer(rollGestureRecognizer)
-            
-            #elseif os(iOS)
-            
-            view.isMultipleTouchEnabled = true
-            
-            let allowedTouchTypes: [NSNumber] = [UITouch.TouchType.direct.rawValue as NSNumber]
-            rollGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rollGesture))
-            rollGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            view.addGestureRecognizer(rollGestureRecognizer)
-            
-            rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
-            rotateGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            rotateGestureRecognizer.minimumNumberOfTouches = 1
-            rotateGestureRecognizer.maximumNumberOfTouches = 1
-            view.addGestureRecognizer(rotateGestureRecognizer)
-            
-            panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
-            panGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            panGestureRecognizer.minimumNumberOfTouches = 2
-            panGestureRecognizer.maximumNumberOfTouches = 2
-            view.addGestureRecognizer(panGestureRecognizer)
-            
-            oneTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-            oneTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            oneTapGestureRecognizer.numberOfTouchesRequired = 1
-            oneTapGestureRecognizer.numberOfTapsRequired = 2
-            view.addGestureRecognizer(oneTapGestureRecognizer)
-            
-            twoTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-            twoTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            twoTapGestureRecognizer.numberOfTouchesRequired = 2
-            twoTapGestureRecognizer.numberOfTapsRequired = 2
-            view.addGestureRecognizer(twoTapGestureRecognizer)
-            
-            threeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
-            threeTapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            threeTapGestureRecognizer.numberOfTouchesRequired = 3
-            threeTapGestureRecognizer.numberOfTapsRequired = 2
-            view.addGestureRecognizer(threeTapGestureRecognizer)
-            
-            pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
-            pinchGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-            view.addGestureRecognizer(pinchGestureRecognizer)
-            
-            #endif
-        }
-        
-        enabled = true
-    }
-    
-    open func disable() {
-        guard let view = self.view else { return }
-        
-        if enabled {
-            #if os(macOS)
-            
-            if let leftMouseDownHandler = self.leftMouseDownHandler {
-                NSEvent.removeMonitor(leftMouseDownHandler)
-            }
-            
-            if let leftMouseDraggedHandler = self.leftMouseDraggedHandler {
-                NSEvent.removeMonitor(leftMouseDraggedHandler)
-            }
-            
-            if let leftMouseUpHandler = self.leftMouseUpHandler {
-                NSEvent.removeMonitor(leftMouseUpHandler)
-            }
-            
-            if let rightMouseDownHandler = self.rightMouseDownHandler {
-                NSEvent.removeMonitor(rightMouseDownHandler)
-            }
-            
-            if let rightMouseDraggedHandler = self.rightMouseDraggedHandler {
-                NSEvent.removeMonitor(rightMouseDraggedHandler)
-            }
-            
-            if let rightMouseUpHandler = self.rightMouseUpHandler {
-                NSEvent.removeMonitor(rightMouseUpHandler)
-            }
-            
-            if let otherMouseDownHandler = self.otherMouseDownHandler {
-                NSEvent.removeMonitor(otherMouseDownHandler)
-            }
-            
-            if let otherMouseDraggedHandler = self.otherMouseDraggedHandler {
-                NSEvent.removeMonitor(otherMouseDraggedHandler)
-            }
-            
-            if let otherMouseUpHandler = self.otherMouseUpHandler {
-                NSEvent.removeMonitor(otherMouseUpHandler)
-            }
-            
-            if let scrollWheelHandler = self.scrollWheelHandler {
-                NSEvent.removeMonitor(scrollWheelHandler)
-            }
-            
-            view.removeGestureRecognizer(magnifyGestureRecognizer)
-            view.removeGestureRecognizer(rollGestureRecognizer)
-            
-            #elseif os(iOS)
-            
-            view.removeGestureRecognizer(rollGestureRecognizer)
-            view.removeGestureRecognizer(rotateGestureRecognizer)
-            view.removeGestureRecognizer(panGestureRecognizer)
-            view.removeGestureRecognizer(oneTapGestureRecognizer)
-            view.removeGestureRecognizer(twoTapGestureRecognizer)
-            view.removeGestureRecognizer(threeTapGestureRecognizer)
-            view.removeGestureRecognizer(pinchGestureRecognizer)
-            
-            #endif
-        }
-        
-        enabled = false
-    }
-    
     #if os(macOS)
     
     // MARK: - Mouse
     
-    func mouseDown(with event: NSEvent) {
+    override func mouseDown(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             if event.clickCount == 2 {
@@ -533,7 +295,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    func mouseDragged(with event: NSEvent) {
+    override func mouseDragged(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             let result = arcballPoint(event.locationInWindow, view.frame.size)
@@ -553,7 +315,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    func mouseUp(with event: NSEvent) {
+    override func mouseUp(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
@@ -562,12 +324,12 @@ open class PerspectiveCameraController: Codable {
     
     // MARK: - Right Mouse
     
-    func rightMouseDown(with event: NSEvent) {
+    override func rightMouseDown(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {}
     }
     
-    func rightMouseDragged(with event: NSEvent) {
+    override func rightMouseDragged(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             let dy = Float(event.deltaY) / mouseDeltaSensitivity
@@ -582,7 +344,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    func rightMouseUp(with event: NSEvent) {
+    override func rightMouseUp(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
@@ -591,14 +353,14 @@ open class PerspectiveCameraController: Codable {
     
     // MARK: - Other Mouse
     
-    func otherMouseDown(with event: NSEvent) {
+    override func otherMouseDown(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             state = .panning
         }
     }
     
-    func otherMouseDragged(with event: NSEvent) {
+    override func otherMouseDragged(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             let dx = Float(event.deltaX) / mouseDeltaSensitivity
@@ -609,7 +371,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    func otherMouseUp(with event: NSEvent) {
+    override func otherMouseUp(with event: NSEvent) {
         guard let view = self.view else { return }
         if event.window == view.window {
             state = .inactive
@@ -618,7 +380,7 @@ open class PerspectiveCameraController: Codable {
     
     // MARK: - Scroll Wheel
     
-    func scrollWheel(with event: NSEvent) {
+    override func scrollWheel(with event: NSEvent) {
         guard let camera = self.camera, let view = self.view else { return }
         if event.window == view.window {
             if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
@@ -649,7 +411,7 @@ open class PerspectiveCameraController: Codable {
     
     // MARK: - Gestures macOS
     
-    @objc func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+    override func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -665,7 +427,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    @objc func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+    override func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -682,13 +444,13 @@ open class PerspectiveCameraController: Codable {
     
     // MARK: - Gestures iOS
     
-    @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc override func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         if gestureRecognizer.state == .ended {
             reset()
         }
     }
     
-    @objc func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
+    @objc override func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -759,7 +521,7 @@ open class PerspectiveCameraController: Codable {
     var panCurrentPoint = simd_float2(repeating: 0.0)
     var panPreviousPoint = simd_float2(repeating: 0.0)
     
-    @objc func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc override func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let camera = self.camera, let view = self.view else { return }
         if gestureRecognizer.state == .began {
             state = .panning
@@ -778,7 +540,7 @@ open class PerspectiveCameraController: Codable {
         }
     }
     
-    @objc func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+    @objc override func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
@@ -820,26 +582,5 @@ open class PerspectiveCameraController: Codable {
             inside = true
         }
         return (inside: inside, point: result)
-    }
-    
-    open func reset() {
-        DispatchQueue.main.async { [unowned self] in
-            self.state = .inactive
-            self.rotationVelocity = 0.0
-            self.translationVelocity = simd_make_float3(0.0)
-            self.zoomVelocity = 0.0
-            self.rollVelocity = 0.0
-            
-            
-            self.target.orientation = defaultOrientation
-            self.target.position = simd_float3(repeating: 0.0)
-            
-            guard let camera = self.camera else { return }
-            camera.orientation = simd_quatf(matrix_identity_float4x4)
-            camera.position = [0, 0, simd_length(defaultPosition)]
-            camera.updateMatrix = true
-            
-            self.onChange?()
-        }
     }
 }

@@ -10,16 +10,6 @@ import Metal
 import simd
 
 open class Mesh: Object {
-    open override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode("Mesh", forKey: .type)
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case type
-    }
-    
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
     public var triangleFillMode: MTLTriangleFillMode = .fill
@@ -58,6 +48,16 @@ open class Mesh: Object {
         fatalError("init(from:) has not been implemented")
     }
     
+    open override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode("Mesh", forKey: .type)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+    }
+
     open override func setup() {
         setupUniformBuffer()
         setupGeometry()
