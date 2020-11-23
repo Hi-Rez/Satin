@@ -167,6 +167,22 @@ open class OrthographicCameraController: CameraController {
         state = .inactive
     }
     
+    
+    // MARK: - Other Mouse
+    
+    override func otherMouseDown(with event: NSEvent) {
+        mouseDown(with: event)
+    }
+    
+    override func otherMouseDragged(with event: NSEvent) {
+        mouseDragged(with: event)
+    }
+    
+    override func otherMouseUp(with event: NSEvent) {
+        mouseUp(with: event)
+    }
+    
+    
     // MARK: - Right Mouse
     
     override func rightMouseDown(with event: NSEvent) {
