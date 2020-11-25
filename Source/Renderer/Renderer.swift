@@ -127,7 +127,7 @@ open class Renderer
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
     {
-        guard let context = self.context else { return }
+        guard let context = self.context, scene.visible, getMeshes(scene, true, false).count > 0 else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
@@ -208,12 +208,12 @@ open class Renderer
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
         renderEncoder.pushDebugGroup(label + " Pass")
         renderEncoder.label = label + " Encoder"
-        if scene.visible
-        {
-            preDraw?(renderEncoder)
-            draw(renderEncoder: renderEncoder, object: scene)
-            postDraw?(renderEncoder)
-        }
+        renderEncoder.setViewport(viewport)
+        
+        preDraw?(renderEncoder)
+        draw(renderEncoder: renderEncoder, object: scene)
+        postDraw?(renderEncoder)        
+        
         renderEncoder.popDebugGroup()
         renderEncoder.endEncoding()
         
@@ -233,8 +233,6 @@ open class Renderer
         if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
         {
             mesh.update(camera: camera)
-            renderEncoder.label = label
-            renderEncoder.setViewport(viewport)
             renderEncoder.setRenderPipelineState(pipeline)
             material.bind(renderEncoder)
             mesh.draw(renderEncoder: renderEncoder)
