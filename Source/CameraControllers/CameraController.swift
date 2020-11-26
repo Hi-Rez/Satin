@@ -88,8 +88,24 @@ open class CameraController: Codable {
     var oneTapGestureRecognizer: UITapGestureRecognizer!
     var twoTapGestureRecognizer: UITapGestureRecognizer!
     var threeTapGestureRecognizer: UITapGestureRecognizer!
-    
+        
     #endif
+    
+    open var minimumPanningTouches: Int = 1 {
+        didSet {
+            #if os(iOS)
+            panGestureRecognizer.minimumNumberOfTouches = minimumPanningTouches
+            #endif
+        }
+    }
+    
+    open var maximumPanningTouches: Int = 2 {
+        didSet {
+            #if os(iOS)
+            panGestureRecognizer.maximumNumberOfTouches = maximumPanningTouches
+            #endif
+        }
+    }
     
     init(view: MTKView) {
         self.view = view
@@ -211,8 +227,8 @@ open class CameraController: Codable {
         
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
         panGestureRecognizer.allowedTouchTypes = allowedTouchTypes
-        panGestureRecognizer.minimumNumberOfTouches = 1
-        panGestureRecognizer.maximumNumberOfTouches = 2
+        panGestureRecognizer.minimumNumberOfTouches = minimumPanningTouches
+        panGestureRecognizer.maximumNumberOfTouches = maximumPanningTouches
         view.addGestureRecognizer(panGestureRecognizer)
         
         oneTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
@@ -307,52 +323,51 @@ open class CameraController: Codable {
     
     // MARK: - Mouse
     
-    func mouseDown(with event: NSEvent) {}
-    func mouseDragged(with event: NSEvent) {}
-    func mouseUp(with event: NSEvent) {}
+    open func mouseDown(with event: NSEvent) {}
+    open func mouseDragged(with event: NSEvent) {}
+    open func mouseUp(with event: NSEvent) {}
     
     // MARK: - Right Mouse
     
-    func rightMouseDown(with event: NSEvent) {}
-    func rightMouseDragged(with event: NSEvent) {}
-    func rightMouseUp(with event: NSEvent) {}
+    open func rightMouseDown(with event: NSEvent) {}
+    open func rightMouseDragged(with event: NSEvent) {}
+    open func rightMouseUp(with event: NSEvent) {}
     
     // MARK: - Other Mouse
     
-    func otherMouseDown(with event: NSEvent) {}
-    func otherMouseDragged(with event: NSEvent) {}
-    func otherMouseUp(with event: NSEvent) {}
+    open func otherMouseDown(with event: NSEvent) {}
+    open func otherMouseDragged(with event: NSEvent) {}
+    open func otherMouseUp(with event: NSEvent) {}
     
     // MARK: - Scroll Wheel
     
-    func scrollWheel(with event: NSEvent) {}
+    open func scrollWheel(with event: NSEvent) {}
     
     // MARK: - Gestures macOS
     
-    @objc func _magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+    @objc open func _magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         if flagsEnabled {
             magnifyGesture(gestureRecognizer)
         }
     }
     
-    @objc func _rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+    @objc open func _rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
         if flagsEnabled {
             rollGesture(gestureRecognizer)
         }
-        
     }
     
-    func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {}
-    func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {}
+    open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {}
+    open func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {}
     
     #elseif os(iOS)
     
     // MARK: - Gestures iOS
     
-    @objc func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {}
-    @objc func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {}
-    @objc func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {}
-    @objc func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {}
+    @objc open func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {}
+    @objc open func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {}
+    @objc open func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {}
+    @objc open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {}
     
     #endif
 }

@@ -22,7 +22,7 @@ open class OrthographicCameraController: CameraController {
         setup()
     }
     
-    open override func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(camera, forKey: .camera)
@@ -46,7 +46,7 @@ open class OrthographicCameraController: CameraController {
     }
        
     public var camera: OrthographicCamera?
-
+    
     open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
     open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
     open var defaultLeft: Float = 0
@@ -102,11 +102,14 @@ open class OrthographicCameraController: CameraController {
         let deltaX = deltaX * cameraWidth
         let deltaY = deltaY * cameraHeight
         
-        camera.left -= deltaX
-        camera.right -= deltaX
+//        camera.left -= deltaX
+//        camera.right -= deltaX
+//
+//        camera.top += deltaY
+//        camera.bottom += deltaY
         
-        camera.top += deltaY
-        camera.bottom += deltaY
+        camera.position -= camera.worldRightDirection * deltaX
+        camera.position += camera.worldUpDirection * deltaY
         
         onChange?()
     }
@@ -131,7 +134,7 @@ open class OrthographicCameraController: CameraController {
     
     func roll(_ delta: Float) {
         guard let camera = self.camera else { return }
-        camera.orientation = simd_mul(camera.orientation, simd_quatf(angle: delta, axis: camera.forwardDirection))
+        camera.orientation = simd_quatf(angle: delta, axis: camera.worldForwardDirection) * camera.orientation
         onChange?()
     }
     
@@ -142,18 +145,18 @@ open class OrthographicCameraController: CameraController {
     
     // MARK: - Mouse
     
-    override func mouseDown(with event: NSEvent) {
+    override open func mouseDown(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         if event.clickCount == 2 {
             reset()
         }
-        else {
+        else if minimumPanningTouches == 1 {
             state = .panning
         }
     }
     
-    override func mouseDragged(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+    override open func mouseDragged(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window, minimumPanningTouches == 1 else { return }
         state = .panning
         
         let dx = Float(event.deltaX / view.frame.size.width)
@@ -162,48 +165,46 @@ open class OrthographicCameraController: CameraController {
         pan(dx, dy)
     }
     
-    override func mouseUp(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+    override open func mouseUp(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window, minimumPanningTouches == 1 else { return }
         state = .inactive
     }
     
-    
     // MARK: - Other Mouse
     
-    override func otherMouseDown(with event: NSEvent) {
+    override open func otherMouseDown(with event: NSEvent) {
         mouseDown(with: event)
     }
     
-    override func otherMouseDragged(with event: NSEvent) {
+    override open func otherMouseDragged(with event: NSEvent) {
         mouseDragged(with: event)
     }
     
-    override func otherMouseUp(with event: NSEvent) {
+    override open func otherMouseUp(with event: NSEvent) {
         mouseUp(with: event)
     }
     
-    
     // MARK: - Right Mouse
     
-    override func rightMouseDown(with event: NSEvent) {
+    override open func rightMouseDown(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         state = .zooming
     }
     
-    override func rightMouseDragged(with event: NSEvent) {
+    override open func rightMouseDragged(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         state = .zooming
         zoom(Float(-event.deltaY / view.frame.size.height))
     }
     
-    override func rightMouseUp(with event: NSEvent) {
+    override open func rightMouseUp(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         state = .inactive
     }
     
     // MARK: - Scroll Wheel
     
-    override func scrollWheel(with event: NSEvent) {
+    override open func scrollWheel(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         let deltaX = Float(event.scrollingDeltaX / view.frame.size.width)
         let deltaY = Float(event.scrollingDeltaY / view.frame.size.height)
@@ -216,7 +217,7 @@ open class OrthographicCameraController: CameraController {
         }
     }
     
-    override func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+    override open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -232,7 +233,7 @@ open class OrthographicCameraController: CameraController {
         }
     }
     
-    override func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+    override open func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -249,13 +250,13 @@ open class OrthographicCameraController: CameraController {
     
     // MARK: - Gestures iOS
     
-    @objc override func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc override open func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         if gestureRecognizer.state == .ended {
             reset()
         }
     }
     
-    @objc override func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
+    @objc override open func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -268,7 +269,7 @@ open class OrthographicCameraController: CameraController {
         }
     }
     
-    @objc override func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc override open func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let view = self.view else { return }
         if gestureRecognizer.state == .began {
             state = .panning
@@ -290,7 +291,7 @@ open class OrthographicCameraController: CameraController {
         }
     }
     
-    @objc override func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+    @objc override open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
@@ -309,21 +310,23 @@ open class OrthographicCameraController: CameraController {
     #endif
     
     override open func reset() {
-        DispatchQueue.main.async { [unowned self] in
-            self.state = .inactive
-            
-            guard let camera = self.camera else { return }
-            
-            camera.left = defaultLeft
-            camera.right = defaultRight
-            camera.top = defaultTop
-            camera.bottom = defaultBottom
-            
-            camera.orientation = defaultOrientation
-            camera.position = defaultPosition
-            camera.updateMatrix = true
-            
-            self.onChange?()
+        if enabled {
+            DispatchQueue.main.async { [unowned self] in
+                self.state = .inactive
+                
+                guard let camera = self.camera else { return }
+                
+                camera.left = defaultLeft
+                camera.right = defaultRight
+                camera.top = defaultTop
+                camera.bottom = defaultBottom
+                
+                camera.orientation = defaultOrientation
+                camera.position = defaultPosition
+                camera.updateMatrix = true
+                
+                self.onChange?()
+            }
         }
     }
 }

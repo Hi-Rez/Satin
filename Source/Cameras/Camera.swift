@@ -25,7 +25,7 @@ open class Camera: Object
         {
             if updateViewMatrix
             {
-                _viewMatrix = matrix_identity_float4x4
+                _viewMatrix = worldMatrix.inverse
                 updateViewMatrix = false
             }
             return _viewMatrix
@@ -43,7 +43,6 @@ open class Camera: Object
         {
             if updateProjectionMatrix
             {
-                _projectionMatrix = matrix_identity_float4x4
                 updateProjectionMatrix = false
             }
             return _projectionMatrix

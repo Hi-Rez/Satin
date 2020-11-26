@@ -235,6 +235,9 @@ open class Object: Codable {
     open func remove(_ child: Object) {
         for (index, object) in children.enumerated() {
             if object == child {
+                if object.parent == self {
+                    object.parent = nil
+                }
                 children.remove(at: index)
                 return
             }

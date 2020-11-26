@@ -155,13 +155,18 @@ open class PerspectiveCameraController: CameraController {
         target.orientation = defaultOrientation
         camera.orientation = simd_quatf(matrix_identity_float4x4)
         camera.position = [0, 0, simd_length(defaultPosition)]
-        target.add(camera)
         enable()
     }
     
     override func _enable(_ view: MTKView) {
         super._enable(view)
     
+        halt()
+        
+        if let camera = self.camera {
+            target.add(camera)
+        }
+        
         #if os(iOS)
         let allowedTouchTypes: [NSNumber] = [UITouch.TouchType.direct.rawValue as NSNumber]
         rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
@@ -170,13 +175,19 @@ open class PerspectiveCameraController: CameraController {
         rotateGestureRecognizer.maximumNumberOfTouches = 1
         view.addGestureRecognizer(rotateGestureRecognizer)
         
-        panGestureRecognizer.minimumNumberOfTouches = 2
-        panGestureRecognizer.maximumNumberOfTouches = 2
+        minimumPanningTouches = 2
+        maximumPanningTouches = 2
         #endif
     }
     
     override func _disable(_ view: MTKView) {
         super._disable(view)
+        
+        halt()
+        
+        if let camera = self.camera {
+            target.remove(camera)
+        }
         
         #if os(iOS)
         view.removeGestureRecognizer(rotateGestureRecognizer)
@@ -228,23 +239,29 @@ open class PerspectiveCameraController: CameraController {
     
     // MARK: - Reset
     
+    func halt() {
+        state = .inactive
+        rotationVelocity = 0.0
+        translationVelocity = simd_make_float3(0.0)
+        zoomVelocity = 0.0
+        rollVelocity = 0.0
+    }
+    
     override open func reset() {
-        DispatchQueue.main.async { [unowned self] in
-            self.state = .inactive
-            self.rotationVelocity = 0.0
-            self.translationVelocity = simd_make_float3(0.0)
-            self.zoomVelocity = 0.0
-            self.rollVelocity = 0.0
-            
-            self.target.orientation = defaultOrientation
-            self.target.position = simd_float3(repeating: 0.0)
-            
-            guard let camera = self.camera else { return }
-            camera.orientation = simd_quatf(matrix_identity_float4x4)
-            camera.position = [0, 0, simd_length(defaultPosition)]
-            camera.updateMatrix = true
-            
-            self.onChange?()
+        if enabled {
+            DispatchQueue.main.async { [unowned self] in
+                self.halt()
+                
+                self.target.orientation = defaultOrientation
+                self.target.position = simd_float3(repeating: 0.0)
+                
+                guard let camera = self.camera else { return }
+                camera.orientation = simd_quatf(matrix_identity_float4x4)
+                camera.position = [0, 0, simd_length(defaultPosition)]
+                camera.updateMatrix = true
+                
+                self.onChange?()
+            }
         }
     }
     
@@ -280,24 +297,22 @@ open class PerspectiveCameraController: CameraController {
     
     // MARK: - Mouse
     
-    override func mouseDown(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            if event.clickCount == 2 {
-                reset()
-            }
-            else {
-                let result = arcballPoint(event.locationInWindow, view.frame.size)
-                previouArcballPoint = result.point
-                insideArcBall = result.inside
-                state = .rotating
-            }
+    override open func mouseDown(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        if event.clickCount == 2 {
+            reset()
+        }
+        else {
+            let result = arcballPoint(event.locationInWindow, view.frame.size)
+            previouArcballPoint = result.point
+            insideArcBall = result.inside
+            state = .rotating
         }
     }
     
-    override func mouseDragged(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
+    override open func mouseDragged(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        if state == .rotating {
             let result = arcballPoint(event.locationInWindow, view.frame.size)
             let point = result.point
             let inside = result.inside
@@ -313,105 +328,93 @@ open class PerspectiveCameraController: CameraController {
             rotationVelocity = rotationScalar * acos(dot(previouArcballPoint, currentArcballPoint))
             previouArcballPoint = currentArcballPoint
         }
+        else {
+            mouseDown(with: event)
+        }
     }
     
-    override func mouseUp(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            state = .inactive
-        }
+    override open func mouseUp(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        state = .inactive
     }
     
     // MARK: - Right Mouse
     
-    override func rightMouseDown(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {}
+    override open func rightMouseDown(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
     }
     
-    override func rightMouseDragged(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            let dy = Float(event.deltaY) / mouseDeltaSensitivity
-            if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
-                state = .dollying
-                translationVelocity.z -= dy * translationScalar
-            }
-            else {
-                state = .zooming
-                zoomVelocity -= dy * zoomScalar
-            }
+    override open func rightMouseDragged(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        let dy = Float(event.deltaY) / mouseDeltaSensitivity
+        if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
+            state = .dollying
+            translationVelocity.z -= dy * translationScalar
+        }
+        else {
+            state = .zooming
+            zoomVelocity -= dy * zoomScalar
         }
     }
     
-    override func rightMouseUp(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            state = .inactive
-        }
+    override open func rightMouseUp(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        state = .inactive
     }
     
     // MARK: - Other Mouse
     
-    override func otherMouseDown(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            state = .panning
-        }
+    override open func otherMouseDown(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        state = .panning
     }
     
-    override func otherMouseDragged(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            let dx = Float(event.deltaX) / mouseDeltaSensitivity
-            let dy = Float(event.deltaY) / mouseDeltaSensitivity
-            state = .panning
-            translationVelocity.x += dx * translationScalar
-            translationVelocity.y += dy * translationScalar
-        }
+    override open func otherMouseDragged(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        let dx = Float(event.deltaX) / mouseDeltaSensitivity
+        let dy = Float(event.deltaY) / mouseDeltaSensitivity
+        state = .panning
+        translationVelocity.x += dx * translationScalar
+        translationVelocity.y += dy * translationScalar
     }
     
-    override func otherMouseUp(with event: NSEvent) {
-        guard let view = self.view else { return }
-        if event.window == view.window {
-            state = .inactive
-        }
+    override open func otherMouseUp(with event: NSEvent) {
+        guard let view = self.view, event.window == view.window else { return }
+        state = .inactive
     }
     
     // MARK: - Scroll Wheel
     
-    override func scrollWheel(with event: NSEvent) {
-        guard let camera = self.camera, let view = self.view else { return }
-        if event.window == view.window {
-            if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
-                state = .inactive
+    override open func scrollWheel(with event: NSEvent) {
+        guard let camera = self.camera, let view = self.view, event.window == view.window else { return }
+        if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
+            state = .inactive
+        }
+        else if event.modifierFlags.contains(NSEvent.ModifierFlags.option) && (event.phase == .began || event.phase == .changed) {
+            if abs(event.deltaX) > abs(event.deltaY) {
+                state = .rolling
+                let sdx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
+                rollVelocity += sdx * rollScalar
             }
-            else if event.modifierFlags.contains(NSEvent.ModifierFlags.option) && (event.phase == .began || event.phase == .changed) {
-                if abs(event.deltaX) > abs(event.deltaY) {
-                    state = .rolling
-                    let sdx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
-                    rollVelocity += sdx * rollScalar
-                }
-                else {
-                    state = .zooming
-                    let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-                    zoomVelocity -= sdy * zoomScalar
-                }
+            else {
+                state = .zooming
+                let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
+                zoomVelocity -= sdy * zoomScalar
             }
-            else if event.phase == .began || event.phase == .changed {
-                state = .panning
-                let cd = length(camera.worldPosition - target.position) / 10.0
-                let dx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
-                let dy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-                translationVelocity.x += dx * translationScalar * cd
-                translationVelocity.y += dy * translationScalar * cd
-            }
+        }
+        else if event.phase == .began || event.phase == .changed {
+            state = .panning
+            let cd = length(camera.worldPosition - target.position) / 10.0
+            let dx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
+            let dy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
+            translationVelocity.x += dx * translationScalar * cd
+            translationVelocity.y += dy * translationScalar * cd
         }
     }
     
     // MARK: - Gestures macOS
     
-    override func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+    override open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -427,7 +430,7 @@ open class PerspectiveCameraController: CameraController {
         }
     }
     
-    override func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+    override open func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -444,13 +447,13 @@ open class PerspectiveCameraController: CameraController {
     
     // MARK: - Gestures iOS
     
-    @objc override func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc override open func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         if gestureRecognizer.state == .ended {
             reset()
         }
     }
     
-    @objc override func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
+    @objc override open func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
         }
@@ -463,12 +466,11 @@ open class PerspectiveCameraController: CameraController {
         }
     }
     
-    @objc func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc open func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let view = self.view else { return }
         if gestureRecognizer.numberOfTouches == gestureRecognizer.minimumNumberOfTouches {
             if gestureRecognizer.state == .began {
                 state = .rotating
-                
                 var centerPoint = CGPoint(x: 0.0, y: 0.0)
                 let numberOfTouches = CGFloat(gestureRecognizer.numberOfTouches)
                 for i in 0..<gestureRecognizer.numberOfTouches {
@@ -478,36 +480,42 @@ open class PerspectiveCameraController: CameraController {
                 }
                 centerPoint.x /= numberOfTouches
                 centerPoint.y /= numberOfTouches
-                
+                    
                 let result = arcballPoint(centerPoint, view.frame.size)
                 previouArcballPoint = result.point
                 insideArcBall = result.inside
             }
-            else if gestureRecognizer.state == .changed, state == .rotating {
-                var centerPoint = CGPoint(x: 0.0, y: 0.0)
-                let numberOfTouches = CGFloat(gestureRecognizer.numberOfTouches)
-                for i in 0..<gestureRecognizer.numberOfTouches {
-                    let pt = gestureRecognizer.location(ofTouch: i, in: view)
-                    centerPoint.x += pt.x
-                    centerPoint.y += pt.y
+            else if gestureRecognizer.state == .changed {
+                if state == .rotating {
+                    var centerPoint = CGPoint(x: 0.0, y: 0.0)
+                    let numberOfTouches = CGFloat(gestureRecognizer.numberOfTouches)
+                    for i in 0..<gestureRecognizer.numberOfTouches {
+                        let pt = gestureRecognizer.location(ofTouch: i, in: view)
+                        centerPoint.x += pt.x
+                        centerPoint.y += pt.y
+                    }
+                    centerPoint.x /= numberOfTouches
+                    centerPoint.y /= numberOfTouches
+                        
+                    let result = arcballPoint(centerPoint, view.frame.size)
+                    let point = result.point
+                    let inside = result.inside
+                        
+                    if insideArcBall != inside {
+                        previouArcballPoint = point
+                    }
+                        
+                    insideArcBall = inside
+                    currentArcballPoint = point
+                        
+                    rotationAxis = normalize(cross(previouArcballPoint, currentArcballPoint))
+                    rotationVelocity = rotationScalar * acos(dot(previouArcballPoint, currentArcballPoint))
+                    previouArcballPoint = currentArcballPoint
                 }
-                centerPoint.x /= numberOfTouches
-                centerPoint.y /= numberOfTouches
-                
-                let result = arcballPoint(centerPoint, view.frame.size)
-                let point = result.point
-                let inside = result.inside
-                
-                if insideArcBall != inside {
-                    previouArcballPoint = point
+                else {
+                    gestureRecognizer.state = .began
+                    rotateGesture(gestureRecognizer)
                 }
-                
-                insideArcBall = inside
-                currentArcballPoint = point
-                
-                rotationAxis = normalize(cross(previouArcballPoint, currentArcballPoint))
-                rotationVelocity = rotationScalar * acos(dot(previouArcballPoint, currentArcballPoint))
-                previouArcballPoint = currentArcballPoint
             }
             else {
                 state = .inactive
@@ -521,26 +529,32 @@ open class PerspectiveCameraController: CameraController {
     var panCurrentPoint = simd_float2(repeating: 0.0)
     var panPreviousPoint = simd_float2(repeating: 0.0)
     
-    @objc override func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc override open func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let camera = self.camera, let view = self.view else { return }
         if gestureRecognizer.state == .began {
             state = .panning
             panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
         }
-        else if gestureRecognizer.state == .changed, state == .panning {
-            panCurrentPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
-            let delta = panCurrentPoint - panPreviousPoint
-            let cd = length(camera.worldPosition - target.position) / 10.0
-            translationVelocity.x += translationScalar * delta.x * cd
-            translationVelocity.y -= translationScalar * delta.y * cd
-            panPreviousPoint = panCurrentPoint
+        else if gestureRecognizer.state == .changed {
+            if state == .panning {
+                panCurrentPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
+                let delta = panCurrentPoint - panPreviousPoint
+                let cd = length(camera.worldPosition - target.position) / 10.0
+                translationVelocity.x += translationScalar * delta.x * cd
+                translationVelocity.y -= translationScalar * delta.y * cd
+                panPreviousPoint = panCurrentPoint
+            }
+            else {
+                state = .panning
+                panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
+            }
         }
         else {
             state = .inactive
         }
     }
     
-    @objc override func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+    @objc override open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
@@ -584,3 +598,4 @@ open class PerspectiveCameraController: CameraController {
         return (inside: inside, point: result)
     }
 }
+ 
