@@ -32,9 +32,9 @@ open class Object: Codable {
         case scale
     }
     
-    public var id: String = UUID().uuidString
-    public var label: String = "Object"
-    public var visible: Bool = true
+    open var id: String = UUID().uuidString
+    open var label: String = "Object"
+    open var visible: Bool = true
     
     open var context: Context? = nil {
         didSet {
