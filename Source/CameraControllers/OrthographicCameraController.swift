@@ -173,15 +173,23 @@ open class OrthographicCameraController: CameraController {
     // MARK: - Other Mouse
     
     override open func otherMouseDown(with event: NSEvent) {
-        mouseDown(with: event)
+        guard let view = self.view, event.window == view.window else { return }
+        state = .panning
     }
     
     override open func otherMouseDragged(with event: NSEvent) {
-        mouseDragged(with: event)
+        guard let view = self.view, event.window == view.window else { return }
+        state = .panning
+        
+        let dx = Float(event.deltaX / view.frame.size.width)
+        let dy = Float(event.deltaY / view.frame.size.height)
+        
+        pan(dx, dy)
     }
     
     override open func otherMouseUp(with event: NSEvent) {
-        mouseUp(with: event)
+        guard let view = self.view, event.window == view.window else { return }
+        state = .inactive
     }
     
     // MARK: - Right Mouse
