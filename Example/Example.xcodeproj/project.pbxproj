@@ -400,7 +400,6 @@
 		E105CC36252BDE7F009EE563 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E105CC6E252BDEA7009EE563 /* FXAA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FXAA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E105CD15252BEAA8009EE563 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
-		E10BDF812576E22E000FC85B /* 3D-macOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "3D-macOS copy-Info.plist"; path = "/Users/rezaali/Code/Apple/Satin/Example/3D-macOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -858,7 +857,6 @@
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
-				E10BDF812576E22E000FC85B /* 3D-macOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
