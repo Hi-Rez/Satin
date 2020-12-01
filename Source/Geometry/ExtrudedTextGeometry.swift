@@ -27,7 +27,7 @@ open class ExtrudedTextGeometry: TextGeometry {
         var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
         if let attributedString = self.attributedText {
             // Calculate Suggested Bounds
-            var bnds = bounds
+            var bnds = textBounds
             if bnds.width < 0 {
                 bnds.width = CGFloat.greatestFiniteMagnitude
             }
@@ -42,7 +42,7 @@ open class ExtrudedTextGeometry: TextGeometry {
             bnds.height = suggestedSize.height
             
             let framePath = CGMutablePath()
-            let constraints = CGRect(x: 0.0, y: 0.0, width: bounds.width >= 0.0 ? bounds.width : bnds.width, height: bounds.height >= 0.0 ? bounds.height : bnds.height)
+            let constraints = CGRect(x: 0.0, y: 0.0, width: textBounds.width >= 0.0 ? textBounds.width : bnds.width, height: textBounds.height >= 0.0 ? textBounds.height : bnds.height)
             framePath.addRect(constraints)
             let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.count), framePath, nil)
             let lines = CTFrameGetLines(frame) as! [CTLine]
@@ -51,17 +51,17 @@ open class ExtrudedTextGeometry: TextGeometry {
             CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &origins)
             
             let pvt = pivot * 0.5 + 0.5
-            let pivotOffsetX: CGFloat = (bounds.width >= 0 ? bounds.width : bnds.width) * CGFloat(pvt.x)
-            let pivotOffsetY: CGFloat = (bounds.height >= 0 ? bounds.height : bnds.height) * CGFloat(pvt.y)
+            let pivotOffsetX: CGFloat = (textBounds.width >= 0 ? textBounds.width : bnds.width) * CGFloat(pvt.x)
+            let pivotOffsetY: CGFloat = (textBounds.height >= 0 ? textBounds.height : bnds.height) * CGFloat(pvt.y)
             
             var verticalOffset: CGFloat
             switch verticalAlignment {
             case .top:
                 verticalOffset = 0
             case .center:
-                verticalOffset = ((bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height) * 0.5
+                verticalOffset = ((textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height) * 0.5
             case .bottom:
-                verticalOffset = (bounds.height >= 0 ? bounds.height : bnds.height) - suggestedSize.height
+                verticalOffset = (textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height
             }
             
             for (lineIndex, line) in lines.enumerated() {

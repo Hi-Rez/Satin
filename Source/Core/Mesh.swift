@@ -27,6 +27,7 @@ open class Mesh: Object {
     public var geometry: Geometry = Geometry() {
         didSet {
             setupGeometry()
+            _updateBounds = true
         }
     }
     
@@ -98,6 +99,7 @@ open class Mesh: Object {
             vertexUniforms[0].viewMatrix = camera.viewMatrix
             vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].projectionMatrix = camera.projectionMatrix
+            vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.projectionMatrix, vertexUniforms[0].modelViewMatrix)
             let n = vertexUniforms[0].modelMatrix.inverse.transpose
             let c0 = n.columns.0
             let c1 = n.columns.1
@@ -177,5 +179,10 @@ open class Mesh: Object {
     open func addSubmesh(_ submesh: Submesh) {
         submesh.parent = self
         submeshes.append(submesh)
+    }
+    
+    override open func computeBounds() -> Bounds
+    {
+        return mergeBounds(transformBounds(geometry.bounds, worldMatrix), super.computeBounds())
     }
 }

@@ -65,6 +65,17 @@ open class Object: Codable {
         }
     }
     
+    var _updateBounds: Bool = true
+    var _bounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
+    
+    public var bounds: Bounds {
+        if _updateBounds {
+            _bounds = computeBounds()
+            _updateBounds = false
+        }
+        return _bounds
+    }    
+    
     public var translationMatrix: matrix_float4x4 {
         return Satin.translate(position)
     }
@@ -107,7 +118,11 @@ open class Object: Codable {
         }
     }
     
-    public var children: [Object] = []
+    public var children: [Object] = [] {
+        didSet {
+            _updateBounds = true
+        }
+    }
     
     public var onUpdate: (() -> ())?
     
@@ -119,6 +134,7 @@ open class Object: Codable {
                 _updateWorldPosition = true
                 _updateWorldScale = true
                 _updateWorldOrientation = true
+                _updateBounds = true
                 updateMatrix = false
                 for child in children {
                     child.updateMatrix = true
@@ -216,6 +232,16 @@ open class Object: Codable {
     public init() {}
     
     open func setup() {}
+    
+    open func computeBounds() -> Bounds
+    {
+        var result = Bounds(min: worldPosition, max: worldPosition)
+        for child in children {
+            let childBounds = child.bounds
+            result = mergeBounds(result, childBounds)
+        }
+        return result
+    }
     
     open func update() {
         onUpdate?()

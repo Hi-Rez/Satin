@@ -18,6 +18,11 @@ typedef struct {
 } Vertex;
 
 typedef struct {
+    simd_float3 min;
+    simd_float3 max;
+} Bounds;
+
+typedef struct {
     uint32_t i0;
     uint32_t i1;
     uint32_t i2;

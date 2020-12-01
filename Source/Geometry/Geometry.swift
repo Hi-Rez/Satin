@@ -16,26 +16,32 @@ open class Geometry {
     
     public var vertexData: [Vertex] = [] {
         didSet {
-            if context != nil {
-                setupVertexBuffer()
-            }
+            setupVertexBuffer()
+            _updateBounds = true
         }
     }
     
     public var indexData: [UInt32] = [] {
         didSet {
-            if context != nil {
-                setupIndexBuffer()
-            }
+            setupIndexBuffer()
         }
     }
     
     public var context: Context? {
         didSet {
-            if context != nil, context != oldValue {
-                setup()
-            }
+            setup()
         }
+    }
+    
+    var _updateBounds: Bool = true
+    var _bounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
+    
+    public var bounds: Bounds {
+        if _updateBounds {
+            _bounds = computeBounds()
+            _updateBounds = false
+        }
+        return _bounds
     }
     
     public var vertexBuffer: MTLBuffer?
@@ -157,6 +163,15 @@ open class Geometry {
         }
         
         return data
+    }
+    
+    func computeBounds() -> Bounds {
+        let count = vertexData.count
+        var result = Bounds()
+        vertexData.withUnsafeMutableBufferPointer { vtxPtr in
+            result = computeBoundsFromVertices(vtxPtr.baseAddress!, Int32(count))
+        }
+        return result
     }
     
     deinit {
