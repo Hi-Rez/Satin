@@ -121,19 +121,32 @@ public func frustum(_ horizontalFov: Float, _ verticalFov: Float, _ near: Float,
     return result
 }
 
-public func frustum(_ left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ near: Float, _ far: Float) -> matrix_float4x4 {
-    let width = right - left
-    let height = top - bottom
-    let depth = far / (far - near)
-
-    var result = matrix_identity_float4x4
-
-    result[0].x = width
-    result[1].y = height
-    result[3].z = depth
-    result[4].z = -depth * near
-
-    return result
+public func frustum(_ l: Float, _ r: Float, _ b: Float, _ t: Float, _ n: Float, _ f: Float) -> matrix_float4x4 {
+    return matrix_float4x4(
+        [
+            2.0 * n / (r - l),
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            2.0 * n / (t - b),
+            0,
+            0
+        ],
+        [
+            (r + l) / (r - l),
+            (t + b) / (t - b),
+            -f / (f - n),
+            -1
+        ],
+        [
+            0,
+            0,
+            -(f * n) / (f - n),
+            0
+        ])
 }
 
 // MARK: - LookAt (Float)
@@ -341,11 +354,11 @@ public func adaptiveQuadratic(_ a: simd_float2, _ b: simd_float2, _ c: simd_floa
     let ab = (a + b) * 0.5
     let bc = (b + c) * 0.5
     let abc = (ab + bc) * 0.5
-    
+
     let dist = pointLineDistance2(a, c, b)
     let acDist = length(c - a)
     let _distanceTolerance = distanceTolerance * acDist
-    
+
     if dist > .ulpOfOne {
         if dist < _distanceTolerance {
             points.append(abc)
@@ -392,6 +405,7 @@ public func adaptiveLinear(_ a: simd_float2, _ b: simd_float2, _ points: inout [
         }
     }
 }
+
 public func cgPathToPoints(_ path: CGPath, _ paths: inout [[simd_float2]], _ maxStraightDistance: Float = 1.0)
 {
     var currentPath: [simd_float2] = []
@@ -399,27 +413,27 @@ public func cgPathToPoints(_ path: CGPath, _ paths: inout [[simd_float2]], _ max
         let element = elementPtr.pointee
         var pointsPtr = element.points
         let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-        
+
         switch element.type {
         case .moveToPoint:
             print("moveToPoint:\(pt)")
             currentPath.append(pt)
-            
+
         case .addLineToPoint:
             print("addLineToPoint:\(pt)")
             let a = currentPath[currentPath.count - 1]
             adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
-            
+
         case .addQuadCurveToPoint:
             let a = currentPath[currentPath.count - 1]
             let b = pt
             pointsPtr += 1
             let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
             print("addQuadCurveToPoint: \(a), \(b), \(c)")
-            
+
             adaptiveQuadratic(a, b, c, &currentPath, 0)
             currentPath.append(c)
-            
+
         case .addCurveToPoint:
             let a = currentPath[currentPath.count - 1]
             let b = pt
@@ -428,10 +442,10 @@ public func cgPathToPoints(_ path: CGPath, _ paths: inout [[simd_float2]], _ max
             pointsPtr += 1
             let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
             print("addCurveToPoint: \(a), \(b), \(c), \(d)")
-            
+
             adaptiveCubic(a, b, c, d, &currentPath, 0)
             currentPath.append(d)
-            
+
         case .closeSubpath:
             print("closeSubpath")
             // remove repeated last point
@@ -445,7 +459,7 @@ public func cgPathToPoints(_ path: CGPath, _ paths: inout [[simd_float2]], _ max
             adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
             paths.append(currentPath)
             currentPath = []
-            
+
         default:
             break
         }

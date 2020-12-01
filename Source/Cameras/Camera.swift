@@ -69,8 +69,8 @@ open class Camera: Object
         }
     }
     
-    var updateProjectionMatrix: Bool = true
-    var updateViewMatrix: Bool = true
+    public var updateProjectionMatrix: Bool = true
+    public var updateViewMatrix: Bool = true
     
     override var updateMatrix: Bool
     {

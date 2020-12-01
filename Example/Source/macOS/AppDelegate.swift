@@ -18,9 +18,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {        
         let window = NSWindow(
-            contentRect: NSRect(origin: CGPoint(x: 100.0, y: 400.0), size: CGSize(width: 1024, height: 1024)),
+            contentRect: NSRect(origin: CGPoint(x: 100.0, y: 400.0), size: CGSize(width: 512, height: 512)),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-//            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
             backing: .buffered,
             defer: true
         )
