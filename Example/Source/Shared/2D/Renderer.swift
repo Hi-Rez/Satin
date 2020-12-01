@@ -35,7 +35,13 @@ class Renderer: Forge.Renderer {
     }()
     #endif
     
-    var camera = OrthographicCamera()
+    lazy var camera: OrthographicCamera = {
+        OrthographicCamera()
+    }()
+    
+    lazy var cameraController: OrthographicCameraController = {
+        OrthographicCameraController(camera: camera, view: mtkView)
+    }()
     
     lazy var renderer: Satin.Renderer = {
         Satin.Renderer(context: context, scene: scene, camera: camera)
@@ -52,6 +58,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func update() {
+        cameraController.update()
         renderer.update()
     }
     
