@@ -23,7 +23,7 @@ public struct RaycastResult {
 }
 
 open class Raycaster {
-    public var ray: Ray = Ray() {
+    public var ray = Ray() {
         didSet {
             originParam.value = ray.origin
             directionParam.value = ray.direction
@@ -36,7 +36,7 @@ open class Raycaster {
         }
     }
     
-    public var far: Float = Float.infinity {
+    public var far = Float.infinity {
         didSet {
             farParam.value = far
         }
@@ -163,7 +163,7 @@ open class Raycaster {
             acount = accelerationStructures.count
             _rebuildStructures = true
         }
-        for _ in acount..<_count {
+        for _ in acount ..< _count {
             accelerationStructures.append(MPSTriangleAccelerationStructure(device: context.device))
             _rebuildStructures = true
         }
@@ -171,20 +171,7 @@ open class Raycaster {
     
     // expects a normalize point from -1 to 1 in both x & y directions
     public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2) {
-        if camera is PerspectiveCamera {
-            let origin = camera.worldPosition
-            let unproject = camera.unProject(coordinate)
-            let direction = normalize(simd_make_float3(unproject.x - origin.x, unproject.y - origin.y, unproject.z - origin.z))
-            ray = Ray(origin, direction)
-        }
-        else if camera is OrthographicCamera {
-            let origin = camera.unProject(coordinate)
-            let direction = normalize(simd_make_float3(camera.worldMatrix * simd_float4(0.0, 0.0, -1.0, 0.0)))
-            ray = Ray(simd_make_float3(origin), direction)
-        }
-        else {
-            fatalError("Raycaster has not implemented this type of Camera")
-        }
+        ray = Ray(camera, coordinate)
     }
     
     func setupRayBuffers() {
@@ -242,6 +229,8 @@ open class Raycaster {
         var intersectables: [Any] = []
         var count = 0
         for mesh in meshes {
+            var times = simd_float2(repeating: -1.0)
+            guard rayBoundsIntersection(ray.origin, ray.direction, mesh.localbounds, &times) else { continue }
             let submeshes = mesh.submeshes
             count += max(mesh.submeshes.count, 1)
             if !submeshes.isEmpty {
@@ -287,7 +276,8 @@ open class Raycaster {
     
     func calculateResult(_ mesh: Mesh,
                          _ submesh: Submesh?,
-                         _ index: Int) -> RaycastResult? {
+                         _ index: Int) -> RaycastResult?
+    {
         intersectionBuffer.sync(index)
         let distance = distanceParam.value
         if distance >= 0 {
@@ -362,7 +352,8 @@ open class Raycaster {
                    _ intersectionBuffer: Buffer,
                    _ mesh: Mesh,
                    _ submesh: Submesh?,
-                   _ index: Int) {
+                   _ index: Int)
+    {
         let meshWorldMatrix = mesh.worldMatrix
         let meshWorldMatrixInverse = meshWorldMatrix.inverse
         
