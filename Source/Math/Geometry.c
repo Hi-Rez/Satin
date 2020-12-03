@@ -125,12 +125,53 @@ bool isClockwise(simd_float2 *polygon, int length) {
 
 bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection)
 {
+    float time = 0.0;
+    if(rayPlaneIntersectionTime(origin, direction, planeNormal, planeOrigin, &time)) {
+        *intersection = origin + direction * time;
+        return true;
+    }
+    return false;
+}
+
+bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, float *time)
+{
     simd_float3 o = planeOrigin - origin;
     const float oProj = simd_dot(o, planeNormal);
     const float dProj = simd_dot(direction, planeNormal);
     const float t = oProj / dProj;
-    *intersection = origin + direction * t;
+    *time = t;
     return (dProj < 0);
+}
+
+bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds, simd_float2 *times)
+{
+    simd_float3 dirInv = 1.0 / direction;
+    simd_float3 tmin = (bounds.min - origin) * dirInv;
+    simd_float3 tmax = (bounds.max - origin) * dirInv;
+    simd_float3 tmpMin = tmin;
+    simd_float3 tmpMax = tmax;
+    
+    tmin = simd_min(tmpMin, tmpMax);
+    tmax = simd_max(tmpMin, tmpMax);
+    
+    float min = simd_max(tmin.x, tmin.y);
+    float max = simd_min(tmax.x, tmax.y);
+    
+    if (tmin.x > tmax.y || tmin.y > tmax.x) {
+        return false;
+    }
+    
+    if (min > tmax.z || tmin.z > max) {
+        return false;
+    }
+    
+    min = simd_max(min, tmin.z);
+    max = simd_min(max, tmax.z);
+    
+    times->x = min;
+    times->y = max;
+    
+    return true;
 }
 
 bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times)
@@ -154,6 +195,45 @@ bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_floa
     
     *times = simd_make_float2(t0, t1);
     return true;
+}
+
+bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_float3 v0, simd_float3 v1, simd_float3 v2, float *time, simd_float3 *intersection, simd_float3 *normal)
+{
+    if (isColinear3(v0, v1, v2)) {
+        return false;
+    } else {
+        simd_float3 a = v1 - v0;
+        simd_float3 b = v2 - v0;
+        *normal = simd_normalize(simd_cross(a, b));
+        simd_float3 triangleOrigin = simd_dot(*normal, v0);
+        bool intersected = rayPlaneIntersectionTime(origin, direction, *normal, triangleOrigin, time);
+        if(intersected) {
+                        
+            (*intersection) = origin + direction * (*time);
+            
+            simd_float3 v0i = (*intersection) - v0;
+            float cross = simd_dot(*normal, simd_cross(a, v0i));
+            if(cross < 0) {
+                return false;
+            }
+            
+            simd_float3 c = v2 - v1;
+            simd_float3 v1i = (*intersection) - v1;
+            cross = simd_dot(*normal, simd_cross(c, v1i));
+            if(cross < 0) {
+                return false;
+            }
+            
+            simd_float3 v2i = (*intersection) - v2;
+            cross = simd_dot(*normal, simd_cross(-b, v2i));
+            if(cross < 0) {
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 simd_float3 projectPointOnPlane( simd_float3 origin, simd_float3 normal, simd_float3 point )

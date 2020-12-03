@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include <simd/simd.h>
 
+#include "Types.h"
+
 float map(float input, float inMin, float inMax, float outMin, float outMax);
 
 bool greaterThanZero(float a);
@@ -40,11 +42,13 @@ bool isBetween(simd_float2 a, simd_float2 b, simd_float2 c);
 bool intersectsProper(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
 bool intersects(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
 
-bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection); 
+bool rayPlaneIntersection(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection);
+bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, float *time);
+bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds, simd_float2 *times);
+bool raySphereIntersection(simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times);
+bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_float3 v0, simd_float3 v1, simd_float3 v2, float *time, simd_float3 *intersection, simd_float3 *normal);
 
-bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times);
-
-simd_float3 projectPointOnPlane( simd_float3 origin, simd_float3 normal, simd_float3 point );
+simd_float3 projectPointOnPlane(simd_float3 origin, simd_float3 normal, simd_float3 point );
 simd_float2 projectedPointOnLine2(simd_float2 start, simd_float2 end, simd_float2 point);
 
 float pointLineDistance2(simd_float2 start, simd_float2 end, simd_float2 point);

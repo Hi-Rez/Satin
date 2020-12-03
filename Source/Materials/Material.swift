@@ -10,7 +10,7 @@ import Metal
 import simd
 
 public protocol MaterialDelegate: AnyObject {
-    func materialUpdated(material: Material)
+    func updated(material: Material)
 }
 
 public struct DepthBias {
@@ -58,7 +58,7 @@ open class Material: ParameterGroupDelegate {
     
     public var pipeline: MTLRenderPipelineState? {
         didSet {
-            delegate?.materialUpdated(material: self)
+            delegate?.updated(material: self)
         }
     }
     

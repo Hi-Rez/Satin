@@ -11,6 +11,7 @@
 #include "Types.h"
 
 Bounds computeBoundsFromVertices(Vertex *vertices, int count);
+Bounds computeBoundsFromVerticesAndTransform(Vertex *vertices, int count, simd_float4x4 transform);
 
 Bounds mergeBounds(Bounds a, Bounds b);
 Bounds transformBounds(Bounds a, simd_float4x4 transform);

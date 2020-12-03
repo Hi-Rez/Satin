@@ -9,7 +9,7 @@
 import Metal
 import simd
 
-open class Mesh: Object {
+open class Mesh: Object, GeometryDelegate {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
     public var triangleFillMode: MTLTriangleFillMode = .fill
@@ -26,8 +26,9 @@ open class Mesh: Object {
     
     public var geometry: Geometry = Geometry() {
         didSet {
+            geometry.delegate = self
             setupGeometry()
-            _updateBounds = true
+            _updateLocalBounds = true
         }
     }
     
@@ -42,6 +43,7 @@ open class Mesh: Object {
     public init(geometry: Geometry, material: Material?) {
         super.init()
         self.geometry = geometry
+        self.geometry.delegate = self
         self.material = material
     }
     
@@ -181,8 +183,20 @@ open class Mesh: Object {
         submeshes.append(submesh)
     }
     
-    override open func computeBounds() -> Bounds
+    
+    override open func computeLocalBounds() -> Bounds
     {
-        return mergeBounds(transformBounds(geometry.bounds, worldMatrix), super.computeBounds())
+        let count = geometry.vertexData.count
+        var result = Bounds()
+        geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
+            result = computeBoundsFromVerticesAndTransform(vtxPtr.baseAddress!, Int32(count), worldMatrix)
+        }
+        return result
+    }
+    
+    // MARK: - Geometry Delegate:
+    
+    public func updated(geometry: Geometry) {
+        _updateLocalBounds = true
     }
 }

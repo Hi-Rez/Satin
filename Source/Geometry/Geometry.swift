@@ -9,13 +9,19 @@
 import Metal
 import simd
 
+public protocol GeometryDelegate: AnyObject {
+    func updated(geometry: Geometry)
+}
+
 open class Geometry {
     public var primitiveType: MTLPrimitiveType = .triangle
     public var windingOrder: MTLWinding = .counterClockwise
     public var indexType: MTLIndexType = .uint32
+    public weak var delegate: GeometryDelegate?
     
     public var vertexData: [Vertex] = [] {
         didSet {
+            delegate?.updated(geometry: self)
             setupVertexBuffer()
             _updateBounds = true
         }
@@ -23,6 +29,7 @@ open class Geometry {
     
     public var indexData: [UInt32] = [] {
         didSet {
+            delegate?.updated(geometry: self)
             setupIndexBuffer()
         }
     }
