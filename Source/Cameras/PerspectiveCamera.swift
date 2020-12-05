@@ -67,6 +67,19 @@ open class PerspectiveCamera: Camera
         set
         {
             _projectionMatrix = newValue
+            let col0 = newValue.columns.0
+            let col1 = newValue.columns.1
+            let col2 = newValue.columns.2
+            let col3 = newValue.columns.3
+            fov = 2.0 * atan(1.0 / col1.y) * 180.0 / Float.pi
+            aspect = col1.y / col0.x;
+            let a = col2.z
+            let b = col3.z
+            let aMinusOne = a - 1.0;
+            let aPlueOne = a + 1.0;
+            near = ( b * aPlueOne / aMinusOne - b ) * 0.5;
+            far = aMinusOne * near / aPlueOne;
+            updateProjectionMatrix = false
         }
     }
     
