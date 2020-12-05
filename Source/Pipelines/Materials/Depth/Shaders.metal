@@ -14,13 +14,11 @@ vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
     const float z = position.z;
     
     const float4x4 projection = vertexUniforms.projectionMatrix;
-    const float a = projection[2].z;
-    const float b = projection[3].z;
+    const float c = projection[2].z;
+    const float d = projection[3].z;
     
-    const float aMinusOne = a - 1.0;
-    const float aPlueOne = a + 1.0;
-    const float n = ( b * aPlueOne / aMinusOne - b ) * 0.5;
-    const float f = aMinusOne * n / aPlueOne;
+    const float n = d / c;
+    const float f = d / (1.0 + c);
     
     float near = uniforms.near;
     float far = uniforms.far;
