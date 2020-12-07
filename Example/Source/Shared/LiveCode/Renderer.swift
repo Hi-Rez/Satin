@@ -119,7 +119,6 @@ class Renderer: Forge.Renderer {
         if let material = mesh.material {
             material.set("Time", Float(getTime() - startTime))
         }
-        renderer.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

@@ -43,11 +43,6 @@ open class PostProcessor {
         mesh.label = label + " Mesh"
     }
     
-    public func update() {
-        camera.update()
-        renderer.update()
-    }
-    
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                      commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture) {
         renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer,

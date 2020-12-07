@@ -95,16 +95,6 @@ open class Renderer
         clearColor = .init(red: Double(color.x), green: Double(color.y), blue: Double(color.z), alpha: Double(color.w))
     }
     
-    public func update()
-    {
-        setupColorTexture()
-        setupDepthTexture()
-        setupStencilTexture()
-        
-        scene.update()
-        camera.update()
-    }
-    
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
     {
         guard let context = self.context else { return }
@@ -127,6 +117,9 @@ open class Renderer
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
     {
+        camera.update()
+        scene.update()
+        
         guard let context = self.context, scene.visible, getMeshes(scene, true, false).count > 0 else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
@@ -143,6 +136,7 @@ open class Renderer
         
         if sampleCount > 1, inColorTexture?.sampleCount != sampleCount || inColorTexture?.pixelFormat != colorPixelFormat
         {
+            setupColorTexture()
             renderPassDescriptor.colorAttachments[0].texture = colorTexture
         }
         
@@ -150,6 +144,7 @@ open class Renderer
         
         if inDepthTexture?.sampleCount != sampleCount || inDepthTexture?.pixelFormat != depthPixelFormat
         {
+            setupDepthTexture()
             renderPassDescriptor.depthAttachment.texture = depthTexture
             if depthPixelFormat == .depth32Float_stencil8
             {
@@ -161,6 +156,7 @@ open class Renderer
         
         if inStencilTexture?.sampleCount != sampleCount || inStencilTexture?.pixelFormat != stencilPixelFormat
         {
+            setupStencilTexture()
             if depthPixelFormat == .depth32Float_stencil8
             {
                 renderPassDescriptor.stencilAttachment.texture = depthTexture

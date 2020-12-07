@@ -50,7 +50,6 @@ class Renderer: Forge.Renderer {
     
     override func update() {
         cameraController.update()
-        renderer.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

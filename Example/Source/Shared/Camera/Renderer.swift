@@ -102,7 +102,6 @@ class Renderer: Forge.Renderer {
     override func update() {
         targetMesh.position = cameraController.target.position
         cameraController.update()
-        renderer.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

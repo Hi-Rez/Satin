@@ -249,7 +249,6 @@ class Renderer: Forge.Renderer {
         }
         
         cameraController.update()
-        renderer.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

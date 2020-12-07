@@ -107,8 +107,6 @@ class Renderer: Forge.Renderer, ARSessionDelegate {
     override func update() {
         updateCamera()
         updateBackground()
-        backgroundRenderer.update()
-        renderer.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

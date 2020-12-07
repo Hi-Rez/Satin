@@ -137,8 +137,6 @@ class Renderer: Forge.Renderer {
         
         updateBufferComputeUniforms()
         cameraController.update()
-        renderer.update()
-        chromaticProcessor.update()
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
