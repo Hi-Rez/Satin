@@ -44,6 +44,10 @@ open class Material: ParameterGroupDelegate {
         return label
     }
     
+    var externalUniformBuffers: Set<UniformBuffer> = []
+    var externalVertexUniformBuffersMap: [VertexBufferIndex: UniformBuffer] = [:]
+    var externalFragmentUniformBuffersMap: [FragmentBufferIndex: UniformBuffer] = [:]
+    
     public var uniforms: UniformBuffer?
     var uniformsNeedsUpdate = true
     
@@ -95,7 +99,7 @@ open class Material: ParameterGroupDelegate {
         }
     }
     
-    public var depthBias: DepthBias = DepthBias(bias: 0.0, slope: 0.0, clamp: 0.0)
+    public var depthBias = DepthBias(bias: 0.0, slope: 0.0, clamp: 0.0)
     
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
@@ -129,7 +133,7 @@ open class Material: ParameterGroupDelegate {
     }
     
     open func setupPipeline() {
-        guard let _ = self.context else { return }
+        guard let _ = context else { return }
         guard let source = compileSource() else { return }
         guard let library = makeLibrary(source) else { return }
         guard let pipeline = createPipeline(library) else { return }
@@ -143,6 +147,11 @@ open class Material: ParameterGroupDelegate {
     open func makeLibrary(_ source: String?) -> MTLLibrary? {
         guard let context = self.context, var source = source else { return nil }
         do {
+            injectVertex(source: &source)
+            injectVertexData(source: &source)
+            injectVertexUniforms(source: &source)
+            injectExternalUniforms(source: &source)
+            injectMaterialUniforms(source: &source)
             injectPassThroughVertex(source: &source)
             return try context.device.makeLibrary(source: source, options: .none)
         }
@@ -152,10 +161,49 @@ open class Material: ParameterGroupDelegate {
         return nil
     }
     
+    open func injectVertex(source: inout String) {
+        source = source.replacingOccurrences(of: "// inject vertex\n", with: VertexSource.get() ?? "" + "\n")
+    }
+    
+    open func injectVertexData(source: inout String) {
+        source = source.replacingOccurrences(of: "// inject vertex data\n", with: VertexDataSource.get() ?? "" + "\n")
+    }
+    
+    open func injectVertexUniforms(source: inout String) {
+        source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "" + "\n")
+    }
+    
+    open func injectExternalUniforms(source: inout String) {
+        var addedStructs: Set<String> = []
+        var externalStructs = ""
+        for externalUniformBuffer in externalUniformBuffers {
+            if let params = externalUniformBuffer.parameters {
+                let structName = params.label
+                if !addedStructs.contains(structName), !source.contains("} \(structName);") {
+                    externalStructs += externalUniformBuffer.parameters.structString + "\n"
+                    addedStructs.insert(structName)
+                }
+            }
+        }
+        source = source.replacingOccurrences(of: "// inject structs\n", with: externalStructs)
+    }
+    
+    open func injectMaterialUniforms(source: inout String) {
+        var materialStructs = "\n"
+        if !source.contains("} \(parameters.label);") {
+            materialStructs = parameters.structString + "\n"
+        }
+        source = source.replacingOccurrences(of: "// inject material structs\n", with: materialStructs)
+    }
+    
     open func injectPassThroughVertex(source: inout String) {
         let vertexFunctionName = label.camelCase + "Vertex"
         if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
-            source += "\n" + passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
+            let vertexSource = passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
+            source = source.replacingOccurrences(of: "// inject vertex shader\n", with: vertexSource + "\n")
+        }
+        else {
+            source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
         }
     }
     
@@ -224,7 +272,14 @@ open class Material: ParameterGroupDelegate {
     open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let uniforms = self.uniforms else { return }
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
+        for (vertexBufferIndex, externalUniforms) in externalVertexUniformBuffersMap {
+            renderEncoder.setVertexBuffer(externalUniforms.buffer, offset: externalUniforms.offset, index: vertexBufferIndex.rawValue)
+        }
+        
         renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+        for (fragmentBufferIndex, externalUniforms) in externalFragmentUniformBuffersMap {
+            renderEncoder.setFragmentBuffer(externalUniforms.buffer, offset: externalUniforms.offset, index: fragmentBufferIndex.rawValue)
+        }
     }
     
     open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
@@ -295,25 +350,83 @@ open class Material: ParameterGroupDelegate {
         return parameters.get(name)
     }
     
+    public func setFragmentUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: FragmentBufferIndex) {
+        var needsSetup = false
+        if !externalUniformBuffers.contains(uniformBuffer) {
+            externalUniformBuffers.insert(uniformBuffer)
+            needsSetup = true
+        }
+        externalFragmentUniformBuffersMap[index] = uniformBuffer
+        if needsSetup {
+            setupPipeline()
+        }
+    }
+    
+    public func removeFragmentUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: FragmentBufferIndex) {
+        if externalUniformBuffers.contains(uniformBuffer) {
+            externalFragmentUniformBuffersMap.removeValue(forKey: index)
+            var remove = true
+            for (_, vertexUniformBuffer) in externalVertexUniformBuffersMap {
+                if vertexUniformBuffer == uniformBuffer {
+                    remove = false
+                    break
+                }
+            }
+            if remove {
+                externalUniformBuffers.remove(uniformBuffer)
+            }
+            setupPipeline()
+        }
+    }
+    
+    public func setVertexUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: VertexBufferIndex) {
+        var needsSetup = false
+        if !externalUniformBuffers.contains(uniformBuffer) {
+            externalUniformBuffers.insert(uniformBuffer)
+            needsSetup = true
+        }
+        externalVertexUniformBuffersMap[index] = uniformBuffer
+        if needsSetup {
+            setupPipeline()
+        }
+    }
+    
+    public func removeVertexUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: VertexBufferIndex) {
+        if externalUniformBuffers.contains(uniformBuffer) {
+            externalVertexUniformBuffersMap.removeValue(forKey: index)
+            var remove = true
+            for (_, fragmentUniformBuffer) in externalFragmentUniformBuffersMap {
+                if fragmentUniformBuffer == uniformBuffer {
+                    remove = false
+                    break
+                }
+            }
+            if remove {
+                externalUniformBuffers.remove(uniformBuffer)
+            }
+            setupPipeline()
+        }
+    }
+    
     deinit {}
 }
 
-extension Material {
-    public func added(parameter: Parameter, from group: ParameterGroup) {
+public extension Material {
+    func added(parameter: Parameter, from group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
     
-    public func removed(parameter: Parameter, from group: ParameterGroup) {
+    func removed(parameter: Parameter, from group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
     
-    public func loaded(group: ParameterGroup) {
+    func loaded(group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
     
-    public func saved(group: ParameterGroup) {}
+    func saved(group: ParameterGroup) {}
     
-    public func cleared(group: ParameterGroup) {
+    func cleared(group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
 }
@@ -329,6 +442,86 @@ class PassThroughVertexPipelineSource {
         if let vertexURL = getPipelinesCommonUrl("Vertex.metal") {
             do {
                 sharedSource = try MetalFileCompiler().parse(vertexURL)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class ConstantsSource {
+    static let shared = ConstantsSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard ConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("Constants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexSource {
+    static let shared = VertexSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("Vertex.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexDataSource {
+    static let shared = VertexDataSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexDataSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("VertexData.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexUniformsSource {
+    static let shared = VertexUniformsSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexUniformsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
             }
             catch {
                 print(error)

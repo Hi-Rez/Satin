@@ -12,7 +12,7 @@ import simd
 
 open class MatCapMaterial: BasicTextureMaterial {
     open override func compileSource() -> String? {
-        return MatCapPipelineSource.setup(label: label, parameters: parameters)
+        return MatCapPipelineSource.setup(label: label)
     }
 }
 
@@ -20,10 +20,10 @@ class MatCapPipelineSource {
     static let shared = MatCapPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard MatCapPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            MatCapPipelineSource.sharedSource = try compilePipelineSource(label, parameters)
+            MatCapPipelineSource.sharedSource = try compilePipelineSource(label)
         }
         catch {
             print(error)

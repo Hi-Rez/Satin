@@ -49,7 +49,7 @@ open class BasicTextureMaterial: BasicColorMaterial {
     }
 
     open override func compileSource() -> String? {
-        return BasicTexturePipelineSource.setup(label: label, parameters: parameters)
+        return BasicTexturePipelineSource.setup(label: label)
     }
 
     open func bindTexture(_ renderEncoder: MTLRenderCommandEncoder) {
@@ -75,10 +75,10 @@ class BasicTexturePipelineSource {
     static let shared = BasicTexturePipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard BasicTexturePipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 BasicTexturePipelineSource.sharedSource = source
             }
         }

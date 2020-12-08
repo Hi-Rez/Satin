@@ -396,7 +396,9 @@ open class ParameterGroup: Codable {
     }
 
     public var structString: String {
-        let structName = label.replacingOccurrences(of: " ", with: "")
+        var structName = label.replacingOccurrences(of: " ", with: "")
+        structName = structName.camelCase
+        structName = structName.prefix(1).capitalized + structName.dropFirst()
         var source = "typedef struct {\n"
         for param in params {
             source += "\t \(param.string) \(param.label.camelCase);\n"

@@ -35,7 +35,7 @@ open class SkyboxMaterial: BasicTextureMaterial {
     }
 
     open override func compileSource() -> String? {
-        return SkyboxPipelineSource.setup(label: label, parameters: parameters)
+        return SkyboxPipelineSource.setup(label: label)
     }
 
     open override func setupPipeline() {
@@ -51,10 +51,10 @@ class SkyboxPipelineSource {
     static let shared = SkyboxPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard SkyboxPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            SkyboxPipelineSource.sharedSource = try compilePipelineSource(label, parameters)
+            SkyboxPipelineSource.sharedSource = try compilePipelineSource(label)
         }
         catch {
             print(error)

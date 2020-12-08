@@ -8,4 +8,3 @@ vertex VertexData satinVertex(Vertex in [[stage_in]],
     out.pointSize = 2.0;
     return out;
 }
-

@@ -217,7 +217,7 @@ public func makeComputePipeline(library: MTLLibrary?,
     return nil
 }
 
-func compilePipelineSource(_ label: String, _ parameters: ParameterGroup) throws -> String? {
+func compilePipelineSource(_ label: String) throws -> String? {
     guard let satinURL = getPipelinesSatinUrl(),
         let materialsURL = getPipelinesMaterialsUrl() else { return nil }
 
@@ -229,7 +229,6 @@ func compilePipelineSource(_ label: String, _ parameters: ParameterGroup) throws
     let compiler = MetalFileCompiler()
     do {
         var source = try compiler.parse(includesURL)
-        source += parameters.structString
         source += try compiler.parse(shadersURL)
         return source
     }

@@ -19,7 +19,7 @@ open class NormalColorMaterial: Material {
     }
 
     open override func compileSource() -> String? {
-        return NormalColorPipelineSource.setup(label: label, parameters: parameters)
+        return NormalColorPipelineSource.setup(label: label)
     }
 }
 
@@ -27,10 +27,10 @@ class NormalColorPipelineSource {
     static let shared = NormalColorPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard NormalColorPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 NormalColorPipelineSource.sharedSource = source
             }
         }

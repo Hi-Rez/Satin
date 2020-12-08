@@ -22,7 +22,7 @@ open class BasicPointMaterial: Material {
     }
 
     open override func compileSource() -> String? {
-        return BasicPointPipelineSource.setup(label: label, parameters: parameters)
+        return BasicPointPipelineSource.setup(label: label)
     }
 }
 
@@ -30,10 +30,10 @@ class BasicPointPipelineSource {
     static let shared = BasicPointPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard BasicPointPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 BasicPointPipelineSource.sharedSource = source
             }
         }

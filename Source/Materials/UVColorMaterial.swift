@@ -14,7 +14,7 @@ open class UvColorMaterial: Material {
     }
 
     open override func compileSource() -> String? {
-        return UvColorPipelineSource.setup(label: label, parameters: parameters)
+        return UvColorPipelineSource.setup(label: label)
     }
 }
 
@@ -22,10 +22,10 @@ class UvColorPipelineSource {
     static let shared = UvColorPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard UvColorPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 UvColorPipelineSource.sharedSource = source
             }
         }

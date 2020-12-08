@@ -255,3 +255,15 @@ open class Buffer {
         }
     }
 }
+
+extension Buffer: Equatable {
+    public static func == (lhs: Buffer, rhs: Buffer) -> Bool {
+        return lhs === rhs
+    }
+}
+
+extension Buffer: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
+    }
+}

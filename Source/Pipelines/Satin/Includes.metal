@@ -4,6 +4,10 @@
 using namespace metal;
 
 #include "Constants.metal"
-#include "Vertex.metal"
-#include "VertexData.metal"
-#include "VertexUniforms.metal"
+
+// inject vertex
+// inject vertex data
+// inject vertex uniforms
+// inject structs
+// inject material structs
+// inject vertex shader

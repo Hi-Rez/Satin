@@ -25,7 +25,7 @@ open class DepthMaterial: Material {
     }
         
     open override func compileSource() -> String? {
-        return DepthPipelineSource.setup(label: label, parameters: parameters)
+        return DepthPipelineSource.setup(label: label)
     }
 }
 
@@ -33,10 +33,10 @@ class DepthPipelineSource {
     static let shared = DepthPipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard DepthPipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 DepthPipelineSource.sharedSource = source
             }
         }

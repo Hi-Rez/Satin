@@ -18,7 +18,6 @@ open class LiveMaterial: Material {
         self.pipelineURL = pipelineURL
         self.instance = instance
         super.init()
-        self.source = compileSource()
     }
     
     public init(pipelinesURL: URL, instance: String = "") {
@@ -26,7 +25,6 @@ open class LiveMaterial: Material {
         self.instance = instance
         super.init()
         self.pipelineURL = self.pipelineURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal")
-        self.source = compileSource()
     }
 
     open override func setup() {
@@ -50,9 +48,8 @@ open class LiveMaterial: Material {
             let includesURL = satinURL.appendingPathComponent("Includes.metal")
             do {
                 var source = try compiler.parse(includesURL)
-                var shaderSource = try compiler.parse(pipelineURL)
+                let shaderSource = try compiler.parse(pipelineURL)
                 parseUniforms(shaderSource)
-                injectPassThroughVertex(source: &shaderSource)
                 source += shaderSource
                 self.source = source
                 return source

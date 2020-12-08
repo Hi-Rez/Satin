@@ -18,7 +18,7 @@ open class BasicDiffuseMaterial: BasicColorMaterial {
     }
 
     open override func compileSource() -> String? {
-        return BasicDiffusePipelineSource.setup(label: label, parameters: parameters)
+        return BasicDiffusePipelineSource.setup(label: label)
     }
 }
 
@@ -26,10 +26,10 @@ class BasicDiffusePipelineSource {
     static let shared = BasicDiffusePipelineSource()
     private static var sharedSource: String?
 
-    class func setup(label: String, parameters: ParameterGroup) -> String? {
+    class func setup(label: String) -> String? {
         guard BasicDiffusePipelineSource.sharedSource == nil else { return sharedSource }
         do {
-            if let source = try compilePipelineSource(label, parameters) {
+            if let source = try compilePipelineSource(label) {
                 BasicDiffusePipelineSource.sharedSource = source
             }
         }
