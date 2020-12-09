@@ -217,7 +217,7 @@ public func makeComputePipeline(library: MTLLibrary?,
     return nil
 }
 
-func compilePipelineSource(_ label: String) throws -> String? {
+public func compilePipelineSource(_ label: String) throws -> String? {
     guard let satinURL = getPipelinesSatinUrl(),
         let materialsURL = getPipelinesMaterialsUrl() else { return nil }
 
@@ -235,5 +235,28 @@ func compilePipelineSource(_ label: String) throws -> String? {
     catch {
         print(error)
         return nil
+    }
+}
+
+public func injectVertex(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject vertex\n", with: VertexSource.get() ?? "" + "\n")
+}
+
+public func injectVertexData(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject vertex data\n", with: VertexDataSource.get() ?? "" + "\n")
+}
+
+public func injectVertexUniforms(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "" + "\n")
+}
+
+public func injectPassThroughVertex(label: String, source: inout String) {
+    let vertexFunctionName = label.camelCase + "Vertex"
+    if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
+        let vertexSource = passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
+        source = source.replacingOccurrences(of: "// inject vertex shader\n", with: vertexSource + "\n")
+    }
+    else {
+        source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
     }
 }

@@ -152,25 +152,13 @@ open class Material: ParameterGroupDelegate {
             injectVertexUniforms(source: &source)
             injectExternalUniforms(source: &source)
             injectMaterialUniforms(source: &source)
-            injectPassThroughVertex(source: &source)
+            injectPassThroughVertex(label: label, source: &source)
             return try context.device.makeLibrary(source: source, options: .none)
         }
         catch {
             print(error)
         }
         return nil
-    }
-    
-    open func injectVertex(source: inout String) {
-        source = source.replacingOccurrences(of: "// inject vertex\n", with: VertexSource.get() ?? "" + "\n")
-    }
-    
-    open func injectVertexData(source: inout String) {
-        source = source.replacingOccurrences(of: "// inject vertex data\n", with: VertexDataSource.get() ?? "" + "\n")
-    }
-    
-    open func injectVertexUniforms(source: inout String) {
-        source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "" + "\n")
     }
     
     open func injectExternalUniforms(source: inout String) {
@@ -187,24 +175,13 @@ open class Material: ParameterGroupDelegate {
         }
         source = source.replacingOccurrences(of: "// inject structs\n", with: externalStructs)
     }
-    
+
     open func injectMaterialUniforms(source: inout String) {
         var materialStructs = "\n"
         if !source.contains("} \(parameters.label);") {
             materialStructs = parameters.structString + "\n"
         }
         source = source.replacingOccurrences(of: "// inject material structs\n", with: materialStructs)
-    }
-    
-    open func injectPassThroughVertex(source: inout String) {
-        let vertexFunctionName = label.camelCase + "Vertex"
-        if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
-            let vertexSource = passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
-            source = source.replacingOccurrences(of: "// inject vertex shader\n", with: vertexSource + "\n")
-        }
-        else {
-            source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
-        }
     }
     
     open func createPipeline(_ library: MTLLibrary?, vertex: String = "", fragment: String = "") -> MTLRenderPipelineState? {

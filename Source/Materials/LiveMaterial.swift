@@ -18,6 +18,7 @@ open class LiveMaterial: Material {
         self.pipelineURL = pipelineURL
         self.instance = instance
         super.init()
+        self.source = self.compileSource()
     }
     
     public init(pipelinesURL: URL, instance: String = "") {
@@ -25,6 +26,7 @@ open class LiveMaterial: Material {
         self.instance = instance
         super.init()
         self.pipelineURL = self.pipelineURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal")
+        self.source = self.compileSource()
     }
 
     open override func setup() {
