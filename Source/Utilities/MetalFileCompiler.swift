@@ -69,7 +69,7 @@ open class MetalFileCompiler
             watchers.append(watcher)
             files.append(fileURLResolved)
             
-            let pattern = #"^#include +\"(.*)\""#
+            let pattern = #"^#include\s+\"(.*)\"\n"#
             let regex = try NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
             let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
             var matches = regex.matches(in: content, options: [], range: nsrange)

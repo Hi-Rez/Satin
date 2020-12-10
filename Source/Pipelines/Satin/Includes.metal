@@ -3,8 +3,7 @@
 
 using namespace metal;
 
-#include "Constants.metal"
-
+// inject constants
 // inject vertex
 // inject vertex data
 // inject vertex uniforms

@@ -196,7 +196,8 @@ class Renderer: Forge.Renderer {
     func setupLibrary() {
         print("Compiling Library")
         do {
-            let librarySource = try metalFileCompiler.parse(pipelinesURL.appendingPathComponent("Compute/Shaders.metal"))
+            var librarySource = try metalFileCompiler.parse(pipelinesURL.appendingPathComponent("Compute/Shaders.metal"))
+            injectConstants(source: &librarySource)
             let library = try context.device.makeLibrary(source: librarySource, options: .none)
             
             if let params = parseStruct(source: librarySource, key: "Particle") {

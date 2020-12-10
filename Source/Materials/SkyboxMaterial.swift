@@ -37,14 +37,6 @@ open class SkyboxMaterial: BasicTextureMaterial {
     open override func compileSource() -> String? {
         return SkyboxPipelineSource.setup(label: label)
     }
-
-    open override func setupPipeline() {
-        guard let _ = self.context else { return }
-        guard let source = compileSource() else { return }
-        guard let library = makeLibrary(source) else { return }
-        guard let pipeline = createPipeline(library, vertex: label.camelCase + "Vertex") else { return }
-        self.pipeline = pipeline
-    }
 }
 
 class SkyboxPipelineSource {

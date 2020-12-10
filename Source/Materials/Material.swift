@@ -134,8 +134,8 @@ open class Material: ParameterGroupDelegate {
     
     open func setupPipeline() {
         guard let _ = context else { return }
-        guard let source = compileSource() else { return }
-        guard let library = makeLibrary(source) else { return }
+        guard var source = compileSource() else { return }
+        guard let library = makeLibrary(&source) else { return }
         guard let pipeline = createPipeline(library) else { return }
         self.pipeline = pipeline
     }
@@ -144,9 +144,10 @@ open class Material: ParameterGroupDelegate {
         return nil
     }
     
-    open func makeLibrary(_ source: String?) -> MTLLibrary? {
-        guard let context = self.context, var source = source else { return nil }
+    open func makeLibrary(_ source: inout String) -> MTLLibrary? {
+        guard let context = self.context else { return nil }
         do {
+            injectConstants(source: &source)
             injectVertex(source: &source)
             injectVertexData(source: &source)
             injectVertexUniforms(source: &source)

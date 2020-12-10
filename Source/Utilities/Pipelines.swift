@@ -238,16 +238,20 @@ public func compilePipelineSource(_ label: String) throws -> String? {
     }
 }
 
+public func injectConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject constants\n", with: (ConstantsSource.get() ?? "\n") + "\n")
+}
+
 public func injectVertex(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject vertex\n", with: VertexSource.get() ?? "" + "\n")
+    source = source.replacingOccurrences(of: "// inject vertex\n", with: (VertexSource.get() ?? "\n") + "\n")
 }
 
 public func injectVertexData(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject vertex data\n", with: VertexDataSource.get() ?? "" + "\n")
+    source = source.replacingOccurrences(of: "// inject vertex data\n", with: (VertexDataSource.get() ?? "\n") + "\n")
 }
 
 public func injectVertexUniforms(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "" + "\n")
+    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: (VertexUniformsSource.get() ?? "\n") + "\n")
 }
 
 public func injectPassThroughVertex(label: String, source: inout String) {

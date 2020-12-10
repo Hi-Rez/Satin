@@ -20,7 +20,8 @@ extension Renderer {
     func setupLibrary() {
         print("Compiling Library")
         do {
-            let librarySource = try metalFileCompiler.parse(pipelinesURL.appendingPathComponent("Compute/Shaders.metal"))
+            var librarySource = try metalFileCompiler.parse(pipelinesURL.appendingPathComponent("Compute/Shaders.metal"))
+            injectConstants(source: &librarySource)
             let library = try context.device.makeLibrary(source: librarySource, options: .none)
             setupSkyboxCompute(library)
             setupCubemapCompute(library)
