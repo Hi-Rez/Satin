@@ -264,3 +264,7 @@ public func injectPassThroughVertex(label: String, source: inout String) {
         source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
     }
 }
+
+public func injectPassThroughVertex(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject vertex shader\n", with: (PassThroughVertexPipelineSource.get() ?? "\n") + "\n")
+}
