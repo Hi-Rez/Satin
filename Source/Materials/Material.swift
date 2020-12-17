@@ -409,6 +409,12 @@ public extension Material {
     }
 }
 
+extension Material: Equatable {
+    public static func == (lhs: Material, rhs: Material) -> Bool {
+        return lhs === rhs
+    }
+}
+
 class PassThroughVertexPipelineSource {
     static let shared = PassThroughVertexPipelineSource()
     private static var sharedSource: String?

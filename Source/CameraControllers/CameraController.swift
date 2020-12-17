@@ -299,6 +299,10 @@ open class CameraController: Codable {
             NSEvent.removeMonitor(scrollWheelHandler)
         }
         
+        if let flagsChangedHandler = self.flagsChangedHandler {
+            NSEvent.removeMonitor(flagsChangedHandler)
+        }
+        
         view.removeGestureRecognizer(magnifyGestureRecognizer)
         view.removeGestureRecognizer(rollGestureRecognizer)
         
