@@ -30,9 +30,8 @@ open class Material: ParameterGroupDelegate {
         case disabled
         case alpha
         case additive
-//        case subtractive
-//        case multiply
-//        case custom
+        case subtract
+        case custom
     }
     
     public var label: String {
@@ -42,6 +41,42 @@ open class Material: ParameterGroupDelegate {
         }
         label = label.replacingOccurrences(of: ".", with: "")
         return label
+    }
+    
+    public var sourceRGBBlendFactor: MTLBlendFactor = .sourceAlpha {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
+    }
+
+    public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
+    }
+
+    public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
+    }
+
+    public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
+    }
+
+    public var rgbBlendOperation: MTLBlendOperation = .add {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
+    }
+
+    public var alphaBlendOperation: MTLBlendOperation = .add {
+        didSet {
+            pipelineNeedsUpdate = true
+        }
     }
     
     var externalUniformBuffers: Set<UniformBuffer> = []
@@ -65,6 +100,7 @@ open class Material: ParameterGroupDelegate {
             delegate?.updated(material: self)
         }
     }
+    var pipelineNeedsUpdate = true
     
     public var context: Context? {
         didSet {
@@ -77,7 +113,7 @@ open class Material: ParameterGroupDelegate {
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
-                setupPipeline()
+                setupBlending()
             }
         }
     }
@@ -130,6 +166,36 @@ open class Material: ParameterGroupDelegate {
         depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
         guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
         depthStencilState = state
+    }
+    
+    open func setupBlending() {
+        switch blending {
+        case .alpha:
+            sourceRGBBlendFactor = .sourceAlpha
+            sourceAlphaBlendFactor = .sourceAlpha
+            destinationRGBBlendFactor = .oneMinusSourceAlpha
+            destinationAlphaBlendFactor = .oneMinusSourceAlpha
+            rgbBlendOperation = .add
+            alphaBlendOperation = .add
+        case .additive:
+            sourceRGBBlendFactor = .sourceAlpha
+            sourceAlphaBlendFactor = .one
+            destinationRGBBlendFactor = .one
+            destinationAlphaBlendFactor = .one
+            rgbBlendOperation = .add
+            alphaBlendOperation = .add
+        case .subtract:
+            sourceRGBBlendFactor = .sourceAlpha
+            sourceAlphaBlendFactor = .sourceAlpha
+            destinationRGBBlendFactor = .oneMinusBlendColor
+            destinationAlphaBlendFactor = .oneMinusSourceAlpha
+            rgbBlendOperation = .reverseSubtract
+            alphaBlendOperation = .add
+        case .disabled:
+            break
+        case .custom:
+            break
+        }
     }
     
     open func setupPipeline() {
@@ -191,30 +257,28 @@ open class Material: ParameterGroupDelegate {
         let fragment = fragment.isEmpty ? label.camelCase + "Fragment" : fragment
         
         do {
-            switch blending {
-            case .alpha:
-                return try makeAlphaRenderPipeline(
-                    library: library,
-                    vertex: vertex,
-                    fragment: fragment,
-                    label: label.titleCase,
-                    context: context
-                )
-            case .additive:
-                return try makeAdditiveRenderPipeline(
-                    library: library,
-                    vertex: vertex,
-                    fragment: fragment,
-                    label: label.titleCase,
-                    context: context
-                )
-            case .disabled:
+            if blending == .disabled {
                 return try makeRenderPipeline(
                     library: library,
                     vertex: vertex,
                     fragment: fragment,
                     label: label.titleCase,
                     context: context
+                )
+            }
+            else {
+                return try makeRenderPipeline(
+                    library: library,
+                    vertex: vertex,
+                    fragment: fragment,
+                    label: label.titleCase,
+                    context: context,
+                    sourceRGBBlendFactor: sourceRGBBlendFactor,
+                    sourceAlphaBlendFactor: sourceAlphaBlendFactor,
+                    destinationRGBBlendFactor: destinationRGBBlendFactor,
+                    destinationAlphaBlendFactor: destinationAlphaBlendFactor,
+                    rgbBlendOperation: rgbBlendOperation,
+                    alphaBlendOperation: alphaBlendOperation
                 )
             }
         }
@@ -236,7 +300,16 @@ open class Material: ParameterGroupDelegate {
     
     open func update() {
         onUpdate?()
+        updatePipeline()
         updateUniforms()
+    }
+    
+    open func updatePipeline()
+    {
+        if pipelineNeedsUpdate {
+            setupPipeline()
+            pipelineNeedsUpdate = false
+        }
     }
     
     open func updateUniforms() {
