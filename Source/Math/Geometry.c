@@ -123,6 +123,20 @@ bool isClockwise(simd_float2 *polygon, int length) {
     return !signbit(area);
 }
 
+bool rayRayIntersection2(simd_float2 as, simd_float2 ad, simd_float2 bs, simd_float2 bd, simd_float2 *intersection)
+{
+    const float dx = bs.x - as.x;
+    const float dy = bs.y - as.y;
+    const float det = bd.x * ad.y - bd.y * ad.x;
+    const float u = (dy * bd.x - dx * bd.y) / det;
+    const float v = (dy * ad.x - dx * ad.y) / det;
+    if (!isZero(det) && u > 0 && v > 0) {
+        *intersection = as + ad * u;
+        return true;
+    }
+    return false;
+}
+
 bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection)
 {
     float time = 0.0;
