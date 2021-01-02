@@ -100,7 +100,7 @@ extension Renderer {
                 
                 // Setup Textures
                 let desc = MTLTextureDescriptor.texture2DDescriptor(
-                    pixelFormat: .rgba32Float,
+                    pixelFormat: .rgba16Float,
                     width: size,
                     height: size,
                     mipmapped: false
@@ -158,7 +158,7 @@ extension Renderer {
                 
                 // Setup Textures
                 let desc = MTLTextureDescriptor.texture2DDescriptor(
-                    pixelFormat: .rgba32Float,
+                    pixelFormat: .rgba16Float,
                     width: size,
                     height: size,
                     mipmapped: false
@@ -221,7 +221,7 @@ extension Renderer {
                 
                 // Setup Textures
                 let desc = MTLTextureDescriptor.texture2DDescriptor(
-                    pixelFormat: .rgba32Float,
+                    pixelFormat: .rgba16Float,
                     width: size,
                     height: size,
                     mipmapped: false

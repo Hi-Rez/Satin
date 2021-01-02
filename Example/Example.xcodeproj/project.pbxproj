@@ -5868,7 +5868,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -5891,7 +5891,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";

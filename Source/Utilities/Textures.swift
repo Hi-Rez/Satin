@@ -14,6 +14,9 @@ import AppKit
 import UIKit
 #endif
 
+import ImageIO
+import CoreGraphics
+
 public func makeCubeTexture(_ context: Context, _ urls: [URL], _ mipmapped: Bool = true) -> MTLTexture? {
     assert(urls.count == 6, "Please provide 6 images to create a cube texture")
     
@@ -105,4 +108,52 @@ public func loadImage(url: URL) -> CGImage? {
     }
     return uiImage.cgImage
     #endif
+}
+
+
+public func loadHDR(_ context: Context, _ url: URL) -> MTLTexture? {
+    
+    let cfURLString = url.path as CFString
+    guard let cfURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, cfURLString, CFURLPathStyle.cfurlposixPathStyle, false) else {
+        fatalError("Failed to create CFURL from: \(url.path)")
+    }
+    guard let cgImageSource = CGImageSourceCreateWithURL(cfURL, nil) else {
+        fatalError("Failed to create CGImageSource")
+    }
+    guard let cgImage = CGImageSourceCreateImageAtIndex(cgImageSource, 0, nil) else {
+        fatalError("Failed to create CGImage")
+    }
+    
+    print(cgImage.width)
+    print(cgImage.height)
+    print(cgImage.bitsPerComponent)
+    print(cgImage.bytesPerRow)
+    print(cgImage.byteOrderInfo)
+    
+    guard let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearSRGB) else { return nil }
+    let bitmapInfo = CGImageAlphaInfo.noneSkipLast.rawValue | CGBitmapInfo.floatComponents.rawValue | CGImageByteOrderInfo.order16Little.rawValue
+    guard let bitmapContext = CGContext(data: nil,
+                                        width: cgImage.width,
+                                        height: cgImage.height,
+                                        bitsPerComponent: cgImage.bitsPerComponent,
+                                        bytesPerRow: cgImage.width * 2 * 4,
+                                        space: colorSpace,
+                                        bitmapInfo: bitmapInfo) else { return nil }
+    
+    bitmapContext.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
+    
+    let descriptor = MTLTextureDescriptor()
+    descriptor.pixelFormat = .rgba16Float
+    descriptor.width = cgImage.width
+    descriptor.height = cgImage.height
+    descriptor.depth = 1
+    descriptor.usage = .shaderRead
+    descriptor.resourceOptions = .storageModeShared
+    descriptor.sampleCount = 1
+    descriptor.textureType = .type2D
+    
+    guard let texture = context.device.makeTexture(descriptor: descriptor) else { return nil }
+    texture.replace(region: MTLRegionMake2D(0, 0, cgImage.width, cgImage.height), mipmapLevel: 0, withBytes: bitmapContext.data!, bytesPerRow: cgImage.width * 2 * 4)
+    
+    return texture
 }

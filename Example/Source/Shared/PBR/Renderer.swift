@@ -176,21 +176,21 @@ class Renderer: Forge.Renderer {
     var hdriTexture: MTLTexture?
     
     lazy var hdrCubemapTexture: MTLTexture? = {
-        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 512, mipmapped: true)
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba16Float, size: 512, mipmapped: true)
         let texture = device.makeTexture(descriptor: cubeDesc)
         texture?.label = "Cubemap"
         return texture
     }()
     
     lazy var diffuseCubeTexture: MTLTexture? = {
-        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 64, mipmapped: true)
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba16Float, size: 64, mipmapped: true)
         let texture = device.makeTexture(descriptor: cubeDesc)
         texture?.label = "Diffuse"
         return texture
     }()
     
     lazy var specularCubeTexture: MTLTexture? = {
-        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba32Float, size: 512, mipmapped: true)
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba16Float, size: 512, mipmapped: true)
         let texture = device.makeTexture(descriptor: cubeDesc)
         texture?.label = "Specular"
         return texture
@@ -221,26 +221,8 @@ class Renderer: Forge.Renderer {
     }
     
     func loadHdri() {
-        do {
-            let filename = "stone_alley_03_2k.exr"
-            if let image = loadImage(url: texturesURL.appendingPathComponent(filename)) {
-                let w = image.width
-                let h = image.height
-                
-                print("Width: \(w)")
-                print("Height: \(h)")
-                print("bitsPerPixel: \(image.bitsPerPixel)")
-                print("bitsPerComponent: \(image.bitsPerComponent)")
-                
-                let loader = MTKTextureLoader(device: device)
-                do {
-                    hdriTexture = try loader.newTexture(cgImage: image, options: nil)
-                }
-            }
-        }
-        catch {
-            print(error)
-        }
+        let filename = "venice_sunset_2k.hdr"
+        hdriTexture = loadHDR(context, texturesURL.appendingPathComponent(filename))
     }
     
     override func update() {
@@ -264,10 +246,7 @@ class Renderer: Forge.Renderer {
     
     #if os(macOS)
     func openEditor() {
-        if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
-            NSWorkspace.shared.openFile(assetsURL.path, withApplication: editorPath)
-        }
-        else {
+        if !_openEditor() {
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.allowsMultipleSelection = false
@@ -277,12 +256,20 @@ class Renderer: Forge.Renderer {
                     if let editorUrl = openPanel.url {
                         let editorPath = editorUrl.path
                         UserDefaults.standard.set(editorPath, forKey: "Editor")
-                        NSWorkspace.shared.openFile(self.assetsURL.path, withApplication: editorPath)
+                        _ = _openEditor()
                     }
                 }
                 openPanel.close()
             })
         }
+    }
+    
+    func _openEditor() -> Bool{
+        if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
+            NSWorkspace.shared.open([assetsURL], withApplicationAt: URL(fileURLWithPath: editorPath), configuration: NSWorkspace.OpenConfiguration(), completionHandler: nil)
+            return true
+        }
+        return false
     }
     
     override func keyDown(with event: NSEvent) {
