@@ -16,7 +16,7 @@ open class Camera: Object
     public var viewDirection: simd_float3
     {
         let q = simd_quatf(worldMatrix)
-        return simd_matrix3x3(q) * simd_make_float3(0.0, 0.0, -1.0)
+        return simd_normalize(simd_matrix3x3(q) * simd_make_float3(0.0, 0.0, -1.0))
     }
     
     public var viewMatrix: matrix_float4x4
