@@ -323,6 +323,11 @@ open class CameraController: Codable {
         #endif
     }
     
+    open func resize(_ size: (width: Float, height: Float))
+    {
+        
+    }
+    
     deinit {
         disable()
         view = nil

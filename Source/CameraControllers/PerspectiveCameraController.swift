@@ -293,6 +293,12 @@ open class PerspectiveCameraController: CameraController {
         target.position = target.position + simd_make_float3(target.upDirection * translationVelocity.y)
     }
     
+    open override func resize(_ size: (width: Float, height: Float)) {
+        if let camera = self.camera {
+            camera.aspect = size.width / size.height
+        }
+    }
+    
     #if os(macOS)
     
     // MARK: - Mouse

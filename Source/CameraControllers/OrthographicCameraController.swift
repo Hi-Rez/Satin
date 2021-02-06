@@ -15,10 +15,7 @@ open class OrthographicCameraController: CameraController {
         camera = try values.decode(OrthographicCamera.self, forKey: .camera)
         defaultPosition = try values.decode(simd_float3.self, forKey: .defaultPosition)
         defaultOrientation = try values.decode(simd_quatf.self, forKey: .defaultOrientation)
-        defaultLeft = try values.decode(Float.self, forKey: .defaultLeft)
-        defaultRight = try values.decode(Float.self, forKey: .defaultRight)
-        defaultTop = try values.decode(Float.self, forKey: .defaultTop)
-        defaultBottom = try values.decode(Float.self, forKey: .defaultBottom)
+        defaultZoom = try values.decode(Float.self, forKey: .defaultZoom)
         setup()
     }
     
@@ -28,10 +25,7 @@ open class OrthographicCameraController: CameraController {
         try container.encode(camera, forKey: .camera)
         try container.encode(defaultPosition, forKey: .defaultPosition)
         try container.encode(defaultOrientation, forKey: .defaultOrientation)
-        try container.encode(defaultLeft, forKey: .defaultLeft)
-        try container.encode(defaultRight, forKey: .defaultRight)
-        try container.encode(defaultTop, forKey: .defaultTop)
-        try container.encode(defaultBottom, forKey: .defaultBottom)
+        try container.encode(defaultZoom, forKey: .defaultZoom)
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -39,57 +33,57 @@ open class OrthographicCameraController: CameraController {
         case defaultPosition
         case defaultOrientation
         case modifierFlags
-        case defaultLeft
-        case defaultRight
-        case defaultTop
-        case defaultBottom
+        case defaultZoom
     }
        
     public var camera: OrthographicCamera?
     
     open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
     open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
-    open var defaultLeft: Float = 0
-    open var defaultRight: Float = 0
-    open var defaultTop: Float = 0
-    open var defaultBottom: Float = 0
+
+    var defaultZoom: Float
+    var zoomDelta: Float
+    var panDelta = simd_make_float2(0.0, 0.0)
     
-    public init(camera: OrthographicCamera, view: MTKView, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
-        super.init(view: view)
-        
+    public init(camera: OrthographicCamera, view: MTKView, defaultZoom: Float = 0.5, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
         self.camera = camera
-        
-        defaultLeft = camera.left
-        defaultRight = camera.right
-        defaultTop = camera.top
-        defaultBottom = camera.bottom
-                
+        self.zoomDelta = defaultZoom
+        self.defaultZoom = defaultZoom
         self.defaultPosition = defaultPosition
         self.defaultOrientation = defaultOrientation
         
+        super.init(view: view)
+
+        setupCamera()
         setup()
     }
     
-    public init(camera: OrthographicCamera, view: MTKView) {
+    public init(camera: OrthographicCamera, view: MTKView, defaultZoom: Float = 0.5) {
+        self.camera = camera
+        self.zoomDelta = defaultZoom
+        self.defaultZoom = defaultZoom
+        self.defaultPosition = camera.position
+        self.defaultOrientation = camera.orientation
+        
         super.init(view: view)
         
-        self.camera = camera
-        
-        defaultLeft = camera.left
-        defaultRight = camera.right
-        defaultTop = camera.top
-        defaultBottom = camera.bottom
-        
-        defaultPosition = camera.position
-        defaultOrientation = camera.orientation
-        
+        setupCamera()
         setup()
+    }
+    
+    func setupCamera()
+    {
+        guard let camera = self.camera, let view = self.view else { return }
+        let hw = Float(view.drawableSize.width) * defaultZoom
+        let hh = Float(view.drawableSize.height) * defaultZoom
+        camera.update(left: -hw, right: hw, bottom: -hh, top: hh, near: camera.near, far: camera.far)
     }
     
     func setup() {
         guard let camera = self.camera else { return }
         camera.orientation = defaultOrientation
         camera.position = defaultPosition
+        
         enable()
     }
     
@@ -102,6 +96,7 @@ open class OrthographicCameraController: CameraController {
         let deltaX = deltaX * cameraWidth
         let deltaY = deltaY * cameraHeight
         
+        panDelta += [deltaX, deltaY]
 //        camera.left -= deltaX
 //        camera.right -= deltaX
 //
@@ -317,6 +312,17 @@ open class OrthographicCameraController: CameraController {
     
     #endif
     
+    override open func resize(_ size: (width: Float, height: Float)) {
+        guard let camera = self.camera, let view = self.view else { return }
+        
+        let cameraWidth = abs(camera.right - camera.left)
+        zoomDelta = cameraWidth / Float(2.0 * view.drawableSize.width)
+            
+        let hw = size.width * zoomDelta
+        let hh = size.height * zoomDelta
+        self.camera?.update(left: -hw, right: hw, bottom: -hh, top: hh, near: camera.near, far: camera.far)
+    }
+    
     override open func reset() {
         if enabled {
             DispatchQueue.main.async { [unowned self] in
@@ -324,10 +330,10 @@ open class OrthographicCameraController: CameraController {
                 
                 guard let camera = self.camera else { return }
                 
-                camera.left = defaultLeft
-                camera.right = defaultRight
-                camera.top = defaultTop
-                camera.bottom = defaultBottom
+                panDelta = [0.0, 0.0]
+                zoomDelta = defaultZoom
+                
+                setupCamera()
                 
                 camera.orientation = defaultOrientation
                 camera.position = defaultPosition

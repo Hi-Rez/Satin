@@ -215,20 +215,22 @@ void computeNormalsOfGeometryData(GeometryData *data) {
             uint32_t i1 = data->indexData[i].i1;
             uint32_t i2 = data->indexData[i].i2;
             
-            Vertex *v0 = &data->vertexData[i0];
-            Vertex *v1 = &data->vertexData[i1];
-            Vertex *v2 = &data->vertexData[i2];
-            
-            simd_float3 p0 = simd_make_float3(v0->position);
-            simd_float3 p1 = simd_make_float3(v1->position);
-            simd_float3 p2 = simd_make_float3(v2->position);
-                        
-            simd_float3 normal = simd_cross(p1 - p0, p2 - p0);
-            if(simd_length(normal) > 0) {
-                v0->normal += normal;
-                v1->normal += normal;
-                v2->normal += normal;
-            }
+//            if(i0 < data->vertexCount && i1 < data->vertexCount && i2 < data->vertexCount) {
+                Vertex *v0 = &data->vertexData[i0];
+                Vertex *v1 = &data->vertexData[i1];
+                Vertex *v2 = &data->vertexData[i2];
+                
+                simd_float3 p0 = simd_make_float3(v0->position);
+                simd_float3 p1 = simd_make_float3(v1->position);
+                simd_float3 p2 = simd_make_float3(v2->position);
+                            
+                simd_float3 normal = simd_cross(p1 - p0, p2 - p0);
+                if(simd_length(normal) > 0) {
+                    v0->normal += normal;
+                    v1->normal += normal;
+                    v2->normal += normal;
+                }
+//            }
         }
         
         count = data->vertexCount;
