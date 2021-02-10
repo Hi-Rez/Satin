@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol FileWatcherDelegate: AnyObject {
+    func updated(watcher: FileWatcher, filePath: String)
+}
+
 open class FileWatcher
 {
     public var timeInterval: TimeInterval = 1.0
@@ -22,6 +26,7 @@ open class FileWatcher
     public var timer: Timer?
     var lastModifiedDate: Date?
     public var onUpdate: (() -> ())?
+    public weak var delegate: FileWatcherDelegate?
 
     public init(filePath: String, timeInterval: TimeInterval = 1.0)
     {
@@ -60,6 +65,7 @@ open class FileWatcher
                     {
                         lastModifiedDate = current
                         onUpdate?()
+                        delegate?.updated(watcher: self, filePath: filePath)
                     }
                 }
             }
