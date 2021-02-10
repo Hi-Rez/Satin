@@ -1,8 +1,8 @@
-#include "hsv2rgb.metal"
-#include "rgb2hsv.metal"
-#include "bezier.metal"
-#include "cubicSmooth.metal"
-#include "mix.metal"
+#include "Hsv2rgb.metal"
+#include "Rgb2hsv.metal"
+#include "Bezier.metal"
+#include "CubicSmooth.metal"
+#include "Mix.metal"
 
 // https://sighack.com/post/procedural-color-algorithms-hsb-vs-ryb
 float3 ryb2rgb(float3 c) { return hsv2rgb(float3(pow(c.x, 1.6), c.yz)); }

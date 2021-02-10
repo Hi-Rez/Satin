@@ -1,4 +1,4 @@
-#include "quadratic.metal"
+#include "Quadratic.metal"
 
 float3 raySphereIntersect(float3 orig, float3 dir, float radius) {
     float3 solution = float3(0.0, 0.0, -1.0);
