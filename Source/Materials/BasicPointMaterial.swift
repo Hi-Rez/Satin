@@ -10,7 +10,7 @@ import simd
 
 open class BasicPointMaterial: Material {
     public var color = Float4Parameter("Color", .colorpicker)
-    public var pointSize = FloatParameter("Point Size", 2, .inputfield)
+    public var pointSize = FloatParameter("Point Size", 2, 0, 64, .slider)
 
     public init(_ color: simd_float4 = simd_float4(repeating: 1.0), _ size: Float = 2.0, _ blending: Blending = .alpha) {
         super.init()
