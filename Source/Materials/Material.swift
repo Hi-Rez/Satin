@@ -100,6 +100,7 @@ open class Material: ParameterGroupDelegate {
             delegate?.updated(material: self)
         }
     }
+
     var pipelineNeedsUpdate = true
     
     public var context: Context? {
@@ -304,8 +305,7 @@ open class Material: ParameterGroupDelegate {
         updateUniforms()
     }
     
-    open func updatePipeline()
-    {
+    open func updatePipeline() {
         if pipelineNeedsUpdate {
             setupPipeline()
             pipelineNeedsUpdate = false

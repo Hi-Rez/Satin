@@ -173,19 +173,23 @@ open class CapsuleGeometry: Geometry {
                 let z = radius * sinPhi
                 
                 var position: simd_float4
+                var normal: simd_float3
                 switch axis {
                 case .x:
                     position = simd_make_float4(y - halfHeight, z, x, 1.0)
+                    normal = simd_make_float3(0, z, x)
                 case .y:
                     position = simd_make_float4(x, y - halfHeight, z, 1.0)
+                    normal = simd_make_float3(x, 0, z)
                 case .z:
                     position = simd_make_float4(z, x, y - halfHeight, 1.0)
+                    normal = simd_make_float3(z, x, 0)
                 }
                 
                 vertexData.append(
                     Vertex(
                         position: position,
-                        normal: normalize(simd_make_float3(x, 0.0, z)),
+                        normal: normalize(normal),
                         uv: simd_make_float2(pf / phif, map(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl))
                     )
                 )

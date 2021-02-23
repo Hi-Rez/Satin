@@ -51,7 +51,7 @@ open class ParameterGroup: Codable {
         delegate?.cleared(group: self)
     }
 
-    public func setFrom(_ incomingParams: ParameterGroup) {
+    public func setFrom(_ incomingParams: ParameterGroup, setValues: Bool = false, setOptions: Bool = true) {
         var order: [String] = []
         for param in incomingParams.params {
             order.append(param.label)
@@ -76,7 +76,7 @@ open class ParameterGroup: Codable {
 
         for key in commonKeys {
             if let inParam = incomingParams.paramsMap[key] {
-                setParameterFrom(param: inParam, setValue: false, setOptions: true, append: false)
+                setParameterFrom(param: inParam, setValue: setValues, setOptions: setOptions, append: false)
             }
         }
 
