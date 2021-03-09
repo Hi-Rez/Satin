@@ -42,7 +42,6 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 	const float3 worldPosition = in.worldPosition;
 	const float3 cameraPosition = in.cameraPosition;
 	const float3 view = normalize( cameraPosition - worldPosition );
-	const float2 uv = in.uv;
 	const float3 normal = normalize( in.normal ); //getNormalFromMap( normalTex, s, uv, normalize( in.normal ), worldPosition );
 	const float3 reflection = reflect( -view, normal );
 

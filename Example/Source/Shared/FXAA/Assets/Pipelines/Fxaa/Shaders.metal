@@ -34,10 +34,10 @@ fragment float4 fxaaFragment( CustomVertexData in [[stage_in]],
 
     const float2 rcpRes = uniforms.inverseResolution;
 
-    const float3 rgbNW = renderTex.sample(s, in.uv, int2(-1,-1)).xyz;
-    const float3 rgbNE = renderTex.sample(s, in.uv, int2(1,-1)).xyz;
-    const float3 rgbSW = renderTex.sample(s, in.uv, int2(-1,1)).xyz;
-    const float3 rgbSE = renderTex.sample(s, in.uv, int2(-1,-1)).xyz;
+    const float3 rgbNW = renderTex.sample(s, uv, int2(-1,-1)).xyz;
+    const float3 rgbNE = renderTex.sample(s, uv, int2(1,-1)).xyz;
+    const float3 rgbSW = renderTex.sample(s, uv, int2(-1,1)).xyz;
+    const float3 rgbSE = renderTex.sample(s, uv, int2(-1,-1)).xyz;
     const float3 rgbM  = renderTex.sample(s, uv).xyz;
 
     const float3 luma = float3(0.299, 0.587, 0.114);

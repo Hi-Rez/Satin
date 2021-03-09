@@ -112,7 +112,6 @@ public func loadImage(url: URL) -> CGImage? {
 
 
 public func loadHDR(_ context: Context, _ url: URL) -> MTLTexture? {
-    
     let cfURLString = url.path as CFString
     guard let cfURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, cfURLString, CFURLPathStyle.cfurlposixPathStyle, false) else {
         fatalError("Failed to create CFURL from: \(url.path)")
@@ -124,11 +123,11 @@ public func loadHDR(_ context: Context, _ url: URL) -> MTLTexture? {
         fatalError("Failed to create CGImage")
     }
     
-    print(cgImage.width)
-    print(cgImage.height)
-    print(cgImage.bitsPerComponent)
-    print(cgImage.bytesPerRow)
-    print(cgImage.byteOrderInfo)
+//    print(cgImage.width)
+//    print(cgImage.height)
+//    print(cgImage.bitsPerComponent)
+//    print(cgImage.bytesPerRow)
+//    print(cgImage.byteOrderInfo)
     
     guard let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearSRGB) else { return nil }
     let bitmapInfo = CGImageAlphaInfo.noneSkipLast.rawValue | CGBitmapInfo.floatComponents.rawValue | CGImageByteOrderInfo.order16Little.rawValue
@@ -148,7 +147,7 @@ public func loadHDR(_ context: Context, _ url: URL) -> MTLTexture? {
     descriptor.height = cgImage.height
     descriptor.depth = 1
     descriptor.usage = .shaderRead
-    descriptor.resourceOptions = .storageModeShared
+    descriptor.resourceOptions = .storageModeManaged
     descriptor.sampleCount = 1
     descriptor.textureType = .type2D
     
