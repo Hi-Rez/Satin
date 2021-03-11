@@ -50,6 +50,61 @@ open class ParameterGroup: Codable {
         paramsMap = [:]
         delegate?.cleared(group: self)
     }
+    
+    public func copy(_ incomingParams: ParameterGroup, setValues: Bool = true, setOptions: Bool = true) {
+        clear()
+        self.label = incomingParams.label
+        for param in incomingParams.params {
+            let label = param.label
+            if let p = param as? FloatParameter {
+                append(FloatParameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? Float2Parameter {
+                append(Float2Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? Float3Parameter {
+                append(Float3Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? PackedFloat3Parameter {
+                append(PackedFloat3Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? Float4Parameter {
+                append(Float4Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? IntParameter {
+                append(IntParameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? Int2Parameter {
+                append(Int2Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? Int3Parameter {
+                append(Int3Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? DoubleParameter {
+                append(DoubleParameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? BoolParameter {
+                append(BoolParameter(label, p.value, p.controlType))
+            }
+            else if let p = param as? StringParameter {
+                append(StringParameter(label, p.value, p.options, p.controlType))
+            }
+            else if let p = param as? UInt32Parameter {
+                append(UInt32Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
+            else if let p = param as? FileParameter {
+                let fp = FileParameter(label, p.value, p.allowedTypes, p.controlType)
+                fp.recents = p.recents
+                append(fp)
+            }
+        }
+    }
+    
+    public func clone() -> ParameterGroup {
+        let copy = ParameterGroup()
+        copy.copy(self)
+        return copy
+    }
 
     public func setFrom(_ incomingParams: ParameterGroup, setValues: Bool = false, setOptions: Bool = true) {
         var order: [String] = []
