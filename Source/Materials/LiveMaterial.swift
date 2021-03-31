@@ -57,7 +57,7 @@ open class LiveMaterial: Material {
                 return source
             }
             catch {
-                print(error)
+                print("\(label) Material: \(error.localizedDescription)")
             }
             return nil
         }

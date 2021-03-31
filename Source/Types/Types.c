@@ -302,9 +302,24 @@ void deindexGeometryData( GeometryData *dest, GeometryData *src )
         Vertex v0 = src->vertexData[t.i0];
         Vertex v1 = src->vertexData[t.i1];
         Vertex v2 = src->vertexData[t.i2];
-        vertices[vertexIndex++] = v0;
-        vertices[vertexIndex++] = v1;
-        vertices[vertexIndex++] = v2;
+        
+        vertices[vertexIndex].position = v0.position;
+        vertices[vertexIndex].normal = v0.normal;
+        vertices[vertexIndex].uv = v0.uv;
+        
+        vertexIndex += 1;
+        
+        vertices[vertexIndex].position = v1.position;
+        vertices[vertexIndex].normal = v1.normal;
+        vertices[vertexIndex].uv = v1.uv;
+        
+        vertexIndex += 1;
+        
+        vertices[vertexIndex].position = v2.position;
+        vertices[vertexIndex].normal = v2.normal;
+        vertices[vertexIndex].uv = v2.uv;
+        
+        vertexIndex += 1;
     }
     
     dest->indexCount = 0;

@@ -120,8 +120,9 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
 
     for (int i = 0; i < vertices; i++) {
         const simd_float4 p = vtx[i].position;
-        vtx[i].normal = simd_normalize(simd_make_float3(p.x, p.y, p.z));
-        vtx[i].uv = simd_make_float2((atan2(p.x, p.z) + M_PI) / (2.0 * M_PI), acos(p.y) / M_PI);
+        const simd_float3 n = simd_normalize(simd_make_float3(p.x, p.y, p.z));
+        vtx[i].normal = n;
+        vtx[i].uv = simd_make_float2((atan2(n.x, n.z) + M_PI) / (2.0 * M_PI), acos(n.y) / M_PI);
     }
 
     return (GeometryData){

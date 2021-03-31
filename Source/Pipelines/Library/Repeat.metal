@@ -1,5 +1,10 @@
 #include "Pi.metal"
 
+float3 gmod( float3 x, float3 y )
+{
+    return x - y * floor( x / y );
+}
+
 float2 gmod( float2 x, float2 y )
 {
     return x - y * floor( x / y );
@@ -8,6 +13,13 @@ float2 gmod( float2 x, float2 y )
 float gmod( float x, float y )
 {
     return x - y * floor( x / y );
+}
+
+int3 repeat( thread float3 &uv, float3 div )
+{
+    int3 cells = int3( floor( uv * ( 1.0 / div ) ) );
+    uv = gmod( uv, div ) / div;
+    return cells;
 }
 
 int2 repeat( thread float2 &uv, float2 div )

@@ -147,7 +147,11 @@ public func loadHDR(_ context: Context, _ url: URL) -> MTLTexture? {
     descriptor.height = cgImage.height
     descriptor.depth = 1
     descriptor.usage = .shaderRead
+#if os(macOS)
     descriptor.resourceOptions = .storageModeManaged
+#elseif os(iOS) || os(tvOS)
+    descriptor.resourceOptions = .storageModeShared
+#endif
     descriptor.sampleCount = 1
     descriptor.textureType = .type2D
     
