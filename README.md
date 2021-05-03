@@ -10,6 +10,8 @@ Satin is a 3D graphics framework (inspired by threejs) that helps designers and 
 
 ## Getting Started
 
+> If you're using a Mac with an **M1 Chip**, you may need to do a new install of Ruby. You can follow [this guide](https://gorails.com/setup/osx/11.0-big-sur) up until "Configuring Git" to do so. 
+
 Install Bundler using:
 
 ```
