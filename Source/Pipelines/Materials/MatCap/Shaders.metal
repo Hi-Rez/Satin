@@ -2,8 +2,6 @@ typedef struct {
     float4 position [[position]];
     float3 eye;
     float3 normal;
-    float2 uv;
-    float pointSize [[point_size]];
 } MatCapVertexData;
 
 vertex MatCapVertexData matCapVertex(Vertex in [[stage_in]],
@@ -14,8 +12,8 @@ vertex MatCapVertexData matCapVertex(Vertex in [[stage_in]],
     const float3 eye = normalize(worldPosition.xyz);
     MatCapVertexData out { .position = vertexUniforms.projectionMatrix * worldPosition,
                            .eye = eye,
-                           .normal = normalize(screenSpaceNormal.xyz),
-                           .uv = in.uv };
+                           .normal = normalize(screenSpaceNormal.xyz)
+    };
     return out;
 }
 
