@@ -120,7 +120,7 @@ open class Material: ParameterGroupDelegate {
     }
     
     public var depthStencilState: MTLDepthStencilState?
-    public var depthCompareFunction: MTLCompareFunction = .less {
+    public var depthCompareFunction: MTLCompareFunction = .greaterEqual {
         didSet {
             if oldValue != depthCompareFunction {
                 setupDepthStencilState()
@@ -136,8 +136,7 @@ open class Material: ParameterGroupDelegate {
         }
     }
     
-    public var depthBias = DepthBias(bias: 0.0, slope: 0.0, clamp: 0.0)
-    
+    public var depthBias: DepthBias?
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
@@ -336,7 +335,9 @@ open class Material: ParameterGroupDelegate {
     open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let depthStencilState = self.depthStencilState else { return }
         renderEncoder.setDepthStencilState(depthStencilState)
-        renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
+        if let depthBias = self.depthBias {
+            renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
+        }
     }
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {

@@ -65,7 +65,7 @@ open class Renderer
     
     public var depthLoadAction: MTLLoadAction = .clear
     public var depthStoreAction: MTLStoreAction = .dontCare
-    public var clearDepth: Double = 1.0
+    public var clearDepth: Double = 0.0
     
     public var updateStencilTexture: Bool = true
     public var stencilTexture: MTLTexture?
