@@ -77,7 +77,6 @@ open class PerspectiveCamera: Camera
             let d = col3.z
             near = d / c
             far = d / (1.0 + c)
-            updateProjectionMatrix = false
         }
     }
     

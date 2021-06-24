@@ -171,3 +171,19 @@ end
 target 'AR-iOS' do
   platform :ios, '13.0'
 end
+
+target 'SatinSceneKit-iOS' do
+    platform :ios, '13.0'
+end
+
+target 'SatinSceneKit-macOS' do
+  platform :osx, '10.15'
+end
+
+target 'SatinSceneKit-tvOS' do
+  platform :tvos, '13.0'
+end
+
+target 'SatinSceneKitAR-iOS' do
+    platform :ios, '13.0'
+end
