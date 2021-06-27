@@ -8,28 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		01063681A0D27C7C925E6947 /* Pods_Cubemap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */; };
-		013246C0AA4FAAC945FE5215 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		034FA9323B107F20BAFE89CB /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		172AEBB1724AA026E08A973B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		013246C0AA4FAAC945FE5215 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		034FA9323B107F20BAFE89CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		172AEBB1724AA026E08A973B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		1CACA5A072823A5E70B2F77C /* Pods_BufferCompute_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09C22978103F4BF87145300A /* Pods_BufferCompute_tvOS.framework */; };
-		1CC812BEDC34D51FCE4642D9 /* Pods_AR_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D3B7B598E3F1E668CABD952 /* Pods_AR_iOS.framework */; };
-		1EAE066DA00134A1DC1CA408 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		1CC812BEDC34D51FCE4642D9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		1EAE066DA00134A1DC1CA408 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		213E711E94D2F005F9E4297A /* Pods_RayMarching_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E12F51B0DEC7236875A6F456 /* Pods_RayMarching_macOS.framework */; };
 		24543155675C62D2F742DF1E /* Pods_Text_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E7CCC62B8ED6E8FF29D804B /* Pods_Text_iOS.framework */; };
 		28EBCDEFD00F5310407DFE85 /* Pods_2D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC478C1FD91C2722DFA2D136 /* Pods_2D_iOS.framework */; };
-		29779AEBCCDDADD923C3CE00 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		2B359BBD132F738E8AD3B4FF /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		29779AEBCCDDADD923C3CE00 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		2B359BBD132F738E8AD3B4FF /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		368F6C6B942AED5368A40DCF /* Pods_Obj_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */; };
-		4113FEBC49A03D2E3ABDC99B /* Pods_3D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 583F27BA472F338C065F422C /* Pods_3D_iOS.framework */; };
-		412C5F430898DA02B35A8A2A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		4113FEBC49A03D2E3ABDC99B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		412C5F430898DA02B35A8A2A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		41812B71EC74AC90905060D2 /* Pods_PBR_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 629ED45B52DEBAA870C68904 /* Pods_PBR_iOS.framework */; };
-		42B0A666096A2EEC0EAC2F6B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		41DADD92FB540FEC518542C8 /* Pods_3D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AFD415F136FD818931DD1E /* Pods_3D_tvOS.framework */; };
+		42B0A666096A2EEC0EAC2F6B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		46357BD0BF0D4703E8A1B1C9 /* Pods_SatinSceneKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FF1416864E9BEA68CD33BD /* Pods_SatinSceneKit_iOS.framework */; };
 		490E1AF444B480CE1CED5E95 /* Pods_Text_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF3FB5D7A3C9A43BB1A57A92 /* Pods_Text_macOS.framework */; };
-		4A2657C6B59E878F1CF14921 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		4A2657C6B59E878F1CF14921 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		4E6EDF2FB163775D6AC9FF96 /* Pods_AR_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 515C5B1ACCE286B6A0582CCD /* Pods_AR_iOS.framework */; };
 		529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */; };
 		5324DC1FEF54FE6C626D0441 /* Pods_TextureCompute_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 205563ABDD56CC0194F44B5B /* Pods_TextureCompute_macOS.framework */; };
 		5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */; };
-		629B01020CECDA195F303BBC /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		629B01020CECDA195F303BBC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		63C96F40464FB4FB8CC44948 /* Pods_ExtrudedText_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 695459B55DD3B58DB2DFE2A8 /* Pods_ExtrudedText_iOS.framework */; };
 		65AC70CE017B44BD3DDAE23D /* Pods_BufferCompute_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6701E8FF8344B814408F7601 /* Pods_BufferCompute_macOS.framework */; };
 		66E6788D243EC73A0070B294 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
@@ -42,40 +45,41 @@
 		677F7AC8C1B844E0CD49D1C3 /* Pods_PBR_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E027B3C8332DE47CE884ADE6 /* Pods_PBR_macOS.framework */; };
 		6C80C75807CC010D3085DE8F /* Pods_Cubemap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECB3D992C9FC269CE687C120 /* Pods_Cubemap_iOS.framework */; };
 		6CD9A841E498F74B318B2044 /* Pods_TextureCompute_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C23C7743AA624B4CC30ED52 /* Pods_TextureCompute_iOS.framework */; };
-		6E0B884D21D8DB116B132856 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		6E0B884D21D8DB116B132856 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		708B93CD6FAB78B4CA8CBE56 /* Pods_Geometry_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE23C2869846F19BE6C298DE /* Pods_Geometry_macOS.framework */; };
 		7AF55C292BB84D329F4A3D18 /* Pods_DepthMaterial_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075D3B480E5BC21D41119DF8 /* Pods_DepthMaterial_iOS.framework */; };
 		7CA689F662AFA4AD2A398160 /* Pods_Geometry_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */; };
-		80203402C3E1A4C551740786 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		80203402C3E1A4C551740786 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		872D62C2E4A7184C5A3F707B /* Pods_RayMarching_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F0E6B8B30D3C26BAF7E831F /* Pods_RayMarching_tvOS.framework */; };
 		8856521F84CD45D219A53D6E /* Pods_FXAA_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7981F2C80C6136A33C34227 /* Pods_FXAA_macOS.framework */; };
 		9157243EDB018B2DD2ACB521 /* Pods_SatinSceneKitAR_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F5A07B55FDE3A2CED56257 /* Pods_SatinSceneKitAR_iOS.framework */; };
 		91D3E34D6B17AB2EA756B587 /* Pods_Obj_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E4F654A3B2C203B8BD162F /* Pods_Obj_macOS.framework */; };
-		9242AAC1B56D7677A947725C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		9289AB361E42B671E3920892 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		9242AAC1B56D7677A947725C /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		9289AB361E42B671E3920892 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9562006863F7061C8724A0CD /* Pods_LiveCode_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97DB38FBAE96FA623FCD9E9E /* Pods_LiveCode_macOS.framework */; };
-		97375F1B270BCC17B718BBBE /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		97375F1B270BCC17B718BBBE /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		993B7398B4892D0D24C63D85 /* Pods_Camera_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32F1725F2257B9CB84496951 /* Pods_Camera_iOS.framework */; };
-		99944A954CFDF4CA65C627CA /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		99944A954CFDF4CA65C627CA /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9B23FD1CBC60AD46CF79E58A /* Pods_SatinSceneKit_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF6873015C3B24A45186C6D3 /* Pods_SatinSceneKit_macOS.framework */; };
 		9B4DBE9591B397351E1304FB /* Pods_ExtrudedText_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C6DF26B044BE2C98806250 /* Pods_ExtrudedText_macOS.framework */; };
 		9F04983EDFBABD9BB6FBF4D1 /* Pods_Geometry_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */; };
-		A038ED9DA76DB20E878EFB35 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		A038ED9DA76DB20E878EFB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		A2C09A7672E513793DA20A3E /* Pods_Text_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A72A74863D8AA9BE95A4FB8A /* Pods_Text_tvOS.framework */; };
-		AA54D3FF36DAE5E69435CC2E /* Pods_3D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC086026CEEED47645E60F02 /* Pods_3D_tvOS.framework */; };
+		AA54D3FF36DAE5E69435CC2E /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		AC013DB9A709562D831C1F64 /* Pods_BufferCompute_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2361E1A2834033E4A34FD40 /* Pods_BufferCompute_iOS.framework */; };
 		AF5FBF9EEF46D882E23BD422 /* Pods_SatinSceneKit_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DB81B06522AB2976D2858F9 /* Pods_SatinSceneKit_tvOS.framework */; };
-		B2B8DE5A736D42B4474D5600 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		B42D5878581C5BAF8C2C96E8 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		B2B8DE5A736D42B4474D5600 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		B42D5878581C5BAF8C2C96E8 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		B4F8357A538D9DFA67BA813B /* Pods_Cubemap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8934F08CC243E05BBD2CD3BE /* Pods_Cubemap_macOS.framework */; };
-		B6630441CDE34AAA12E211F7 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE05C969F72DF68F3140BB5 /* Pods_3D_macOS.framework */; };
-		B6A96F3AB029F68F44F41A20 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		B6630441CDE34AAA12E211F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		B6A96F3AB029F68F44F41A20 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F7C1F46CC39AAFA8C7D2B0 /* Pods_MatCap_iOS.framework */; };
 		C0CF7F26AC5EC213F8E69F44 /* Pods_Camera_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E794B61AD21911B3ED0F50E /* Pods_Camera_macOS.framework */; };
 		C3740FB4DB417C46C907A5EF /* Pods_DepthMaterial_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF84C29078A2759FB28D8C6D /* Pods_DepthMaterial_tvOS.framework */; };
 		D700143DFDF0ABBB7ACD6EC6 /* Pods_2D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB5FBE0AA2042A5CF64E2A88 /* Pods_2D_macOS.framework */; };
-		D8E4CB724BDB5D09DE3AEFD9 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		D9AAE82BD14730FF90DCFEC5 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		E076B36BDF43C2AA0C154E49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		E105CC63252BDEA7009EE563 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E105CC67252BDEA7009EE563 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E105CC68252BDEA7009EE563 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
@@ -116,13 +120,26 @@
 		E144FA6624D21FAB0072D456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E144FA6724D21FAB0072D456 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
 		E144FA6F24D21FD90072D456 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144FA2D24D0D5550072D456 /* Renderer.swift */; };
+		E152A9E72688E2B6002EF5B1 /* RayMarchedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152A9E62688E2B6002EF5B1 /* RayMarchedMaterial.swift */; };
+		E152A9EC2688F426002EF5B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
+		E152A9F52688F426002EF5B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
+		E152A9F62688F426002EF5B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E152A9FE2688F457002EF5B1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1EC55EF268786E70097C140 /* Assets */; };
+		E152A9FF2688F45B002EF5B1 /* RayMarchedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152A9E62688E2B6002EF5B1 /* RayMarchedMaterial.swift */; };
+		E152AA002688F45B002EF5B1 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC55D8268785630097C140 /* Renderer.swift */; };
+		E152AA052688F512002EF5B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
+		E152AA072688F512002EF5B1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E152AA082688F512002EF5B1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E152AA092688F512002EF5B1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E152AA0A2688F512002EF5B1 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E152AA0C2688F512002EF5B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
+		E152AA142688F569002EF5B1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1EC55EF268786E70097C140 /* Assets */; };
+		E152AA152688F56D002EF5B1 /* RayMarchedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152A9E62688E2B6002EF5B1 /* RayMarchedMaterial.swift */; };
+		E152AA162688F56D002EF5B1 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC55D8268785630097C140 /* Renderer.swift */; };
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
 		E1653EEE2684F0D90012C97F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
-		E1653EF02684F0D90012C97F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		E1653EF12684F0D90012C97F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		E1653EF22684F0D90012C97F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		E1653EF52684F0D90012C97F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1653EFD2684F1170012C97F /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E11CD0002683EBDD005BEA88 /* Assets */; };
 		E1653EFE2684F11B0012C97F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11CCFFE2683EAD5005BEA88 /* Renderer.swift */; };
@@ -258,6 +275,11 @@
 		E1E7C55324515DA600BD8324 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
 		E1E7C55724515DA600BD8324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1E7C55F24515DB600BD8324 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17B986E2451488100216411 /* Renderer.swift */; };
+		E1EC55DD2687856C0097C140 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E1EC55E62687856C0097C140 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E1EC55E72687856C0097C140 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E1EC55F0268786E70097C140 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1EC55EF268786E70097C140 /* Assets */; };
+		E1EC55F1268787C10097C140 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EC55D8268785630097C140 /* Renderer.swift */; };
 		E1ED688B24A562720029C158 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E1ED689124A562720029C158 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E1ED689224A562720029C158 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
@@ -284,12 +306,13 @@
 		E1FAC0052527E6C9008569F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E1FAC0072527E6C9008569F7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
 		E1FAC05F2527E79A008569F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FABFFC2527E698008569F7 /* Renderer.swift */; };
-		EBB451C7F01049D7FC8B4D7B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		F0CEA7DD0FC0F2AB5822FB64 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		E6CCCA5512C5017DEF88EFB6 /* Pods_RayMarching_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3080AD99C749D82D35211AA /* Pods_RayMarching_iOS.framework */; };
+		EBB451C7F01049D7FC8B4D7B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		F0CEA7DD0FC0F2AB5822FB64 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CE0DB5D38F2571E1F4BABD /* Pods_MatCap_macOS.framework */; };
 		F36F4114CCF20A419289D7AE /* Pods_ExtrudedText_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FBB33F25CEB86E717EB31B7 /* Pods_ExtrudedText_tvOS.framework */; };
-		F4525EB6D2853E367A61EA5F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		F8600421B47B20340EFAD160 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		F4525EB6D2853E367A61EA5F /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		F8600421B47B20340EFAD160 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		F9953B371692605694F6DAB9 /* Pods_Export_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F11BF3C16367ED3603971B7 /* Pods_Export_macOS.framework */; };
 		F9FFD7952CDDB7BC22CC8FCB /* Pods_2D_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */; };
 /* End PBXBuildFile section */
@@ -300,9 +323,11 @@
 		0690847EE93D7C4D49D39CC7 /* Pods-Matcap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-iOS.release.xcconfig"; path = "Target Support Files/Pods-Matcap-iOS/Pods-Matcap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		075232D84B93EBBB28D981C7 /* Pods_Geometry_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geometry_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		075D3B480E5BC21D41119DF8 /* Pods_DepthMaterial_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DepthMaterial_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0814CDA98C1931787B4E1F67 /* Pods-RayMarching-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-RayMarching-tvOS/Pods-RayMarching-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		09C22978103F4BF87145300A /* Pods_BufferCompute_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BufferCompute_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CB5A7A2599206614D2F01F0 /* Pods-Geometry-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Geometry-iOS/Pods-Geometry-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		0E7CCC62B8ED6E8FF29D804B /* Pods_Text_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Text_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F0E6B8B30D3C26BAF7E831F /* Pods_RayMarching_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RayMarching_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MatCap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1609ADC58A5A8C693A2DD42C /* Pods_Geometry_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geometry_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16EC31E8366407F744E978A1 /* Pods-DepthMaterial-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-iOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-iOS/Pods-DepthMaterial-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -323,6 +348,7 @@
 		29EB33822739DE8F28C25695 /* Pods-Obj-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Obj-tvOS/Pods-Obj-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		2A09B1D361CE1826BAFB5A32 /* Pods_2D_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_2D_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B1EF9EC741A27A8D5BBA708 /* Pods-BufferCompute-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BufferCompute-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-BufferCompute-tvOS/Pods-BufferCompute-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		2BB8EFC72521C01D41F85C7A /* Pods-RayMarching-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-tvOS.release.xcconfig"; path = "Target Support Files/Pods-RayMarching-tvOS/Pods-RayMarching-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		2BD220542626ED9752C1993F /* Pods-LiveCode-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiveCode-macOS.debug.xcconfig"; path = "Target Support Files/Pods-LiveCode-macOS/Pods-LiveCode-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2CF6A5EDCC4F9A85D0852CDE /* Pods-Example-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02B1F0B61F07A320EF1211 /* Pods-LiveCode-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LiveCode-macOS.release.xcconfig"; path = "Target Support Files/Pods-LiveCode-macOS/Pods-LiveCode-macOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -336,15 +362,16 @@
 		382280709C12709742CDF920 /* Pods_Cubemap_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE8AA4C9E440280480CE239 /* Pods-PBR-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-iOS.debug.xcconfig"; path = "Target Support Files/Pods-PBR-iOS/Pods-PBR-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		4066A95FFF70C2733839E729 /* Pods-TextureCompute-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-macOS.debug.xcconfig"; path = "Target Support Files/Pods-TextureCompute-macOS/Pods-TextureCompute-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		44E9865DD02C48A01366057F /* Pods-RayMarching-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-iOS.release.xcconfig"; path = "Target Support Files/Pods-RayMarching-iOS/Pods-RayMarching-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		45BEAA3FE448ED3CB0CE2906 /* Pods-PBR-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-macOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-macOS/Pods-PBR-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		4C23C7743AA624B4CC30ED52 /* Pods_TextureCompute_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TextureCompute_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C2D7AFA3F0E0A4F7717FF6F /* Pods-SatinSceneKit-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-iOS.release.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-iOS/Pods-SatinSceneKit-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		4F0A09A1C58285DE24DEBB8B /* Pods-PBR-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-iOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-iOS/Pods-PBR-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		515C5B1ACCE286B6A0582CCD /* Pods_AR_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AR_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		528D8A1A8FE62168A56059D1 /* Pods-Geometry-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-tvOS/Pods-Geometry-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		52F28570AE26C2CC2CEC9213 /* Pods-SatinSceneKit-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-macOS.release.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-macOS/Pods-SatinSceneKit-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		576DCD9208123272EEF6180D /* Pods-MatCap-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-tvOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-tvOS/Pods-MatCap-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		57CA93238F58BC90BDB4B24A /* Pods-Obj-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-macOS.release.xcconfig"; path = "Target Support Files/Pods-Obj-macOS/Pods-Obj-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		583F27BA472F338C065F422C /* Pods_3D_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		629ED45B52DEBAA870C68904 /* Pods_PBR_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PBR_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E67889243EC73A0070B294 /* 3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66E6788C243EC73A0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -360,6 +387,7 @@
 		6701E8FF8344B814408F7601 /* Pods_BufferCompute_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BufferCompute_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67AA03964445E959FFD8C108 /* Pods-Matcap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Matcap-macOS/Pods-Matcap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		682AAF343D45CA554ACB5299 /* Pods-Example-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-macOS.release.xcconfig"; path = "Target Support Files/Pods-Example-macOS/Pods-Example-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		68CE0B3DC9512CBFB3CB14CE /* Pods-RayMarching-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-macOS.release.xcconfig"; path = "Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		6917F7FA959B4DA63E388BBC /* Pods-PBR-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-tvOS.release.xcconfig"; path = "Target Support Files/Pods-PBR-tvOS/Pods-PBR-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		695459B55DD3B58DB2DFE2A8 /* Pods_ExtrudedText_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExtrudedText_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		69CB0CCAB3EBF707632681F2 /* Pods-AR-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR-iOS.debug.xcconfig"; path = "Target Support Files/Pods-AR-iOS/Pods-AR-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -368,11 +396,12 @@
 		74111599CBCCB06145E3D30E /* Pods-DepthMaterial-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-tvOS/Pods-DepthMaterial-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		750B437E2BFE85565D3BFFCF /* Pods-AR-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR-iOS.release.xcconfig"; path = "Target Support Files/Pods-AR-iOS/Pods-AR-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		7535A5B536B5D637C3DF615C /* Pods-2D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.release.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.release.xcconfig"; sourceTree = "<group>"; };
+		7702F593AACCCA80B8B02730 /* Pods-RayMarching-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-macOS.debug.xcconfig"; path = "Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		77258EF57452BDA36F72D8AB /* Pods-FXAA-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FXAA-macOS.debug.xcconfig"; path = "Target Support Files/Pods-FXAA-macOS/Pods-FXAA-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7DABCC5ECA12210B3727C688 /* Pods-TextureCompute-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-iOS.debug.xcconfig"; path = "Target Support Files/Pods-TextureCompute-iOS/Pods-TextureCompute-iOS.debug.xcconfig"; sourceTree = "<group>"; };
-		7EE05C969F72DF68F3140BB5 /* Pods_3D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80980545C11C4C193B17A42F /* Pods-MatCap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		8179099D9F51182D657D3DED /* Pods-SatinSceneKit-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-tvOS/Pods-SatinSceneKit-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		81AFD415F136FD818931DD1E /* Pods_3D_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_3D_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A915D34485E0EA833046C4 /* Pods-MatCap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-macOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-macOS/Pods-MatCap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		86C37369065F9A14669AA518 /* Pods-SatinSceneKit-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-macOS.debug.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-macOS/Pods-SatinSceneKit-macOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -411,6 +440,7 @@
 		B3C1A029FB7D25EAA0A87E82 /* Pods-3D-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-tvOS/Pods-3D-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		B3EC87467C4C58D380CE00DD /* Pods-Cubemap-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		B7981F2C80C6136A33C34227 /* Pods_FXAA_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FXAA_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8D9B3B01D6E500D903A594D /* Pods-RayMarching-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-iOS.debug.xcconfig"; path = "Target Support Files/Pods-RayMarching-iOS/Pods-RayMarching-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		BB19FA97AE8F0B1BEA772294 /* Pods-Text-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Text-tvOS/Pods-Text-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		BE190F9DDFF26F1262F9ADB9 /* Pods-BufferCompute-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BufferCompute-tvOS.release.xcconfig"; path = "Target Support Files/Pods-BufferCompute-tvOS/Pods-BufferCompute-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		BF3FB5D7A3C9A43BB1A57A92 /* Pods_Text_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Text_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -426,6 +456,7 @@
 		CA96995181D74EB7FADCC329 /* Pods-MatCap-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-MatCap-tvOS/Pods-MatCap-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CAC6222D6411B7C57A289397 /* Pods-Text-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Text-tvOS/Pods-Text-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CCC6FAEC3463B2485AD58D58 /* Pods-BufferCompute-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BufferCompute-macOS.debug.xcconfig"; path = "Target Support Files/Pods-BufferCompute-macOS/Pods-BufferCompute-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D3080AD99C749D82D35211AA /* Pods_RayMarching_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RayMarching_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D410958C22CEB31D4B4044CF /* Pods-Matcap-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Matcap-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Matcap-macOS/Pods-Matcap-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D4CD5BF3C42FA0D907E9CCAC /* Pods-SatinSceneKit-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-tvOS.release.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-tvOS/Pods-SatinSceneKit-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		D5722457979AB6BA7D1A53EF /* Pods-SatinSceneKit-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-iOS.debug.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-iOS/Pods-SatinSceneKit-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -453,9 +484,13 @@
 		E129CE21252011E4009B237A /* Renderer+Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Renderer+Background.swift"; sourceTree = "<group>"; };
 		E12EDE9F24A6E1B800E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12EDEB424A6E31B00E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E12F51B0DEC7236875A6F456 /* Pods_RayMarching_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RayMarching_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E144FA2D24D0D5550072D456 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E144FA4124D0D56D0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E144FA6D24D21FAB0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E152A9E62688E2B6002EF5B1 /* RayMarchedMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchedMaterial.swift; sourceTree = "<group>"; };
+		E152A9FC2688F426002EF5B1 /* RayMarching.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RayMarching.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E152AA122688F512002EF5B1 /* RayMarching.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RayMarching.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E160CA4F24876781005D37A4 /* MatCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1653EFB2684F0D90012C97F /* SatinSceneKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinSceneKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1653F112684F46D0012C97F /* SatinSceneKitAR-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SatinSceneKitAR-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -514,6 +549,9 @@
 		E1E69D2924A4713100EDA686 /* DepthMaterial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DepthMaterial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E7C54C24515B8A00BD8324 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E7C55D24515DA600BD8324 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1EC55D8268785630097C140 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E1EC55ED2687856C0097C140 /* RayMarching.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RayMarching.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1EC55EF268786E70097C140 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		E1ED689824A562720029C158 /* DepthMaterial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DepthMaterial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1ED68AB24A568580029C158 /* DepthMaterial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DepthMaterial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F1B30624BAA60C00563923 /* Text.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Text.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -549,12 +587,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				629B01020CECDA195F303BBC /* BuildFile in Frameworks */,
-				F0CEA7DD0FC0F2AB5822FB64 /* BuildFile in Frameworks */,
-				9289AB361E42B671E3920892 /* BuildFile in Frameworks */,
-				B2B8DE5A736D42B4474D5600 /* BuildFile in Frameworks */,
-				B6A96F3AB029F68F44F41A20 /* BuildFile in Frameworks */,
-				B6630441CDE34AAA12E211F7 /* Pods_3D_macOS.framework in Frameworks */,
+				629B01020CECDA195F303BBC /* (null) in Frameworks */,
+				F0CEA7DD0FC0F2AB5822FB64 /* (null) in Frameworks */,
+				9289AB361E42B671E3920892 /* (null) in Frameworks */,
+				B2B8DE5A736D42B4474D5600 /* (null) in Frameworks */,
+				B6A96F3AB029F68F44F41A20 /* (null) in Frameworks */,
+				B6630441CDE34AAA12E211F7 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,12 +600,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A038ED9DA76DB20E878EFB35 /* BuildFile in Frameworks */,
-				B42D5878581C5BAF8C2C96E8 /* BuildFile in Frameworks */,
-				034FA9323B107F20BAFE89CB /* BuildFile in Frameworks */,
-				172AEBB1724AA026E08A973B /* BuildFile in Frameworks */,
-				6E0B884D21D8DB116B132856 /* BuildFile in Frameworks */,
-				4113FEBC49A03D2E3ABDC99B /* Pods_3D_iOS.framework in Frameworks */,
+				A038ED9DA76DB20E878EFB35 /* (null) in Frameworks */,
+				B42D5878581C5BAF8C2C96E8 /* (null) in Frameworks */,
+				034FA9323B107F20BAFE89CB /* (null) in Frameworks */,
+				172AEBB1724AA026E08A973B /* (null) in Frameworks */,
+				6E0B884D21D8DB116B132856 /* (null) in Frameworks */,
+				4113FEBC49A03D2E3ABDC99B /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,10 +613,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29779AEBCCDDADD923C3CE00 /* BuildFile in Frameworks */,
-				9242AAC1B56D7677A947725C /* BuildFile in Frameworks */,
-				4A2657C6B59E878F1CF14921 /* BuildFile in Frameworks */,
-				AA54D3FF36DAE5E69435CC2E /* Pods_3D_tvOS.framework in Frameworks */,
+				29779AEBCCDDADD923C3CE00 /* (null) in Frameworks */,
+				9242AAC1B56D7677A947725C /* (null) in Frameworks */,
+				4A2657C6B59E878F1CF14921 /* (null) in Frameworks */,
+				AA54D3FF36DAE5E69435CC2E /* (null) in Frameworks */,
+				41DADD92FB540FEC518542C8 /* Pods_3D_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,7 +649,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CC812BEDC34D51FCE4642D9 /* Pods_AR_iOS.framework in Frameworks */,
+				1CC812BEDC34D51FCE4642D9 /* (null) in Frameworks */,
+				4E6EDF2FB163775D6AC9FF96 /* Pods_AR_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,12 +686,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E152A9ED2688F426002EF5B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6CCCA5512C5017DEF88EFB6 /* Pods_RayMarching_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E152AA062688F512002EF5B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E152AA072688F512002EF5B1 /* (null) in Frameworks */,
+				E152AA082688F512002EF5B1 /* (null) in Frameworks */,
+				E152AA092688F512002EF5B1 /* (null) in Frameworks */,
+				E152AA0A2688F512002EF5B1 /* (null) in Frameworks */,
+				872D62C2E4A7184C5A3F707B /* Pods_RayMarching_tvOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E160CA4424876781005D37A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8600421B47B20340EFAD160 /* BuildFile in Frameworks */,
-				99944A954CFDF4CA65C627CA /* BuildFile in Frameworks */,
+				F8600421B47B20340EFAD160 /* (null) in Frameworks */,
+				99944A954CFDF4CA65C627CA /* (null) in Frameworks */,
 				BA6485D233B18AB420170270 /* Pods_MatCap_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -684,7 +744,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4525EB6D2853E367A61EA5F /* BuildFile in Frameworks */,
+				F4525EB6D2853E367A61EA5F /* (null) in Frameworks */,
 				368F6C6B942AED5368A40DCF /* Pods_Obj_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -693,7 +753,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E076B36BDF43C2AA0C154E49 /* BuildFile in Frameworks */,
+				E076B36BDF43C2AA0C154E49 /* (null) in Frameworks */,
 				529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -702,7 +762,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97375F1B270BCC17B718BBBE /* BuildFile in Frameworks */,
+				97375F1B270BCC17B718BBBE /* (null) in Frameworks */,
 				91D3E34D6B17AB2EA756B587 /* Pods_Obj_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -719,7 +779,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B359BBD132F738E8AD3B4FF /* BuildFile in Frameworks */,
+				2B359BBD132F738E8AD3B4FF /* (null) in Frameworks */,
 				490E1AF444B480CE1CED5E95 /* Pods_Text_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -760,7 +820,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				412C5F430898DA02B35A8A2A /* BuildFile in Frameworks */,
+				412C5F430898DA02B35A8A2A /* (null) in Frameworks */,
 				B4F8357A538D9DFA67BA813B /* Pods_Cubemap_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -793,7 +853,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9AAE82BD14730FF90DCFEC5 /* BuildFile in Frameworks */,
+				D9AAE82BD14730FF90DCFEC5 /* (null) in Frameworks */,
 				F242E896D2CF37FCD6297CBC /* Pods_MatCap_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -802,8 +862,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E4CB724BDB5D09DE3AEFD9 /* BuildFile in Frameworks */,
-				013246C0AA4FAAC945FE5215 /* BuildFile in Frameworks */,
+				D8E4CB724BDB5D09DE3AEFD9 /* (null) in Frameworks */,
+				013246C0AA4FAAC945FE5215 /* (null) in Frameworks */,
 				5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -836,7 +896,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80203402C3E1A4C551740786 /* BuildFile in Frameworks */,
+				80203402C3E1A4C551740786 /* (null) in Frameworks */,
 				6CD9A841E498F74B318B2044 /* Pods_TextureCompute_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -845,7 +905,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1EAE066DA00134A1DC1CA408 /* BuildFile in Frameworks */,
+				1EAE066DA00134A1DC1CA408 /* (null) in Frameworks */,
 				672AB3029B482367F9111BC2 /* Pods_TextureCompute_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -882,6 +942,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1EC55DE2687856C0097C140 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				213E711E94D2F005F9E4297A /* Pods_RayMarching_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1ED688C24A562720029C158 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -902,7 +970,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42B0A666096A2EEC0EAC2F6B /* BuildFile in Frameworks */,
+				42B0A666096A2EEC0EAC2F6B /* (null) in Frameworks */,
 				24543155675C62D2F742DF1E /* Pods_Text_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -927,7 +995,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBB451C7F01049D7FC8B4D7B /* BuildFile in Frameworks */,
+				EBB451C7F01049D7FC8B4D7B /* (null) in Frameworks */,
 				F9953B371692605694F6DAB9 /* Pods_Export_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -993,6 +1061,9 @@
 				E11CD019268423A5005BEA88 /* SatinSceneKit.app */,
 				E1653EFB2684F0D90012C97F /* SatinSceneKit.app */,
 				E1653F112684F46D0012C97F /* SatinSceneKitAR-iOS.app */,
+				E1EC55ED2687856C0097C140 /* RayMarching.app */,
+				E152A9FC2688F426002EF5B1 /* RayMarching.app */,
+				E152AA122688F512002EF5B1 /* RayMarching.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1033,6 +1104,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E1EC55D7268784F10097C140 /* RayMarching */,
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E11CCFFD2683EABD005BEA88 /* SatinSceneKit */,
 				E105CC35252BDE66009EE563 /* FXAA */,
@@ -1161,6 +1233,12 @@
 				D4CD5BF3C42FA0D907E9CCAC /* Pods-SatinSceneKit-tvOS.release.xcconfig */,
 				C045303F13C5856445EADB14 /* Pods-SatinSceneKitAR-iOS.debug.xcconfig */,
 				A6934A1DB52F52A20CF62A22 /* Pods-SatinSceneKitAR-iOS.release.xcconfig */,
+				B8D9B3B01D6E500D903A594D /* Pods-RayMarching-iOS.debug.xcconfig */,
+				44E9865DD02C48A01366057F /* Pods-RayMarching-iOS.release.xcconfig */,
+				7702F593AACCCA80B8B02730 /* Pods-RayMarching-macOS.debug.xcconfig */,
+				68CE0B3DC9512CBFB3CB14CE /* Pods-RayMarching-macOS.release.xcconfig */,
+				0814CDA98C1931787B4E1F67 /* Pods-RayMarching-tvOS.debug.xcconfig */,
+				2BB8EFC72521C01D41F85C7A /* Pods-RayMarching-tvOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1352,6 +1430,16 @@
 			path = DepthMaterial;
 			sourceTree = "<group>";
 		};
+		E1EC55D7268784F10097C140 /* RayMarching */ = {
+			isa = PBXGroup;
+			children = (
+				E1EC55EF268786E70097C140 /* Assets */,
+				E1EC55D8268785630097C140 /* Renderer.swift */,
+				E152A9E62688E2B6002EF5B1 /* RayMarchedMaterial.swift */,
+			);
+			path = RayMarching;
+			sourceTree = "<group>";
+		};
 		E1FA708124A5D377001BFE4B /* BufferCompute */ = {
 			isa = PBXGroup;
 			children = (
@@ -1412,10 +1500,13 @@
 				1F11BF3C16367ED3603971B7 /* Pods_Export_macOS.framework */,
 				27FF1416864E9BEA68CD33BD /* Pods_SatinSceneKit_iOS.framework */,
 				FF6873015C3B24A45186C6D3 /* Pods_SatinSceneKit_macOS.framework */,
-				583F27BA472F338C065F422C /* Pods_3D_iOS.framework */,
-				7EE05C969F72DF68F3140BB5 /* Pods_3D_macOS.framework */,
 				9DB81B06522AB2976D2858F9 /* Pods_SatinSceneKit_tvOS.framework */,
 				F7F5A07B55FDE3A2CED56257 /* Pods_SatinSceneKitAR_iOS.framework */,
+				81AFD415F136FD818931DD1E /* Pods_3D_tvOS.framework */,
+				515C5B1ACCE286B6A0582CCD /* Pods_AR_iOS.framework */,
+				D3080AD99C749D82D35211AA /* Pods_RayMarching_iOS.framework */,
+				E12F51B0DEC7236875A6F456 /* Pods_RayMarching_macOS.framework */,
+				0F0E6B8B30D3C26BAF7E831F /* Pods_RayMarching_tvOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1641,6 +1732,46 @@
 			name = "Camera-iOS";
 			productName = "Example-iOS";
 			productReference = E144FA6D24D21FAB0072D456 /* Camera.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E152A9E82688F426002EF5B1 /* RayMarching-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E152A9F92688F426002EF5B1 /* Build configuration list for PBXNativeTarget "RayMarching-iOS" */;
+			buildPhases = (
+				E152A9E92688F426002EF5B1 /* [CP] Check Pods Manifest.lock */,
+				E152A9EA2688F426002EF5B1 /* Sources */,
+				E152A9ED2688F426002EF5B1 /* Frameworks */,
+				E152A9F42688F426002EF5B1 /* Resources */,
+				E152A9F72688F426002EF5B1 /* Touch Frameworks */,
+				E152A9F82688F426002EF5B1 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RayMarching-iOS";
+			productName = "Example-iOS";
+			productReference = E152A9FC2688F426002EF5B1 /* RayMarching.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E152AA012688F512002EF5B1 /* RayMarching-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E152AA0F2688F512002EF5B1 /* Build configuration list for PBXNativeTarget "RayMarching-tvOS" */;
+			buildPhases = (
+				E152AA022688F512002EF5B1 /* [CP] Check Pods Manifest.lock */,
+				E152AA032688F512002EF5B1 /* Sources */,
+				E152AA062688F512002EF5B1 /* Frameworks */,
+				E152AA0B2688F512002EF5B1 /* Resources */,
+				E152AA0D2688F512002EF5B1 /* Touch Frameworks */,
+				E152AA0E2688F512002EF5B1 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RayMarching-tvOS";
+			productName = "Example-tvOS";
+			productReference = E152AA122688F512002EF5B1 /* RayMarching.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E160CA3F24876781005D37A4 /* MatCap-iOS */ = {
@@ -2203,6 +2334,26 @@
 			productReference = E1E7C55D24515DA600BD8324 /* 2D.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E1EC55D92687856C0097C140 /* RayMarching-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1EC55EA2687856C0097C140 /* Build configuration list for PBXNativeTarget "RayMarching-macOS" */;
+			buildPhases = (
+				E1EC55DA2687856C0097C140 /* [CP] Check Pods Manifest.lock */,
+				E1EC55DB2687856C0097C140 /* Sources */,
+				E1EC55DE2687856C0097C140 /* Frameworks */,
+				E1EC55E52687856C0097C140 /* Resources */,
+				E1EC55E82687856C0097C140 /* Touch Frameworks */,
+				E1EC55E92687856C0097C140 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RayMarching-macOS";
+			productName = Example;
+			productReference = E1EC55ED2687856C0097C140 /* RayMarching.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E1ED688724A562720029C158 /* DepthMaterial-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1ED689524A562720029C158 /* Build configuration list for PBXNativeTarget "DepthMaterial-iOS" */;
@@ -2408,6 +2559,9 @@
 				E11CD006268423A5005BEA88 /* SatinSceneKit-iOS */,
 				E1653EEA2684F0D90012C97F /* SatinSceneKit-tvOS */,
 				E1653EFF2684F46D0012C97F /* SatinSceneKitAR-iOS */,
+				E1EC55D92687856C0097C140 /* RayMarching-macOS */,
+				E152A9E82688F426002EF5B1 /* RayMarching-iOS */,
+				E152AA012688F512002EF5B1 /* RayMarching-tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -2513,6 +2667,25 @@
 			files = (
 				E144FA6624D21FAB0072D456 /* Assets.xcassets in Resources */,
 				E144FA6724D21FAB0072D456 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E152A9F42688F426002EF5B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E152A9F52688F426002EF5B1 /* Assets.xcassets in Resources */,
+				E152A9FE2688F457002EF5B1 /* Assets in Resources */,
+				E152A9F62688F426002EF5B1 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E152AA0B2688F512002EF5B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E152AA0C2688F512002EF5B1 /* Assets.xcassets in Resources */,
+				E152AA142688F569002EF5B1 /* Assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2774,6 +2947,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1E7C55724515DA600BD8324 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1EC55E52687856C0097C140 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1EC55E62687856C0097C140 /* Assets.xcassets in Resources */,
+				E1EC55F0268786E70097C140 /* Assets in Resources */,
+				E1EC55E72687856C0097C140 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3632,6 +3815,120 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E152A9E92688F426002EF5B1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RayMarching-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E152A9F72688F426002EF5B1 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E152A9F82688F426002EF5B1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-iOS/Pods-RayMarching-iOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-iOS/Pods-RayMarching-iOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RayMarching-iOS/Pods-RayMarching-iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E152AA022688F512002EF5B1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RayMarching-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E152AA0D2688F512002EF5B1 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E152AA0E2688F512002EF5B1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-tvOS/Pods-RayMarching-tvOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-tvOS/Pods-RayMarching-tvOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RayMarching-tvOS/Pods-RayMarching-tvOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		E160CA4024876781005D37A4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5034,6 +5331,63 @@
 			shellPath = /bin/sh;
 			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
 		};
+		E1EC55DA2687856C0097C140 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RayMarching-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1EC55E82687856C0097C140 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E1EC55E92687856C0097C140 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E1ED688824A562720029C158 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5502,6 +5856,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E152A9EA2688F426002EF5B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E152AA002688F45B002EF5B1 /* Renderer.swift in Sources */,
+				E152A9FF2688F45B002EF5B1 /* RayMarchedMaterial.swift in Sources */,
+				E152A9EC2688F426002EF5B1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E152AA032688F512002EF5B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E152AA162688F56D002EF5B1 /* Renderer.swift in Sources */,
+				E152AA152688F56D002EF5B1 /* RayMarchedMaterial.swift in Sources */,
+				E152AA052688F512002EF5B1 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E160CA4124876781005D37A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5767,6 +6141,16 @@
 			files = (
 				E1E7C55F24515DB600BD8324 /* Renderer.swift in Sources */,
 				E1E7C55324515DA600BD8324 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1EC55DB2687856C0097C140 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1EC55F1268787C10097C140 /* Renderer.swift in Sources */,
+				E152A9E72688E2B6002EF5B1 /* RayMarchedMaterial.swift in Sources */,
+				E1EC55DD2687856C0097C140 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6401,6 +6785,90 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E152A9FA2688F426002EF5B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8D9B3B01D6E500D903A594D /* Pods-RayMarching-iOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E152A9FB2688F426002EF5B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44E9865DD02C48A01366057F /* Pods-RayMarching-iOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				INFOPLIST_FILE = Source/iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E152AA102688F512002EF5B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0814CDA98C1931787B4E1F67 /* Pods-RayMarching-tvOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
+			};
+			name = Debug;
+		};
+		E152AA112688F512002EF5B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2BB8EFC72521C01D41F85C7A /* Pods-RayMarching-tvOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Source/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -7604,6 +8072,48 @@
 			};
 			name = Release;
 		};
+		E1EC55EB2687856C0097C140 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7702F593AACCCA80B8B02730 /* Pods-RayMarching-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E1EC55EC2687856C0097C140 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 68CE0B3DC9512CBFB3CB14CE /* Pods-RayMarching-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_NAME = RayMarching;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		E1ED689624A562720029C158 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 16EC31E8366407F744E978A1 /* Pods-DepthMaterial-iOS.debug.xcconfig */;
@@ -7965,6 +8475,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		E152A9F92688F426002EF5B1 /* Build configuration list for PBXNativeTarget "RayMarching-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E152A9FA2688F426002EF5B1 /* Debug */,
+				E152A9FB2688F426002EF5B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E152AA0F2688F512002EF5B1 /* Build configuration list for PBXNativeTarget "RayMarching-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E152AA102688F512002EF5B1 /* Debug */,
+				E152AA112688F512002EF5B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E160CA4C24876781005D37A4 /* Build configuration list for PBXNativeTarget "MatCap-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -8213,6 +8741,15 @@
 			buildConfigurations = (
 				E1E7C55B24515DA600BD8324 /* Debug */,
 				E1E7C55C24515DA600BD8324 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1EC55EA2687856C0097C140 /* Build configuration list for PBXNativeTarget "RayMarching-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1EC55EB2687856C0097C140 /* Debug */,
+				E1EC55EC2687856C0097C140 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

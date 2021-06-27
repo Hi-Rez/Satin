@@ -187,3 +187,15 @@ end
 target 'SatinSceneKitAR-iOS' do
     platform :ios, '13.0'
 end
+
+target 'RayMarching-macOS' do
+  platform :osx, '10.15'
+end
+
+target 'RayMarching-tvOS' do
+  platform :tvos, '13.0'
+end
+
+target 'RayMarching-iOS' do
+    platform :ios, '13.0'
+end
