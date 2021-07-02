@@ -50,12 +50,12 @@ open class ParametricGeometry: Geometry {
                 var normal = simd_make_float3(0.0, 0.0, 0.0)
                 var sum: Float = 0
 
-                if n0.x != .nan, n0.y != .nan, n0.z != .nan {
+                if !n0.x.isNaN, !n0.y.isNaN, !n0.z.isNaN {
                     normal = n0
                     sum += 1
                 }
 
-                if n1.x != .nan, n1.y != .nan, n1.z != .nan {
+                if !n1.x.isNaN, !n1.y.isNaN, !n1.z.isNaN {
                     normal = n1
                     sum += 1
                 }

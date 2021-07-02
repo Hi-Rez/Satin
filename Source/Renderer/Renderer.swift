@@ -120,7 +120,7 @@ open class Renderer
         camera.update()
         scene.update()
         
-        guard let context = self.context, scene.visible else { return }
+        guard let context = self.context, scene.visible, scene.children.count > 0 else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
@@ -208,7 +208,7 @@ open class Renderer
         
         preDraw?(renderEncoder)
         draw(renderEncoder: renderEncoder, object: scene)
-        postDraw?(renderEncoder)        
+        postDraw?(renderEncoder)
         
         renderEncoder.popDebugGroup()
         renderEncoder.endEncoding()
@@ -221,14 +221,15 @@ open class Renderer
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, object: Object)
     {
-        if object.context == nil
+        if object.context == nil || object.context != context
         {
             object.context = context
         }
         
-        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline
+        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount >= 1
         {
             mesh.update(camera: camera)
+            material.update(camera: camera)
             renderEncoder.setRenderPipelineState(pipeline)
             material.bind(renderEncoder)
             mesh.draw(renderEncoder: renderEncoder)
