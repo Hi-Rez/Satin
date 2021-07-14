@@ -120,7 +120,7 @@ open class Renderer
         camera.update()
         scene.update()
         
-        guard let context = self.context, scene.visible, scene.children.count > 0 else { return }
+        guard let context = self.context, scene.visible, (scene is Mesh || scene.children.count > 0) else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture

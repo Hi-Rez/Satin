@@ -20,13 +20,7 @@ open class CameraController: Codable {
     public required init(from decoder: Decoder) throws {}
     open func encode(to encoder: Encoder) throws {}
     
-    public private(set) var enabled: Bool = false {
-        didSet {
-            if enabled {
-                onChange?()
-            }
-        }
-    }
+    public private(set) var enabled: Bool = false
     
     public var view: MTKView? {
         willSet {
@@ -40,10 +34,21 @@ open class CameraController: Codable {
             }
         }
     }
-    
+
+    public var onStartChange: (() -> ())?
     public var onChange: (() -> ())?
+    public var onEndChange: (() -> ())?
         
-    public internal(set) var state: CameraControllerState = .inactive
+    public internal(set) var state: CameraControllerState = .inactive {
+        didSet {
+            if oldValue == .inactive, state != .inactive {
+                onStartChange?()
+            }
+            else if state == .inactive {
+                onEndChange?()
+            }
+        }
+    }
     
     #if os(macOS)
     

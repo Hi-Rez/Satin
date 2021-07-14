@@ -83,7 +83,6 @@ open class OrthographicCameraController: CameraController {
         guard let camera = self.camera else { return }
         camera.orientation = defaultOrientation
         camera.position = defaultPosition
-        
         enable()
     }
     
@@ -143,7 +142,10 @@ open class OrthographicCameraController: CameraController {
     override open func mouseDown(with event: NSEvent) {
         guard let view = self.view, event.window == view.window else { return }
         if event.clickCount == 2 {
+            onStartChange?()
+            onChange?()
             reset()
+            onEndChange?()
         }
         else if minimumPanningTouches == 1 {
             state = .panning

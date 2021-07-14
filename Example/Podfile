@@ -199,3 +199,15 @@ end
 target 'RayMarching-iOS' do
     platform :ios, '13.0'
 end
+
+target 'PostProcessing-macOS' do
+  platform :osx, '10.15'
+end
+
+target 'PostProcessing-tvOS' do
+  platform :tvos, '13.0'
+end
+
+target 'PostProcessing-iOS' do
+    platform :ios, '13.0'
+end

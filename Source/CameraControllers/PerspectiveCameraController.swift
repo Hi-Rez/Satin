@@ -200,6 +200,8 @@ open class PerspectiveCameraController: CameraController {
     
     // MARK: - Updates
     
+    var tweening: Bool = false
+    
     override open func update() {
         guard camera != nil else { return }
         
@@ -232,9 +234,17 @@ open class PerspectiveCameraController: CameraController {
             changed = true
         }
         
-        if changed {
+        if changed == true, tweening == false {
+            onStartChange?()
+        }
+        else if changed == true, tweening == true {
             onChange?()
         }
+        else if changed == false, tweening == true {
+            onEndChange?()
+        }
+        
+        tweening = changed
     }
     
     // MARK: - Reset
