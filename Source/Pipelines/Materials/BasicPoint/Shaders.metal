@@ -29,7 +29,7 @@ fragment FragOut basicPointFragment(
     }
     FragOut out;
     out.color = float4( uniforms.color.rgb, uniforms.color.a * result );
-    out.depth = mix(1.0, in.position.z, result);
+    out.depth = mix(0.0, in.position.z, result);
     return out;
 }
 

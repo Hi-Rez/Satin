@@ -26,7 +26,7 @@ class Renderer: Forge.Renderer {
     }
     
     var metalFileCompiler = MetalFileCompiler()
-    
+
     var countParam = IntParameter("Count", 4096, .inputfield)
     
     lazy var computeSystem: BufferComputeSystem = {

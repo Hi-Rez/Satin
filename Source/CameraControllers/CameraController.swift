@@ -206,6 +206,7 @@ open class CameraController: Codable {
         }
         
         flagsChangedHandler = NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [unowned self] event -> NSEvent? in
+            guard let view = self.view, event.window == view.window else { return nil }
             let up = event.modifierFlags.isSubset(of: .init(rawValue: 256))
             let hasFlags = !self.modifierFlags.isEmpty
             if hasFlags, self.modifierFlags.isStrictSubset(of: event.modifierFlags) {
