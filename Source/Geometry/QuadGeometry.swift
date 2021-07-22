@@ -24,6 +24,6 @@ open class QuadGeometry: Geometry {
             Vertex(position: simd_make_float4(-hsize, hsize, 0.0, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(0.0, 0.0)),
             Vertex(position: simd_make_float4(hsize, hsize, 0.0, 1.0), normal: simd_make_float3(0.0, 0.0, 1.0), uv: simd_make_float2(1.0, 0.0))
         ]
-        indexData = [0, 1, 2, 1, 3, 2]
+        indexData = [0, 3, 2, 0, 1, 3]
     }
 }
