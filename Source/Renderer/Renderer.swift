@@ -43,13 +43,15 @@ open class Renderer
     {
         didSet
         {
-            let width = Double(size.width)
-            let height = Double(size.height)
-            viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
-            
-            updateColorTexture = true
-            updateDepthTexture = true
-            updateStencilTexture = true
+            if oldValue.width != size.width || oldValue.height != size.height
+            {
+                let width = Double(size.width)
+                let height = Double(size.height)
+                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
+                updateColorTexture = true
+                updateDepthTexture = true
+                updateStencilTexture = true
+            }
         }
     }
     
@@ -120,7 +122,7 @@ open class Renderer
         camera.update()
         scene.update()
         
-        guard let context = self.context, scene.visible, (scene is Mesh || scene.children.count > 0) else { return }
+        guard let context = self.context, scene.visible, scene is Mesh || scene.children.count > 0 else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
