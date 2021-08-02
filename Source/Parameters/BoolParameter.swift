@@ -75,5 +75,6 @@ open class BoolParameter: NSObject, Parameter {
     
     deinit {
         observers = []
+        actions = []
     }
 }

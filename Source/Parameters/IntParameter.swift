@@ -101,5 +101,6 @@ open class IntParameter: NSObject, Parameter {
     
     deinit {
         observers = []
+        actions = []
     }
 }
