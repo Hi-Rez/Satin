@@ -211,3 +211,7 @@ end
 target 'PostProcessing-iOS' do
     platform :ios, '13.0'
 end
+
+target 'AudioInput-macOS' do
+  platform :osx, '10.15'
+end

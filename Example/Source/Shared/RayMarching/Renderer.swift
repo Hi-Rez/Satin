@@ -48,7 +48,7 @@ class Renderer: Forge.Renderer {
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera()
         camera.fov = 45
-        camera.near = 0.01
+        camera.near = 0.1
         camera.far = 100.0
         camera.position = simd_make_float3(0.0, 0.0, 5.0)
         return camera

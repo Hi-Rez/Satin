@@ -12,24 +12,24 @@
 
 typedef struct {
     float4 color; // color
-    float3 cameraPosition;
-    float3 cameraRight;
-    float3 cameraUp;
-    float3 cameraForward;
-    float2 resolution;
-    float2 nearFar;
-    float2 cameraDepth;
 } RayMarchedUniforms;
 
-vertex VertexData rayMarchedVertex( Vertex in [[stage_in]],
-    constant VertexUniforms &uniforms [[buffer( VertexBufferVertexUniforms )]] )
-{
-    VertexData out;
-    out.position = in.position;
-    out.uv = in.uv;
-    out.normal = in.normal;
-    return out;
-}
+typedef struct {
+    float4 position [[position]];
+    float3 cameraPosition [[flat]];
+    float3 cameraRight [[flat]];
+    float3 cameraUp [[flat]];
+    float3 cameraForward [[flat]];
+    float2 uv;
+    float2 nearFar [[flat]];
+    float2 cameraDepth [[flat]];
+    float cameraAspect [[flat]];
+} RayMarchedData;
+
+struct FragOut {
+    float4 color [[color( 0 )]];
+    float depth [[depth( any )]];
+};
 
 float scene( float3 p )
 {
@@ -62,20 +62,47 @@ float render( float3 ro, float3 rd )
     return d;
 }
 
-struct FragOut {
-    float4 color [[color( 0 )]];
-    float depth [[depth( any )]];
-};
 
-fragment FragOut rayMarchedFragment( VertexData in [[stage_in]],
+vertex RayMarchedData rayMarchedVertex( Vertex in [[stage_in]],
+    constant VertexUniforms &uniforms [[buffer( VertexBufferVertexUniforms )]] )
+{
+    const float4x4 projectionMatrix = uniforms.projectionMatrix;
+    const float4x4 inverseViewMatrix = uniforms.inverseViewMatrix;
+    const float imagePlaneHeight = 1.0 / projectionMatrix[1].y;
+    const float imagePlaneWidth = imagePlaneHeight;
+    
+    const float c = projectionMatrix[2].z;
+    const float d = projectionMatrix[3].z;
+    const float near = d / c;
+    const float far = d / (1.0 + c);
+    
+    const float cameraDelta = far - near;
+    const float cameraA = far / cameraDelta;
+    const float cameraB = (far * near) / cameraDelta;
+
+    RayMarchedData out;
+    out.position = in.position;
+    out.uv = in.uv;
+    out.cameraPosition = inverseViewMatrix[3].xyz;
+    out.cameraRight = inverseViewMatrix[0].xyz * imagePlaneWidth;;
+    out.cameraUp = inverseViewMatrix[1].xyz * imagePlaneHeight;;
+    out.cameraForward = -inverseViewMatrix[2].xyz;
+    out.cameraAspect = projectionMatrix[0].x / projectionMatrix[1].y;
+    out.nearFar = float2(near, far);
+    out.cameraDepth = float2(cameraA, cameraB);
+    return out;
+}
+
+fragment FragOut rayMarchedFragment( RayMarchedData in [[stage_in]],
     constant RayMarchedUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]],
     constant float4x4 *view [[buffer( FragmentBufferCustom0 )]] )
 {
     float2 uv = 2.0 * in.uv - 1.0;
+    uv.x /= in.cameraAspect;
     uv.y *= -1.0;
 
-    const float3 ro = uniforms.cameraPosition;
-    const float3 rd = normalize( uv.x * uniforms.cameraRight + uv.y * uniforms.cameraUp + uniforms.cameraForward );
+    const float3 ro = in.cameraPosition;
+    const float3 rd = normalize( uv.x * in.cameraRight + uv.y * in.cameraUp + in.cameraForward );
 
     const float d = render( ro, rd );
     const float3 p = ro + rd * d;
@@ -85,12 +112,12 @@ fragment FragOut rayMarchedFragment( VertexData in [[stage_in]],
     }
 
     FragOut out;
-    const float2 cameraDepth = uniforms.cameraDepth;
+    const float2 cameraDepth = in.cameraDepth;
     const float a = cameraDepth.x;
     const float b = cameraDepth.y;
 
     const float4 ep = ( *view ) * float4( p, 1.0 );
-    out.depth = 1.0 - ( a + b / ep.z );
+    out.depth = ( a + b / ep.z );
     const float3 color = float3( 1.00000, 0.52941, 0.19216 );
     out.color = float4( color, 1.0 );
     return out;
