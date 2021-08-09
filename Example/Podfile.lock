@@ -1,26 +1,34 @@
 PODS:
   - Forge (1.0.9)
   - Satin (1.3.4)
+  - Spectra (0.0.2)
 
 DEPENDENCIES:
   - Forge (from `https://github.com/Hi-Rez/Forge.git`)
   - Satin (from `../`)
+  - Spectra (from `https://github.com/Hi-Rez/Spectra.git`)
 
 EXTERNAL SOURCES:
   Forge:
     :git: https://github.com/Hi-Rez/Forge.git
   Satin:
     :path: "../"
+  Spectra:
+    :git: https://github.com/Hi-Rez/Spectra.git
 
 CHECKOUT OPTIONS:
   Forge:
     :commit: 5b0cdf2b3f1f432f3749d35c37691a7f1c6dd4ae
     :git: https://github.com/Hi-Rez/Forge.git
+  Spectra:
+    :commit: 0bb5211d9115ab09a411aa1fd6d33e83a50ec0cb
+    :git: https://github.com/Hi-Rez/Spectra.git
 
 SPEC CHECKSUMS:
   Forge: abca50ae8838a6d745b9a4e204bc2cb800546cef
   Satin: c8b8c80e461918ab3ab8a03f1138a54cb0172fda
+  Spectra: 1e638cbbde12eb6fa09202f3f5b98e452fd2a365
 
-PODFILE CHECKSUM: 58038179eb53792f048867c999e71837ac1fad75
+PODFILE CHECKSUM: eb56eefb6ae9d0c1d845f96a8d971845764cbf63
 
 COCOAPODS: 1.10.1

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E19B057E26BB701700D91376"
-               BuildableName = "AudioInput-macOS.app"
+               BuildableName = "AudioInput.app"
                BlueprintName = "AudioInput-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E19B057E26BB701700D91376"
-            BuildableName = "AudioInput-macOS.app"
+            BuildableName = "AudioInput.app"
             BlueprintName = "AudioInput-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E19B057E26BB701700D91376"
-            BuildableName = "AudioInput-macOS.app"
+            BuildableName = "AudioInput.app"
             BlueprintName = "AudioInput-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

@@ -214,4 +214,5 @@ end
 
 target 'AudioInput-macOS' do
   platform :osx, '10.15'
+  pod 'Spectra', :git => 'https://github.com/Hi-Rez/Spectra.git'
 end

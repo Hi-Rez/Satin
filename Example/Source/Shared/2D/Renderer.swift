@@ -67,9 +67,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func resize(_ size: (width: Float, height: Float)) {
-        let hw = size.width * 0.5
-        let hh = size.height * 0.5
-        camera.update(left: -hw, right: hw, bottom: -hh, top: hh)
+        cameraController.resize(size)
         renderer.resize(size)
     }
         

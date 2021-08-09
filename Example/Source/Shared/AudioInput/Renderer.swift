@@ -13,8 +13,29 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
+    lazy var audioInput: AudioInput = {
+        let audioInput = AudioInput(context: context)
+        audioInput.input.value = "loopback"
+        return audioInput
+    }()
+    
+    lazy var audioMaterial: BasicTextureMaterial = {
+        let mat = BasicTextureMaterial()
+        
+        let desc = MTLSamplerDescriptor()
+        desc.label = "Audio Texture Sampler"
+        desc.minFilter = .nearest
+        desc.magFilter = .nearest
+        mat.sampler = context.device.makeSamplerState(descriptor: desc)
+        
+        mat.onUpdate = { [unowned self] in
+            mat.texture = self.audioInput.texture
+        }
+        return mat
+    }()
+    
     lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: UvColorMaterial())
+        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: audioMaterial)
         mesh.label = "Quad"
         return mesh
     }()
@@ -29,12 +50,6 @@ class Renderer: Forge.Renderer {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    #if os(macOS) || os(iOS)
-    lazy var raycaster: Raycaster = {
-        Raycaster(context: context)
-    }()
-    #endif
-    
     lazy var camera: OrthographicCamera = {
         OrthographicCamera()
     }()
@@ -44,7 +59,9 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context, scene: scene, camera: camera)
+        let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+        renderer.setClearColor([1, 1, 1, 1])
+        return renderer
     }()
     
     override func setupMtkView(_ metalKitView: MTKView) {
@@ -54,7 +71,7 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        // Setup things here
+        print(audioInput.inputs)
     }
     
     override func update() {
@@ -67,47 +84,8 @@ class Renderer: Forge.Renderer {
     }
     
     override func resize(_ size: (width: Float, height: Float)) {
-        let hw = size.width * 0.5
-        let hh = size.height * 0.5
-        camera.update(left: -hw, right: hw, bottom: -hh, top: hh)
+        cameraController.resize(size)
         renderer.resize(size)
-    }
-        
-    #if !targetEnvironment(simulator)
-    #if os(macOS)
-    override func mouseDown(with event: NSEvent) {
-        let m = event.locationInWindow
-        let pt = normalizePoint(m, mtkView.frame.size)
-        raycaster.setFromCamera(camera, pt)
-        let results = raycaster.intersect(scene, true)
-        for result in results {
-            print(result.object.label)
-            print(result.position)
-        }
-    }
-    #elseif os(iOS)
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let first = touches.first {
-            let point = first.location(in: self.mtkView)
-            let size = self.mtkView.frame.size
-            let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
-            for result in results {
-                print(result.object.label)
-                print(result.position)
-            }
-        }
-    }
-    #endif
-    #endif
-    
-    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
-        #if os(macOS)
-        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
-        #else
-        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
-        #endif
     }
 }
 

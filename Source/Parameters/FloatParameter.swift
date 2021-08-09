@@ -17,6 +17,8 @@ open class FloatParameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<Float>.stride }
     public var alignment: Int { return MemoryLayout<Float>.alignment }
     public var count: Int { return 1 }
+    public var actions: [(Float) -> Void] = []
+    
     public subscript<Float>(index: Int) -> Float {
         get {
             return value as! Float
@@ -30,34 +32,76 @@ open class FloatParameter: NSObject, Parameter {
         return Float.self
     }
     
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+        case min
+        case max
+    }
+    
+    var observers: [NSKeyValueObservation] = []
+    
     @objc public dynamic var value: Float
     @objc public dynamic var min: Float
     @objc public dynamic var max: Float
     
-    public init(_ label: String, _ value: Float, _ min: Float, _ max: Float, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Float, _ min: Float, _ max: Float, _ controlType: ControlType = .unknown, _ action: ((Float) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = value
         self.min = min
         self.max = max
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
     }
     
-    public init(_ label: String, _ value: Float = 0.0, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Float = 0.0, _ controlType: ControlType = .unknown,
+                _ action: ((Float) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = value
         self.min = 0.0
         self.max = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
     }
     
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Float) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = 0.0
         self.min = 0.0
         self.max = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
+    }
+    
+    func setup() {
+        observers.append(observe(\.value) { [unowned self] _, _ in
+            for action in self.actions {
+                action(self.value)
+            }
+        })
+    }
+    
+    deinit {
+        observers = []
+        actions = []
     }
 }
