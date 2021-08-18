@@ -228,7 +228,7 @@ open class MultipleTextureComputeSystem {
             _dispatchThreadgroups(texture, computeEncoder, pipeline)
         }
         #elseif os(tvOS)
-        _dispatchThreadgroups(videoTexture, computeEncoder, pipeline)
+        _dispatchThreadgroups(texture, computeEncoder, pipeline)
         #endif
     }
 
