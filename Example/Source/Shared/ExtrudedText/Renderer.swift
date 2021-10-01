@@ -51,25 +51,15 @@ class Renderer: Forge.Renderer {
     }
     
     func setupText() {
-        let input = "HELLO\nWORLD"
-        
-        /*
-         Times
-         AvenirNext-UltraLight
-         Helvetica
-         SFMono-HeavyItalic
-         SFProRounded-Thin
-         SFProRounded-Heavy
-         */
-        
+        let input = "stay hungry\nstay foolish"
         let geo = ExtrudedTextGeometry(
             text: input,
-            fontName: "SFProRounded-Heavy",
+            fontName: "Helvetica",
             fontSize: 8,
-            distance: 4.0,
+            distance: 1,
             bounds: CGSize(width: -1, height: -1),
             pivot: simd_make_float2(0, 0),
-            textAlignment: .center,
+            textAlignment: .left,
             verticalAlignment: .center
         )
         
