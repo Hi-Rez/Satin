@@ -73,7 +73,7 @@ open class Object: Codable {
     
     var _localbounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
     
-    public var localbounds: Bounds {
+    public var localBounds: Bounds {
         if _updateLocalBounds {
             _localbounds = computeLocalBounds()
             _updateLocalBounds = false
@@ -82,15 +82,15 @@ open class Object: Codable {
     }
     
     var _updateBounds: Bool = true
-    var _bounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
+    var _worldBounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
     
     
-    public var bounds: Bounds {
+    public var worldBounds: Bounds {
         if _updateBounds {
-            _bounds = computeBounds()
+            _worldBounds = computeWorldBounds()
             _updateBounds = false
         }
-        return _bounds
+        return _worldBounds
     }
     
     public var translationMatrix: matrix_float4x4 {
@@ -252,14 +252,19 @@ open class Object: Codable {
     
     open func computeLocalBounds() -> Bounds
     {
+        return Bounds(min: position, max: position)
+    }
+    
+    open func computeWorldBounds() -> Bounds
+    {
         return Bounds(min: worldPosition, max: worldPosition)
     }
     
     open func computeBounds() -> Bounds
     {
-        var result = localbounds
+        var result = localBounds
         for child in children {
-            let childBounds = child.bounds
+            let childBounds = child.worldBounds
             result = mergeBounds(result, childBounds)
         }
         return result

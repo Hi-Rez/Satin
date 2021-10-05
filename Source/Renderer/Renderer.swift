@@ -13,6 +13,7 @@ open class Renderer
 {
     public var label: String = "Satin Renderer"
     
+    public var onUpdate: (() -> ())?
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
@@ -119,6 +120,8 @@ open class Renderer
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
     {
+        onUpdate?()
+        
         camera.update()
         scene.update()
         

@@ -190,6 +190,16 @@ open class Mesh: Object, GeometryDelegate {
         let count = geometry.vertexData.count
         var result = Bounds()
         geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
+            result = computeBoundsFromVerticesAndTransform(vtxPtr.baseAddress!, Int32(count), localMatrix)
+        }
+        return result
+    }
+    
+    override open func computeWorldBounds() -> Bounds
+    {
+        let count = geometry.vertexData.count
+        var result = Bounds()
+        geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
             result = computeBoundsFromVerticesAndTransform(vtxPtr.baseAddress!, Int32(count), worldMatrix)
         }
         return result

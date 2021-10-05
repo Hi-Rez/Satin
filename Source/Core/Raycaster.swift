@@ -230,7 +230,7 @@ open class Raycaster {
         var count = 0
         for mesh in meshes {
             var times = simd_float2(repeating: -1.0)
-            guard rayBoundsIntersection(ray.origin, ray.direction, mesh.localbounds, &times) else { continue }
+            guard rayBoundsIntersection(ray.origin, ray.direction, mesh.localBounds, &times) else { continue }
             let submeshes = mesh.submeshes
             count += max(mesh.submeshes.count, 1)
             if !submeshes.isEmpty {

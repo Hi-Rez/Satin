@@ -18,7 +18,7 @@ vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
     const float4 viewPosition = vertexUniforms.modelViewMatrix * in.position;
     out.viewPosition = viewPosition.xyz;
     out.position = vertexUniforms.projectionMatrix * viewPosition;
-    out.normal = normalize( screenSpaceNormal.xyz ),
+    out.normal = normalize( screenSpaceNormal.xyz );
     out.uv = in.uv;
     out.pointSize = 2.0;
     return out;
