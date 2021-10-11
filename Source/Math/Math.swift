@@ -138,13 +138,13 @@ public func frustum(_ l: Float, _ r: Float, _ b: Float, _ t: Float, _ n: Float, 
         [
             (r + l) / (r - l),
             (t + b) / (t - b),
-            -f / (f - n),
+            n / (f - n),
             -1
         ],
         [
             0,
             0,
-            -(f * n) / (f - n),
+            (f * n) / (f - n),
             0
         ])
 }

@@ -72,11 +72,12 @@ open class PerspectiveCamera: Camera
             let col2 = newValue.columns.2
             let col3 = newValue.columns.3
             fov = 2.0 * atan(1.0 / col1.y) * 180.0 / Float.pi
-            aspect = col1.y / col0.x;
+            aspect = col1.y / col0.x
             let c = col2.z
             let d = col3.z
             near = d / c
             far = d / (1.0 + c)
+            updateProjectionMatrix = false
         }
     }
     
