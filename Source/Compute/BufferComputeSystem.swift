@@ -48,7 +48,7 @@ open class BufferComputeSystem {
     public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
     public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
 
-    var context: Context
+    public var context: Context
 
     public var resetPipeline: MTLComputePipelineState?
     public var updatePipeline: MTLComputePipelineState?
@@ -84,7 +84,7 @@ open class BufferComputeSystem {
         setup()
     }
 
-    private func setup() {
+    open func setup() {
         checkFeatures()
     }
 
@@ -167,7 +167,7 @@ open class BufferComputeSystem {
             if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 for i in 0..<bufferCount {
-                    let offset = setBuffers(computeEncoder, i)
+                    let offset = setBuffers(computeEncoder, i, ComputeBufferIndex.Custom0.rawValue)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)
                     dispatch(computeEncoder, pipeline)
@@ -177,7 +177,7 @@ open class BufferComputeSystem {
 
             if let pipeline = self.updatePipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                let offset = setBuffers(computeEncoder)
+                let offset = setBuffers(computeEncoder, ComputeBufferIndex.Custom0.rawValue)
                 preUpdate?(computeEncoder, offset)
                 preCompute?(computeEncoder, offset)
                 dispatch(computeEncoder, pipeline)
@@ -188,55 +188,55 @@ open class BufferComputeSystem {
         }
     }
 
-    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
-        var offset = 0
+    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> Int {
+        var indexOffset = offset
         if feedback {
             for key in bufferOrder {
                 if let buffers = bufferMap[key] {
                     let inBuffer = buffers[ping()]
                     let outBuffer = buffers[pong()]
-                    computeEncoder.setBuffer(inBuffer, offset: 0, index: offset)
-                    offset += 1
-                    computeEncoder.setBuffer(outBuffer, offset: 0, index: offset)
-                    offset += 1
+                    computeEncoder.setBuffer(inBuffer, offset: 0, index: indexOffset)
+                    indexOffset += 1
+                    computeEncoder.setBuffer(outBuffer, offset: 0, index: indexOffset)
+                    indexOffset += 1
                 }
             }
         } else {
             for key in bufferOrder {
                 if let buffers = bufferMap[key] {
-                    computeEncoder.setBuffer(buffers[ping()], offset: 0, index: offset)
-                    offset += 1
+                    computeEncoder.setBuffer(buffers[ping()], offset: 0, index: indexOffset)
+                    indexOffset += 1
                 }
             }
         }
-        return offset
+        return indexOffset
     }
 
-    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
-        var offset = 0
+    private func setBuffers(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int, _ offset: Int) -> Int {
+        var indexOffset = offset
         if feedback {
             for key in bufferOrder {
                 if let buffers = bufferMap[key] {
                     let inBuffer = buffers[ping(index)]
                     let outBuffer = buffers[pong(index)]
-                    computeEncoder.setBuffer(inBuffer, offset: 0, index: offset)
-                    offset += 1
-                    computeEncoder.setBuffer(outBuffer, offset: 0, index: offset)
-                    offset += 1
+                    computeEncoder.setBuffer(inBuffer, offset: 0, index: indexOffset)
+                    indexOffset += 1
+                    computeEncoder.setBuffer(outBuffer, offset: 0, index: indexOffset)
+                    indexOffset += 1
                 }
             }
         } else {
             for key in bufferOrder {
                 if let buffers = bufferMap[key] {
-                    computeEncoder.setBuffer(buffers[ping(index)], offset: 0, index: offset)
-                    offset += 1
+                    computeEncoder.setBuffer(buffers[ping(index)], offset: 0, index: indexOffset)
+                    indexOffset += 1
                 }
             }
         }
-        return offset
+        return indexOffset
     }
 
-    private func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    public func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         #if os(iOS) || os(macOS)
         if _useDispatchThreads {
             _dispatchThreads(computeEncoder, pipeline)
@@ -249,7 +249,7 @@ open class BufferComputeSystem {
     }
 
     #if os(iOS) || os(macOS)
-    private func _dispatchThreads(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    public  func _dispatchThreads(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         let gridSize = MTLSizeMake(_count, 1, 1)
         var threadGroupSize = pipeline.maxTotalThreadsPerThreadgroup
         threadGroupSize = threadGroupSize > _count ? _count : threadGroupSize

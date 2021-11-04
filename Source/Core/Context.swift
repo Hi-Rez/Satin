@@ -18,8 +18,8 @@ open class Context {
     public init(_ device: MTLDevice,
                 _ sampleCount: Int,
                 _ colorPixelFormat: MTLPixelFormat,
-                _ depthPixelFormat: MTLPixelFormat,
-                _ stencilPixelFormat: MTLPixelFormat) {
+                _ depthPixelFormat: MTLPixelFormat = .invalid,
+                _ stencilPixelFormat: MTLPixelFormat = .invalid) {
         self.device = device
         self.sampleCount = sampleCount
         self.colorPixelFormat = colorPixelFormat

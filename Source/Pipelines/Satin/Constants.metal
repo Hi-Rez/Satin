@@ -90,17 +90,18 @@ typedef enum FragmentSamplerIndex {
 } FragmentSamplerIndex;
 
 typedef enum ComputeBufferIndex {
-    ComputeBufferCustom0 = 0,
-    ComputeBufferCustom1 = 1,
-    ComputeBufferCustom2 = 2,
-    ComputeBufferCustom3 = 3,
-    ComputeBufferCustom4 = 4,
-    ComputeBufferCustom5 = 5,
-    ComputeBufferCustom6 = 6,
-    ComputeBufferCustom7 = 7,
-    ComputeBufferCustom8 = 8,
-    ComputeBufferCustom9 = 9,
-    ComputeBufferCustom10 = 10
+    ComputeBufferUniforms = 0,
+    ComputeBufferCustom0 = 1,
+    ComputeBufferCustom1 = 2,
+    ComputeBufferCustom2 = 3,
+    ComputeBufferCustom3 = 4,
+    ComputeBufferCustom4 = 5,
+    ComputeBufferCustom5 = 6,
+    ComputeBufferCustom6 = 7,
+    ComputeBufferCustom7 = 8,
+    ComputeBufferCustom8 = 9,
+    ComputeBufferCustom9 = 10,
+    ComputeBufferCustom10 = 11
 } ComputeBufferIndex;
 
 typedef enum ComputeTextureIndex {

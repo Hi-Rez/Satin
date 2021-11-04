@@ -231,7 +231,7 @@ open class Renderer
             object.context = context
         }
         
-        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount >= 1
+        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
         {
             mesh.update(camera: camera)
             material.update(camera: camera)

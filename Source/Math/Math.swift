@@ -200,8 +200,9 @@ public func perspective(fov: Float, aspect: Float, near: Float, far: Float) -> m
 
     let sy = 1.0 / tanf(angle)
     let sx = sy / aspect
-    let sz = near / (far - near)
-    let sw = far * near / (far - near)
+    let farMinusNear = far - near
+    let sz = near / farMinusNear
+    let sw = far * near / farMinusNear
 
     let P = simd_make_float4(sx, 0.0, 0.0, 0.0)
     let Q = simd_make_float4(0.0, sy, 0.0, 0.0)
