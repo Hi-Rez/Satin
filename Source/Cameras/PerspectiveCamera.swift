@@ -143,4 +143,12 @@ open class PerspectiveCamera: Camera
         let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, near / farMinusNear, 1.0)
         return simd_make_float3(wc) / wc.w
     }
+    
+    public override func setFrom(_ object: Object) {
+        super.setFrom(object)
+        if let camera = object as? PerspectiveCamera {
+            fov = camera.fov
+            aspect = camera.aspect
+        }
+    }
 }

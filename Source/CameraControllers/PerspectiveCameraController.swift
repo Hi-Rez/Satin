@@ -13,8 +13,13 @@ open class PerspectiveCameraController: CameraController {
     var rotateGestureRecognizer: UIPanGestureRecognizer!
     #endif
 
+    private override init()
+    {
+        super.init()
+    }
+    
     public required convenience init(from decoder: Decoder) throws {
-        try self.init(from: decoder)
+        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
         camera = try values.decode(PerspectiveCamera.self, forKey: .camera)
         target = try values.decode(Object.self, forKey: .target)
@@ -30,8 +35,6 @@ open class PerspectiveCameraController: CameraController {
         zoomDamping = try values.decode(Float.self, forKey: .zoomDamping)
         rollScalar = try values.decode(Float.self, forKey: .rollScalar)
         rollDamping = try values.decode(Float.self, forKey: .rollDamping)
-        
-        setup()
     }
     
     override open func encode(to encoder: Encoder) throws {
@@ -612,6 +615,23 @@ open class PerspectiveCameraController: CameraController {
             inside = true
         }
         return (inside: inside, point: result)
+    }
+    
+    //MARK: - Load
+    
+    open override func load(_ url: URL) {
+        do {
+            let data = try Data(contentsOf: url)
+            let loaded = try JSONDecoder().decode(PerspectiveCameraController.self, from: data)
+            self.target.setFrom(loaded.target)
+            if let camera = self.camera, let loadedCamera = loaded.camera {
+                camera.setFrom(loadedCamera)
+            }
+        }
+        catch
+        {
+            print(error.localizedDescription)
+        }
     }
 }
  

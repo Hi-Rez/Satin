@@ -9,14 +9,21 @@ import MetalKit
 import simd
 
 open class OrthographicCameraController: CameraController {
+    
+    private override init()
+    {
+        super.init()
+    }
+    
     public required convenience init(from decoder: Decoder) throws {
-        try self.init(from: decoder)
+        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
         camera = try values.decode(OrthographicCamera.self, forKey: .camera)
         defaultPosition = try values.decode(simd_float3.self, forKey: .defaultPosition)
         defaultOrientation = try values.decode(simd_quatf.self, forKey: .defaultOrientation)
         defaultZoom = try values.decode(Float.self, forKey: .defaultZoom)
-        setup()
+        zoomDelta = try values.decode(Float.self, forKey: .zoomDelta)
+        panDelta = try values.decode(simd_float2.self, forKey: .panDelta)
     }
     
     override open func encode(to encoder: Encoder) throws {
@@ -26,6 +33,8 @@ open class OrthographicCameraController: CameraController {
         try container.encode(defaultPosition, forKey: .defaultPosition)
         try container.encode(defaultOrientation, forKey: .defaultOrientation)
         try container.encode(defaultZoom, forKey: .defaultZoom)
+        try container.encode(zoomDelta, forKey: .zoomDelta)
+        try container.encode(panDelta, forKey: .panDelta)
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -34,6 +43,8 @@ open class OrthographicCameraController: CameraController {
         case defaultOrientation
         case modifierFlags
         case defaultZoom
+        case zoomDelta
+        case panDelta
     }
        
     public var camera: OrthographicCamera?
@@ -41,8 +52,8 @@ open class OrthographicCameraController: CameraController {
     open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
     open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
 
-    var defaultZoom: Float
-    var zoomDelta: Float
+    var defaultZoom: Float = 0.5
+    var zoomDelta: Float = 0.5
     var panDelta = simd_make_float2(0.0, 0.0)
     
     public init(camera: OrthographicCamera, view: MTKView, defaultZoom: Float = 0.5, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
@@ -343,6 +354,24 @@ open class OrthographicCameraController: CameraController {
                 
                 self.onChange?()
             }
+        }
+    }
+    
+    //MARK: - Load
+    
+    open override func load(_ url: URL) {
+        do {
+            let data = try Data(contentsOf: url)
+            let loaded = try JSONDecoder().decode(OrthographicCameraController.self, from: data)
+            if let camera = self.camera, let loadedCamera = loaded.camera {
+                camera.setFrom(loadedCamera)
+            }
+            self.zoomDelta = loaded.zoomDelta
+            self.panDelta = loaded.panDelta
+        }
+        catch
+        {
+            print(error.localizedDescription)
         }
     }
 }

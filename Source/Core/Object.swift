@@ -341,6 +341,12 @@ open class Object: Codable {
             return visible
         }
     }
+    
+    public func setFrom(_ object: Object) {
+        position = object.position
+        orientation = object.orientation
+        scale = object.scale
+    }
 }
 
 extension Object: Equatable {

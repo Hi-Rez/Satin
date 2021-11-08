@@ -20,6 +20,8 @@ open class CameraController: Codable {
     public required init(from decoder: Decoder) throws {}
     open func encode(to encoder: Encoder) throws {}
     
+    public init() {}
+    
     public private(set) var enabled: Bool = false
     
     public var view: MTKView? {
@@ -390,4 +392,22 @@ open class CameraController: Codable {
     @objc open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {}
     
     #endif
+    
+    // MARK: - Save & Load
+    
+    open func save(_ url: URL) {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        do {
+            let payload: Data = try jsonEncoder.encode(self)
+            try payload.write(to: url)
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    open func load(_ url: URL) {
+        
+    }
 }

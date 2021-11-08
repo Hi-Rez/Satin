@@ -129,4 +129,12 @@ open class Camera: Object
         let origin = worldMatrix * projectionMatrix.inverse * simd_float4(ndcCoordinate.x, ndcCoordinate.y, 0.5, 1.0)
         return simd_make_float3(origin)
     }
+    
+    public override func setFrom(_ object: Object) {
+        super.setFrom(object)
+        if let camera = object as? Camera {
+            near = camera.near
+            far = camera.far
+        }
+    }
 }
