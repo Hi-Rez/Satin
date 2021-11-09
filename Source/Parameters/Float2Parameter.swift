@@ -19,6 +19,7 @@ open class Float2Parameter: NSObject, Parameter {
     public var alignment: Int { return MemoryLayout<simd_float2>.alignment }
     public var count: Int { return 2 }
     public var actions: [(simd_float2) -> Void] = []
+    
     public subscript<Float>(index: Int) -> Float {
         get {
             return value[index % count] as! Float

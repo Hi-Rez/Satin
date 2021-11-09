@@ -18,6 +18,8 @@ open class Int2Parameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<simd_int2>.stride }
     public var alignment: Int { return MemoryLayout<simd_int2>.alignment }
     public var count: Int { return 2 }
+    public var actions: [(simd_int2) -> Void] = []
+    
     public subscript<Int32>(index: Int) -> Int32 {
         get {
             return value[index % count] as! Int32
@@ -30,6 +32,8 @@ open class Int2Parameter: NSObject, Parameter {
     public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }
+    
+    var observers: [NSKeyValueObservation] = []
     
     @objc public dynamic var x: Int32
     @objc public dynamic var y: Int32
@@ -70,7 +74,18 @@ open class Int2Parameter: NSObject, Parameter {
         }
     }
     
-    public init(_ label: String, _ value: simd_int2, _ min: simd_int2, _ max: simd_int2, _ controlType: ControlType = .unknown) {
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case x
+        case y
+        case minX
+        case maxX
+        case minY
+        case maxY
+    }
+    
+    public init(_ label: String, _ value: simd_int2, _ min: simd_int2, _ max: simd_int2, _ controlType: ControlType = .unknown, _ action: ((simd_int2) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -82,9 +97,15 @@ open class Int2Parameter: NSObject, Parameter {
         
         self.minY = min.y
         self.maxY = max.y
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
     }
     
-    public init(_ label: String, _ value: simd_int2 = simd_make_int2(0), _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_int2 = simd_make_int2(0), _ controlType: ControlType = .unknown, _ action: ((simd_int2) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -96,9 +117,15 @@ open class Int2Parameter: NSObject, Parameter {
         
         self.minY = 0
         self.maxY = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
     }
     
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_int2) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -110,5 +137,29 @@ open class Int2Parameter: NSObject, Parameter {
         
         self.minY = 0
         self.maxY = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+        setup()
+    }
+    
+    func setup() {
+        observers.append(observe(\.x) { [unowned self] _, _ in
+            for action in self.actions {
+                action(self.value)
+            }
+        })
+        observers.append(observe(\.y) { [unowned self] _, _ in
+            for action in self.actions {
+                action(self.value)
+            }
+        })
+    }
+    
+    deinit {
+        observers = []
+        actions = []
     }
 }
