@@ -7,6 +7,10 @@
 
 import Metal
 
+public protocol BufferComputeSystemDelegate: AnyObject {
+    func updated(bufferComputeSystem: BufferComputeSystem)
+}
+
 open class BufferComputeSystem {
     var _reset: Bool = true
     var _setupBuffers: Bool = false
@@ -24,6 +28,8 @@ open class BufferComputeSystem {
         }
     }
 
+    public weak var delegate: BufferComputeSystemDelegate?
+    
     public var feedback: Bool {
         didSet {
             _reset = true
@@ -84,7 +90,7 @@ open class BufferComputeSystem {
         setup()
     }
 
-    open func setup() {
+    func setup() {
         checkFeatures()
     }
 
@@ -236,7 +242,7 @@ open class BufferComputeSystem {
         return indexOffset
     }
 
-    public func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         #if os(iOS) || os(macOS)
         if _useDispatchThreads {
             _dispatchThreads(computeEncoder, pipeline)
@@ -249,7 +255,7 @@ open class BufferComputeSystem {
     }
 
     #if os(iOS) || os(macOS)
-    public  func _dispatchThreads(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    private func _dispatchThreads(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         let gridSize = MTLSizeMake(_count, 1, 1)
         var threadGroupSize = pipeline.maxTotalThreadsPerThreadgroup
         threadGroupSize = threadGroupSize > _count ? _count : threadGroupSize

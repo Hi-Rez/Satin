@@ -462,6 +462,38 @@ open class ParameterGroup: Codable {
         return source
     }
 
+    public func set(_ name: String, _ value: [Float]) {
+        let count = value.count
+        if count == 1 {
+            set(name, value[0])
+        }
+        else if count == 2 {
+            set(name, simd_make_float2(value[0], value[1]))
+        }
+        else if count == 3 {
+            set(name, simd_make_float3(value[0], value[1], value[2]))
+        }
+        else if count == 4 {
+            set(name, simd_make_float4(value[0], value[1], value[2], value[3]))
+        }
+    }
+    
+    public func set(_ name: String, _ value: [Int]) {
+        let count = value.count
+        if count == 1 {
+            set(name, value[0])
+        }
+        else if count == 2 {
+            set(name, simd_make_int2(Int32(value[0]), Int32(value[1])))
+        }
+        else if count == 3 {
+            set(name, simd_make_int3(Int32(value[0]), Int32(value[1]), Int32(value[2])))
+        }
+        else if count == 4 {
+            set(name, simd_make_int4(Int32(value[0]), Int32(value[1]), Int32(value[2]), Int32(value[3])))
+        }
+    }
+    
     public func set(_ name: String, _ value: Float) {
         if let param = paramsMap[name], let p = param as? FloatParameter {
             p.value = value

@@ -15,7 +15,7 @@ import Satin
 class Renderer: Forge.Renderer {
     lazy var audioInput: AudioInput = {
         let audioInput = AudioInput(context: context)
-        audioInput.input.value = "loopback"
+        audioInput.input.value = "Loopback Audio"
         return audioInput
     }()
     

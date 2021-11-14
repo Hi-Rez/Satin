@@ -15,7 +15,7 @@ extension Renderer {
             let pipeline = try makeComputePipeline(library: library, kernel: kernel)
             computeSystem.updatePipeline = pipeline
             
-            if let commandQueue = self.device.makeCommandQueue(), let commandBuffer = commandQueue.makeCommandBuffer() {
+            if let commandQueue = device.makeCommandQueue(), let commandBuffer = commandQueue.makeCommandBuffer() {
                 computeSystem.update(commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
@@ -31,7 +31,7 @@ extension Renderer {
             let pipeline = try makeComputePipeline(library: library, kernel: "skyboxCompute")
             skyboxTextureCompute.updatePipeline = pipeline
             
-            guard let cubemapTexture = self.skyboxCubeTexture else { return }
+            guard let cubemapTexture = skyboxCubeTexture else { return }
             let levels = cubemapTexture.mipmapLevelCount
             
             var size = cubemapTexture.width
@@ -59,18 +59,16 @@ extension Renderer {
                 for slice in 0..<6 {
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = skyboxTextureCompute.texture[slice] {
-                                blitEncoder.copy(
-                                    from: texture,
-                                    sourceSlice: 0,
-                                    sourceLevel: 0,
-                                    to: cubemapTexture,
-                                    destinationSlice: slice,
-                                    destinationLevel: level,
-                                    sliceCount: 1,
-                                    levelCount: 1
-                                )
-                            }
+                            blitEncoder.copy(
+                                from: skyboxTextureCompute.texture[slice],
+                                sourceSlice: 0,
+                                sourceLevel: 0,
+                                to: cubemapTexture,
+                                destinationSlice: slice,
+                                destinationLevel: level,
+                                sliceCount: 1,
+                                levelCount: 1
+                            )
                             blitEncoder.endEncoding()
                         }
                         commandBuffer.commit()
@@ -91,7 +89,7 @@ extension Renderer {
             let pipeline = try makeComputePipeline(library: library, kernel: "cubemapCompute")
             cubemapTextureCompute.updatePipeline = pipeline
             
-            guard let cubemapTexture = self.hdrCubemapTexture else { return }
+            guard let cubemapTexture = hdrCubemapTexture else { return }
             let levels = cubemapTexture.mipmapLevelCount
             
             var size = cubemapTexture.width
@@ -117,18 +115,17 @@ extension Renderer {
                 for slice in 0..<6 {
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = cubemapTextureCompute.texture[slice] {
-                                blitEncoder.copy(
-                                    from: texture,
-                                    sourceSlice: 0,
-                                    sourceLevel: 0,
-                                    to: cubemapTexture,
-                                    destinationSlice: slice,
-                                    destinationLevel: level,
-                                    sliceCount: 1,
-                                    levelCount: 1
-                                )
-                            }
+                            blitEncoder.copy(
+                                from: cubemapTextureCompute.texture[slice],
+                                sourceSlice: 0,
+                                sourceLevel: 0,
+                                to: cubemapTexture,
+                                destinationSlice: slice,
+                                destinationLevel: level,
+                                sliceCount: 1,
+                                levelCount: 1
+                            )
+                            
                             blitEncoder.endEncoding()
                         }
                         commandBuffer.commit()
@@ -149,7 +146,7 @@ extension Renderer {
             let pipeline = try makeComputePipeline(library: library, kernel: "diffuseCompute")
             diffuseTextureCompute.updatePipeline = pipeline
             
-            guard let cubemapTexture = self.diffuseCubeTexture else { return }
+            guard let cubemapTexture = diffuseCubeTexture else { return }
             let levels = cubemapTexture.mipmapLevelCount
             
             var size = cubemapTexture.width
@@ -176,18 +173,16 @@ extension Renderer {
                 for slice in 0..<6 {
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = diffuseTextureCompute.texture[slice] {
-                                blitEncoder.copy(
-                                    from: texture,
-                                    sourceSlice: 0,
-                                    sourceLevel: 0,
-                                    to: cubemapTexture,
-                                    destinationSlice: slice,
-                                    destinationLevel: level,
-                                    sliceCount: 1,
-                                    levelCount: 1
-                                )
-                            }
+                            blitEncoder.copy(
+                                from: diffuseTextureCompute.texture[slice],
+                                sourceSlice: 0,
+                                sourceLevel: 0,
+                                to: cubemapTexture,
+                                destinationSlice: slice,
+                                destinationLevel: level,
+                                sliceCount: 1,
+                                levelCount: 1
+                            )
                             blitEncoder.endEncoding()
                         }
                         commandBuffer.commit()
@@ -239,18 +234,16 @@ extension Renderer {
                 for slice in 0..<6 {
                     if let commandBuffer = commandQueue.makeCommandBuffer() {
                         if let blitEncoder = commandBuffer.makeBlitCommandEncoder() {
-                            if let texture = specularTextureCompute.texture[slice] {
-                                blitEncoder.copy(
-                                    from: texture,
-                                    sourceSlice: 0,
-                                    sourceLevel: 0,
-                                    to: cubeTexture,
-                                    destinationSlice: slice,
-                                    destinationLevel: level,
-                                    sliceCount: 1,
-                                    levelCount: 1
-                                )
-                            }
+                            blitEncoder.copy(
+                                from: specularTextureCompute.texture[slice],
+                                sourceSlice: 0,
+                                sourceLevel: 0,
+                                to: cubeTexture,
+                                destinationSlice: slice,
+                                destinationLevel: level,
+                                sliceCount: 1,
+                                levelCount: 1
+                            )
                             blitEncoder.endEncoding()
                         }
                         commandBuffer.commit()

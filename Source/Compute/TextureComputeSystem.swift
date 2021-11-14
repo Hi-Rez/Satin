@@ -2,14 +2,18 @@
 //  TextureComputeSystem.swift
 //  Satin
 //
-//  Created by Reza Ali on 6/11/20.
+//  Created by Reza Ali on 7/22/20.
 //
 
 import Metal
 
+public protocol TextureComputeSystemDelegate: AnyObject {
+    func updated(textureComputeSystem: TextureComputeSystem)
+}
+
 open class TextureComputeSystem {
     public var label: String = "Satin Texture Compute Encoder"
-    public var textureDescriptor: MTLTextureDescriptor {
+    public var textureDescriptors: [MTLTextureDescriptor] {
         didSet {
             _reset = true
             _setupTextures = true
@@ -17,6 +21,8 @@ open class TextureComputeSystem {
         }
     }
 
+    public weak var delegate: TextureComputeSystemDelegate?
+    
     public var feedback: Bool {
         didSet {
             _reset = true
@@ -32,12 +38,18 @@ open class TextureComputeSystem {
         return feedback ? 2 : 1
     }
 
-    public var texture: MTLTexture? {
-        return textures[index]
+    public var texture: [MTLTexture] {
+        var results: [MTLTexture] = []
+        var textureIndex = 0
+        for _ in textureDescriptors {
+            results.append(textures[textureIndex + index])
+            textureIndex += count
+        }
+        return results
     }
 
     public var textures: [MTLTexture] = []
-
+        
     public var resetPipeline: MTLComputePipelineState? {
         didSet {
             if resetPipeline != nil {
@@ -45,6 +57,7 @@ open class TextureComputeSystem {
             }
         }
     }
+    
     public var updatePipeline: MTLComputePipelineState?
 
     public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
@@ -56,15 +69,15 @@ open class TextureComputeSystem {
     private var _index: Int = 0
     private var _useDispatchThreads: Bool = false
 
-    private var context: Context
+    public var context: Context
 
     public init(context: Context,
-                textureDescriptor: MTLTextureDescriptor,
+                textureDescriptors: [MTLTextureDescriptor],
                 updatePipeline: MTLComputePipelineState?,
                 resetPipeline: MTLComputePipelineState?,
                 feedback: Bool = false) {
         self.context = context
-        self.textureDescriptor = textureDescriptor
+        self.textureDescriptors = textureDescriptors
         self.updatePipeline = updatePipeline
         self.resetPipeline = resetPipeline
         self.feedback = feedback
@@ -72,26 +85,26 @@ open class TextureComputeSystem {
     }
 
     public init(context: Context,
-                textureDescriptor: MTLTextureDescriptor,
+                textureDescriptors: [MTLTextureDescriptor],
                 updatePipeline: MTLComputePipelineState?,
                 feedback: Bool = false) {
         self.context = context
-        self.textureDescriptor = textureDescriptor
+        self.textureDescriptors = textureDescriptors
         self.updatePipeline = updatePipeline
         self.feedback = feedback
         setup()
     }
 
     public init(context: Context,
-                textureDescriptor: MTLTextureDescriptor,
+                textureDescriptors: [MTLTextureDescriptor],
                 feedback: Bool = false) {
         self.context = context
-        self.textureDescriptor = textureDescriptor
+        self.textureDescriptors = textureDescriptors
         self.feedback = feedback
         setup()
     }
 
-    private func setup() {
+    open func setup() {
         checkFeatures()
         checkDescriptor()
         setupTextures()
@@ -104,11 +117,13 @@ open class TextureComputeSystem {
     }
 
     private func checkDescriptor() {
-        if !textureDescriptor.usage.contains(.shaderWrite) {
-            textureDescriptor.usage = [textureDescriptor.usage, .shaderWrite]
-        }
-        if feedback, !textureDescriptor.usage.contains(.shaderRead) {
-            textureDescriptor.usage = [textureDescriptor.usage, .shaderRead]
+        for textureDescriptor in textureDescriptors {
+            if !textureDescriptor.usage.contains(.shaderWrite) {
+                textureDescriptor.usage = [textureDescriptor.usage, .shaderWrite]
+            }
+            if feedback, !textureDescriptor.usage.contains(.shaderRead) {
+                textureDescriptor.usage = [textureDescriptor.usage, .shaderRead]
+            }
         }
     }
 
@@ -135,9 +150,11 @@ open class TextureComputeSystem {
     private func setupTextures() {
         textures = []
         let count = feedback ? 2 : 1
-        for _ in 0..<count {
-            if let texture = context.device.makeTexture(descriptor: textureDescriptor) {
-                textures.append(texture)
+        for textureDescriptor in textureDescriptors {
+            for _ in 0..<count {
+                if let texture = context.device.makeTexture(descriptor: textureDescriptor) {
+                    textures.append(texture)
+                }
             }
         }
     }
@@ -158,12 +175,12 @@ open class TextureComputeSystem {
         }
         
         let count = textures.count
-        if count > 0, (resetPipeline != nil || updatePipeline != nil), let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
+        if count > 0, resetPipeline != nil || updatePipeline != nil, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
-            
-            if _reset, let pipeline = self.resetPipeline {
+
+            if feedback, _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0..<count {
+                for i in 0...count {
                     let offset = setTextures(computeEncoder, i)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)
@@ -174,7 +191,7 @@ open class TextureComputeSystem {
 
             if let pipeline = self.updatePipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                let offset = setTextures(computeEncoder)
+                let offset = setTextures(computeEncoder, _index)
                 preUpdate?(computeEncoder, offset)
                 preCompute?(computeEncoder, offset)
                 dispatch(computeEncoder, pipeline)
@@ -185,38 +202,31 @@ open class TextureComputeSystem {
         }
     }
 
-    private func setTextures(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
-        var offset = 0
-        if feedback {
-            computeEncoder.setTexture(textures[ping()], index: offset)
-            offset += 1
-            computeEncoder.setTexture(textures[pong()], index: offset)
-            offset += 1
-        } else {
-            computeEncoder.setTexture(textures[0], index: offset)
-            offset += 1
-        }
-
-        return offset
-    }
-    
     private func setTextures(_ computeEncoder: MTLComputeCommandEncoder, _ index: Int) -> Int {
-        var offset = 0
+        var index = 0
         if feedback {
-            computeEncoder.setTexture(textures[ping(index)], index: offset)
-            offset += 1
-            computeEncoder.setTexture(textures[pong(index)], index: offset)
-            offset += 1
+            var textureIndex = 0
+            for _ in textureDescriptors {
+                computeEncoder.setTexture(textures[textureIndex + ping()], index: index)
+                index += 1
+                computeEncoder.setTexture(textures[textureIndex + pong()], index: index)
+                index += 1
+                textureIndex += 2
+            }
         } else {
-            computeEncoder.setTexture(textures[index], index: offset)
-            offset += 1
+            var textureIndex = 0
+            for _ in textureDescriptors {
+                computeEncoder.setTexture(textures[textureIndex], index: index)
+                textureIndex += 1
+                index += 1
+            }            
         }
 
-        return offset
+        return index
     }
 
-    private func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
-        guard let texture = self.texture else { return }
+    func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+        guard let texture = self.texture.first else { return }
         #if os(iOS) || os(macOS)
         if _useDispatchThreads {
             _dispatchThreads(texture, computeEncoder, pipeline)
@@ -270,7 +280,7 @@ open class TextureComputeSystem {
     }
 
     private func ping() -> Int {
-        return (_index % count)
+        return _index
     }
 
     private func pong() -> Int {
@@ -279,13 +289,5 @@ open class TextureComputeSystem {
 
     private func pingPong() {
         _index = (_index + 1) % count
-    }
-    
-    private func ping(_ index: Int) -> Int {
-        return (index % count)
-    }
-    
-    private func pong(_ index: Int) -> Int {
-        return ((index + 1) % count)
     }
 }

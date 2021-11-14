@@ -24,7 +24,7 @@ class Renderer: Forge.Renderer {
         textureDescriptor.sampleCount = 1
         textureDescriptor.textureType = .type2D
         textureDescriptor.usage = [.shaderRead, .shaderWrite]
-        let textureCompute = TextureComputeSystem(context: context, textureDescriptor: textureDescriptor)
+        let textureCompute = TextureComputeSystem(context: context, textureDescriptors: [textureDescriptor])
         return textureCompute
     }()
     
@@ -91,7 +91,7 @@ class Renderer: Forge.Renderer {
             if let commandBuffer = commandQueue.makeCommandBuffer() {
                 textureCompute.update(commandBuffer)
                 commandBuffer.commit()
-                mesh.material = BasicTextureMaterial(texture: textureCompute.texture)
+                mesh.material = BasicTextureMaterial(texture: textureCompute.texture.first)
             }
         }
         catch {

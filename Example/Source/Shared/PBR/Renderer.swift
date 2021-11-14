@@ -71,7 +71,10 @@ class Renderer: Forge.Renderer {
         mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
             renderEncoder.setFragmentTexture(self.diffuseCubeTexture, index: FragmentTextureIndex.Custom0.rawValue)
             renderEncoder.setFragmentTexture(self.specularCubeTexture, index: FragmentTextureIndex.Custom1.rawValue)
-            renderEncoder.setFragmentTexture(self.integrationTextureCompute.texture, index: FragmentTextureIndex.Custom2.rawValue)
+            if let texture = self.integrationTextureCompute.texture.first {
+                renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom2.rawValue)
+            }
+            
         }
         return mesh
     }()
@@ -89,7 +92,7 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var debugMesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 10), material: BasicTextureMaterial(texture: integrationTextureCompute.texture))
+        let mesh = Mesh(geometry: PlaneGeometry(size: 10), material: BasicTextureMaterial(texture: integrationTextureCompute.texture.first!))
         mesh.label = "Debug"
         mesh.position = [0, 0, -5]
         mesh.visible = false
@@ -99,15 +102,15 @@ class Renderer: Forge.Renderer {
     lazy var integrationTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
             context: context,
-            textureDescriptor: MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rg16Float, width: 512, height: 512, mipmapped: false)
+            textureDescriptors: [MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rg16Float, width: 512, height: 512, mipmapped: false)]
         )
         return compute
     }()
     
     // Diffuse (Irradiance) Computation
     
-    lazy var diffuseTextureCompute: MultipleTextureComputeSystem = {
-        let compute = MultipleTextureComputeSystem(
+    lazy var diffuseTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(
             context: context,
             textureDescriptors: []
         )
@@ -119,8 +122,8 @@ class Renderer: Forge.Renderer {
     
     // HDRI to Cubemap Computation
     
-    lazy var cubemapTextureCompute: MultipleTextureComputeSystem = {
-        let compute = MultipleTextureComputeSystem(
+    lazy var cubemapTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(
             context: context,
             textureDescriptors: []
         )
@@ -147,8 +150,8 @@ class Renderer: Forge.Renderer {
         return buffer
     }()
     
-    lazy var specularTextureCompute: MultipleTextureComputeSystem = {
-        let compute = MultipleTextureComputeSystem(
+    lazy var specularTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(
             context: context,
             textureDescriptors:[]
         )
@@ -162,8 +165,8 @@ class Renderer: Forge.Renderer {
     
     // HDRI to Skybox Texture
     
-    lazy var skyboxTextureCompute: MultipleTextureComputeSystem = {
-        let compute = MultipleTextureComputeSystem(context: context, textureDescriptors: [])
+    lazy var skyboxTextureCompute: TextureComputeSystem = {
+        let compute = TextureComputeSystem(context: context, textureDescriptors: [])
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdriTexture, index: offset)
         }

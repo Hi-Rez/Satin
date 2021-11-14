@@ -1,13 +1,13 @@
 //
-//  LiveBufferComputeSystem.swift
+//  LiveTextureComputeSystem.swift
 //  Pods
 //
-//  Created by Reza Ali on 10/26/21.
+//  Created by Reza Ali on 11/12/21.
 //
 
 import Foundation
 
-open class LiveBufferComputeSystem: BufferComputeSystem {
+open class LiveTextureComputeSystem: TextureComputeSystem {
     public var compiler = MetalFileCompiler()
     public var source: String?
     public var instance: String = ""
@@ -17,7 +17,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     public var parameters: ParameterGroup?
     
     var prefixLabel: String {
-        var prefix = String(describing: type(of: self)).replacingOccurrences(of: "BufferComputeSystem", with: "")
+        var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != prefix {
             prefix = prefix.replacingOccurrences(of: bundleName, with: "")
@@ -27,27 +27,31 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     }
     
     public init(context: Context,
+                textureDescriptors: [MTLTextureDescriptor],
                 pipelineURL: URL,
                 instance: String = "",
-                count: Int,
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelineURL
         self.instance = instance
-        super.init(context: context, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
+        
+        super.init(context: context, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
+        
         self.source = compileSource()
         setup()
     }
     
     public init(context: Context,
+                textureDescriptors: [MTLTextureDescriptor],
                 pipelinesURL: URL,
                 instance: String = "",
-                count: Int,
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelinesURL
         self.instance = instance
-        super.init(context: context, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
+        
+        super.init(context: context, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
+        
         self.pipelineURL = pipelineURL.appendingPathComponent(prefixLabel).appendingPathComponent("Shaders.metal")
         self.source = compileSource()
         setup()
@@ -64,6 +68,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             self.source = nil
             self.source = self.compileSource()
             self.setupPipelines()
+            self.delegate?.updated(textureComputeSystem: self)
         }
     }
     
@@ -86,11 +91,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             do {
                 var source = try compiler.parse(pipelineURL)
                 injectConstants(source: &source)
-                
-                if let buffer = parseStruct(source: source, key: "\(prefixLabel.titleCase)") {
-                    setParams([buffer])
-                }
-                
+                                
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase)Uniforms") {
                     params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
                     if let parameters = self.parameters {
@@ -107,7 +108,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
                 return source
             }
             catch {
-                print("\(prefixLabel) BufferComputeError: \(error.localizedDescription)")
+                print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
             }
             return nil
         }
@@ -118,7 +119,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             return try context.device.makeLibrary(source: source, options: .none)
         }
         catch {
-            print("\(prefixLabel) BufferComputeError: \(error.localizedDescription)")
+            print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
         }
         return nil
     }
@@ -130,18 +131,18 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             reset()
         }
         catch {
-            print("\(prefixLabel) BufferComputeError: \(error.localizedDescription)")
+            print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
         }
     }
     
     func updateUniforms() {
-        guard let parameters = parameters else { return }
-        parameters.set("Count", count)
+        guard let parameters = parameters, let txDsx = textureDescriptors.first else { return }
+        parameters.set("Size", [txDsx.width, txDsx.height])
         guard let uniforms = uniforms else { return }
         uniforms.update()
     }
 
-    public override func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    override func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         bindUniforms(computeEncoder)
         super.dispatch(computeEncoder, pipeline)
     }
