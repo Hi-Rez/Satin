@@ -17,6 +17,8 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     public var stride: Int { return 12 }
     public var alignment: Int { return 4 }
     public var count: Int { return 3 }
+    public var actions: [(simd_float3) -> Void] = []
+    
     public subscript<Float>(index: Int) -> Float {
         get {
             return value[index % count] as! Float
@@ -30,9 +32,27 @@ open class PackedFloat3Parameter: NSObject, Parameter {
         return Float.self
     }
     
-    @objc public dynamic var x: Float
-    @objc public dynamic var y: Float
-    @objc public dynamic var z: Float
+    @objc public dynamic var x: Float {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Float {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var z: Float {
+        didSet {
+            if !valueChanged, oldValue != z {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Float
     @objc public dynamic var maxX: Float
@@ -43,14 +63,18 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     @objc public dynamic var minZ: Float
     @objc public dynamic var maxZ: Float
     
+    var valueChanged: Bool = false
+    
     public var value: simd_float3 {
         get {
             return simd_make_float3(x, y, z)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
             z = newValue.z
+            emit()
         }
     }
     
@@ -75,8 +99,22 @@ open class PackedFloat3Parameter: NSObject, Parameter {
             maxZ = newValue.z
         }
     }
+        
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case x
+        case y
+        case z
+        case minX
+        case maxX
+        case minY
+        case maxY
+        case minZ
+        case maxZ
+    }
     
-    public init(_ label: String, _ value: simd_float3, _ min: simd_float3, _ max: simd_float3, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_float3, _ min: simd_float3, _ max: simd_float3, _ controlType: ControlType = .unknown, _ action: ((simd_float3) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -91,9 +129,14 @@ open class PackedFloat3Parameter: NSObject, Parameter {
         
         self.minZ = min.z
         self.maxZ = max.z
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
-    public init(_ label: String, _ value: simd_float3 = simd_make_float3(0.0), _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: simd_float3 = simd_make_float3(0.0), _ controlType: ControlType = .unknown, _ action: ((simd_float3) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -109,9 +152,14 @@ open class PackedFloat3Parameter: NSObject, Parameter {
         
         self.minZ = 0.0
         self.maxZ = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_float3) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
@@ -127,5 +175,21 @@ open class PackedFloat3Parameter: NSObject, Parameter {
         
         self.minZ = 0.0
         self.maxZ = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+    }
+    
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
+    }
+    
+    deinit {
+        actions = []
     }
 }

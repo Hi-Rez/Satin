@@ -32,13 +32,35 @@ open class Int4Parameter: NSObject, Parameter {
     public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }
-    
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var x: Int32
-    @objc public dynamic var y: Int32
-    @objc public dynamic var z: Int32
-    @objc public dynamic var w: Int32
+        
+    @objc public dynamic var x: Int32 {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Int32 {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var z: Int32 {
+        didSet {
+            if !valueChanged, oldValue != z {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var w: Int32 {
+        didSet {
+            if !valueChanged, oldValue != w {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Int32
     @objc public dynamic var maxX: Int32
@@ -52,15 +74,19 @@ open class Int4Parameter: NSObject, Parameter {
     @objc public dynamic var minW: Int32
     @objc public dynamic var maxW: Int32
     
+    var valueChanged: Bool = false
+    
     public var value: simd_int4 {
         get {
             return simd_make_int4(x, y, z, w)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
             z = newValue.z
             w = newValue.w
+            emit()
         }
     }
     
@@ -125,6 +151,11 @@ open class Int4Parameter: NSObject, Parameter {
         
         self.minW = min.w
         self.maxW = max.w
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
     public init(_ label: String, _ value: simd_int4 = simd_make_int4(0), _ controlType: ControlType = .unknown, _ action: ((simd_int4) -> Void)? = nil) {
@@ -147,6 +178,11 @@ open class Int4Parameter: NSObject, Parameter {
         
         self.minW = 0
         self.maxW = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_int4) -> Void)? = nil) {
@@ -169,33 +205,21 @@ open class Int4Parameter: NSObject, Parameter {
         
         self.minW = 0
         self.maxW = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.z) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.w) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

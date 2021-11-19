@@ -17,6 +17,8 @@ open class DoubleParameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<Double>.stride }
     public var alignment: Int { return MemoryLayout<Double>.alignment }
     public var count: Int { return 1 }
+    public var actions: [(Double) -> Void] = []
+
     public subscript<Double>(index: Int) -> Double {
         get {
             return value as! Double
@@ -30,34 +32,73 @@ open class DoubleParameter: NSObject, Parameter {
         return Double.self
     }
     
-    @objc public dynamic var value: Double
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+        case min
+        case max
+    }
+    
+    @objc public dynamic var value: Double {
+        didSet {
+            if oldValue != value {
+                emit()
+            }
+        }
+    }
     @objc public dynamic var min: Double
     @objc public dynamic var max: Double
     
-    public init(_ label: String, _ value: Double, _ min: Double, _ max: Double, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Double, _ min: Double, _ max: Double, _ controlType: ControlType = .unknown, _ action: ((Double) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = value
         self.min = min
         self.max = max
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
-    public init(_ label: String, _ value: Double = 0.0, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: Double = 0.0, _ controlType: ControlType = .unknown, _ action: ((Double) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = value
         self.min = 0.0
         self.max = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
     
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Double) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
         
         self.value = 0.0
         self.min = 0.0
         self.max = 1.0
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+    }
+    
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+    }
+    
+    deinit {
+        actions = []
     }
 }

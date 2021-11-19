@@ -291,3 +291,12 @@ float angle2(simd_float2 a)
     }
     return theta;
 }
+
+float angle(float x, float y)
+{
+    float theta = atan2f(y, x);
+    if(theta < 0) {
+        theta += M_PI * 2.0;
+    }
+    return theta;
+}

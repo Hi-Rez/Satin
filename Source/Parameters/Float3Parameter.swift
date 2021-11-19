@@ -31,12 +31,28 @@ open class Float3Parameter: NSObject, Parameter {
     public func dataType<Float>() -> Float.Type {
         return Float.self
     }
-    
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var x: Float
-    @objc public dynamic var y: Float
-    @objc public dynamic var z: Float
+        
+    @objc public dynamic var x: Float {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Float {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var z: Float {
+        didSet {
+            if !valueChanged, oldValue != z {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Float
     @objc public dynamic var maxX: Float
@@ -47,14 +63,18 @@ open class Float3Parameter: NSObject, Parameter {
     @objc public dynamic var minZ: Float
     @objc public dynamic var maxZ: Float
     
+    var valueChanged: Bool = false
+
     public var value: simd_float3 {
         get {
             return simd_make_float3(x, y, z)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
             z = newValue.z
+            emit()
         }
     }
     
@@ -114,7 +134,6 @@ open class Float3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: simd_float3 = simd_make_float3(0.0), _ controlType: ControlType = .unknown, _ action: ((simd_float3) -> Void)? = nil) {
@@ -138,7 +157,6 @@ open class Float3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_float3) -> Void)? = nil) {
@@ -162,29 +180,16 @@ open class Float3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.z) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

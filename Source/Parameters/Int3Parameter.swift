@@ -33,11 +33,27 @@ open class Int3Parameter: NSObject, Parameter {
         return Int32.self
     }
     
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var x: Int32
-    @objc public dynamic var y: Int32
-    @objc public dynamic var z: Int32
+    @objc public dynamic var x: Int32 {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Int32 {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var z: Int32 {
+        didSet {
+            if !valueChanged, oldValue != z {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Int32
     @objc public dynamic var maxX: Int32
@@ -48,14 +64,18 @@ open class Int3Parameter: NSObject, Parameter {
     @objc public dynamic var minZ: Int32
     @objc public dynamic var maxZ: Int32
     
+    var valueChanged: Bool = false
+    
     public var value: simd_int3 {
         get {
             return simd_make_int3(x, y, z)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
             z = newValue.z
+            emit()
         }
     }
     
@@ -116,7 +136,6 @@ open class Int3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: simd_int3 = simd_make_int3(0), _ controlType: ControlType = .unknown, _ action: ((simd_int3) -> Void)? = nil) {
@@ -140,7 +159,6 @@ open class Int3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_int3) -> Void)? = nil) {
@@ -164,29 +182,16 @@ open class Int3Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.z) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

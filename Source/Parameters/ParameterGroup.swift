@@ -80,6 +80,9 @@ open class ParameterGroup: Codable {
             else if let p = param as? Int3Parameter {
                 append(Int3Parameter(label, p.value, p.min, p.max, p.controlType))
             }
+            else if let p = param as? Int4Parameter {
+                append(Int4Parameter(label, p.value, p.min, p.max, p.controlType))
+            }
             else if let p = param as? DoubleParameter {
                 append(DoubleParameter(label, p.value, p.min, p.max, p.controlType))
             }
@@ -223,8 +226,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mfp = mp as? Float2Parameter {
                     if setValue {
-                        mfp.x = p.x
-                        mfp.y = p.y
+                        mfp.value = p.value
                     }
                     if setOptions {
                         mfp.minX = p.minX
@@ -240,9 +242,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mfp = mp as? Float3Parameter {
                     if setValue {
-                        mfp.x = p.x
-                        mfp.y = p.y
-                        mfp.z = p.z
+                        mfp.value = p.value
                     }
                     if setOptions {
                         mfp.minX = p.minX
@@ -260,9 +260,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mfp = mp as? PackedFloat3Parameter {
                     if setValue {
-                        mfp.x = p.x
-                        mfp.y = p.y
-                        mfp.z = p.z
+                        mfp.value = p.value
                     }
                     if setOptions {
                         mfp.minX = p.minX
@@ -280,10 +278,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mfp = mp as? Float4Parameter {
                     if setValue {
-                        mfp.x = p.x
-                        mfp.y = p.y
-                        mfp.z = p.z
-                        mfp.w = p.w
+                        mfp.value = p.value
                     }
                     if setOptions {
                         mfp.minX = p.minX
@@ -317,8 +312,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mip = mp as? Int2Parameter {
                     if setValue {
-                        mip.x = p.x
-                        mip.y = p.y
+                        mip.value = p.value
                     }
                     if setOptions {
                         mip.minX = p.minX
@@ -334,9 +328,7 @@ open class ParameterGroup: Codable {
             if let mp = paramsMap[label] {
                 if let mip = mp as? Int3Parameter {
                     if setValue {
-                        mip.x = p.x
-                        mip.y = p.y
-                        mip.z = p.z
+                        mip.value = p.value
                     }
                     if setOptions {
                         mip.minX = p.minX

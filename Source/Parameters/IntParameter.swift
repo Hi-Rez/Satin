@@ -32,6 +32,17 @@ open class IntParameter: NSObject, Parameter {
         return Int32.self
     }
     
+
+    @objc public dynamic var value: Int {
+        didSet {
+            if oldValue != value {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var min: Int
+    @objc public dynamic var max: Int
+
     private enum CodingKeys: String, CodingKey {
         case controlType
         case label
@@ -40,12 +51,6 @@ open class IntParameter: NSObject, Parameter {
         case max
     }
     
-    var observers: [NSKeyValueObservation] = []
-
-    @objc public dynamic var value: Int
-    @objc public dynamic var min: Int
-    @objc public dynamic var max: Int
-
     public init(_ label: String, _ value: Int, _ min: Int, _ max: Int, _ controlType: ControlType = .unknown, _ action: ((Int) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
@@ -58,7 +63,6 @@ open class IntParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
 
     public init(_ label: String, _ value: Int = 0, _ controlType: ControlType = .unknown, _ action: ((Int) -> Void)? = nil) {
@@ -73,7 +77,6 @@ open class IntParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
 
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Int) -> Void)? = nil) {
@@ -88,19 +91,16 @@ open class IntParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
+
     }
     
-    func setup() {
-        observers.append(observe(\.value) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

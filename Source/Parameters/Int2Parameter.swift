@@ -44,13 +44,17 @@ open class Int2Parameter: NSObject, Parameter {
     @objc public dynamic var minY: Int32
     @objc public dynamic var maxY: Int32
     
+    var valueChanged: Bool = false
+    
     public var value: simd_int2 {
         get {
             return simd_make_int2(x, y)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
+            emit()
         }
     }
     
@@ -102,7 +106,6 @@ open class Int2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: simd_int2 = simd_make_int2(0), _ controlType: ControlType = .unknown, _ action: ((simd_int2) -> Void)? = nil) {
@@ -122,7 +125,6 @@ open class Int2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_int2) -> Void)? = nil) {
@@ -142,24 +144,16 @@ open class Int2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

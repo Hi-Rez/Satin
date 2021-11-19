@@ -40,9 +40,13 @@ open class FloatParameter: NSObject, Parameter {
         case max
     }
     
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var value: Float
+    @objc public dynamic var value: Float {
+        didSet {
+            if oldValue != value {
+                emit()
+            }
+        }
+    }
     @objc public dynamic var min: Float
     @objc public dynamic var max: Float
     
@@ -58,7 +62,6 @@ open class FloatParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: Float = 0.0, _ controlType: ControlType = .unknown,
@@ -74,7 +77,6 @@ open class FloatParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Float) -> Void)? = nil) {
@@ -89,19 +91,15 @@ open class FloatParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.value) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

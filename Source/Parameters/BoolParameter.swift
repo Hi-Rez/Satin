@@ -32,16 +32,20 @@ open class BoolParameter: NSObject, Parameter {
         return Bool.self
     }
     
-    @objc public dynamic var value: Bool
+    @objc public dynamic var value: Bool {
+        didSet {
+            if oldValue != value {
+                emit()
+            }
+        }
+    }
     
     private enum CodingKeys: String, CodingKey {
         case controlType
         case label
         case value
     }
-    
-    var observers: [NSKeyValueObservation] = []
-    
+        
     public init(_ label: String, _ value: Bool = false, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
@@ -50,7 +54,6 @@ open class BoolParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
@@ -61,20 +64,15 @@ open class BoolParameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup()
-    {
-        observers.append(observe(\.value) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in actions {
+            action(value)
+        }
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

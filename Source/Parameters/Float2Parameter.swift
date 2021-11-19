@@ -32,11 +32,21 @@ open class Float2Parameter: NSObject, Parameter {
     public func dataType<Float>() -> Float.Type {
         return Float.self
     }
-    
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var x: Float
-    @objc public dynamic var y: Float
+        
+    @objc public dynamic var x: Float {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Float {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Float
     @objc public dynamic var maxX: Float
@@ -44,13 +54,17 @@ open class Float2Parameter: NSObject, Parameter {
     @objc public dynamic var minY: Float
     @objc public dynamic var maxY: Float
     
+    var valueChanged: Bool = false
+    
     public var value: simd_float2 {
         get {
             return simd_make_float2(x, y)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
+            emit()
         }
     }
     
@@ -100,7 +114,6 @@ open class Float2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: simd_float2 = simd_make_float2(0.0), _ controlType: ControlType = .unknown, _ action: ((simd_float2) -> Void)? = nil) {
@@ -118,7 +131,6 @@ open class Float2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_float2) -> Void)? = nil) {
@@ -136,24 +148,16 @@ open class Float2Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }

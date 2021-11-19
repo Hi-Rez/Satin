@@ -16,6 +16,8 @@ open class UInt32Parameter: NSObject, Parameter {
     public var stride: Int { return MemoryLayout<UInt32>.stride }
     public var alignment: Int { return MemoryLayout<UInt32>.alignment }
     public var count: Int { return 1 }
+    public var actions: [(UInt32) -> Void] = []
+    
     public subscript<UInt32>(index: Int) -> UInt32 {
         get {
             return value as! UInt32
@@ -29,34 +31,73 @@ open class UInt32Parameter: NSObject, Parameter {
         return UInt32.self
     }
 
-    @objc public dynamic var value: UInt32
+    @objc public dynamic var value: UInt32 {
+        didSet {
+            if oldValue != value {
+                emit()
+            }
+        }
+    }
     @objc public dynamic var min: UInt32
     @objc public dynamic var max: UInt32
 
-    public init(_ label: String, _ value: UInt32, _ min: UInt32, _ max: UInt32, _ controlType: ControlType = .unknown) {
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+        case min
+        case max
+    }
+    
+    public init(_ label: String, _ value: UInt32, _ min: UInt32, _ max: UInt32, _ controlType: ControlType = .unknown, _ action: ((UInt32) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
 
         self.value = value
         self.min = min
         self.max = max
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
 
-    public init(_ label: String, _ value: UInt32 = 0, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: UInt32 = 0, _ controlType: ControlType = .unknown, _ action: ((UInt32) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
 
         self.value = value
         self.min = 0
         self.max = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
     }
 
-    public init(_ label: String, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((UInt32) -> Void)? = nil) {
         self.label = label
         self.controlType = controlType
 
         self.value = 0
         self.min = 0
         self.max = 100
+        
+        if let a = action {
+            actions.append(a)
+        }
+        super.init()
+    }
+    
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+    }
+    
+    deinit {
+        actions = []
     }
 }

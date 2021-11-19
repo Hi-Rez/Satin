@@ -32,12 +32,34 @@ open class Float4Parameter: NSObject, Parameter {
         return Float.self
     }
     
-    var observers: [NSKeyValueObservation] = []
-    
-    @objc public dynamic var x: Float
-    @objc public dynamic var y: Float
-    @objc public dynamic var z: Float
-    @objc public dynamic var w: Float
+    @objc public dynamic var x: Float {
+        didSet {
+            if !valueChanged, oldValue != x {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var y: Float {
+        didSet {
+            if !valueChanged, oldValue != y {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var z: Float {
+        didSet {
+            if !valueChanged, oldValue != z {
+                emit()
+            }
+        }
+    }
+    @objc public dynamic var w: Float {
+        didSet {
+            if !valueChanged, oldValue != w {
+                emit()
+            }
+        }
+    }
     
     @objc public dynamic var minX: Float
     @objc public dynamic var maxX: Float
@@ -51,15 +73,19 @@ open class Float4Parameter: NSObject, Parameter {
     @objc public dynamic var minW: Float
     @objc public dynamic var maxW: Float
     
+    var valueChanged: Bool = false
+
     public var value: simd_float4 {
         get {
             return simd_make_float4(x, y, z, w)
         }
         set(newValue) {
+            valueChanged = true
             x = newValue.x
             y = newValue.y
             z = newValue.z
             w = newValue.w
+            emit()
         }
     }
     
@@ -129,7 +155,6 @@ open class Float4Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ value: simd_float4 = simd_make_float4(0.0), _ controlType: ControlType = .unknown, _ action: ((simd_float4) -> Void)? = nil) {
@@ -157,7 +182,6 @@ open class Float4Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
     public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((simd_float4) -> Void)? = nil) {
@@ -185,34 +209,16 @@ open class Float4Parameter: NSObject, Parameter {
             actions.append(a)
         }
         super.init()
-        setup()
     }
     
-    func setup() {
-        observers.append(observe(\.x) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.y) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.z) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
-        observers.append(observe(\.w) { [unowned self] _, _ in
-            for action in self.actions {
-                action(self.value)
-            }
-        })
+    func emit() {
+        for action in self.actions {
+            action(self.value)
+        }
+        valueChanged = false
     }
     
     deinit {
-        observers = []
         actions = []
     }
 }
