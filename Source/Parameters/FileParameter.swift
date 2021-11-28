@@ -9,6 +9,8 @@
 import Foundation
 
 open class FileParameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.file
     public var controlType: ControlType
     public let label: String

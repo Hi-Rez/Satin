@@ -15,6 +15,12 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     
     public var uniforms: UniformBuffer?
     public var parameters: ParameterGroup?
+        
+    public override var textureDescriptors: [MTLTextureDescriptor] {
+        didSet{
+            updateSize()
+        }
+    }
     
     var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
@@ -61,6 +67,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         super.setup()
         setupCompiler()
         setupPipelines()
+        updateSize()
     }
 
     open func setupCompiler() {
@@ -135,9 +142,20 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         }
     }
     
-    func updateUniforms() {
+    func updateSize() {
         guard let parameters = parameters, let txDsx = textureDescriptors.first else { return }
-        parameters.set("Size", [txDsx.width, txDsx.height])
+        if txDsx.depth > 1 {
+            parameters.set("Size", [txDsx.width, txDsx.height, txDsx.depth])
+        }
+        else if txDsx.height > 1  {
+            parameters.set("Size", [txDsx.width, txDsx.height])
+        }
+        else if txDsx.width > 1 {
+            parameters.set("Size", txDsx.width)
+        }
+    }
+    
+    func updateUniforms() {
         guard let uniforms = uniforms else { return }
         uniforms.update()
     }

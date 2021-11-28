@@ -10,6 +10,8 @@ import Foundation
 import simd
 
 open class Float4Parameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.float4
     public var controlType: ControlType
     public let label: String
@@ -80,12 +82,14 @@ open class Float4Parameter: NSObject, Parameter {
             return simd_make_float4(x, y, z, w)
         }
         set(newValue) {
-            valueChanged = true
-            x = newValue.x
-            y = newValue.y
-            z = newValue.z
-            w = newValue.w
-            emit()
+            if x != newValue.x || y != newValue.y || z != newValue.z || w != newValue.w {
+                valueChanged = true
+                x = newValue.x
+                y = newValue.y
+                z = newValue.z
+                w = newValue.w
+                emit()
+            }
         }
     }
     
@@ -212,6 +216,7 @@ open class Float4Parameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
@@ -219,6 +224,7 @@ open class Float4Parameter: NSObject, Parameter {
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

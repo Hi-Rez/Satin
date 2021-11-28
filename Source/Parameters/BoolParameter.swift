@@ -9,6 +9,8 @@
 import Foundation
 
 open class BoolParameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.bool
     public var controlType: ControlType
     public let label: String
@@ -67,12 +69,14 @@ open class BoolParameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in actions {
             action(value)
         }
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

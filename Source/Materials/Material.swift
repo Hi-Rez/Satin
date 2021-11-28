@@ -512,6 +512,8 @@ public extension Material {
     func cleared(group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
+    
+    func update(parameter: Parameter, from group: ParameterGroup) {}
 }
 
 extension Material: Equatable {

@@ -43,18 +43,18 @@ open class PostProcessor {
         mesh.label = label + " Mesh"
     }
     
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
+    open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                      commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture) {
         renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer,
                       renderTarget: renderTarget)
     }
     
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
+    open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                      commandBuffer: MTLCommandBuffer) {
         renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }
     
-    public func resize(_ size: (width: Float, height: Float)) {
+    open func resize(_ size: (width: Float, height: Float)) {
         renderer.resize(size)
     }
 }

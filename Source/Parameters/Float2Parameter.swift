@@ -10,6 +10,8 @@ import Foundation
 import simd
 
 open class Float2Parameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.float2
     public var controlType: ControlType
     public let label: String
@@ -61,10 +63,12 @@ open class Float2Parameter: NSObject, Parameter {
             return simd_make_float2(x, y)
         }
         set(newValue) {
-            valueChanged = true
-            x = newValue.x
-            y = newValue.y
-            emit()
+            if x != newValue.x || y != newValue.y {
+                valueChanged = true
+                x = newValue.x
+                y = newValue.y
+                emit()
+            }
         }
     }
     
@@ -151,6 +155,7 @@ open class Float2Parameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
@@ -158,6 +163,7 @@ open class Float2Parameter: NSObject, Parameter {
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

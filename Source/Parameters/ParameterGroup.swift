@@ -12,22 +12,41 @@ import simd
 public protocol ParameterGroupDelegate: AnyObject {
     func added(parameter: Parameter, from group: ParameterGroup)
     func removed(parameter: Parameter, from group: ParameterGroup)
+    func update(parameter: Parameter, from group: ParameterGroup)
     func loaded(group: ParameterGroup)
     func saved(group: ParameterGroup)
     func cleared(group: ParameterGroup)
 }
 
-open class ParameterGroup: Codable {
+open class ParameterGroup: Codable, ParameterDelegate {
     public var label: String = ""
-    public var params: [Parameter] = []
+    public var params: [Parameter] = [] {
+        didSet {
+            _updateSize = true
+            _updateStride = true
+            _updateAlignment = true
+            _updateData = true
+        }
+    }
+    
     public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
+
+    deinit {
+        params = []
+        paramsMap = [:]
+        delegate = nil
+        _data.deallocate()
+    }
 
     public init(_ label: String = "") {
         self.label = label
     }
 
     public func append(_ param: Parameter) {
+        if param.delegate == nil {
+            param.delegate = self
+        }
         params.append(param)
         paramsMap[param.label] = param
         delegate?.added(parameter: param, from: self)
@@ -39,6 +58,9 @@ open class ParameterGroup: Codable {
         for (i, p) in params.enumerated() {
             if p.label == key {
                 params.remove(at: i)
+                if param.delegate === self {
+                    param.delegate = nil
+                }
                 break
             }
         }
@@ -46,14 +68,17 @@ open class ParameterGroup: Codable {
     }
 
     public func clear() {
+        for param in params {
+            param.delegate = nil
+        }
         params = []
         paramsMap = [:]
         delegate?.cleared(group: self)
     }
-    
+
     public func copy(_ incomingParams: ParameterGroup, setValues: Bool = true, setOptions: Bool = true) {
         clear()
-        self.label = incomingParams.label
+        label = incomingParams.label
         for param in incomingParams.params {
             let label = param.label
             if let p = param as? FloatParameter {
@@ -102,7 +127,7 @@ open class ParameterGroup: Codable {
             }
         }
     }
-    
+
     public func clone() -> ParameterGroup {
         let copy = ParameterGroup()
         copy.copy(self)
@@ -163,11 +188,11 @@ open class ParameterGroup: Codable {
 
     public func save(_ url: URL, baseURL: URL? = nil) {
         do {
-            var userInfo = [CodingUserInfoKey:Any]()
+            var userInfo = [CodingUserInfoKey: Any]()
             if let baseURL = baseURL {
                 userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
             }
-            
+
             let jsonEncoder = JSONEncoder()
             jsonEncoder.userInfo = userInfo
             jsonEncoder.outputFormatting = .prettyPrinted
@@ -182,14 +207,14 @@ open class ParameterGroup: Codable {
 
     public func load(_ url: URL, append: Bool = true, baseURL: URL? = nil) {
         do {
-            var userInfo = [CodingUserInfoKey:Any]()
+            var userInfo = [CodingUserInfoKey: Any]()
             if let baseURL = baseURL {
                 userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
             }
-            
+
             let jsonDecoder = JSONDecoder()
             jsonDecoder.userInfo = userInfo
-            
+
             let data = try Data(contentsOf: url)
             let loaded = try jsonDecoder.decode(ParameterGroup.self, from: data)
             for param in loaded.params {
@@ -408,38 +433,71 @@ open class ParameterGroup: Codable {
         }
     }
 
-    public var size: Int {
-        var pointerOffset: Int = 0
+    var _size: Int = 0
+    var _stride: Int = 0
+    var _alignment: Int = 0
+
+    var _updateSize: Bool = true
+    var _updateStride: Bool = true
+    var _updateAlignment: Bool = true
+    var _updateData: Bool = true
+
+    func updateSize() {
+        var result: Int = 0
         for param in params {
             let size = param.size
             let alignment = param.alignment
-            let rem = pointerOffset % alignment
+            let rem = result % alignment
             if rem > 0 {
                 let offset = alignment - rem
-                pointerOffset += offset
+                result += offset
             }
-            pointerOffset += size
+            result += size
         }
-        return pointerOffset
+        _size = result
+    }
+
+    public var size: Int {
+        if _updateSize {
+            updateSize()
+            _updateSize = false
+        }
+        return _size
+    }
+
+    func updateStride() {
+        var result = size
+        let alignment = self.alignment
+        let rem = result % alignment
+        if rem > 0 {
+            let offset = alignment - rem
+            result += offset
+        }
+        _stride = result
     }
 
     public var stride: Int {
-        var stride = size
-        let alignment = self.alignment
-        let rem = stride % alignment
-        if rem > 0 {
-            let offset = alignment - rem
-            stride += offset
+        if _updateStride {
+            updateStride()
+            _updateStride = false
         }
-        return stride
+        return _stride
+    }
+
+    func updateAlignment() {
+        var result: Int = 0
+        for param in params {
+            result = max(result, param.alignment)
+        }
+        _alignment = result
     }
 
     public var alignment: Int {
-        var alignment: Int = 0
-        for param in params {
-            alignment = max(alignment, param.alignment)
+        if _updateAlignment {
+            updateAlignment()
+            _updateAlignment = false
         }
-        return alignment
+        return _alignment
     }
 
     public var structString: String {
@@ -452,6 +510,130 @@ open class ParameterGroup: Codable {
         }
         source += "} \(structName);\n\n"
         return source
+    }
+
+    lazy var _data: UnsafeMutableRawPointer = {
+        UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+    }()
+
+    public var data: UnsafeRawPointer {
+        if _updateData {
+            updateData()
+            _updateData = false
+        }
+        return UnsafeRawPointer(_data)
+    }
+
+    func updateData() {
+        var pointer = _data
+        var pointerOffset = 0
+        for param in params {
+            let size = param.size
+            let alignment = param.alignment
+            // Set proper alignment
+            let rem = pointerOffset % alignment
+            if rem > 0 {
+                let offset = alignment - rem
+                pointer += offset
+                pointerOffset += offset
+            }
+
+            if param is BoolParameter {
+                let boolParam = param as! BoolParameter
+                pointer.storeBytes(of: boolParam.value, as: Bool.self)
+                pointer += size
+            }
+            else if param is UInt32Parameter {
+                let intParam = param as! UInt32Parameter
+                pointer.storeBytes(of: intParam.value, as: UInt32.self)
+                pointer += size
+            }
+            else if param is IntParameter {
+                let intParam = param as! IntParameter
+                pointer.storeBytes(of: Int32(intParam.value), as: Int32.self)
+                pointer += size
+            }
+            else if param is Int2Parameter {
+                let intParam = param as! Int2Parameter
+                let isize = MemoryLayout<Int32>.size
+                pointer.storeBytes(of: intParam.x, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.y, as: Int32.self)
+                pointer += isize
+            }
+            else if param is Int3Parameter {
+                let intParam = param as! Int3Parameter
+                let isize = MemoryLayout<Int32>.size
+                pointer.storeBytes(of: intParam.x, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.y, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.z, as: Int32.self)
+                pointer += isize
+                // because alignment is 16 not 12
+                pointer += isize
+            }
+            else if param is Int4Parameter {
+                let intParam = param as! Int4Parameter
+                let isize = MemoryLayout<Int32>.size
+                pointer.storeBytes(of: intParam.x, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.y, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.z, as: Int32.self)
+                pointer += isize
+                pointer.storeBytes(of: intParam.w, as: Int32.self)
+                pointer += isize
+            }
+            else if param is FloatParameter {
+                let floatParam = param as! FloatParameter
+                pointer.storeBytes(of: floatParam.value, as: Float.self)
+                pointer += size
+            }
+            else if param is Float2Parameter {
+                let floatParam = param as! Float2Parameter
+                let fsize = MemoryLayout<Float>.size
+                pointer.storeBytes(of: floatParam.x, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.y, as: Float.self)
+                pointer += fsize
+            }
+            else if param is Float3Parameter {
+                let floatParam = param as! Float3Parameter
+                let fsize = MemoryLayout<Float>.size
+                pointer.storeBytes(of: floatParam.x, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.y, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.z, as: Float.self)
+                pointer += fsize
+                // because alignment is 16 not 12
+                pointer += fsize
+            }
+            else if param is PackedFloat3Parameter {
+                let floatParam = param as! PackedFloat3Parameter
+                let fsize = MemoryLayout<Float>.size
+                pointer.storeBytes(of: floatParam.x, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.y, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.z, as: Float.self)
+                pointer += fsize
+            }
+            else if param is Float4Parameter {
+                let floatParam = param as! Float4Parameter
+                let fsize = MemoryLayout<Float>.size
+                pointer.storeBytes(of: floatParam.x, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.y, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.z, as: Float.self)
+                pointer += fsize
+                pointer.storeBytes(of: floatParam.w, as: Float.self)
+                pointer += fsize
+            }
+            pointerOffset += size
+        }
     }
 
     public func set(_ name: String, _ value: [Float]) {
@@ -469,7 +651,7 @@ open class ParameterGroup: Codable {
             set(name, simd_make_float4(value[0], value[1], value[2], value[3]))
         }
     }
-    
+
     public func set(_ name: String, _ value: [Int]) {
         let count = value.count
         if count == 1 {
@@ -485,7 +667,7 @@ open class ParameterGroup: Codable {
             set(name, simd_make_int4(Int32(value[0]), Int32(value[1]), Int32(value[2]), Int32(value[3])))
         }
     }
-    
+
     public func set(_ name: String, _ value: Float) {
         if let param = paramsMap[name], let p = param as? FloatParameter {
             p.value = value
@@ -542,6 +724,11 @@ open class ParameterGroup: Codable {
 
     public func get(_ name: String) -> Parameter? {
         return paramsMap[name]
+    }
+
+    public func update(parameter: Parameter) {
+        _updateData = true
+        delegate?.update(parameter: parameter, from: self)
     }
 }
 

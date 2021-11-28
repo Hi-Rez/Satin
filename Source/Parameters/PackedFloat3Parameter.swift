@@ -9,6 +9,8 @@ import Foundation
 import simd
 
 open class PackedFloat3Parameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.packedfloat3
     public var controlType: ControlType
     public let label: String
@@ -70,11 +72,13 @@ open class PackedFloat3Parameter: NSObject, Parameter {
             return simd_make_float3(x, y, z)
         }
         set(newValue) {
-            valueChanged = true
-            x = newValue.x
-            y = newValue.y
-            z = newValue.z
-            emit()
+            if x != newValue.x || y != newValue.y || z != newValue.z {
+                valueChanged = true
+                x = newValue.x
+                y = newValue.y
+                z = newValue.z
+                emit()
+            }
         }
     }
     
@@ -183,6 +187,7 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
@@ -190,6 +195,7 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

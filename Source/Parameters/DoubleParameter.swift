@@ -9,6 +9,8 @@
 import Foundation
 
 open class DoubleParameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.double
     public var controlType: ControlType
     public let label: String
@@ -93,12 +95,14 @@ open class DoubleParameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

@@ -9,6 +9,8 @@
 import Foundation
 
 open class StringParameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.string
     public var controlType: ControlType
     public let label: String
@@ -85,12 +87,14 @@ open class StringParameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

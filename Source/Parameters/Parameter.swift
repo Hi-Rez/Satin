@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol ParameterDelegate: AnyObject {
+    func update(parameter: Parameter)
+}
+    
 public protocol Parameter: NSObject, Codable {
     static var type: ParameterType { get }
     var controlType: ControlType { get set }
@@ -19,6 +23,7 @@ public protocol Parameter: NSObject, Codable {
     var count: Int { get }    
     subscript<T>(index: Int) -> T { get set }
     func dataType<T>() -> T.Type
+    var delegate: ParameterDelegate? { get set }
 }
 
 public enum ControlType: String, Codable {

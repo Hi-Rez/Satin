@@ -8,6 +8,8 @@
 import Foundation
 
 open class UInt32Parameter: NSObject, Parameter {
+    public weak var delegate: ParameterDelegate?
+    
     public static var type = ParameterType.uint32
     public var controlType: ControlType
     public let label: String
@@ -38,6 +40,7 @@ open class UInt32Parameter: NSObject, Parameter {
             }
         }
     }
+
     @objc public dynamic var min: UInt32
     @objc public dynamic var max: UInt32
 
@@ -92,12 +95,14 @@ open class UInt32Parameter: NSObject, Parameter {
     }
     
     func emit() {
+        delegate?.update(parameter: self)
         for action in self.actions {
             action(self.value)
         }
     }
     
     deinit {
+        delegate = nil
         actions = []
     }
 }

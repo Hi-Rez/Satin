@@ -16,6 +16,12 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     public var uniforms: UniformBuffer?
     public var parameters: ParameterGroup?
     
+    public override var count: Int {
+        didSet {
+            updateSize()
+        }
+    }
+    
     var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "BufferComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
@@ -57,6 +63,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         super.setup()
         setupCompiler()
         setupPipelines()
+        updateSize()
     }
 
     open func setupCompiler() {
@@ -134,9 +141,13 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         }
     }
     
-    func updateUniforms() {
+    
+    func updateSize() {
         guard let parameters = parameters else { return }
         parameters.set("Count", count)
+    }
+    
+    func updateUniforms() {
         guard let uniforms = uniforms else { return }
         uniforms.update()
     }
