@@ -24,6 +24,8 @@ public protocol Parameter: NSObject, Codable {
     subscript<T>(index: Int) -> T { get set }
     func dataType<T>() -> T.Type
     var delegate: ParameterDelegate? { get set }
+    func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
+    func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
 }
 
 public enum ControlType: String, Codable {

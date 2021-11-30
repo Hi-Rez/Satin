@@ -94,6 +94,27 @@ open class UInt32Parameter: NSObject, Parameter {
         super.init()
     }
     
+    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = pointer
+        let rem = offset % alignment
+        if rem > 0 {
+            let remOffset = alignment - rem
+            data += remOffset
+            offset += remOffset
+        }
+        return data
+    }
+    
+    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = alignData(pointer: pointer, offset: &offset)
+        offset += size
+        
+        data.storeBytes(of: value, as: UInt32.self)
+        data += size
+        
+        return data
+    }
+    
     func emit() {
         delegate?.update(parameter: self)
         for action in self.actions {

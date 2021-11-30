@@ -116,4 +116,14 @@ open class FileParameter: NSObject, Parameter {
         try container.encode(transformedRecents, forKey: .recents)
         try container.encode(allowedTypes, forKey: .allowedTypes)
     }
+    
+    
+    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        return pointer
+    }
+    
+    
+    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        return pointer
+    }
 }

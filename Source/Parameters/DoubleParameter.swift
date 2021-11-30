@@ -94,6 +94,15 @@ open class DoubleParameter: NSObject, Parameter {
         super.init()
     }
     
+    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        return pointer
+    }
+    
+    
+    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        return pointer
+    }
+    
     func emit() {
         delegate?.update(parameter: self)
         for action in self.actions {

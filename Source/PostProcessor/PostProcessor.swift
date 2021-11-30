@@ -33,6 +33,7 @@ open class PostProcessor {
     
     public lazy var renderer: Renderer = {
         let renderer = Renderer(context: context, scene: scene, camera: camera)
+        renderer.setClearColor([1, 1, 1, 0])
         return renderer
     }()
     

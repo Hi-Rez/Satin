@@ -150,6 +150,31 @@ open class Int2Parameter: NSObject, Parameter {
         super.init()
     }
     
+    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = pointer
+        let rem = offset % alignment
+        if rem > 0 {
+            let remOffset = alignment - rem
+            data += remOffset
+            offset += remOffset
+        }
+        return data
+    }
+    
+    
+    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = alignData(pointer: pointer, offset: &offset)
+        offset += size
+                
+        let isize = MemoryLayout<Int32>.size
+        data.storeBytes(of: x, as: Int32.self)
+        data += isize
+        data.storeBytes(of: y, as: Int32.self)
+        data += isize
+                
+        return data
+    }
+    
     func emit() {
         delegate?.update(parameter: self)
         for action in self.actions {
