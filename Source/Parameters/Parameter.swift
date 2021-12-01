@@ -38,6 +38,7 @@ public enum ControlType: String, Codable {
     case button
     case inputfield
     case colorpicker
+    case colorpalette
     case dropdown
     case label
     case filepicker
