@@ -25,6 +25,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
             _updateSize = true
             _updateStride = true
             _updateAlignment = true
+            _reallocateData = true
             _updateData = true
         }
     }
@@ -36,7 +37,9 @@ open class ParameterGroup: Codable, ParameterDelegate {
         params = []
         paramsMap = [:]
         delegate = nil
-        _data.deallocate()
+        if _dataAllocated {
+            _data.deallocate()
+        }
     }
 
     public init(_ label: String = "") {
@@ -436,7 +439,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
     var _size: Int = 0
     var _stride: Int = 0
     var _alignment: Int = 0
-
+    var _dataAllocated: Bool = false
+    var _reallocateData: Bool = false
     var _updateSize: Bool = true
     var _updateStride: Bool = true
     var _updateAlignment: Bool = true
@@ -513,10 +517,23 @@ open class ParameterGroup: Codable, ParameterDelegate {
     }
 
     lazy var _data: UnsafeMutableRawPointer = {
-        UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+        _dataAllocated = true
+        return UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
     }()
+    
+    func allocateData() -> UnsafeMutableRawPointer {
+        if _dataAllocated {
+            _data.deallocate()
+        }
+        _dataAllocated = true
+        return UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
+    }
 
     public var data: UnsafeRawPointer {
+        if _reallocateData {
+            _data = allocateData()
+            _reallocateData = false
+        }
         if _updateData {
             updateData()
             _updateData = false
