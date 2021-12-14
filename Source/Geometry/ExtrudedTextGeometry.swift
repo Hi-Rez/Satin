@@ -28,12 +28,13 @@ open class ExtrudedTextGeometry: TextGeometry {
         if let attributedString = self.attributedText {
             // Calculate Suggested Bounds
             var bnds = textBounds
-            if bnds.width < 0 {
+            if bnds.width <= 0 {
                 bnds.width = CGFloat.greatestFiniteMagnitude
             }
-            if bnds.height < 0 {
+            if bnds.height <= 0 {
                 bnds.height = CGFloat.greatestFiniteMagnitude
             }
+            print(bnds)
             
             let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
             let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)

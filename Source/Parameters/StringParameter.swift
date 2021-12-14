@@ -40,9 +40,7 @@ open class StringParameter: NSObject, Parameter {
 
     @objc public dynamic var value: String {
         didSet {
-            if oldValue != value {
-                emit()
-            }
+            emit()
         }
     }
 

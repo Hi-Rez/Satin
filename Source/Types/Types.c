@@ -327,3 +327,59 @@ void deindexGeometryData( GeometryData *dest, GeometryData *src )
     dest->vertexCount = vertexIndex;
     dest->vertexData = vertices;
 }
+
+void unrollGeometryData( GeometryData *dest, GeometryData *src ) {
+    int triangleCount = src->indexCount;
+    int newVertexCount = triangleCount * 3;
+    Vertex *vertices = (Vertex *)malloc(newVertexCount * sizeof(Vertex));
+    TriangleIndices *triangles = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangleCount);
+    
+    int vertexIndex = 0;
+    simd_float3 p01, p02, p0, p1, p2;
+    simd_float3 normal;
+    for(int i = 0; i < triangleCount; i++) {
+        TriangleIndices t = src->indexData[i];
+        
+        Vertex v0 = src->vertexData[t.i0];
+        Vertex v1 = src->vertexData[t.i1];
+        Vertex v2 = src->vertexData[t.i2];
+        
+        p0 = simd_make_float3(v0.position);
+        p1 = simd_make_float3(v1.position);
+        p2 = simd_make_float3(v2.position);
+                
+        p01 = p1 - p0;
+        p02 = p2 - p0;
+        
+        normal = simd_normalize(simd_cross(p01, p02));
+        
+        vertices[vertexIndex].position = v0.position;
+        vertices[vertexIndex].normal = normal;
+        vertices[vertexIndex].uv = v0.uv;
+                
+        triangles[i].i0 = vertexIndex;
+        
+        vertexIndex += 1;
+        
+        vertices[vertexIndex].position = v1.position;
+        vertices[vertexIndex].normal = normal;
+        vertices[vertexIndex].uv = v1.uv;
+        
+        triangles[i].i1 = vertexIndex;
+        
+        vertexIndex += 1;
+        
+        vertices[vertexIndex].position = v2.position;
+        vertices[vertexIndex].normal = normal;
+        vertices[vertexIndex].uv = v2.uv;
+        
+        triangles[i].i2 = vertexIndex;
+        
+        vertexIndex += 1;
+    }
+    
+    dest->indexCount = triangleCount;
+    dest->indexData = triangles;
+    dest->vertexCount = vertexIndex;
+    dest->vertexData = vertices;
+}

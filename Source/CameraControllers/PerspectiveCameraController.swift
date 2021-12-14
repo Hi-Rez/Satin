@@ -236,13 +236,13 @@ open class PerspectiveCameraController: CameraController {
         }
         
         if changed == true, isTweening == false {
-            onStartChange?()
+            start()
         }
         else if changed == true, isTweening == true {
-            onChange?()
+            change()
         }
         else if changed == false, isTweening == true {
-            onEndChange?()
+            end()
         }
         
         isTweening = changed
@@ -271,7 +271,9 @@ open class PerspectiveCameraController: CameraController {
                 camera.position = [0, 0, simd_length(defaultPosition)]
                 camera.updateMatrix = true
                 
-                self.onChange?()
+                start()
+                change()
+                end()
             }
         }
     }
@@ -572,6 +574,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     @objc override open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        guard let camera = self.camera else { return }
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
@@ -579,7 +582,7 @@ open class PerspectiveCameraController: CameraController {
         else if gestureRecognizer.state == .changed, state == .zooming {
             let newScale = Float(gestureRecognizer.scale)
             let delta = pinchScale - newScale
-            zoomVelocity += delta * zoomScalar
+            zoomVelocity += delta * zoomScalar * (360.0/camera.fov)
             pinchScale = newScale
         }
         else {

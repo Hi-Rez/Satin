@@ -22,7 +22,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         }
     }
     
-    var prefixLabel: String {
+    public var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != prefix {
@@ -89,6 +89,10 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         updateUniforms()
         super.update(commandBuffer)
     }
+    
+    open func inject(source: inout String) {
+        injectConstants(source: &source)
+    }
 
     func compileSource() -> String? {
         if let source = self.source {
@@ -96,8 +100,13 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         }
         else {
             do {
-                var source = try compiler.parse(pipelineURL)
-                injectConstants(source: &source)
+                guard let satinURL = getPipelinesSatinUrl() else { return nil }
+                let includesURL = satinURL.appendingPathComponent("Includes.metal")
+                
+                var source = try compiler.parse(includesURL)
+                let shaderSource = try compiler.parse(pipelineURL)
+                inject(source: &source)
+                source += shaderSource
                                 
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase)Uniforms") {
                     params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")

@@ -36,11 +36,41 @@ open class CameraController: Codable {
             }
         }
     }
+    
+    public var onStartAction: [() -> ()] = []
+    public var onChangeAction: [() -> ()] = []
+    public var onEndAction: [() -> ()] = []
+    
+    public func onStart(_ startFn: @escaping (() -> ())) {
+        onStartAction.append(startFn)
+    }
+    
+    public func onChange(_ changeFn: @escaping (() -> ())) {
+        onChangeAction.append(changeFn)
+    }
+    
+    public func onEnd(_ endFn: @escaping (() -> ())) {
+        onEndAction.append(endFn)
+    }
 
-    public var onStartChange: (() -> ())?
-    public var onChange: (() -> ())?
-    public var onEndChange: (() -> ())?
-        
+    internal func change() {
+        for action in onChangeAction {
+            action()
+        }
+    }
+    
+    internal func start() {
+        for action in onStartAction {
+            action()
+        }
+    }
+    
+    internal func end() {
+        for action in onEndAction {
+            action()
+        }
+    }    
+    
     public internal(set) var state: CameraControllerState = .inactive    
     public internal(set) var isTweening: Bool = false
     
@@ -200,16 +230,16 @@ open class CameraController: Codable {
         }
         
         flagsChangedHandler = NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [unowned self] event -> NSEvent? in
+            guard let window = event.window, window == view else { return event }
             let up = event.modifierFlags.isSubset(of: .init(rawValue: 256))
             let hasFlags = !self.modifierFlags.isEmpty
-            if hasFlags, self.modifierFlags.isStrictSubset(of: event.modifierFlags) {
-                self.flagsEnabled = true
-            }
-            else if up, !hasFlags {
-                self.flagsEnabled = true
-            }
-            else {
-                self.flagsEnabled = false
+            if hasFlags {
+                if self.modifierFlags.isStrictSubset(of: event.modifierFlags) || up {
+                    self.flagsEnabled = true
+                }
+                else {
+                    self.flagsEnabled = false
+                }
             }
             return event
         }
@@ -328,6 +358,9 @@ open class CameraController: Codable {
     }
     
     deinit {
+        onStartAction = []
+        onChangeAction = []
+        onEndAction = []
         disable()
         view = nil
     }

@@ -60,5 +60,6 @@ void reverseFacesOfGeometryData( GeometryData *data );
 void transformGeometryData( GeometryData *data, simd_float4x4 transform );
 
 void deindexGeometryData( GeometryData *dest, GeometryData *src );
+void unrollGeometryData( GeometryData *dest, GeometryData *src );
 
 #endif /* Types_h */

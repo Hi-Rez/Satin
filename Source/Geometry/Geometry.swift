@@ -172,6 +172,14 @@ open class Geometry {
         return data
     }
     
+    public func unrollGeometry() {
+        var data = getGeometryData()
+        var unrolled = GeometryData()
+        unrollGeometryData(&unrolled, &data)
+        setFrom(&unrolled)
+        freeGeometryData(&unrolled)
+    }
+    
     func computeBounds() -> Bounds {
         let count = vertexData.count
         var result = Bounds()

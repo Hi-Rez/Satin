@@ -42,7 +42,7 @@ open class TextureComputeSystem {
         var results: [MTLTexture] = []
         var textureIndex = 0
         for _ in textureDescriptors {
-            results.append(textures[textureIndex + index])
+            results.append(textures[textureIndex + _index])
             textureIndex += count
         }
         return results
@@ -174,17 +174,18 @@ open class TextureComputeSystem {
             _setupTextures = false
         }
         
-        let count = textures.count
-        if count > 0, resetPipeline != nil || updatePipeline != nil, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
+        if textureDescriptors.count > 0, resetPipeline != nil || updatePipeline != nil, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
 
-            if feedback, _reset, let pipeline = self.resetPipeline {
+            if _reset, let pipeline = self.resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0...count {
+                let count = feedback ? 2 : 1
+                for i in 0..<count {
                     let offset = setTextures(computeEncoder, i)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)
                     dispatch(computeEncoder, pipeline)
+                    pingPong()
                 }
                 _reset = false
             }

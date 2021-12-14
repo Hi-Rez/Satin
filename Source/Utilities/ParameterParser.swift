@@ -627,6 +627,11 @@ func parseParameters(source: String) -> ParameterGroup? {
                         success = true
                     }
                 }
+                else if uiType == "colorpalette", vType == "float4", let name = vName {
+                    var label = uiDetails.count > 0 ? uiDetails : name
+                    label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
+                    params.append(Float4Parameter(label.titleCase, simd_make_float4(1.0, 1.0, 1.0, 1.0), .colorpalette))
+                }
             }
         }
         return params
