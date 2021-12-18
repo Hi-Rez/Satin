@@ -172,7 +172,7 @@ open class Geometry {
         return data
     }
     
-    public func unrollGeometry() {
+    public func unroll() {
         var data = getGeometryData()
         var unrolled = GeometryData()
         unrollGeometryData(&unrolled, &data)
