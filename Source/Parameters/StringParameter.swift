@@ -20,6 +20,10 @@ open class StringParameter: NSObject, Parameter {
     public var alignment: Int { return MemoryLayout<String>.alignment }
     public var count: Int { return value.count }
     public var actions: [(String) -> Void] = []
+        
+    public func onChange(_ fn: @escaping ((String) -> ())) {
+        actions.append(fn)
+    }
     
     public subscript<String>(index: Int) -> String {
         get {
@@ -93,7 +97,7 @@ open class StringParameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

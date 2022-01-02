@@ -293,7 +293,7 @@ open class Material: ParameterGroupDelegate {
     
     open func setupUniforms() {
         if let context = self.context, parameters.size > 0 {
-            uniforms = UniformBuffer(context: context, parameters: parameters)
+            uniforms = UniformBuffer(device: context.device, parameters: parameters)
         }
         else {
             uniforms = nil
@@ -492,6 +492,29 @@ open class Material: ParameterGroupDelegate {
     }
     
     deinit {}
+    
+    public func clone() -> Material {
+        let clone = Material()
+        clone.parameters = parameters.clone()
+        
+        clone.blending = blending
+        clone.pipeline = pipeline
+        
+        clone.sourceRGBBlendFactor = sourceRGBBlendFactor
+        clone.sourceAlphaBlendFactor = sourceAlphaBlendFactor
+        clone.destinationRGBBlendFactor = destinationRGBBlendFactor
+        clone.destinationAlphaBlendFactor = destinationAlphaBlendFactor
+        clone.rgbBlendOperation = rgbBlendOperation
+        clone.alphaBlendOperation = alphaBlendOperation
+        
+        clone.context = context
+        
+        clone.depthStencilState = depthStencilState
+        clone.depthCompareFunction = depthCompareFunction
+        clone.depthWriteEnabled = depthWriteEnabled
+        
+        return clone
+    }
 }
 
 public extension Material {

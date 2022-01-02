@@ -21,6 +21,11 @@ open class FloatParameter: NSObject, Parameter {
     public var count: Int { return 1 }
     public var actions: [(Float) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((Float) -> ())) {
+        actions.append(fn)
+    }
+    
+    
     public subscript<Float>(index: Int) -> Float {
         get {
             return value as! Float
@@ -117,7 +122,7 @@ open class FloatParameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

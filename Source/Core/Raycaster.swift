@@ -176,12 +176,12 @@ open class Raycaster {
     
     func setupRayBuffers() {
         guard let context = self.context else { fatalError("Unable to create Ray Buffers") }
-        rayBuffer = Buffer(context: context, parameters: rayParams, count: _count)
+        rayBuffer = Buffer(device: context.device, parameters: rayParams, count: _count)
     }
     
     func setupIntersectionBuffers() {
         guard let context = self.context else { fatalError("Unable to create Intersection Buffers") }
-        intersectionBuffer = Buffer(context: context, parameters: intersectionParams, count: _count)
+        intersectionBuffer = Buffer(device: context.device, parameters: intersectionParams, count: _count)
     }
     
     func _intersect(_ intersectables: [Any]) -> MTLCommandBuffer? {

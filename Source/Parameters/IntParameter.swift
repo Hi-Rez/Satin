@@ -21,6 +21,10 @@ open class IntParameter: NSObject, Parameter {
     public var count: Int { return 1 }
     public var actions: [(Int) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((Int) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Int32>(index: Int) -> Int32 {
         get {
             return value as! Int32
@@ -121,7 +125,7 @@ open class IntParameter: NSObject, Parameter {
     
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

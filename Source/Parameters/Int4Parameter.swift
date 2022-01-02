@@ -22,6 +22,10 @@ open class Int4Parameter: NSObject, Parameter {
     public var count: Int { return 4 }
     public var actions: [(simd_int4) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((simd_int4) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Int32>(index: Int) -> Int32 {
         get {
             return value[index % count] as! Int32
@@ -245,7 +249,7 @@ open class Int4Parameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

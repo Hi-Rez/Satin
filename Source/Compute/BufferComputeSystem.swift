@@ -54,12 +54,12 @@ open class BufferComputeSystem {
     public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
     public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
 
-    public var context: Context
+    public var device: MTLDevice
 
     public var resetPipeline: MTLComputePipelineState?
     public var updatePipeline: MTLComputePipelineState?
 
-    public init(context: Context,
+    public init(device: MTLDevice,
                 resetPipeline: MTLComputePipelineState?,
                 updatePipeline: MTLComputePipelineState?,
                 params: [ParameterGroup],
@@ -68,7 +68,7 @@ open class BufferComputeSystem {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
         }
-        self.context = context
+        self.device = device
         self.resetPipeline = resetPipeline
         self.updatePipeline = updatePipeline
         self.params = params
@@ -78,12 +78,12 @@ open class BufferComputeSystem {
         setupBuffers()
     }
 
-    public init(context: Context, count: Int, feedback: Bool = false) {
+    public init(device: MTLDevice, count: Int, feedback: Bool = false) {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
         }
 
-        self.context = context
+        self.device = device
         self.count = count
         self._count = count
         self.feedback = feedback
@@ -96,7 +96,6 @@ open class BufferComputeSystem {
 
     private func checkFeatures() {
         _useDispatchThreads = false
-        let device = context.device
         if #available(macOS 10.15, iOS 13, tvOS 13, *) {
             if device.supportsFamily(.common3) || device.supportsFamily(.apple4) || device.supportsFamily(.apple5) || device.supportsFamily(.mac1) || device.supportsFamily(.mac2) {
                 _useDispatchThreads = true
@@ -138,7 +137,7 @@ open class BufferComputeSystem {
                 bufferOrder.append(label)
                 var buffers: [MTLBuffer] = []
                 for i in 0..<bufferCount {
-                    if let buffer = context.device.makeBuffer(length: stride * count, options: [.storageModePrivate]) {
+                    if let buffer = device.makeBuffer(length: stride * count, options: [.storageModePrivate]) {
                         buffer.label = param.label + " \(i)"
                         buffers.append(buffer)
                     }

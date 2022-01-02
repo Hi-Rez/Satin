@@ -639,7 +639,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         return paramsMap[name]
     }
 
-    public func update(parameter: Parameter) {
+    public func updated(parameter: Parameter) {
         _updateData = true
         delegate?.update(parameter: parameter, from: self)
     }

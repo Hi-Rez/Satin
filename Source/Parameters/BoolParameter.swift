@@ -21,6 +21,10 @@ open class BoolParameter: NSObject, Parameter {
     public var count: Int { return 1 }
     public var actions: [(Bool) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((Bool) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Bool>(index: Int) -> Bool {
         get {
             return value as! Bool
@@ -90,7 +94,7 @@ open class BoolParameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in actions {
             action(value)
         }

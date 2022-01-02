@@ -101,7 +101,7 @@ class Renderer: Forge.Renderer {
     
     lazy var integrationTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
-            context: context,
+            device: device,
             textureDescriptors: [MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rg16Float, width: 512, height: 512, mipmapped: false)]
         )
         return compute
@@ -111,7 +111,7 @@ class Renderer: Forge.Renderer {
     
     lazy var diffuseTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
-            context: context,
+            device: device,
             textureDescriptors: []
         )
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
@@ -124,7 +124,7 @@ class Renderer: Forge.Renderer {
     
     lazy var cubemapTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
-            context: context,
+            device: device,
             textureDescriptors: []
         )
         
@@ -146,13 +146,13 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var specularTextureComputeUniforms: Buffer = {
-        let buffer = Buffer(context: context, parameters: specularTextureComputeParameters)
+        let buffer = Buffer(device: device, parameters: specularTextureComputeParameters)
         return buffer
     }()
     
     lazy var specularTextureCompute: TextureComputeSystem = {
         let compute = TextureComputeSystem(
-            context: context,
+            device: device,
             textureDescriptors:[]
         )
         
@@ -166,7 +166,7 @@ class Renderer: Forge.Renderer {
     // HDRI to Skybox Texture
     
     lazy var skyboxTextureCompute: TextureComputeSystem = {
-        let compute = TextureComputeSystem(context: context, textureDescriptors: [])
+        let compute = TextureComputeSystem(device: device, textureDescriptors: [])
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, offset: Int) in
             computeEncoder.setTexture(self.hdriTexture, index: offset)
         }

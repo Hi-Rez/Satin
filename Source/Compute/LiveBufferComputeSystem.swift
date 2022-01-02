@@ -32,7 +32,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         return prefix
     }
     
-    public init(context: Context,
+    public init(device: MTLDevice,
                 pipelineURL: URL,
                 instance: String = "",
                 count: Int,
@@ -40,12 +40,12 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     {
         self.pipelineURL = pipelineURL
         self.instance = instance
-        super.init(context: context, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
+        super.init(device: device, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
         self.source = compileSource()
         setup()
     }
     
-    public init(context: Context,
+    public init(device: MTLDevice,
                 pipelinesURL: URL,
                 instance: String = "",
                 count: Int,
@@ -53,7 +53,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     {
         self.pipelineURL = pipelinesURL
         self.instance = instance
-        super.init(context: context, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
+        super.init(device: device, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
         self.pipelineURL = pipelineURL.appendingPathComponent(prefixLabel).appendingPathComponent("Shaders.metal")
         self.source = compileSource()
         setup()
@@ -117,7 +117,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
                         parameters = params
                     }
                         
-                    uniforms = UniformBuffer(context: context, parameters: parameters!)
+                    uniforms = UniformBuffer(device: device, parameters: parameters!)
                 }
                                 
                 self.source = source
@@ -132,7 +132,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     
     func setupLibrary(_ source: String) -> MTLLibrary? {
         do {
-            return try context.device.makeLibrary(source: source, options: .none)
+            return try device.makeLibrary(source: source, options: .none)
         }
         catch {
             print("\(prefixLabel) BufferComputeError: \(error.localizedDescription)")

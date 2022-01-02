@@ -20,6 +20,10 @@ open class UInt32Parameter: NSObject, Parameter {
     public var count: Int { return 1 }
     public var actions: [(UInt32) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((UInt32) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<UInt32>(index: Int) -> UInt32 {
         get {
             return value as! UInt32
@@ -116,7 +120,7 @@ open class UInt32Parameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

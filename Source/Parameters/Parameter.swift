@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol ParameterDelegate: AnyObject {
-    func update(parameter: Parameter)
+    func updated(parameter: Parameter)
 }
     
 public protocol Parameter: NSObject, Codable {

@@ -22,6 +22,10 @@ open class Int2Parameter: NSObject, Parameter {
     public var count: Int { return 2 }
     public var actions: [(simd_int2) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((simd_int2) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Int32>(index: Int) -> Int32 {
         get {
             return value[index % count] as! Int32
@@ -176,7 +180,7 @@ open class Int2Parameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

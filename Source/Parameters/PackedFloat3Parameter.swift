@@ -21,6 +21,10 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     public var count: Int { return 3 }
     public var actions: [(simd_float3) -> Void] = []
     
+    public func onChange(_ fn: @escaping ((simd_float3) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Float>(index: Int) -> Float {
         get {
             return value[index % count] as! Float
@@ -213,7 +217,7 @@ open class PackedFloat3Parameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }

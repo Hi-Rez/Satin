@@ -30,7 +30,7 @@ class Renderer: Forge.Renderer {
     var countParam = IntParameter("Count", 4096, .inputfield)
     
     lazy var computeSystem: BufferComputeSystem = {
-        let compute = BufferComputeSystem(context: context, count: countParam.value, feedback: false)
+        let compute = BufferComputeSystem(device: device, count: countParam.value, feedback: false)
         compute.preCompute = { [unowned self] (computeEncoder: MTLComputeCommandEncoder, bufferOffset: Int) in
             var offset = bufferOffset
             if let uniforms = self.computeUniforms {
@@ -206,7 +206,7 @@ class Renderer: Forge.Renderer {
             
             if let params = parseParameters(source: librarySource, key: "ComputeUniforms") {
                 params.label = "Compute"
-                computeUniforms = UniformBuffer(context: context, parameters: params)
+                computeUniforms = UniformBuffer(device: device, parameters: params)
                 computeParams = params
             }
             

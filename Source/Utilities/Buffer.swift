@@ -13,13 +13,13 @@ open class Buffer {
 
     init() {}
 
-    public init(context: Context, parameters: ParameterGroup, count: Int = 1, options: MTLResourceOptions = [.storageModeShared]) {
+    public init(device: MTLDevice, parameters: ParameterGroup, count: Int = 1, options: MTLResourceOptions = [.storageModeShared]) {
         self.parameters = parameters
-        setupBuffer(context: context, count: count, options: options)
+        setupBuffer(device: device, count: count, options: options)
     }
 
-    func setupBuffer(context: Context, count: Int, options: MTLResourceOptions) {
-        guard let buffer = context.device.makeBuffer(length: parameters.stride * count, options: options) else { fatalError("Unable to create Buffer") }
+    func setupBuffer(device: MTLDevice, count: Int, options: MTLResourceOptions) {
+        guard let buffer = device.makeBuffer(length: parameters.stride * count, options: options) else { fatalError("Unable to create Buffer") }
         buffer.label = parameters.label
         self.buffer = buffer
     }

@@ -24,7 +24,7 @@ class Renderer: Forge.Renderer {
         textureDescriptor.sampleCount = 1
         textureDescriptor.textureType = .type2D
         textureDescriptor.usage = [.shaderRead, .shaderWrite]
-        let textureCompute = TextureComputeSystem(context: context, textureDescriptors: [textureDescriptor])
+        let textureCompute = TextureComputeSystem(device: device, textureDescriptors: [textureDescriptor])
         return textureCompute
     }()
     

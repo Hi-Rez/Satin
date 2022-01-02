@@ -32,7 +32,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         return prefix
     }
     
-    public init(context: Context,
+    public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelineURL: URL,
                 instance: String = "",
@@ -41,13 +41,13 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         self.pipelineURL = pipelineURL
         self.instance = instance
         
-        super.init(context: context, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
+        super.init(device: device, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
         
         self.source = compileSource()
         setup()
     }
     
-    public init(context: Context,
+    public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelinesURL: URL,
                 instance: String = "",
@@ -56,7 +56,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         self.pipelineURL = pipelinesURL
         self.instance = instance
         
-        super.init(context: context, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
+        super.init(device: device, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
         
         self.pipelineURL = pipelineURL.appendingPathComponent(prefixLabel).appendingPathComponent("Shaders.metal")
         self.source = compileSource()
@@ -85,8 +85,12 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         setupPipelines(library)
     }
     
-    public override func update(_ commandBuffer: MTLCommandBuffer) {
+    open override func update() {
         updateUniforms()
+        super.update()
+    }
+    
+    public override func update(_ commandBuffer: MTLCommandBuffer) {
         super.update(commandBuffer)
     }
     
@@ -107,8 +111,8 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                 let shaderSource = try compiler.parse(pipelineURL)
                 inject(source: &source)
                 source += shaderSource
-                                
-                if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase)Uniforms") {
+                                                
+                if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase.replacingOccurrences(of: " ", with: ""))Uniforms") {
                     params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
                     if let parameters = self.parameters {
                         parameters.setFrom(params)
@@ -117,7 +121,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                         parameters = params
                     }
                         
-                    uniforms = UniformBuffer(context: context, parameters: parameters!)
+                    uniforms = UniformBuffer(device: device, parameters: parameters!)
                 }
                                 
                 self.source = source
@@ -132,7 +136,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     
     func setupLibrary(_ source: String) -> MTLLibrary? {
         do {
-            return try context.device.makeLibrary(source: source, options: .none)
+            return try device.makeLibrary(source: source, options: .none)
         }
         catch {
             print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
@@ -169,9 +173,9 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         uniforms.update()
     }
 
-    override func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    open override func bind(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
         bindUniforms(computeEncoder)
-        super.dispatch(computeEncoder, pipeline)
+        return super.bind(computeEncoder)
     }
     
     open func bindUniforms(_ computeEncoder: MTLComputeCommandEncoder) {

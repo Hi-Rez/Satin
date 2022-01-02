@@ -21,6 +21,10 @@ open class DoubleParameter: NSObject, Parameter {
     public var count: Int { return 1 }
     public var actions: [(Double) -> Void] = []
 
+    public func onChange(_ fn: @escaping ((Double) -> ())) {
+        actions.append(fn)
+    }
+    
     public subscript<Double>(index: Int) -> Double {
         get {
             return value as! Double
@@ -104,7 +108,7 @@ open class DoubleParameter: NSObject, Parameter {
     }
     
     func emit() {
-        delegate?.update(parameter: self)
+        delegate?.updated(parameter: self)
         for action in self.actions {
             action(self.value)
         }
