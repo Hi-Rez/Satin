@@ -329,6 +329,7 @@ open class Raycaster {
             let bN = meshWorldMatrix * simd_make_float4(b.normal) * v
             let cN = meshWorldMatrix * simd_make_float4(c.normal) * w
             
+            
             let hitP = simd_make_float3(aP + bP + cP)
             let hitU = simd_make_float2(aU + bU + cU)
             let hitN = normalize(simd_make_float3(aN + bN + cN))

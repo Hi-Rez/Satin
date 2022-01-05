@@ -8,21 +8,21 @@ let package = Package(
     products: [
         .library(
             name: "Satin",
-            targets: ["SatinC", "SatinSwift"]
+            targets: ["Satin"]
         ),
     ],
     dependencies: [],
     targets: [
-        .target(name: "SatinC",
-                path: "Sources/SatinC"
+        .target(
+            name: "Satin",
+            dependencies: ["SatinCore"],
+            path: "Sources/Satin",
+            resources: [.copy("Pipelines")]
         ),
-        .target(name: "SatinSwift",
-                path: "Sources/SatinSwift",
-                exclude: ["Pipelines"]
+        .target(
+            name: "SatinCore",
+            path: "Sources/SatinCore"
         )
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
-
-
-
-

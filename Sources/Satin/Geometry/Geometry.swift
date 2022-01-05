@@ -7,7 +7,7 @@
 //
 
 import Metal
-import simd
+import simd 
 
 public protocol GeometryDelegate: AnyObject {
     func updated(geometry: Geometry)
@@ -114,7 +114,7 @@ open class Geometry {
             let p1 = simd_make_float3(v1.position)
             let p2 = simd_make_float3(v2.position)
             
-            let normal = normalize(cross(p1 - p0, p2 - p0))
+            let normal = simd_normalize(simd_cross(p1 - p0, p2 - p0))
             if length(normal) > 0.0 {
                 let l0 = length(v0.normal)
                 v0.normal += normal

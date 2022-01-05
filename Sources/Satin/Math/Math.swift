@@ -7,6 +7,7 @@
 //
 
 import simd
+import CoreGraphics
 
 // MARK: - Degrees To Radians (Double)
 
