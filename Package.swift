@@ -16,7 +16,7 @@ let package = Package(
             name: "Satin",
             dependencies: [],
             exclude: ["Pipelines"],
-            resources: [.copy(Sources/Satin/Pipelines)]),
+            resources: [.copy(Pipelines)]),
         .testTarget(
             name: "SatinTests",
             dependencies: ["Satin"]),
