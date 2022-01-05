@@ -8,7 +8,8 @@ let package = Package(
     products: [
         .library(
             name: "Satin",
-            targets: ["SatinC", "SatinSwift"]
+            targets: ["SatinC", "SatinSwift"],
+            exclude: ["Example", "Images"]
         ),
     ],
     dependencies: [],
@@ -16,14 +17,13 @@ let package = Package(
         .target(
             name: "Satin",
             dependencies: [],
-            exclude: ["Pipelines", "Example", "Images"]
         ),
         .target(name: "SatinC",
                 path: "Sources/SatinC"
         ),
         .target(name: "SatinSwift",
                 path: "Sources/SatinSwift",
-                exclude: ["Pipelines", "Example", "Images"]
+                exclude: ["Pipelines"]
         )
     ]
 )
