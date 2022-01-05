@@ -16,7 +16,7 @@ let package = Package(
         .target(
             name: "Satin",
             dependencies: [],
-            exclude: ["Pipelines"]
+            exclude: ["Pipelines", "Example", "Images"]
         ),
         .testTarget(
             name: "SatinTests",
