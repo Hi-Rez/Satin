@@ -8,7 +8,7 @@ let package = Package(
     products: [
         .library(
             name: "Satin",
-            targets: ["Satin"]
+            targets: ["SatinC", "SatinSwift"]
         ),
     ],
     dependencies: [],
@@ -18,9 +18,15 @@ let package = Package(
             dependencies: [],
             exclude: ["Pipelines", "Example", "Images"]
         ),
-        .testTarget(
-            name: "SatinTests",
-            dependencies: ["Satin"]
+        .target(name: "SatinC",
+                path: "Sources/SatinC"
         ),
+        .target(name: "SatinSwift",
+                path: "Sources/SatinSwift"
+        )
     ]
 )
+
+
+
+

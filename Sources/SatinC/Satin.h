@@ -20,4 +20,5 @@ FOUNDATION_EXPORT const unsigned char SatinVersionString[];
 #include "Geometry.h"
 #include "Generators.h"
 #include "Bezier.h"
+#include "Bounds.h"
 #include "Triangulator.h"
