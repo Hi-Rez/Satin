@@ -16,7 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "Satin",
-            dependencies: [],
+            dependencies: []
         ),
         .target(name: "SatinC",
                 path: "Sources/SatinC"
