@@ -24,6 +24,8 @@ open class ArcGeometry: Geometry {
         let radialInc = (radius.outer - radius.inner) / radialf
         let angularInc = (angle.end - angle.start) / angularf
 
+        let perLoop = angular + 1
+        
         for r in 0...radial {
             let rf = Float(r)
             let rad = radius.inner + rf * radialInc
@@ -42,21 +44,28 @@ open class ArcGeometry: Geometry {
                 )
 
                 if r != radial, a != angular {
-                    let perLoop = angular + 1
                     let index = a + r * perLoop
 
-                    let tl = index
-                    let tr = tl + 1
-                    let bl = index + perLoop
-                    let br = bl + 1
+                    let br = index
+                    let bl = br + 1
+                    let tr = br + perLoop
+                    let tl = bl + perLoop
 
-                    indexData.append(UInt32(tl))
+//                    indexData.append(UInt32(br))
+//                    indexData.append(UInt32(tr))
+//                    indexData.append(UInt32(tl))
+//
+//                    indexData.append(UInt32(br))
+//                    indexData.append(UInt32(tl))
+//                    indexData.append(UInt32(bl))
+                    
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(tr))
+                    indexData.append(UInt32(tl))
 
-                    indexData.append(UInt32(tr))
                     indexData.append(UInt32(bl))
                     indexData.append(UInt32(br))
+                    indexData.append(UInt32(tr))
                 }
             }
         }

@@ -7,6 +7,13 @@ build/
 DerivedData/
 .idea/
 
+## Swift Package Manager
+/.build
+/Packages
+
+DerivedData/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
 ## Bundler
 vendor/
 
@@ -20,6 +27,7 @@ vendor/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
+/*.xcodeproj
 
 ## Other
 *.moved-aside
