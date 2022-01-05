@@ -8,8 +8,7 @@ let package = Package(
     products: [
         .library(
             name: "Satin",
-            targets: ["SatinC", "SatinSwift"],
-            exclude: ["Example", "Images"]
+            targets: ["SatinC", "SatinSwift"]
         ),
     ],
     dependencies: [],
