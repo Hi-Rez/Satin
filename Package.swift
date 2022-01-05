@@ -13,10 +13,6 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(
-            name: "Satin",
-            dependencies: []
-        ),
         .target(name: "SatinC",
                 path: "Sources/SatinC"
         ),
