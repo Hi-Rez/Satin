@@ -22,7 +22,8 @@ let package = Package(
                 path: "Sources/SatinC"
         ),
         .target(name: "SatinSwift",
-                path: "Sources/SatinSwift"
+                path: "Sources/SatinSwift",
+                exclude: ["Pipelines", "Example", "Images"]
         )
     ]
 )
