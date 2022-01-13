@@ -95,11 +95,11 @@ open class Object: Codable {
     }
     
     public var translationMatrix: matrix_float4x4 {
-        return Satin.translate(position)
+        return translationMatrix3f(position)
     }
     
     public var scaleMatrix: matrix_float4x4 {
-        return Satin.scale(scale)
+        return scaleMatrix3f(scale)
     }
     
     public var rotationMatrix: matrix_float4x4 {
@@ -248,6 +248,13 @@ open class Object: Codable {
     }
     
     public init() {}
+    
+    public init(_ label: String, _ children: [Object] = []) {
+        self.label = label
+        for child in children {
+            add(child)
+        }
+    }
     
     open func setup() {}
     

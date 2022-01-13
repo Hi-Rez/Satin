@@ -18,196 +18,72 @@ open class ExtrudedTextGeometry: TextGeometry {
         }
     }
     
-    var geometryExtrudeCache: [CGGlyph: GeometryData] = [:]
-    var geometryReverseCache: [CGGlyph: GeometryData] = [:]
+    var geometryExtrudeCache: [Character: GeometryData] = [:]
+    var geometryReverseCache: [Character: GeometryData] = [:]
     
-    public init(text: String, fontName: String, fontSize: Float, distance: Float = 1.0, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0) {
+    public init(text: String, fontName: String, fontSize: Float, distance: Float = 1.0, bounds: CGSize = .zero, pivot: simd_float2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0) {
         self.distance = distance
         super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
     }
-    
-    override func setupData() {
-        let maxStraightDistance = Float(fontSize / 10.0)
-        var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-        if let attributedString = self.attributedText {
-            // Calculate Suggested Bounds
-            var bnds = textBounds
-            if bnds.width <= 0 {
-                bnds.width = CGFloat.greatestFiniteMagnitude
+
+    override func addGlyphGeometryData(_ gData: inout GeometryData, _ charOffset: Int, _ glyph: CGGlyph, _ glyphPosition: CGPoint, _ origin: CGPoint) {
+        guard let framePivot = framePivot, let verticalOffset = verticalOffset else { return }
+        
+        let charIndex = text.index(text.startIndex, offsetBy: Int(charOffset))
+        let char = text[charIndex]
+        characterPaths[char] = []
+        
+        // front face character data
+        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        // back face character data
+        var bData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        // side faces character data
+        var sData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        
+        if let cacheData = geometryCache[char], let cacheReverseData = geometryReverseCache[char],
+           let cacheExtrudeData = geometryExtrudeCache[char], let charPaths = characterPathsCache[char]
+        {
+            cData = cacheData
+            bData = cacheReverseData
+            sData = cacheExtrudeData
+            characterPaths[char] = charPaths
+        } else if let glyphPath = CTFontCreatePathForGlyph(ctFont, glyph, nil) {
+            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize/10.0)
+            
+            var _paths: [UnsafeMutablePointer<simd_float2>?] = []
+            var _lengths: [Int32] = []
+            for i in 0..<glyphPaths.count {
+                let path = glyphPaths[i]
+                _paths.append(path.data)
+                _lengths.append(path.count)
             }
-            if bnds.height <= 0 {
-                bnds.height = CGFloat.greatestFiniteMagnitude
+                                                 
+            if triangulate(&_paths, &_lengths, Int32(glyphPaths.count), &cData) != 0 {
+                print("Triangulation for \(char) FAILED!")
             }
-            print(bnds)
-            
-            let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
-            let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
-            
-            bnds.width = suggestedSize.width
-            bnds.height = suggestedSize.height
-            
-            let framePath = CGMutablePath()
-            let constraints = CGRect(x: 0.0, y: 0.0, width: textBounds.width >= 0.0 ? textBounds.width : bnds.width, height: textBounds.height >= 0.0 ? textBounds.height : bnds.height)
-            framePath.addRect(constraints)
-            let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.count), framePath, nil)
-            let lines = CTFrameGetLines(frame) as! [CTLine]
-            
-            var origins: [CGPoint] = Array(repeating: CGPoint(), count: lines.count)
-            CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &origins)
-            
-            let pvt = pivot * 0.5 + 0.5
-            let pivotOffsetX: CGFloat = (textBounds.width >= 0 ? textBounds.width : bnds.width) * CGFloat(pvt.x)
-            let pivotOffsetY: CGFloat = (textBounds.height >= 0 ? textBounds.height : bnds.height) * CGFloat(pvt.y)
-            
-            var verticalOffset: CGFloat
-            switch verticalAlignment {
-            case .top:
-                verticalOffset = 0
-            case .center:
-                verticalOffset = ((textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height) * 0.5
-            case .bottom:
-                verticalOffset = (textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height
-            }
-            
-            for (lineIndex, line) in lines.enumerated() {
-                let origin = origins[lineIndex]
-                let runs: [CTRun] = CTLineGetGlyphRuns(line) as! [CTRun]
                 
-                for run in runs {
-                    let glyphCount = CTRunGetGlyphCount(run)
-                    
-                    let glyphPositions = UnsafeMutablePointer<CGPoint>.allocate(capacity: glyphCount)
-                    CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions)
-                    
-                    let glyphs = UnsafeMutablePointer<CGGlyph>.allocate(capacity: glyphCount)
-                    CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs)
-                    
-                    for glyphIndex in 0..<glyphCount {
-                        let glyph = glyphs[glyphIndex]
-                        
-                        // front face character data
-                        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-                        
-                        // back face character data
-                        var bData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-                        
-                        // side faces character data
-                        var sData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-                        
-                        if let cacheData = geometryCache[glyph], let cacheReverseData = geometryReverseCache[glyph],
-                            let cacheExtrudeData = geometryExtrudeCache[glyph] {
-                            cData = cacheData
-                            bData = cacheReverseData
-                            sData = cacheExtrudeData
-                        } else {
-                            guard let path = CTFontCreatePathForGlyph(ctFont, glyph, nil) else { continue }
-                            
-                            var allPaths: [[simd_float2]] = []
-                            var currentPath: [simd_float2] = []
-                            path.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
-                                let element = elementPtr.pointee
-                                var pointsPtr = element.points
-                                let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                
-                                switch element.type {
-                                case .moveToPoint:
-                                    currentPath.append(pt)
-                                case .addLineToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
-                                case .addQuadCurveToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    let b = pt
-                                    pointsPtr += 1
-                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    adaptiveQuadratic(a, b, c, &currentPath, 0)
-                                    currentPath.append(c)
-                                case .addCurveToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    let b = pt
-                                    pointsPtr += 1
-                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    pointsPtr += 1
-                                    let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    adaptiveCubic(a, b, c, d, &currentPath, 0)
-                                    currentPath.append(d)
-                                case .closeSubpath:
-                                    // remove repeated last point
-                                    var a = currentPath[currentPath.count - 1]
-                                    let b = currentPath[0]
-                                    if isEqual2(a, b) {
-                                        currentPath.remove(at: currentPath.count - 1)
-                                    }
-                                    a = currentPath[currentPath.count - 1]
-                                    // sample start and end
-                                    adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
-                                    allPaths.append(currentPath)
-                                    currentPath = []
-                                default:
-                                    break
-                                }
-                            }
-                            
-                            var paths: [UnsafeMutablePointer<simd_float2>?] = []
-                            var lengths: [Int32] = []
-                            for i in 0..<allPaths.count {
-                                allPaths[i].withUnsafeMutableBufferPointer { ptr in
-                                    paths.append(ptr.baseAddress!)
-                                }
-                                lengths.append(Int32(allPaths[i].count))
-                            }
-                            
-                            let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
-                            
-                            let counts = Int32(lengths.count)
-                            if triangulate(&paths, &lengths, counts, &cData) != 0 {
-                                print("Triangulation for \(char) FAILED!")
-                            }
-                            geometryCache[glyph] = cData
-                            
-                            copyGeometryData(&bData, &cData)
-                            reverseFacesOfGeometryData(&bData)
-                            geometryReverseCache[glyph] = bData
-                            
-                            if extrudePaths(&paths, &lengths, counts, &sData) != 0 {
-                                print("Path Extrusion for \(char) FAILED!")
-                            }
-                            
-                            computeNormalsOfGeometryData(&sData)
-                            geometryExtrudeCache[glyph] = sData
-                        }
-                        
-                        let glyphPosition = glyphPositions[glyphIndex]
-                        
-                        combineAndOffsetGeometryData(&gData, &cData, simd_make_float3(
-                            Float(glyphPosition.x + origin.x - pivotOffsetX),
-                            Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
-                            distance * 0.5
-                        ))
-                        
-                        combineAndOffsetGeometryData(&gData, &bData, simd_make_float3(
-                            Float(glyphPosition.x + origin.x - pivotOffsetX),
-                            Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
-                            -distance * 0.5
-                        ))
-                        
-                        combineAndScaleAndOffsetGeometryData(&gData, &sData,
-                                                             simd_make_float3(1.0, 1.0, distance * 0.5),
-                                                             simd_make_float3(
-                                                                 Float(glyphPosition.x + origin.x - pivotOffsetX),
-                                                                 Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
-                                                                 0
-                                                             ))
-                    }
-                    
-                    glyphPositions.deallocate()
-                    glyphs.deallocate()
-                }
-            }
+            copyGeometryData(&bData, &cData)
+            reverseFacesOfGeometryData(&bData)
+            geometryReverseCache[char] = bData
             
-            setFrom(&gData)
-            freeGeometryData(&gData)
+            if extrudePaths(&_paths, &_lengths, Int32(glyphPaths.count), &sData) != 0 {
+                print("Path Extrusion for \(char) FAILED!")
+            }
+                
+            computeNormalsOfGeometryData(&sData)
+            
+            geometryCache[char] = cData
+            geometryExtrudeCache[char] = sData
+            characterPaths[char] = glyphPaths
+            characterPathsCache[char] = glyphPaths
         }
+        
+        let glyphOffset = simd_make_float2(Float(glyphPosition.x + origin.x - framePivot.x), Float(glyphPosition.y + origin.y - framePivot.y - verticalOffset))
+        characterOffsets[charIndex] = glyphOffset
+
+        combineAndOffsetGeometryData(&gData, &cData, simd_make_float3(glyphOffset, distance * 0.5))
+        combineAndOffsetGeometryData(&gData, &bData, simd_make_float3(glyphOffset, -distance * 0.5))
+        combineAndScaleAndOffsetGeometryData(&gData, &sData, simd_make_float3(1.0, 1.0, distance * 0.5), simd_make_float3(glyphOffset, 0.0))
     }
     
     override func clearGeometryCache() {

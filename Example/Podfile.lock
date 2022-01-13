@@ -1,6 +1,6 @@
 PODS:
   - Forge (1.0.9)
-  - Satin (1.3.4)
+  - Satin (1.4.2)
   - Spectra (0.0.2)
 
 DEPENDENCIES:
@@ -26,7 +26,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Forge: abca50ae8838a6d745b9a4e204bc2cb800546cef
-  Satin: c8b8c80e461918ab3ab8a03f1138a54cb0172fda
+  Satin: 456d4ddba4cbc55035223dde5e9286d1bd0a6670
   Spectra: 1e638cbbde12eb6fa09202f3f5b98e452fd2a365
 
 PODFILE CHECKSUM: eb56eefb6ae9d0c1d845f96a8d971845764cbf63

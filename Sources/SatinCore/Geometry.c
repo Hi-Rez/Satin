@@ -123,8 +123,8 @@ bool isClockwise(simd_float2 *polygon, int length) {
     return !signbit(area);
 }
 
-bool rayRayIntersection2(simd_float2 as, simd_float2 ad, simd_float2 bs, simd_float2 bd, simd_float2 *intersection)
-{
+bool rayRayIntersection2(simd_float2 as, simd_float2 ad, simd_float2 bs, simd_float2 bd,
+                         simd_float2 *intersection) {
     const float dx = bs.x - as.x;
     const float dy = bs.y - as.y;
     const float det = bd.x * ad.y - bd.y * ad.x;
@@ -137,18 +137,18 @@ bool rayRayIntersection2(simd_float2 as, simd_float2 ad, simd_float2 bs, simd_fl
     return false;
 }
 
-bool rayPlaneIntersection( simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, simd_float3 *intersection)
-{
+bool rayPlaneIntersection(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal,
+                          simd_float3 planeOrigin, simd_float3 *intersection) {
     float time = 0.0;
-    if(rayPlaneIntersectionTime(origin, direction, planeNormal, planeOrigin, &time)) {
+    if (rayPlaneIntersectionTime(origin, direction, planeNormal, planeOrigin, &time)) {
         *intersection = origin + direction * time;
         return true;
     }
     return false;
 }
 
-bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal, simd_float3 planeOrigin, float *time)
-{
+bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal,
+                              simd_float3 planeOrigin, float *time) {
     simd_float3 o = planeOrigin - origin;
     const float oProj = simd_dot(o, planeNormal);
     const float dProj = simd_dot(direction, planeNormal);
@@ -157,62 +157,55 @@ bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_fl
     return (dProj < 0);
 }
 
-bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds, simd_float2 *times)
-{
+bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds,
+                           simd_float2 *times) {
     simd_float3 dirInv = 1.0 / direction;
     simd_float3 tmin = (bounds.min - origin) * dirInv;
     simd_float3 tmax = (bounds.max - origin) * dirInv;
     simd_float3 tmpMin = tmin;
     simd_float3 tmpMax = tmax;
-    
+
     tmin = simd_min(tmpMin, tmpMax);
     tmax = simd_max(tmpMin, tmpMax);
-    
+
     float min = simd_max(tmin.x, tmin.y);
     float max = simd_min(tmax.x, tmax.y);
-    
-    if (tmin.x > tmax.y || tmin.y > tmax.x) {
-        return false;
-    }
-    
-    if (min > tmax.z || tmin.z > max) {
-        return false;
-    }
-    
+
+    if (tmin.x > tmax.y || tmin.y > tmax.x) { return false; }
+
+    if (min > tmax.z || tmin.z > max) { return false; }
+
     min = simd_max(min, tmin.z);
     max = simd_min(max, tmax.z);
-    
+
     times->x = min;
     times->y = max;
-    
+
     return true;
 }
 
-bool raySphereIntersection( simd_float3 origin, simd_float3 direction, simd_float3 center, float radius, simd_float2 *times)
-{
+bool raySphereIntersection(simd_float3 origin, simd_float3 direction, simd_float3 center,
+                           float radius, simd_float2 *times) {
     const simd_float3 l = center - origin;
     const float tca = simd_dot(l, direction);
-    if( tca < 0 ) {
-        return false;
-    }
-    
+    if (tca < 0) { return false; }
+
     const float r2 = radius * radius;
-    const float d2 = simd_dot(l,l) - tca * tca;
-    if( d2 < 0 || d2 > r2 ) {
-        return false;
-    }
-    
-    const float thc = sqrt( r2 - d2 );
-    
+    const float d2 = simd_dot(l, l) - tca * tca;
+    if (d2 < 0 || d2 > r2) { return false; }
+
+    const float thc = sqrt(r2 - d2);
+
     const float t0 = tca - thc;
     const float t1 = tca + thc;
-    
+
     *times = simd_make_float2(t0, t1);
     return true;
 }
 
-bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_float3 v0, simd_float3 v1, simd_float3 v2, float *time, simd_float3 *intersection, simd_float3 *normal)
-{
+bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_float3 v0,
+                             simd_float3 v1, simd_float3 v2, float *time, simd_float3 *intersection,
+                             simd_float3 *normal) {
     if (isColinear3(v0, v1, v2)) {
         return false;
     } else {
@@ -220,38 +213,32 @@ bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_flo
         simd_float3 b = v2 - v0;
         *normal = simd_normalize(simd_cross(a, b));
         simd_float3 triangleOrigin = simd_dot(*normal, v0);
-        bool intersected = rayPlaneIntersectionTime(origin, direction, *normal, triangleOrigin, time);
-        if(intersected) {
-                        
+        bool intersected =
+            rayPlaneIntersectionTime(origin, direction, *normal, triangleOrigin, time);
+        if (intersected) {
+
             (*intersection) = origin + direction * (*time);
-            
+
             simd_float3 v0i = (*intersection) - v0;
             float cross = simd_dot(*normal, simd_cross(a, v0i));
-            if(cross < 0) {
-                return false;
-            }
-            
+            if (cross < 0) { return false; }
+
             simd_float3 c = v2 - v1;
             simd_float3 v1i = (*intersection) - v1;
             cross = simd_dot(*normal, simd_cross(c, v1i));
-            if(cross < 0) {
-                return false;
-            }
-            
+            if (cross < 0) { return false; }
+
             simd_float3 v2i = (*intersection) - v2;
             cross = simd_dot(*normal, simd_cross(-b, v2i));
-            if(cross < 0) {
-                return false;
-            }
+            if (cross < 0) { return false; }
             return true;
         }
     }
-    
+
     return false;
 }
 
-simd_float3 projectPointOnPlane( simd_float3 origin, simd_float3 normal, simd_float3 point )
-{
+simd_float3 projectPointOnPlane(simd_float3 origin, simd_float3 normal, simd_float3 point) {
     simd_float3 v = point - origin;
     float pn = simd_dot(v, normal);
     return point - pn * normal;
@@ -270,8 +257,8 @@ simd_float2 projectedPointOnLine2(simd_float2 start, simd_float2 end, simd_float
     simd_float2 ab = end - start;
     float lengthAB = simd_length(ab);
     simd_float2 ac = point - start;
-    float projectedLength = simd_dot(ab, ac)/ lengthAB;
-    return start + projectedLength * (ab/lengthAB);
+    float projectedLength = simd_dot(ab, ac) / lengthAB;
+    return start + projectedLength * (ab / lengthAB);
 }
 
 float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point) {
@@ -283,20 +270,14 @@ float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point) 
     return acLength * sin(angle);
 }
 
-float angle2(simd_float2 a)
-{
+float angle2(simd_float2 a) {
     float theta = atan2f(a.y, a.x);
-    if(theta < 0) {
-        theta += M_PI * 2.0;
-    }
+    if (theta < 0) { theta += M_PI * 2.0; }
     return theta;
 }
 
-float angle(float x, float y)
-{
+float angle(float x, float y) {
     float theta = atan2f(y, x);
-    if(theta < 0) {
-        theta += M_PI * 2.0;
-    }
+    if (theta < 0) { theta += M_PI * 2.0; }
     return theta;
 }

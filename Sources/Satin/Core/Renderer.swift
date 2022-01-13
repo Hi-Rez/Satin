@@ -21,7 +21,7 @@ open class Renderer
     {
         didSet
         {
-            if let context = self.context
+            if let context = context
             {
                 scene.context = context
             }
@@ -100,7 +100,7 @@ open class Renderer
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
     {
-        guard let context = self.context else { return }
+        guard let context = context else { return }
         
         if context.sampleCount > 1
         {
@@ -125,7 +125,7 @@ open class Renderer
         camera.update()
         scene.update()
         
-        guard let context = self.context, scene.visible, scene is Mesh || scene.children.count > 0 else { return }
+        guard let context = context else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
@@ -206,17 +206,22 @@ open class Renderer
         renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
         renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
         
-        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return }
-        renderEncoder.pushDebugGroup(label + " Pass")
-        renderEncoder.label = label + " Encoder"
-        renderEncoder.setViewport(viewport)
-        
-        preDraw?(renderEncoder)
-        draw(renderEncoder: renderEncoder, object: scene)
-        postDraw?(renderEncoder)
-        
-        renderEncoder.popDebugGroup()
-        renderEncoder.endEncoding()
+        if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+        {
+            renderEncoder.pushDebugGroup(label + " Pass")
+            renderEncoder.label = label + " Encoder"
+            renderEncoder.setViewport(viewport)
+           
+            if scene.visible, scene is Mesh || scene.children.count > 0
+            {
+                preDraw?(renderEncoder)
+                draw(renderEncoder: renderEncoder, object: scene)
+                postDraw?(renderEncoder)
+            }
+            
+            renderEncoder.popDebugGroup()
+            renderEncoder.endEncoding()
+        }
         
         renderPassDescriptor.colorAttachments[0].texture = inColorTexture
         renderPassDescriptor.colorAttachments[0].resolveTexture = inColorResolveTexture
@@ -259,7 +264,7 @@ open class Renderer
     
     public func setupDepthTexture()
     {
-        guard let context = self.context, updateDepthTexture else { return }
+        guard let context = context, updateDepthTexture else { return }
         let sampleCount = context.sampleCount
         let depthPixelFormat = context.depthPixelFormat
         if depthPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -285,7 +290,7 @@ open class Renderer
     
     public func setupStencilTexture()
     {
-        guard let context = self.context, updateStencilTexture else { return }
+        guard let context = context, updateStencilTexture else { return }
         let sampleCount = context.sampleCount
         let stencilPixelFormat = context.stencilPixelFormat
         if stencilPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -311,7 +316,7 @@ open class Renderer
     
     public func setupColorTexture()
     {
-        guard let context = self.context, updateColorTexture else { return }
+        guard let context = context, updateColorTexture else { return }
         let sampleCount = context.sampleCount
         let colorPixelFormat = context.colorPixelFormat
         if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1

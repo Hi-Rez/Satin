@@ -12,17 +12,17 @@
 #include "Types.h"
 
 void freeTriangleFaceMap(TriangleFaceMap *map) {
-    if (map->count > 0 && map->data == NULL) { return; }
+    if (map->count <= 0 && map->data == NULL) { return; }
     free(map->data);
     map->count = 0;
 }
 
 void freeGeometryData(GeometryData *data) {
-    if (data->vertexCount > 0 && data->vertexData == NULL) { return; }
+    if (data->vertexCount <= 0 && data->vertexData == NULL) { return; }
     free(data->vertexData);
     data->vertexCount = 0;
 
-    if (data->indexCount > 0 && data->indexData == NULL) { return; }
+    if (data->indexCount <= 0 && data->indexData == NULL) { return; }
     free(data->indexData);
     data->indexCount = 0;
 }
@@ -215,36 +215,35 @@ void computeNormalsOfGeometryData(GeometryData *data) {
             uint32_t i1 = data->indexData[i].i1;
             uint32_t i2 = data->indexData[i].i2;
             
-//            if(i0 < data->vertexCount && i1 < data->vertexCount && i2 < data->vertexCount) {
-                Vertex *v0 = &data->vertexData[i0];
-                Vertex *v1 = &data->vertexData[i1];
-                Vertex *v2 = &data->vertexData[i2];
-                
-                simd_float3 p0 = simd_make_float3(v0->position);
-                simd_float3 p1 = simd_make_float3(v1->position);
-                simd_float3 p2 = simd_make_float3(v2->position);
-                            
-                simd_float3 normal = simd_cross(p1 - p0, p2 - p0);
-                if(simd_length(normal) > 0) {
-                    v0->normal += normal;
-                    v1->normal += normal;
-                    v2->normal += normal;
-                }
-//            }
+            Vertex *v0 = &data->vertexData[i0];
+            Vertex *v1 = &data->vertexData[i1];
+            Vertex *v2 = &data->vertexData[i2];
+
+            simd_float3 p0 = simd_make_float3(v0->position);
+            simd_float3 p1 = simd_make_float3(v1->position);
+            simd_float3 p2 = simd_make_float3(v2->position);
+
+            simd_float3 normal = simd_cross(p1 - p0, p2 - p0);
+            if (simd_length(normal) > 0) {
+                v0->normal += normal;
+                v1->normal += normal;
+                v2->normal += normal;
+            }
+            //            }
         }
-        
+
         count = data->vertexCount;
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             Vertex *v = &data->vertexData[i];
             v->normal = simd_normalize(v->normal);
         }
-        
+
     } else {
         int count = data->vertexCount;
         for (int i = 0; i < count; i += 3) {
             Vertex *v0 = &data->vertexData[i];
-            Vertex *v1 = &data->vertexData[i+1];
-            Vertex *v2 = &data->vertexData[i+2];
+            Vertex *v1 = &data->vertexData[i + 1];
+            Vertex *v2 = &data->vertexData[i + 2];
 
             simd_float3 p0 = simd_make_float3(v0->position);
             simd_float3 p1 = simd_make_float3(v1->position);
@@ -290,94 +289,93 @@ void transformGeometryData(GeometryData *data, simd_float4x4 transform) {
     }
 }
 
-void deindexGeometryData( GeometryData *dest, GeometryData *src )
-{
+void deindexGeometryData(GeometryData *dest, GeometryData *src) {
     int triangleCount = src->indexCount;
     int newVertexCount = triangleCount * 3;
     Vertex *vertices = (Vertex *)malloc(newVertexCount * sizeof(Vertex));
-    
+
     int vertexIndex = 0;
-    for(int i = 0; i < triangleCount; i++) {
+    for (int i = 0; i < triangleCount; i++) {
         TriangleIndices t = src->indexData[i];
         Vertex v0 = src->vertexData[t.i0];
         Vertex v1 = src->vertexData[t.i1];
         Vertex v2 = src->vertexData[t.i2];
-        
+
         vertices[vertexIndex].position = v0.position;
         vertices[vertexIndex].normal = v0.normal;
         vertices[vertexIndex].uv = v0.uv;
-        
+
         vertexIndex += 1;
-        
+
         vertices[vertexIndex].position = v1.position;
         vertices[vertexIndex].normal = v1.normal;
         vertices[vertexIndex].uv = v1.uv;
-        
+
         vertexIndex += 1;
-        
+
         vertices[vertexIndex].position = v2.position;
         vertices[vertexIndex].normal = v2.normal;
         vertices[vertexIndex].uv = v2.uv;
-        
+
         vertexIndex += 1;
     }
-    
+
     dest->indexCount = 0;
     dest->indexData = NULL;
     dest->vertexCount = vertexIndex;
     dest->vertexData = vertices;
 }
 
-void unrollGeometryData( GeometryData *dest, GeometryData *src ) {
+void unrollGeometryData(GeometryData *dest, GeometryData *src) {
     int triangleCount = src->indexCount;
     int newVertexCount = triangleCount * 3;
     Vertex *vertices = (Vertex *)malloc(newVertexCount * sizeof(Vertex));
     TriangleIndices *triangles = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangleCount);
-    
+
     int vertexIndex = 0;
     simd_float3 p01, p02, p0, p1, p2;
     simd_float3 normal;
-    for(int i = 0; i < triangleCount; i++) {
+    for (int i = 0; i < triangleCount; i++) {
         TriangleIndices t = src->indexData[i];
-        
+
         Vertex v0 = src->vertexData[t.i0];
         Vertex v1 = src->vertexData[t.i1];
         Vertex v2 = src->vertexData[t.i2];
-        
+
         p0 = simd_make_float3(v0.position);
         p1 = simd_make_float3(v1.position);
         p2 = simd_make_float3(v2.position);
-                
+
         p01 = p1 - p0;
         p02 = p2 - p0;
-        
+
         normal = simd_normalize(simd_cross(p01, p02));
-        
+
         vertices[vertexIndex].position = v0.position;
         vertices[vertexIndex].normal = normal;
         vertices[vertexIndex].uv = v0.uv;
-                
+
         triangles[i].i0 = vertexIndex;
-        
+
         vertexIndex += 1;
-        
+
         vertices[vertexIndex].position = v1.position;
         vertices[vertexIndex].normal = normal;
         vertices[vertexIndex].uv = v1.uv;
-        
+
         triangles[i].i1 = vertexIndex;
-        
+
         vertexIndex += 1;
-        
+
         vertices[vertexIndex].position = v2.position;
         vertices[vertexIndex].normal = normal;
         vertices[vertexIndex].uv = v2.uv;
-        
+
         triangles[i].i2 = vertexIndex;
-        
+
         vertexIndex += 1;
     }
-    
+
     dest->indexCount = triangleCount;
     dest->indexData = triangles;
     dest->vertexCount = vertexIndex;

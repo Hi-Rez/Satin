@@ -42,10 +42,17 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    public init(_ label: String = "") {
+    public init(_ label: String = "", _ parameters: [Parameter] = []) {
         self.label = label
+        append(parameters)
     }
 
+    public func append(_ parameters: [Parameter]) {
+        for p in parameters {
+            append(p)
+        }
+    }
+        
     public func append(_ param: Parameter) {
         if param.delegate == nil {
             param.delegate = self

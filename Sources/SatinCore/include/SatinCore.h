@@ -14,8 +14,11 @@ FOUNDATION_EXPORT double SatinVersionNumber;
 //! Project version string for Satin.
 FOUNDATION_EXPORT const unsigned char SatinVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <Satin/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like
+// #import <Satin/PublicHeader.h>
 
+#include "../Helpers.h"
+#include "../Transforms.h"
 #include "../Types.h"
 #include "../Geometry.h"
 #include "../Generators.h"

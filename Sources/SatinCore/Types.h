@@ -23,6 +23,11 @@ typedef struct {
 } Bounds;
 
 typedef struct {
+    int count;
+    simd_float2 *data;
+} Polyline2D;
+
+typedef struct {
     uint32_t i0;
     uint32_t i1;
     uint32_t i2;
@@ -33,7 +38,7 @@ typedef struct {
     uint32_t *data;
 } TriangleFaceMap;
 
-void freeTriangleFaceMap( TriangleFaceMap *map );
+void freeTriangleFaceMap(TriangleFaceMap *map);
 
 typedef struct {
     int vertexCount;
@@ -42,24 +47,26 @@ typedef struct {
     TriangleIndices *indexData;
 } GeometryData;
 
-void freeGeometryData( GeometryData *data );
+void freeGeometryData(GeometryData *data);
 
-void copyGeometryVertexData( GeometryData *dest, GeometryData *src, int start, int end );
-void copyGeometryIndexData( GeometryData *dest, GeometryData *src, int start, int end );
-void copyGeometryData( GeometryData *dest, GeometryData *src );
+void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int end);
+void copyGeometryIndexData(GeometryData *dest, GeometryData *src, int start, int end);
+void copyGeometryData(GeometryData *dest, GeometryData *src);
 
-void combineGeometryData( GeometryData *dest, GeometryData *src );
-void combineAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 offset );
-void combineAndScaleGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale );
-void combineAndScaleAndOffsetGeometryData( GeometryData *dest, GeometryData *src, simd_float3 scale, simd_float3 offset );
-void combineAndTransformGeometryData( GeometryData *dest, GeometryData *src, simd_float4x4 transform ); 
+void combineGeometryData(GeometryData *dest, GeometryData *src);
+void combineAndOffsetGeometryData(GeometryData *dest, GeometryData *src, simd_float3 offset);
+void combineAndScaleGeometryData(GeometryData *dest, GeometryData *src, simd_float3 scale);
+void combineAndScaleAndOffsetGeometryData(GeometryData *dest, GeometryData *src, simd_float3 scale,
+                                          simd_float3 offset);
+void combineAndTransformGeometryData(GeometryData *dest, GeometryData *src,
+                                     simd_float4x4 transform);
 
-void computeNormalsOfGeometryData( GeometryData *data );
-void reverseFacesOfGeometryData( GeometryData *data );
+void computeNormalsOfGeometryData(GeometryData *data);
+void reverseFacesOfGeometryData(GeometryData *data);
 
-void transformGeometryData( GeometryData *data, simd_float4x4 transform );
+void transformGeometryData(GeometryData *data, simd_float4x4 transform);
 
-void deindexGeometryData( GeometryData *dest, GeometryData *src );
-void unrollGeometryData( GeometryData *dest, GeometryData *src );
+void deindexGeometryData(GeometryData *dest, GeometryData *src);
+void unrollGeometryData(GeometryData *dest, GeometryData *src);
 
 #endif /* Types_h */

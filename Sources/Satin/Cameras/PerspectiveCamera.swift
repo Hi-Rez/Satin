@@ -59,7 +59,7 @@ open class PerspectiveCamera: Camera
         {
             if updateProjectionMatrix
             {
-                _projectionMatrix = perspective(fov: fov, aspect: aspect, near: near, far: far)
+                _projectionMatrix = perspectiveMatrixf(fov, aspect, near, far)
                 updateProjectionMatrix = false
             }
             return _projectionMatrix

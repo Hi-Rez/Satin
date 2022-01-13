@@ -71,7 +71,7 @@ open class Geometry {
         setupIndexBuffer()
     }
     
-    func update() {}
+    public func update() {}
     
     func setupVertexBuffer() {
         guard let context = self.context else { return }

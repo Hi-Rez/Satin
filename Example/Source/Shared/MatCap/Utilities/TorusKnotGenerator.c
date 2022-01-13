@@ -8,8 +8,6 @@
 
 #include "TorusKnotGenerator.h"
 
-#include <simd/SIMD.h>
-
 simd_float3 torusKnotGenerator(float t, float s, float R, float r, float c, float q, float p) {
     float theta = p * t;
     float phi = q * t;

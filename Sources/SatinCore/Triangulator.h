@@ -18,4 +18,3 @@ int triangulateMesh(Vertex *vertices, int vertexCount, const uint32_t **faces, i
                     int faceCount, GeometryData *gData, TriangleFaceMap *triangleFaceMap);
 
 #endif /* Triangulator_h */
-

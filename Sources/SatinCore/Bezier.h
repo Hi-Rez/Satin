@@ -8,15 +8,38 @@
 #ifndef Bezier_h
 #define Bezier_h
 
-#include <stdio.h>
-#include <simd/simd.h>
+#include "Types.h"
 
-simd_float2 quadraticBezier2(float t, simd_float2 a, simd_float2 b, simd_float2 c);
-simd_float2 cubicBezier2(float t, simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
+void freePolyline2D(Polyline2D *line);
 
-simd_float3 quadraticBezier3(float t, simd_float3 a, simd_float3 b, simd_float3 c);
-simd_float3 cubicBezier3(float t, simd_float3 a, simd_float3 b, simd_float3 c, simd_float3 d);
+void addPointToPolyline2D(simd_float2 p, Polyline2D *line);
+void removeFirstPointInPolyline2D(Polyline2D *line);
+void removeLastPointInPolyline2D(Polyline2D *line);
+void appendPolyline2D(Polyline2D *dst, Polyline2D *src);
+
+Polyline2D getAdaptiveLinearPath2(simd_float2 a, simd_float2 b, float distanceLimit);
+    
+simd_float2 quadraticBezier2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
+simd_float2 quadraticBezierVelocity2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
+simd_float2 quadraticBezierAcceleration2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
+float quadraticBezierCurvature2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
+
+Polyline2D getQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, int res);
+Polyline2D getAdaptiveQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c,
+                                           float angleLimit);
+
+simd_float2 cubicBezier2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d, float t);
+simd_float2 cubicBezierVelocity2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
+                                 float t);
+simd_float2 cubicBezierAcceleration2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
+                                     float t);
+float cubicBezierCurvature2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d, float t);
+
+Polyline2D getCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d, int res);
+Polyline2D getAdaptiveCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
+                                       float angleLimit);
+
+simd_float3 quadraticBezier3(simd_float3 a, simd_float3 b, simd_float3 c, float t);
+simd_float3 cubicBezier3(simd_float3 a, simd_float3 b, simd_float3 c, simd_float3 d, float t);
 
 #endif /* Bezier_h */
-
-

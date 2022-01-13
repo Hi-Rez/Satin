@@ -2,11 +2,11 @@
 //  TextGeometry.swift
 //  Satin
 //
-//  Created by Reza Ali on 7/5/20.
+//  Created by Reza Ali on 1/10/22.
 //
 
-import Foundation
 import CoreText
+import Foundation
 import simd
 
 open class TextGeometry: Geometry {
@@ -40,7 +40,7 @@ open class TextGeometry: Geometry {
         }
     }
     
-    public var pivot: simd_float2 = simd_float2(repeating: 0.0) {
+    public var pivot = simd_float2(repeating: 0.0) {
         didSet {
             if pivot != oldValue {
                 needsSetup = true
@@ -48,7 +48,7 @@ open class TextGeometry: Geometry {
         }
     }
     
-    public var textBounds: CGSize = CGSize(width: -1, height: -1) {
+    public var textBounds = CGSize(width: -1, height: -1) {
         didSet {
             if textBounds != oldValue {
                 needsSetup = true
@@ -76,7 +76,7 @@ open class TextGeometry: Geometry {
         didSet {
             if fontName != oldValue {
                 ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-                clearGeometryCache()
+                needsClear = true
                 needsSetup = true
             }
         }
@@ -86,7 +86,7 @@ open class TextGeometry: Geometry {
         didSet {
             if fontSize != oldValue {
                 ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-                clearGeometryCache()
+                needsClear = true
                 needsSetup = true
             }
         }
@@ -137,20 +137,319 @@ open class TextGeometry: Geometry {
     }
     
     public var suggestFrameSize: CGSize? {
-        guard let attributedText = attributedText else { return nil }
-        var bnds = textBounds
-        if bnds.width < 0 {
-            bnds.width = CGFloat.greatestFiniteMagnitude
+        if needsSuggestFrameSizeSetup {
+            _suggestFrameSize = getSuggestFrameSize()
+            needsSuggestFrameSizeSetup = false
         }
-        if bnds.height < 0 {
-            bnds.height = CGFloat.greatestFiniteMagnitude
-        }
-        
-        let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
-        return CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
+        return _suggestFrameSize
     }
     
+    var _suggestFrameSize: CGSize?
+    
+    var verticalOffset: CGFloat? {
+        if needsVerticalOffsetSetup {
+            _verticalOffset = getVerticalOffset()
+            needsVerticalOffsetSetup = false
+        }
+        return _verticalOffset
+    }
+    
+    var _verticalOffset: CGFloat?
+    
+    var framePivot: CGPoint? {
+        if needsFramePivotSetup {
+            _framePivot = getFramePivot()
+            needsFramePivotSetup = false
+        }
+        return _framePivot
+    }
+    
+    var _framePivot: CGPoint?
+    
+    var frameSetter: CTFramesetter? {
+        if needsFrameSetterSetup {
+            _frameSetter = getFrameSetter()
+            needsFrameSetterSetup = false
+        }
+        return _frameSetter
+    }
+
+    var _frameSetter: CTFramesetter?
+    
+    var frame: CTFrame? {
+        if needsFrameSetup {
+            _frame = getFrame()
+            needsFrameSetup = false
+        }
+        return _frame
+    }
+
+    var _frame: CTFrame?
+    
+    var lines: [CTLine] {
+        if needsLinesSetup {
+            _lines = getLines()
+            needsLinesSetup = false
+        }
+        return _lines
+    }
+    
+    var _lines: [CTLine] = []
+    
+    var origins: [CGPoint] {
+        if needsOriginsSetup {
+            _origins = getOrigins()
+            needsOriginsSetup = false
+        }
+        return _origins
+    }
+    
+    var _origins: [CGPoint] = []
+    
     var attributedText: CFAttributedString? {
+        if needsTextSetup {
+            _attributedText = getAttributedText()
+            needsTextSetup = false
+        }
+        return _attributedText
+    }
+
+    var _attributedText: CFAttributedString?
+    
+    var ctFont: CTFont
+    
+    var needsVerticalOffsetSetup: Bool = true
+    var needsFramePivotSetup: Bool = true
+    
+    var needsTextSetup: Bool = true {
+        didSet {
+            if needsTextSetup {
+                needsFrameSetterSetup = true
+                needsSuggestFrameSizeSetup = true
+                needsVerticalOffsetSetup = true
+                needsFramePivotSetup = true
+            }
+        }
+    }
+    
+    var needsSuggestFrameSizeSetup: Bool = true
+    
+    var needsFrameSetterSetup: Bool = true {
+        didSet {
+            if needsFrameSetterSetup {
+                needsFrameSetup = true
+            }
+        }
+    }
+    
+    var needsFrameSetup: Bool = true {
+        didSet {
+            if needsFrameSetup {
+                needsLinesSetup = true
+            }
+        }
+    }
+    
+    var needsLinesSetup: Bool = true {
+        didSet {
+            if needsLinesSetup {
+                needsOriginsSetup = true
+            }
+        }
+    }
+    
+    var needsOriginsSetup: Bool = true
+    
+    var needsClear: Bool = false
+    
+    var needsSetup: Bool = true {
+        didSet {
+            if needsSetup {
+                needsTextSetup = true
+            }
+        }
+    }
+
+    var geometryCache: [Character: GeometryData] = [:]
+    var characterPathsCache: [Character: [Polyline2D]] = [:]
+    
+    public var characterPaths: [Character: [Polyline2D]] = [:]
+    public var characterOffsets: [String.Index: simd_float2] = [:]
+    
+    public init(text: String, fontName: String = "Helvetica", fontSize: Float, bounds: CGSize = .zero, pivot: simd_float2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0.0) {
+        self.text = text
+        self.fontName = fontName
+        self.fontSize = fontSize
+        self.textBounds = bounds
+        self.pivot = pivot
+        self.textAlignment = textAlignment
+        self.verticalAlignment = verticalAlignment
+        self.kern = kern
+        self.lineSpacing = lineSpacing
+        self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
+        super.init()
+        update()
+    }
+    
+    override public func update() {
+        if needsSetup {
+            setupData()
+            needsSetup = false
+        }
+    }
+    
+    var angleLimit: Float = degToRad(7.5)
+    
+    func setupData() {
+        var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        
+        if needsClear {
+            clearCache()
+            needsClear = false
+        }
+        
+        var charOffset: Int = 0
+        for (lineIndex, line) in lines.enumerated() {
+            let origin = origins[lineIndex]
+            let runs: [CTRun] = CTLineGetGlyphRuns(line) as! [CTRun]
+            for run in runs {
+                let glyphCount = CTRunGetGlyphCount(run)
+                let glyphPositions = UnsafeMutablePointer<CGPoint>.allocate(capacity: glyphCount)
+                CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions)
+                let glyphs = UnsafeMutablePointer<CGGlyph>.allocate(capacity: glyphCount)
+                CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs)
+                for glyphIndex in 0..<glyphCount {
+                    let glyph = glyphs[glyphIndex]
+                    let glyphPosition = glyphPositions[glyphIndex]
+                    addGlyphGeometryData(&gData, charOffset, glyph, glyphPosition, origin)
+                    charOffset += 1
+                }
+                glyphPositions.deallocate()
+                glyphs.deallocate()
+            }
+        }
+            
+        setFrom(&gData)
+        freeGeometryData(&gData)
+    }
+    
+    func addGlyphGeometryData(_ gData: inout GeometryData, _ charOffset: Int, _ glyph: CGGlyph, _ glyphPosition: CGPoint, _ origin: CGPoint) {
+        guard let framePivot = framePivot, let verticalOffset = verticalOffset else { return }
+        
+        let charIndex = text.index(text.startIndex, offsetBy: Int(charOffset))
+        let char = text[charIndex]
+        characterPaths[char] = []
+        
+        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        
+        if let cacheData = geometryCache[char], let charPaths = characterPathsCache[char] {
+            cData = cacheData
+            characterPaths[char] = charPaths
+        } else if let glyphPath = CTFontCreatePathForGlyph(ctFont, glyph, nil) {
+            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize/10.0)
+            
+            var _paths: [UnsafeMutablePointer<simd_float2>?] = []
+            var _lengths: [Int32] = []
+            for i in 0..<glyphPaths.count {
+                let path = glyphPaths[i]
+                _paths.append(path.data)
+                _lengths.append(path.count)
+            }
+                                     
+            if triangulate(&_paths, &_lengths, Int32(_lengths.count), &cData) != 0 {
+                print("Triangulation for \(char) FAILED!")
+            }
+            
+            geometryCache[char] = cData
+            characterPaths[char] = glyphPaths
+            characterPathsCache[char] = glyphPaths
+        }
+        
+        let glyphOffset = simd_make_float2(Float(glyphPosition.x + origin.x - framePivot.x), Float(glyphPosition.y + origin.y - framePivot.y - verticalOffset))
+        characterOffsets[charIndex] = glyphOffset
+        combineAndOffsetGeometryData(&gData, &cData, simd_make_float3(glyphOffset, 0.0))
+    }
+    
+    func getPolylines(_ glyphPath: CGPath, _ angleLimit: Float, _ distanceLimit: Float) -> [Polyline2D] {
+        var glyphPaths = [Polyline2D]()
+        var path = Polyline2D(count: 0, data: nil)
+        glyphPath.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
+            let element = elementPtr.pointee
+            var pointsPtr = element.points
+            let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                
+            switch element.type {
+            case .moveToPoint:
+                addPointToPolyline2D(pt, &path)
+            case .addLineToPoint:
+                let a = path.data[Int(path.count) - 1]
+                var line = getAdaptiveLinearPath2(a, pt, distanceLimit)
+                removeFirstPointInPolyline2D(&line)
+                appendPolyline2D(&path, &line)
+                freePolyline2D(&line)
+            case .addQuadCurveToPoint:
+                let a = path.data[Int(path.count) - 1]
+                let b = pt
+                pointsPtr += 1
+                let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                var curve = getAdaptiveQuadraticBezierPath2(a, b, c, angleLimit)
+                removeFirstPointInPolyline2D(&curve)
+                appendPolyline2D(&path, &curve)
+                freePolyline2D(&curve)
+            case .addCurveToPoint:
+                let a = path.data[Int(path.count) - 1]
+                let b = pt
+                pointsPtr += 1
+                let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                pointsPtr += 1
+                let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
+                var curve = getAdaptiveCubicBezierPath2(a, b, c, d, angleLimit)
+                removeFirstPointInPolyline2D(&curve)
+                appendPolyline2D(&path, &curve)
+                freePolyline2D(&curve)
+            case .closeSubpath:
+                if isEqual2(path.data[0], path.data[Int(path.count - 1)]) {
+                    removeLastPointInPolyline2D(&path)
+                }
+                let first = path.data[0]
+                let last = path.data[Int(path.count) - 1]
+                var line = getAdaptiveLinearPath2(last, first, distanceLimit)
+                removeLastPointInPolyline2D(&line)
+                removeFirstPointInPolyline2D(&line)
+                appendPolyline2D(&path, &line)
+                freePolyline2D(&line)
+                glyphPaths.append(path)
+                path = Polyline2D(count: 0, data: nil)
+            default:
+                break
+            }
+        }
+        return glyphPaths
+    }
+    
+    func getVerticalOffset() -> CGFloat? {
+        guard let suggestFrameSize = suggestFrameSize else { return nil }
+        var verticalOffset: CGFloat
+        switch verticalAlignment {
+        case .top:
+            verticalOffset = 0
+        case .center:
+            verticalOffset = ((textBounds.height <= 0 ? suggestFrameSize.height : textBounds.height) - suggestFrameSize.height) * 0.5
+        case .bottom:
+            verticalOffset = (textBounds.height <= 0 ? suggestFrameSize.height : textBounds.height) - suggestFrameSize.height
+        }
+        return verticalOffset
+    }
+    
+    func getFramePivot() -> CGPoint? {
+        guard let suggestFrameSize = suggestFrameSize else { return nil }
+        let pt = pivot * 0.5 + 0.5
+        let px: CGFloat = (textBounds.width <= 0 ? suggestFrameSize.width : textBounds.width) * CGFloat(pt.x)
+        let py: CGFloat = (textBounds.height <= 0 ? suggestFrameSize.height : textBounds.height) * CGFloat(pt.y)
+        return CGPoint(x: px, y: py)
+    }
+    
+    func getAttributedText() -> CFAttributedString? {
         // Text Attributes
         let attributes: [NSAttributedString.Key: Any] = [
             .font: ctFont,
@@ -182,176 +481,43 @@ open class TextGeometry: Geometry {
         return attributedText
     }
     
-    var ctFont: CTFont
-    var needsSetup: Bool = true
-    var geometryCache: [CGGlyph: GeometryData] = [:]
-    
-    public init(text: String, fontName: String, fontSize: Float, bounds: CGSize = CGSize(width: -1, height: -1), pivot: simd_float2, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0.0) {
-        self.text = text
-        self.fontName = fontName
-        self.fontSize = fontSize
-        self.textBounds = bounds
-        self.pivot = pivot
-        self.textAlignment = textAlignment
-        self.verticalAlignment = verticalAlignment
-        self.kern = kern
-        self.lineSpacing = lineSpacing
-        self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
-        super.init()
-        self.update()
+    func getFrameSetter() -> CTFramesetter? {
+        guard let attributedText = attributedText else { return nil }
+        return CTFramesetterCreateWithAttributedString(attributedText)
     }
     
-    override func update() {
-        if needsSetup {
-            setupData()
-            needsSetup = false
+    func getSuggestFrameSize() -> CGSize? {
+        guard let frameSetter = frameSetter else { return nil }
+        var bnds = textBounds
+        if bnds.width <= 0 {
+            bnds.width = CGFloat.greatestFiniteMagnitude
         }
+        if bnds.height <= 0 {
+            bnds.height = CGFloat.greatestFiniteMagnitude
+        }
+        return CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(0, text.count), nil, bnds, nil)
     }
     
-    func setupData() {
-        let maxStraightDistance = Float(fontSize / 10.0)
-        var gData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-        if let attributedString = self.attributedText {
-            // Calculate Suggested Bounds
-            var bnds = textBounds
-            if bnds.width < 0 {
-                bnds.width = CGFloat.greatestFiniteMagnitude
-            }
-            if bnds.height < 0 {
-                bnds.height = CGFloat.greatestFiniteMagnitude
-            }
-            
-            let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
-            let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.count), nil, bnds, nil)
-            
-            bnds.width = suggestedSize.width
-            bnds.height = suggestedSize.height
-            
-            let framePath = CGMutablePath()
-            let constraints = CGRect(x: 0.0, y: 0.0, width: textBounds.width >= 0.0 ? textBounds.width : bnds.width, height: textBounds.height >= 0.0 ? textBounds.height : bnds.height)
-            framePath.addRect(constraints)
-            let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.count), framePath, nil)
-            let lines = CTFrameGetLines(frame) as! [CTLine]
-            
-            var origins: [CGPoint] = Array(repeating: CGPoint(), count: lines.count)
-            CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &origins)
-            
-            let pvt = pivot * 0.5 + 0.5
-            let pivotOffsetX: CGFloat = (textBounds.width >= 0 ? textBounds.width : bnds.width) * CGFloat(pvt.x)
-            let pivotOffsetY: CGFloat = (textBounds.height >= 0 ? textBounds.height : bnds.height) * CGFloat(pvt.y)
-            
-            var verticalOffset: CGFloat
-            switch verticalAlignment {
-            case .top:
-                verticalOffset = 0
-            case .center:
-                verticalOffset = ((textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height) * 0.5
-            case .bottom:
-                verticalOffset = (textBounds.height >= 0 ? textBounds.height : bnds.height) - suggestedSize.height
-            }
-            
-            for (lineIndex, line) in lines.enumerated() {
-                let origin = origins[lineIndex]
-                let runs: [CTRun] = CTLineGetGlyphRuns(line) as! [CTRun]
-                
-                for run in runs {
-                    let glyphCount = CTRunGetGlyphCount(run)
-                    
-                    let glyphPositions = UnsafeMutablePointer<CGPoint>.allocate(capacity: glyphCount)
-                    CTRunGetPositions(run, CFRangeMake(0, 0), glyphPositions)
-                    
-                    let glyphs = UnsafeMutablePointer<CGGlyph>.allocate(capacity: glyphCount)
-                    CTRunGetGlyphs(run, CFRangeMake(0, 0), glyphs)
-                    
-                    for glyphIndex in 0..<glyphCount {
-                        let glyph = glyphs[glyphIndex]
-                        
-                        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
-                        
-                        if let cacheData = geometryCache[glyph] {
-                            cData = cacheData
-                        } else {
-                            guard let path = CTFontCreatePathForGlyph(ctFont, glyph, nil) else { continue }
-                            
-                            var allPaths: [[simd_float2]] = []
-                            var currentPath: [simd_float2] = []
-                            path.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
-                                let element = elementPtr.pointee
-                                var pointsPtr = element.points
-                                let pt = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                
-                                switch element.type {
-                                case .moveToPoint:
-                                    currentPath.append(pt)
-                                case .addLineToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    adaptiveLinear(a, pt, &currentPath, maxStraightDistance)
-                                case .addQuadCurveToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    let b = pt
-                                    pointsPtr += 1
-                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    adaptiveQuadratic(a, b, c, &currentPath, 0)
-                                    currentPath.append(c)
-                                case .addCurveToPoint:
-                                    let a = currentPath[currentPath.count - 1]
-                                    let b = pt
-                                    pointsPtr += 1
-                                    let c = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    pointsPtr += 1
-                                    let d = simd_make_float2(Float(pointsPtr.pointee.x), Float(pointsPtr.pointee.y))
-                                    adaptiveCubic(a, b, c, d, &currentPath, 0)
-                                    currentPath.append(d)
-                                case .closeSubpath:
-                                    // remove repeated last point
-                                    var a = currentPath[currentPath.count - 1]
-                                    let b = currentPath[0]
-                                    if isEqual2(a, b) {
-                                        currentPath.remove(at: currentPath.count - 1)
-                                    }
-                                    a = currentPath[currentPath.count - 1]
-                                    // sample start and end
-                                    adaptiveLinear(a, b, &currentPath, maxStraightDistance, 1, false)
-                                    allPaths.append(currentPath)
-                                    currentPath = []
-                                default:
-                                    break
-                                }
-                            }
-                            
-                            var paths: [UnsafeMutablePointer<simd_float2>?] = []
-                            var lengths: [Int32] = []
-                            for i in 0..<allPaths.count {
-                                allPaths[i].withUnsafeMutableBufferPointer { ptr in
-                                    paths.append(ptr.baseAddress!)
-                                }
-                                lengths.append(Int32(allPaths[i].count))
-                            }
-                            
-                            if triangulate(&paths, &lengths, Int32(lengths.count), &cData) != 0 {
-                                let char = text[text.index(text.startIndex, offsetBy: Int(glyphIndex))]
-                                print("Triangulation for \(char) FAILED!")
-                            }
-                            
-                            geometryCache[glyph] = cData
-                        }
-                        
-                        let glyphPosition = glyphPositions[glyphIndex]
-                        combineAndOffsetGeometryData(&gData, &cData, simd_make_float3(
-                            Float(glyphPosition.x + origin.x - pivotOffsetX),
-                            Float(glyphPosition.y + origin.y - pivotOffsetY - verticalOffset),
-                            0.0
-                        ))
-                    }
-                    
-                    glyphPositions.deallocate()
-                    glyphs.deallocate()
-                }
-            }
-            
-            setFrom(&gData)
-            freeGeometryData(&gData)
-        }
+    func getFrame() -> CTFrame? {
+        guard let suggestFrameSize = suggestFrameSize, let frameSetter = frameSetter else { return nil }
+        
+        let framePath = CGMutablePath()
+        let constraints = CGRect(x: 0.0, y: 0.0, width: textBounds.width <= 0.0 ? suggestFrameSize.width : textBounds.width, height: textBounds.height <= 0.0 ? suggestFrameSize.height : textBounds.height)
+        framePath.addRect(constraints)
+        
+        return CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, text.count), framePath, nil)
+    }
+    
+    func getLines() -> [CTLine] {
+        guard let frame = frame else { return [] }
+        return CTFrameGetLines(frame) as! [CTLine]
+    }
+    
+    func getOrigins() -> [CGPoint] {
+        guard lines.count > 0, let frame = frame else { return [] }
+        var origins: [CGPoint] = Array(repeating: CGPoint(), count: lines.count)
+        CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &origins)
+        return origins
     }
     
     func clearGeometryCache() {
@@ -361,7 +527,22 @@ open class TextGeometry: Geometry {
         geometryCache = [:]
     }
     
-    deinit {
+    func clearCharacterPaths() {
+        characterPaths = [:]
+        for (_, paths) in characterPathsCache {
+            for var path in paths {
+                freePolyline2D(&path)
+            }
+        }
+        characterPathsCache = [:]
+    }
+    
+    func clearCache() {
         clearGeometryCache()
+        clearCharacterPaths()
+    }
+    
+    deinit {
+        clearCache()
     }
 }

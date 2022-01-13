@@ -39,29 +39,29 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
     vtx[10].position = simd_make_float4(-w, 0.0, h, 1.0);
     vtx[11].position = simd_make_float4(w, 0.0, h, 1.0);
 
-    ind[0] = (TriangleIndices){ 0, 11, 5 };
-    ind[1] = (TriangleIndices){ 0, 5, 1 };
-    ind[2] = (TriangleIndices){ 0, 1, 7 };
-    ind[3] = (TriangleIndices){ 0, 7, 10 };
-    ind[4] = (TriangleIndices){ 0, 10, 11 };
+    ind[0] = (TriangleIndices) { 0, 11, 5 };
+    ind[1] = (TriangleIndices) { 0, 5, 1 };
+    ind[2] = (TriangleIndices) { 0, 1, 7 };
+    ind[3] = (TriangleIndices) { 0, 7, 10 };
+    ind[4] = (TriangleIndices) { 0, 10, 11 };
 
-    ind[5] = (TriangleIndices){ 1, 5, 9 };
-    ind[6] = (TriangleIndices){ 5, 11, 4 };
-    ind[7] = (TriangleIndices){ 11, 10, 2 };
-    ind[8] = (TriangleIndices){ 10, 7, 6 };
-    ind[9] = (TriangleIndices){ 7, 1, 8 };
+    ind[5] = (TriangleIndices) { 1, 5, 9 };
+    ind[6] = (TriangleIndices) { 5, 11, 4 };
+    ind[7] = (TriangleIndices) { 11, 10, 2 };
+    ind[8] = (TriangleIndices) { 10, 7, 6 };
+    ind[9] = (TriangleIndices) { 7, 1, 8 };
 
-    ind[10] = (TriangleIndices){ 3, 9, 4 };
-    ind[11] = (TriangleIndices){ 3, 4, 2 };
-    ind[12] = (TriangleIndices){ 3, 2, 6 };
-    ind[13] = (TriangleIndices){ 3, 6, 8 };
-    ind[14] = (TriangleIndices){ 3, 8, 9 };
+    ind[10] = (TriangleIndices) { 3, 9, 4 };
+    ind[11] = (TriangleIndices) { 3, 4, 2 };
+    ind[12] = (TriangleIndices) { 3, 2, 6 };
+    ind[13] = (TriangleIndices) { 3, 6, 8 };
+    ind[14] = (TriangleIndices) { 3, 8, 9 };
 
-    ind[15] = (TriangleIndices){ 4, 9, 5 };
-    ind[16] = (TriangleIndices){ 2, 4, 11 };
-    ind[17] = (TriangleIndices){ 6, 2, 10 };
-    ind[18] = (TriangleIndices){ 8, 6, 7 };
-    ind[19] = (TriangleIndices){ 9, 8, 1 };
+    ind[15] = (TriangleIndices) { 4, 9, 5 };
+    ind[16] = (TriangleIndices) { 2, 4, 11 };
+    ind[17] = (TriangleIndices) { 6, 2, 10 };
+    ind[18] = (TriangleIndices) { 8, 6, 7 };
+    ind[19] = (TriangleIndices) { 9, 8, 1 };
 
     for (int r = 0; r < res; r++) {
         int newTriangles = triangles * 4;
@@ -102,13 +102,13 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
             uint32_t c = (uint32_t)j;
             j++;
 
-            newInd[k] = (TriangleIndices){ i0, a, c };
+            newInd[k] = (TriangleIndices) { i0, a, c };
             k++;
-            newInd[k] = (TriangleIndices){ a, i1, b };
+            newInd[k] = (TriangleIndices) { a, i1, b };
             k++;
-            newInd[k] = (TriangleIndices){ a, b, c };
+            newInd[k] = (TriangleIndices) { a, b, c };
             k++;
-            newInd[k] = (TriangleIndices){ c, b, i2 };
+            newInd[k] = (TriangleIndices) { c, b, i2 };
             k++;
         }
 
@@ -125,7 +125,7 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
         vtx[i].uv = simd_make_float2((atan2(n.x, n.z) + M_PI) / (2.0 * M_PI), acos(n.y) / M_PI);
     }
 
-    return (GeometryData){
+    return (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 }
@@ -174,15 +174,15 @@ GeometryData generateSquircleGeometryData(float size, float p, int angularResolu
                 int i2 = curr + nextLevel;
                 int i3 = next + nextLevel;
 
-                ind[triIndex] = (TriangleIndices){ i0, i2, i3 };
+                ind[triIndex] = (TriangleIndices) { i0, i2, i3 };
                 triIndex++;
-                ind[triIndex] = (TriangleIndices){ i0, i3, i1 };
+                ind[triIndex] = (TriangleIndices) { i0, i3, i1 };
                 triIndex++;
             }
         }
     }
 
-    return (GeometryData){
+    return (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 }
@@ -215,7 +215,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
     float widthHalf = width * 0.5;
     float heightHalf = height * 0.5;
 
-    float minDim = (widthHalf < heightHalf ? widthHalf : heightHalf);    
+    float minDim = (widthHalf < heightHalf ? widthHalf : heightHalf);
     radius = radius > minDim ? minDim : radius;
 
     for (int j = 0; j < radial; j++) {
@@ -238,7 +238,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
         // 4
 
         // corner 0
-        for (int i = 1; i < angular-1; i++) {
+        for (int i = 1; i < angular - 1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi;
             float x = radius * cos(theta);
@@ -272,7 +272,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
         // 8 -- 20
 
         // corner 1
-        for (int i = 1; i < angular-1; i++) {
+        for (int i = 1; i < angular - 1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + halfPi;
             float x = radius * cos(theta);
@@ -306,7 +306,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
         // 8 -- 36
 
         // corner 2
-        for (int i = 1; i < angular-1; i++) {
+        for (int i = 1; i < angular - 1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + M_PI;
             float x = radius * cos(theta);
@@ -340,7 +340,7 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
         // 8 -- 52
 
         // corner 3
-        for (int i = 1; i < angular-1; i++) {
+        for (int i = 1; i < angular - 1; i++) {
             float t = (float)i / (float)(angular - 1);
             float theta = t * halfPi + 1.5 * M_PI;
             float x = radius * cos(theta);
@@ -389,15 +389,15 @@ GeometryData generateRoundedRectGeometryData(float width, float height, float ra
                 int i2 = nextLoop + i;
                 int i3 = nextLoop + i + 1;
 
-                ind[triIndex] = (TriangleIndices){ i0, i2, i3 };
+                ind[triIndex] = (TriangleIndices) { i0, i2, i3 };
                 triIndex++;
-                ind[triIndex] = (TriangleIndices){ i0, i3, i1 };
+                ind[triIndex] = (TriangleIndices) { i0, i3, i1 };
                 triIndex++;
             }
         }
     }
 
-    return (GeometryData){
+    return (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 }
@@ -435,7 +435,7 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
     };
 
     copyGeometryVertexData(&edgeData, &result, vertices - perLoop, perLoop);
-    
+
     int extrudeTriangles = (perLoop - 1) * 2 * edgeZ;
     TriangleIndices *ind = (TriangleIndices *)malloc(extrudeTriangles * sizeof(TriangleIndices));
 
@@ -451,41 +451,41 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
         int currLoop = j * perLoop;
         int nextLoop = (j + 1) * perLoop;
         for (int i = 0; i < perLoop; i++) {
-            float uvy = (float)i/(float)perLoop;
+            float uvy = (float)i / (float)perLoop;
             edgeData.vertexData[i].uv = simd_make_float2(uvx, uvy);
             edgeData.vertexData[i].position.z -= z;
-            
+
             int prev = i - 1;
             prev = prev < 0 ? (perLoop - 1) : prev;
             int curr = i;
             int next = (i + 1) % perLoop;
-            
+
             simd_float4 prevPos = edgeData.vertexData[prev].position;
             simd_float4 currPos = edgeData.vertexData[curr].position;
             simd_float4 nextPos = edgeData.vertexData[next].position;
-            
+
             simd_float4 d0 = prevPos - currPos;
             simd_float4 d1 = currPos - nextPos;
-            
+
             d0 += d1;
             edgeData.vertexData[i].normal = simd_normalize(simd_make_float3(-d0.y, d0.x, 0.0));
-            
-            if((j != edgeZ) && ((i + 1) != perLoop)) {
+
+            if ((j != edgeZ) && ((i + 1) != perLoop)) {
                 int i0 = currLoop + curr;
                 int i1 = currLoop + next;
 
                 int i2 = nextLoop + curr;
                 int i3 = nextLoop + next;
 
-                ind[triIndex] = (TriangleIndices){ i0, i2, i3 };
+                ind[triIndex] = (TriangleIndices) { i0, i2, i3 };
                 triIndex++;
-                ind[triIndex] = (TriangleIndices){ i0, i3, i1 };
+                ind[triIndex] = (TriangleIndices) { i0, i3, i1 };
                 triIndex++;
             }
         }
         combineGeometryData(&extrudeData, &edgeData);
     }
-        
+
     combineGeometryData(&result, &extrudeData);
     reverseFacesOfGeometryData(&faceData);
     combineAndOffsetGeometryData(&result, &faceData, simd_make_float3(0.0, 0.0, -depthHalf));

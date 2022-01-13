@@ -62,15 +62,7 @@ class Renderer: Forge.Renderer {
          SFProRounded-Heavy
          */
         
-        let geo = TextGeometry(
-            text: input,
-            fontName: "SFProRounded-Heavy",
-            fontSize: 8,
-            bounds: CGSize(width: -1, height: -1),
-            pivot:[0,0],
-            textAlignment: .center,
-            verticalAlignment: .center
-        )
+        let geo = TextGeometry(text: input, fontName: "SFProRounded-Heavy", fontSize: 8)
         
         let mat = BasicColorMaterial([1.0, 1.0, 1.0, 0.125], .additive)
         mat.depthWriteEnabled = false

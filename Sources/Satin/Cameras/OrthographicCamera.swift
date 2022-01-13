@@ -66,7 +66,7 @@ open class OrthographicCamera: Camera
         {
             if updateProjectionMatrix
             {
-                _projectionMatrix = orthographic(left: left, right: right, bottom: bottom, top: top, near: near, far: far)
+                _projectionMatrix = orthographicMatrixf(left, right, bottom, top, near, far)
                 updateProjectionMatrix = false
             }
             return _projectionMatrix
