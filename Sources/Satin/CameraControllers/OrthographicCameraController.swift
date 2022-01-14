@@ -369,6 +369,7 @@ open class OrthographicCameraController: CameraController {
             }
             zoomDelta = loaded.zoomDelta
             panDelta = loaded.panDelta
+            needsSetup = false
         }
         catch {
             print(error.localizedDescription)
