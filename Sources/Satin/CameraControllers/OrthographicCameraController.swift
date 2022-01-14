@@ -47,6 +47,8 @@ open class OrthographicCameraController: CameraController {
        
     public var camera: OrthographicCamera?
     
+    var needsSetup: Bool = true
+    
     open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
     open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
 
@@ -63,7 +65,6 @@ open class OrthographicCameraController: CameraController {
         
         super.init(view: view)
 
-        setupCamera()
         setup()
     }
     
@@ -76,15 +77,22 @@ open class OrthographicCameraController: CameraController {
         
         super.init(view: view)
         
-        setupCamera()
         setup()
     }
     
-    func setupCamera() {
-        guard let camera = camera, let view = view else { return }
+    open override func update() {
+        if needsSetup {
+            needsSetup = setupCamera()
+        }
+        super.update()
+    }
+    
+    func setupCamera() -> Bool {
+        guard let camera = camera, let view = view, view.drawableSize.width > 0, view.drawableSize.height > 0 else { return true }
         let hw = Float(view.drawableSize.width) * defaultZoom
         let hh = Float(view.drawableSize.height) * defaultZoom
         camera.update(left: -hw, right: hw, bottom: -hh, top: hh, near: camera.near, far: camera.far)
+        return false
     }
     
     func setup() {
@@ -104,12 +112,7 @@ open class OrthographicCameraController: CameraController {
         let deltaY = deltaY * cameraHeight
         
         panDelta += [deltaX, deltaY]
-//        camera.left -= deltaX
-//        camera.right -= deltaX
-//
-//        camera.top += deltaY
-//        camera.bottom += deltaY
-        
+
         camera.position -= camera.worldRightDirection * deltaX
         camera.position += camera.worldUpDirection * deltaY
         
@@ -323,8 +326,7 @@ open class OrthographicCameraController: CameraController {
     #endif
     
     override open func resize(_ size: (width: Float, height: Float)) {
-        guard let camera = camera, let view = view else { return }
-        
+        guard !needsSetup, let camera = camera, let view = view else { return }
         let cameraWidth = abs(camera.right - camera.left)
         zoomDelta = cameraWidth / Float(2.0 * view.drawableSize.width)
             
@@ -343,7 +345,7 @@ open class OrthographicCameraController: CameraController {
                 panDelta = [0.0, 0.0]
                 zoomDelta = defaultZoom
                 
-                setupCamera()
+                _ = setupCamera()
                 
                 camera.orientation = defaultOrientation
                 camera.position = defaultPosition

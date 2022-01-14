@@ -24,7 +24,7 @@ open class CameraController: Codable {
     
     public private(set) var enabled: Bool = false
     
-    public var view: MTKView? {
+    public weak var view: MTKView? {
         willSet {
             if view != nil, enabled {
                 disable()
@@ -69,9 +69,9 @@ open class CameraController: Codable {
         for action in onEndAction {
             action()
         }
-    }    
+    }
     
-    public internal(set) var state: CameraControllerState = .inactive    
+    public internal(set) var state: CameraControllerState = .inactive
     public internal(set) var isTweening: Bool = false
     
     #if os(macOS)
