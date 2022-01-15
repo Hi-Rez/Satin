@@ -9,7 +9,7 @@
 import simd
 
 open class SphereGeometry: Geometry {
-    public override init() {
+    override public init() {
         super.init()
         self.setupData(radius: 1, res: (angular: 60, vertical: 60))
     }
@@ -28,68 +28,8 @@ open class SphereGeometry: Geometry {
     }
     
     func setupData(radius: Float, res: (angular: Int, vertical: Int)) {
-        let phi = max(res.angular, 3)
-        let theta = max(res.vertical, 3)
-        
-        let phif = Float(phi)
-        
-        let thetaMinusOne = theta - 1
-        let thetaMinusOnef = Float(thetaMinusOne)
-        
-        let phiMax = Float.pi * 2.0
-        let thetaMax = Float.pi
-        
-        let phiInc = phiMax / phif
-        let thetaInc = thetaMax / thetaMinusOnef
-        
-        for t in 0...thetaMinusOne {
-            let tf = Float(t)
-            let thetaAngle = tf * thetaInc
-            let cosTheta = cos(thetaAngle)
-            let sinTheta = sin(thetaAngle)
-            
-            for p in 0...phi {
-                let pf = Float(p)
-                let phiAngle = pf * phiInc
-                let cosPhi = cos(phiAngle)
-                let sinPhi = sin(phiAngle)
-                
-                let x = radius * sinTheta * cosPhi
-                let y = radius * cosTheta
-                let z = radius * sinTheta * sinPhi
-                
-                vertexData.append(
-                    Vertex(
-                        position: simd_make_float4(x, y, z, 1.0),
-                        normal: normalize(simd_make_float3(x, y, z)),
-                        uv: simd_make_float2(pf / phif, 1.0 - tf / thetaMinusOnef)
-                    )
-                )
-                
-                if p != phi, t != thetaMinusOne {
-                    let perLoop = phi + 1
-                    let index = p + t * perLoop
-                    
-                    let tl = index
-                    let tr = tl + 1
-                    let bl = index + perLoop
-                    let br = bl + 1
-                    
-                    indexData.append(UInt32(tl))
-                    indexData.append(UInt32(tr))
-                    indexData.append(UInt32(bl))
-                    
-                    indexData.append(UInt32(tr))
-                    indexData.append(UInt32(br))
-                    indexData.append(UInt32(bl))
-                }
-            }
-        }
-    }
-    
-    public override func calculateNormals() {
-        for i in 0..<vertexData.count {
-            vertexData[i].normal = normalize(simd_make_float3(vertexData[i].position))
-        }
+        var geometryData = generateSphereGeometryData(radius, Int32(res.angular), Int32(res.vertical))
+        setFrom(&geometryData)
+        freeGeometryData(&geometryData)
     }
 }

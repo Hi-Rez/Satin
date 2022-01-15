@@ -21,7 +21,7 @@ open class ExtrudedTextGeometry: TextGeometry {
     var geometryExtrudeCache: [Character: GeometryData] = [:]
     var geometryReverseCache: [Character: GeometryData] = [:]
     
-    public init(text: String, fontName: String, fontSize: Float, distance: Float = 1.0, bounds: CGSize = .zero, pivot: simd_float2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0) {
+    public init(text: String, fontName: String = "Helvetica", fontSize: Float, distance: Float = 1.0, bounds: CGSize = .zero, pivot: simd_float2 = .zero, textAlignment: CTTextAlignment = .natural, verticalAlignment: VerticalAlignment = .center, kern: Float = 0.0, lineSpacing: Float = 0) {
         self.distance = distance
         super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
     }
@@ -48,11 +48,11 @@ open class ExtrudedTextGeometry: TextGeometry {
             sData = cacheExtrudeData
             characterPaths[char] = charPaths
         } else if let glyphPath = CTFontCreatePathForGlyph(ctFont, glyph, nil) {
-            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize/10.0)
+            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize / 10.0)
             
             var _paths: [UnsafeMutablePointer<simd_float2>?] = []
             var _lengths: [Int32] = []
-            for i in 0..<glyphPaths.count {
+            for i in 0 ..< glyphPaths.count {
                 let path = glyphPaths[i]
                 _paths.append(path.data)
                 _lengths.append(path.count)

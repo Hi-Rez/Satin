@@ -9,13 +9,13 @@
 import simd
 
 open class PlaneGeometry: Geometry {
-    public enum Orientation {
-        case xy // points in +z direction
-        case yx // points in -z direction
-        case xz // points in -y direction
-        case zx // points in +y direction
-        case yz // points in +x direction
-        case zy // points in -x direction
+    public enum Orientation: Int32 {
+        case xy = 0 // points in +z direction
+        case yx = 1 // points in -z direction
+        case xz = 2 // points in -y direction
+        case zx = 3 // points in +y direction
+        case yz = 4 // points in +x direction
+        case zy = 5 // points in -x direction
     }
     
     public init(size: Float = 2) {
@@ -94,83 +94,8 @@ open class PlaneGeometry: Geometry {
     }
     
     func setupData(width: Float, height: Float, resU: Int, resV: Int, plane: Orientation = .xy, centered: Bool = true) {
-        var rU = resU
-        var rV = resV
-        
-        var sizeU = width
-        var sizeV = height
-        
-        if plane == .yx || plane == .zx || plane == .yz {
-            swap(&sizeU, &sizeV)
-            swap(&rU, &rV)
-        }
-        
-        rU = max(rU, 1)
-        rV = max(rV, 1)
-        
-        let bU = Float(rU)
-        let bV = Float(rV)
-        
-        let hU = sizeU * 0.5
-        let hV = sizeV * 0.5
-        
-        let dU = sizeU / bU
-        let dV = sizeV / bV
-        
-        let cU = centered ? -hU : 0.0
-        let cV = centered ? -hV : 0.0
-        
-        let perRow = rU + 1
-        
-        for v in 0...rV {
-            for u in 0...rU {
-                let fU = Float(u)
-                let fV = Float(v)
-                
-                var p = simd_make_float4(cU + fU * dU, cV + fV * dV, 0.0, 1.0)
-                var n = simd_make_float3(0.0, 0.0, 1.0)
-                var t = simd_make_float2(fU / bU, 1.0 - fV / bV)
-                
-                switch plane {
-                case .xy: // points in +z direction
-                    break
-                case .yx: // points in -z direction
-                    p = simd_make_float4(p.y, p.x, p.z, p.w)
-                    n = simd_make_float3(0.0, 0.0, -1.0)
-                    t = simd_make_float2(t.y, 1.0 - t.x)
-                case .xz: // points in -y direction
-                    p = simd_make_float4(p.x, p.z, p.y, p.w)
-                    n = simd_make_float3(0.0, -1.0, 0.0)
-                case .zx: // points in +y direction
-                    p = simd_make_float4(p.y, p.z, p.x, p.w)
-                    n = simd_make_float3(0.0, 1.0, 0.0)
-                    t = simd_make_float2(1.0 - t.y, t.x)
-                case .yz: // points in +x direction
-                    p = simd_make_float4(p.z, p.x, p.y, p.w)
-                    n = simd_make_float3(1.0, 0.0, 0.0)
-                    t = simd_make_float2(t.y, 1.0 - t.x)
-                case .zy: // points in -x direction
-                    p = simd_make_float4(p.z, p.y, p.x, p.w)
-                    n = simd_make_float3(-1.0, 0.0, 0.0)
-                }
-                
-                vertexData.append(Vertex(position: p, normal: n, uv: t))
-                
-                let index = u + v * perRow
-                let bl = index
-                let br = bl + 1
-                let tl = index + perRow
-                let tr = tl + 1
-                
-                if u != rU, v != rV {
-                    indexData.append(UInt32(bl))
-                    indexData.append(UInt32(br))
-                    indexData.append(UInt32(tl))
-                    indexData.append(UInt32(br))
-                    indexData.append(UInt32(tr))
-                    indexData.append(UInt32(tl))
-                }
-            }
-        }
+        var geometryData = generatePlaneGeometryData(width, height, Int32(resU), Int32(resV), plane.rawValue, centered)
+        setFrom(&geometryData)
+        freeGeometryData(&geometryData)
     }
 }

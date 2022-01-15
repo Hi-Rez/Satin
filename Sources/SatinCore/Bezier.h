@@ -18,7 +18,7 @@ void removeLastPointInPolyline2D(Polyline2D *line);
 void appendPolyline2D(Polyline2D *dst, Polyline2D *src);
 
 Polyline2D getAdaptiveLinearPath2(simd_float2 a, simd_float2 b, float distanceLimit);
-    
+
 simd_float2 quadraticBezier2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
 simd_float2 quadraticBezierVelocity2(simd_float2 a, simd_float2 b, simd_float2 c, float t);
 simd_float2 quadraticBezierAcceleration2(simd_float2 a, simd_float2 b, simd_float2 c, float t);

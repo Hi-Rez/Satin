@@ -9,7 +9,7 @@
 import simd
 
 open class CylinderGeometry: Geometry {
-    public override init() {
+    override public init() {
         super.init()
         self.setupData(size: (1, 2), res: (60, 1, 1))
     }
@@ -87,7 +87,7 @@ open class CylinderGeometry: Geometry {
                 
                 vertexData.append(
                     Vertex(
-                        position: simd_make_float4(x, y, -halfHeight, 1.0),                        
+                        position: simd_make_float4(x, y, -halfHeight, 1.0),
                         normal: simd_make_float3(0.0, 0.0, -1.0),
                         uv: simd_make_float2(rf / radialf, af / angularf)
                     )
@@ -127,7 +127,7 @@ open class CylinderGeometry: Geometry {
                     Vertex(
                         position: simd_make_float4(x, y, z, 1.0),
                         normal: normalize(simd_make_float3(x, y, 0.0)),
-                        uv: simd_make_float2(af / angularf, vf / verticalf)                        
+                        uv: simd_make_float2(af / angularf, vf / verticalf)
                     )
                 )
                 

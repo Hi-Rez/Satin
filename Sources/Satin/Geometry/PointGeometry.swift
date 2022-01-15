@@ -8,7 +8,7 @@
 import simd
 
 open class PointGeometry: Geometry {
-    public override init() {
+    override public init() {
         super.init()
         self.setupData()
     }

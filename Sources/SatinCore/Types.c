@@ -214,7 +214,7 @@ void computeNormalsOfGeometryData(GeometryData *data) {
             uint32_t i0 = data->indexData[i].i0;
             uint32_t i1 = data->indexData[i].i1;
             uint32_t i2 = data->indexData[i].i2;
-            
+
             Vertex *v0 = &data->vertexData[i0];
             Vertex *v1 = &data->vertexData[i1];
             Vertex *v2 = &data->vertexData[i2];

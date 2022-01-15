@@ -14,8 +14,6 @@
 
 #include "Types.h"
 
-float map(float input, float inMin, float inMax, float outMin, float outMax);
-
 bool greaterThanZero(float a);
 bool isZero(float a);
 

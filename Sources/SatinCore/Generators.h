@@ -11,6 +11,26 @@
 #include <stdio.h>
 #include "Types.h"
 
+GeometryData generatePlaneGeometryData(float width, float height, int widthResolution,
+                                       int heightResolution, int plane, bool centered);
+
+GeometryData generateArcGeometryData(float innerRadius, float outerRadius, float startAngle,
+                                     float endAngle, int angularResolution, int radialResolution);
+
+GeometryData generateTorusGeometryData(float minorRadius, float majorRadius, int minorResolution,
+                                       int majorResolution);
+
+GeometryData generateSkyboxGeometryData(float size);
+
+GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution);
+
+GeometryData generateTriangleGeometryData(float size);
+
+GeometryData generateQuadGeometryData(float size);
+
+GeometryData generateSphereGeometryData(float radius, int angularResolution,
+                                        int verticalResolution);
+
 GeometryData generateIcoSphereGeometryData(float radius, int res);
 
 GeometryData generateSquircleGeometryData(float size, float p, int angularResolution,

@@ -9,7 +9,7 @@
 import simd
 
 open class BoxGeometry: Geometry {
-    public override init() {
+    override public init() {
         super.init()
         self.setupData(width: 2, height: 2, depth: 2, resX: 1, resY: 1, resZ: 1)
     }
@@ -49,7 +49,7 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
                 position: simd_make_float4(bounds.max.x, bounds.min.y, bounds.max.z, 1.0),
@@ -57,7 +57,7 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
                 position: simd_make_float4(bounds.max, 1.0),
@@ -65,7 +65,7 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
                 position: simd_make_float4(bounds.min.x, bounds.max.y, bounds.max.z, 1.0),
@@ -73,9 +73,9 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         // Back Face
-        
+
         // Front Face
         vertexData.append(
             Vertex(
@@ -84,7 +84,7 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
                 position: simd_make_float4(bounds.max.x, bounds.min.y, bounds.min.z, 1.0),
@@ -92,15 +92,15 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
-                position: simd_make_float4(bounds.max.x, bounds.max.y, bounds.min.z,  1.0),
+                position: simd_make_float4(bounds.max.x, bounds.max.y, bounds.min.z, 1.0),
                 normal: simd_normalize(simd_make_float3(1.0, 1.0, -1.0)),
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
+
         vertexData.append(
             Vertex(
                 position: simd_make_float4(bounds.min.x, bounds.max.y, bounds.min.z, 1.0),
@@ -108,48 +108,48 @@ open class BoxGeometry: Geometry {
                 uv: simd_make_float2(0.0, 0.0)
             )
         )
-        
-        //Front Face
+
+        // Front Face
         indexData.append(UInt32(0))
         indexData.append(UInt32(1))
         indexData.append(UInt32(2))
         indexData.append(UInt32(0))
         indexData.append(UInt32(2))
         indexData.append(UInt32(3))
-        
-        //Back Face
+
+        // Back Face
         indexData.append(UInt32(5))
         indexData.append(UInt32(4))
         indexData.append(UInt32(7))
         indexData.append(UInt32(5))
         indexData.append(UInt32(7))
         indexData.append(UInt32(6))
-        
-        //Top Face
+
+        // Top Face
         indexData.append(UInt32(3))
         indexData.append(UInt32(2))
         indexData.append(UInt32(6))
         indexData.append(UInt32(3))
         indexData.append(UInt32(6))
         indexData.append(UInt32(7))
-        
-        //Bottom Face
+
+        // Bottom Face
         indexData.append(UInt32(0))
         indexData.append(UInt32(4))
         indexData.append(UInt32(5))
         indexData.append(UInt32(0))
         indexData.append(UInt32(5))
         indexData.append(UInt32(1))
-        
-        //Right Face
+
+        // Right Face
         indexData.append(UInt32(1))
         indexData.append(UInt32(5))
         indexData.append(UInt32(6))
         indexData.append(UInt32(1))
         indexData.append(UInt32(6))
         indexData.append(UInt32(2))
-        
-        //Left Face
+
+        // Left Face
         indexData.append(UInt32(0))
         indexData.append(UInt32(3))
         indexData.append(UInt32(4))
@@ -157,7 +157,7 @@ open class BoxGeometry: Geometry {
         indexData.append(UInt32(3))
         indexData.append(UInt32(7))
     }
-    
+
     func setupData(width: Float, height: Float, depth: Float, resX: Int, resY: Int, resZ: Int) {
         let rx = max(resX, 1)
         let ry = max(resY, 1)

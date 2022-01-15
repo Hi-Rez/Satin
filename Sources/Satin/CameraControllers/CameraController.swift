@@ -7,6 +7,10 @@
 
 import MetalKit
 
+#if os(macOS)
+import AppKit
+#endif
+
 public enum CameraControllerState {
     case panning // moves the camera either up to right
     case rotating // rotates the camera around an arcball
@@ -230,16 +234,12 @@ open class CameraController: Codable {
         }
         
         flagsChangedHandler = NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [unowned self] event -> NSEvent? in
-            guard let window = event.window, window == view else { return event }
-            let up = event.modifierFlags.isSubset(of: .init(rawValue: 256))
-            let hasFlags = !self.modifierFlags.isEmpty
-            if hasFlags {
-                if self.modifierFlags.isStrictSubset(of: event.modifierFlags) || up {
-                    self.flagsEnabled = true
-                }
-                else {
-                    self.flagsEnabled = false
-                }
+            guard event.window?.windowNumber == view.window?.windowNumber, !self.modifierFlags.isEmpty else { return event }
+            if self.modifierFlags.isStrictSubset(of: event.modifierFlags) {
+                self.flagsEnabled = true
+            }
+            else {
+                self.flagsEnabled = false
             }
             return event
         }

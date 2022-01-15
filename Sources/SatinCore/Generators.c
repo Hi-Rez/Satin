@@ -10,6 +10,530 @@
 
 #include "Generators.h"
 #include "Geometry.h"
+#include "Helpers.h"
+
+enum PlaneOrientation {
+    xy = 0, // points in +z direction
+    yx = 1, // points in -z direction
+    xz = 2, // points in -y direction
+    zx = 3, // points in +y direction
+    yz = 4, // points in +x direction
+    zy = 5  // points in -x direction
+};
+
+GeometryData generatePlaneGeometryData(float width, float height, int widthResolution,
+                                       int heightResolution, int plane, bool centered) {
+    const int resWidth = widthResolution > 0 ? widthResolution : 1;
+    const int resHeight = heightResolution > 0 ? heightResolution : 1;
+
+    const float resWidthf = (float)resWidth;
+    const float resHeightf = (float)resHeight;
+
+    const float halfWidth = width * 0.5;
+    const float halfHeight = height * 0.5;
+
+    const float widthInc = width / resWidthf;
+    const float heightInc = height / resHeightf;
+
+    const float centerXOffset = centered ? -halfWidth : 0.0;
+    const float centerYOffset = centered ? -halfHeight : 0.0;
+
+    const int perRow = resWidth + 1;
+    const int vertices = (resHeight + 1) * perRow;
+    const int triangles = resWidth * 2 * resHeight;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+
+    for (int y = 0; y <= resHeight; y++) {
+        const float yf = (float)y;
+        const float yuv = yf / resHeightf;
+
+        for (int x = 0; x <= resWidth; x++) {
+            const float xf = (float)x;
+            const float xuv = xf / resWidthf;
+
+            const float xP = centerXOffset + xf * widthInc;
+            const float yP = centerYOffset + yf * heightInc;
+
+            simd_float4 position = simd_make_float4(xP, yP, 0.0, 1.0);
+            simd_float3 normal = simd_make_float3(0.0, 0.0, 1.0);
+            simd_float2 uv = simd_make_float2(xuv, yuv);
+
+            bool flip = false;
+            switch (plane) {
+                case yx: // points in -z direction
+                    normal = simd_make_float3(0.0, 0.0, -1.0);
+                    uv.x = 1.0 - uv.x;
+                    flip = true;
+                    break;
+                case xz: // points in -y direction
+                    position = simd_make_float4(xP, 0.0, yP, 1.0);
+                    normal = simd_make_float3(0.0, -1.0, 0.0);
+                    break;
+                case zx: // points in +y direction
+                    position = simd_make_float4(xP, 0.0, yP, 1.0);
+                    normal = simd_make_float3(0.0, 1.0, 0.0);
+                    uv.y = 1.0 - uv.y;
+                    flip = true;
+                    break;
+                case yz: // points in +x direction
+                    position = simd_make_float4(0.0, xP, yP, 1.0);
+                    normal = simd_make_float3(1.0, 0.0, 0.0);
+                    uv.x = 1.0 - yuv;
+                    uv.y = xuv;
+                    break;
+                case zy: // points in -x direction
+                    position = simd_make_float4(0.0, xP, yP, 1.0);
+                    normal = simd_make_float3(-1.0, 0.0, 0.0);
+                    uv.x = yuv;
+                    uv.y = xuv;
+                    flip = true;
+                    break;
+                default: break;
+            }
+
+            vtx[vertexIndex++] = (Vertex) { .position = position, .normal = normal, .uv = uv };
+
+            if (x != resWidth && y != resHeight) {
+                const uint32_t index = x + y * perRow;
+                const uint32_t bl = index;
+                const uint32_t br = bl + 1;
+                const uint32_t tl = index + perRow;
+                const uint32_t tr = tl + 1;
+
+                if (flip) {
+                    ind[triangleIndex++] = (TriangleIndices) { .i0 = bl, .i1 = tl, .i2 = br };
+                    ind[triangleIndex++] = (TriangleIndices) { .i0 = br, .i1 = tl, .i2 = tr };
+                } else {
+                    ind[triangleIndex++] = (TriangleIndices) { .i0 = bl, .i1 = br, .i2 = tl };
+                    ind[triangleIndex++] = (TriangleIndices) { .i0 = br, .i1 = tr, .i2 = tl };
+                }
+            }
+        }
+    }
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateArcGeometryData(float innerRadius, float outerRadius, float startAngle,
+                                     float endAngle, int angularResolution, int radialResolution) {
+    const int radial = radialResolution > 0 ? radialResolution : 1;
+    const int angular = angularResolution > 2 ? angularResolution : 3;
+
+    const float radialf = (float)radial;
+    const float angularf = (float)angular;
+
+    const float radialInc = (outerRadius - innerRadius) / radialf;
+    const float angularInc = (endAngle - startAngle) / angularf;
+
+    const int perArc = angular + 1;
+    const int vertices = (radial + 1) * perArc;
+    const int triangles = angular * 2 * radial;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+
+    for (int r = 0; r <= radial; r++) {
+        const float rf = (float)r;
+        const float rad = innerRadius + rf * radialInc;
+
+        for (int a = 0; a <= angular; a++) {
+            const float af = (float)a;
+            const float angle = startAngle + af * angularInc;
+            const float x = rad * cos(angle);
+            const float y = rad * sin(angle);
+
+            vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, y, 0.0, 1.0),
+                                            .normal = simd_make_float3(0.0, 0.0, 1.0),
+                                            .uv = simd_make_float2(rf / radialf, af / angularf) };
+
+            if (r != radial && a != angular) {
+                const uint32_t index = a + r * perArc;
+
+                const uint32_t br = index;
+                const uint32_t bl = br + 1;
+                const uint32_t tr = br + perArc;
+                const uint32_t tl = bl + perArc;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = bl, .i1 = br, .i2 = tr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = bl, .i1 = tr, .i2 = tl };
+            }
+        }
+    }
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateTorusGeometryData(float minorRadius, float majorRadius, int minorResolution,
+                                       int majorResolution) {
+    const int slices = minorResolution > 2 ? minorResolution : 3;
+    const int angular = majorResolution > 2 ? majorResolution : 3;
+
+    const float slicesf = (float)slices;
+    const float angularf = (float)angular;
+
+    const float limit = M_PI * 2.0;
+    const float sliceInc = limit / slicesf;
+    const float angularInc = limit / angularf;
+
+    const int perLoop = angular + 1;
+    const int vertices = (slices + 1) * perLoop;
+    const int triangles = angular * 2 * slices;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+
+    for (int s = 0; s <= slices; s++) {
+        const float sf = (float)s;
+        const float slice = sf * sliceInc;
+
+        const float cosSlice = cos(slice);
+        const float sinSlice = sin(slice);
+
+        for (int a = 0; a <= angular; a++) {
+            const float af = (float)a;
+            const float angle = af * angularInc;
+
+            const float cosAngle = cos(angle);
+            const float sinAngle = sin(angle);
+
+            const float x = cosSlice * (majorRadius + cosAngle * minorRadius);
+            const float y = sinSlice * (majorRadius + cosAngle * minorRadius);
+            const float z = sinAngle * minorRadius;
+
+            const simd_float3 tangent = simd_make_float3(-sinSlice, cosSlice, 0.0);
+            const simd_float3 stangent =
+                simd_make_float3(cosSlice * (-sinAngle), sinSlice * (-sinAngle), cosAngle);
+
+            vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, z, y, 1.0),
+                                            .normal = simd_normalize(simd_cross(tangent, stangent)),
+                                            .uv = simd_make_float2(af / angularf, sf / slicesf) };
+
+            if (s != slices && a != angular) {
+                const uint32_t index = a + s * perLoop;
+
+                const uint32_t tl = index;
+                const uint32_t tr = tl + 1;
+                const uint32_t bl = index + perLoop;
+                const uint32_t br = bl + 1;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tl, .i1 = tr, .i2 = bl };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tr, .i1 = br, .i2 = bl };
+            }
+        }
+    }
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateSkyboxGeometryData(float size) {
+    const float halfSize = size * 0.5;
+
+    const int vertices = 24;
+    const int triangles = 12;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    // +Y
+    vtx[0] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, -1.0, 0.0),
+                        .uv = simd_make_float2(1.0, 1.0) };
+    vtx[1] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, -1.0, 0.0),
+                        .uv = simd_make_float2(0.0, 1.0) };
+    vtx[2] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, -halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, -1.0, 0.0),
+                        .uv = simd_make_float2(0.0, 0.0) };
+    vtx[3] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, -halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, -1.0, 0.0),
+                        .uv = simd_make_float2(1.0, 0.0) };
+    // -Y
+    vtx[4] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 1.0, 0.0),
+                        .uv = simd_make_float2(1.0, 1.0) };
+    vtx[5] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 1.0, 0.0),
+                        .uv = simd_make_float2(0.0, 1.0) };
+    vtx[6] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, -halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 1.0, 0.0),
+                        .uv = simd_make_float2(0.0, 0.0) };
+    vtx[7] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, -halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 1.0, 0.0),
+                        .uv = simd_make_float2(1.0, 0.0) };
+    // +Z
+    vtx[8] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, -1.0),
+                        .uv = simd_make_float2(1.0, 1.0) };
+    vtx[9] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, halfSize, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, -1.0),
+                        .uv = simd_make_float2(0.0, 1.0) };
+    vtx[10] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, -1.0),
+                         .uv = simd_make_float2(0.0, 0.0) };
+    vtx[11] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, -1.0),
+                         .uv = simd_make_float2(1.0, 0.0) };
+    // -Z
+    vtx[12] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, 1.0),
+                         .uv = simd_make_float2(1.0, 1.0) };
+    vtx[13] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, 1.0),
+                         .uv = simd_make_float2(0.0, 1.0) };
+    vtx[14] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, 1.0),
+                         .uv = simd_make_float2(0.0, 0.0) };
+    vtx[15] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(0.0, 0.0, 1.0),
+                         .uv = simd_make_float2(1.0, 0.0) };
+    // -X
+    vtx[16] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(1.0, 1.0) };
+    vtx[17] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(0.0, 1.0) };
+    vtx[18] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(0.0, 0.0) };
+    vtx[19] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(1.0, 0.0) };
+    // +X
+    vtx[20] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(-1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(1.0, 1.0) };
+    vtx[21] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(-1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(0.0, 1.0) };
+    vtx[22] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, -halfSize, 1.0),
+                         .normal = simd_make_float3(-1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(0.0, 0.0) };
+    vtx[23] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, halfSize, 1.0),
+                         .normal = simd_make_float3(-1.0, 0.0, 0.0),
+                         .uv = simd_make_float2(1.0, 0.0) };
+
+    ind[0] = (TriangleIndices) { .i0 = 0, .i1 = 3, .i2 = 2 };
+    ind[1] = (TriangleIndices) { .i0 = 2, .i1 = 1, .i2 = 0 };
+    ind[2] = (TriangleIndices) { .i0 = 5, .i1 = 7, .i2 = 6 };
+    ind[3] = (TriangleIndices) { .i0 = 5, .i1 = 4, .i2 = 7 };
+    ind[4] = (TriangleIndices) { .i0 = 8, .i1 = 11, .i2 = 10 };
+    ind[5] = (TriangleIndices) { .i0 = 10, .i1 = 9, .i2 = 8 };
+    ind[6] = (TriangleIndices) { .i0 = 12, .i1 = 15, .i2 = 14 };
+    ind[7] = (TriangleIndices) { .i0 = 14, .i1 = 13, .i2 = 12 };
+    ind[8] = (TriangleIndices) { .i0 = 16, .i1 = 19, .i2 = 18 };
+    ind[9] = (TriangleIndices) { .i0 = 18, .i1 = 17, .i2 = 16 };
+    ind[10] = (TriangleIndices) { .i0 = 20, .i1 = 23, .i2 = 22 };
+    ind[11] = (TriangleIndices) { .i0 = 22, .i1 = 21, .i2 = 20 };
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution) {
+    const int radial = radialResolution > 0 ? radialResolution : 1;
+    const int angular = angularResolution > 2 ? angularResolution : 3;
+
+    const float radialf = (float)radial;
+    const float angularf = (float)angular;
+
+    const float radialInc = radius / radialf;
+    const float angularInc = (2.0 * M_PI) / angularf;
+
+    const int perLoop = angular + 1;
+
+    const int vertices = perLoop * (radial + 1);
+    const int triangles = angular * 2 * radial;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+
+    for (int r = 0; r <= radial; r++) {
+        const float rf = (float)r;
+        const float rad = rf * radialInc;
+        for (int a = 0; a <= angular; a++) {
+            const float af = (float)a;
+            const float angle = af * angularInc;
+            const float x = rad * cos(angle);
+            const float y = rad * sin(angle);
+
+            vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, y, 0.0, 1.0),
+                                            .normal = simd_make_float3(0.0, 0.0, 1.0),
+                                            .uv = simd_make_float2(rf / radialf, af / angularf) };
+
+            if (r != radial && a != angular) {
+                const uint32_t index = a + r * perLoop;
+
+                const uint32_t tl = index;
+                const uint32_t tr = tl + 1;
+                const uint32_t bl = index + perLoop;
+                const uint32_t br = bl + 1;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tl, .i1 = bl, .i2 = tr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tr, .i1 = bl, .i2 = br };
+            }
+        }
+    }
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateTriangleGeometryData(float size) {
+    const int vertices = 3;
+    const int triangles = 1;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    const float twoPi = M_PI * 2.0;
+    float angle = 0.0;
+    vtx[0] =
+        (Vertex) { .position = simd_make_float4(size * sin(angle), size * cos(angle), 0.0, 1.0),
+                   .normal = simd_make_float3(0.0, 0.0, 1.0),
+                   .uv = simd_make_float2(0, 0) };
+
+    angle = twoPi / 3.0;
+    vtx[1] =
+        (Vertex) { .position = simd_make_float4(size * sin(angle), size * cos(angle), 0.0, 1.0),
+                   .normal = simd_make_float3(0.0, 0.0, 1.0),
+                   .uv = simd_make_float2(0, 1) };
+
+    angle = 2.0 * twoPi / 3.0;
+    vtx[2] =
+        (Vertex) { .position = simd_make_float4(size * sin(angle), size * cos(angle), 0.0, 1.0),
+                   .normal = simd_make_float3(0.0, 0.0, 1.0),
+                   .uv = simd_make_float2(1, 0) };
+
+    ind[0] = (TriangleIndices) { .i0 = 0, .i1 = 2, .i2 = 1 };
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateQuadGeometryData(float size) {
+    const float halfSize = size * 0.5;
+
+    const int vertices = 4;
+    const int triangles = 2;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    vtx[0] = (Vertex) { .position = simd_make_float4(-halfSize, -halfSize, 0.0, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, 1.0),
+                        .uv = simd_make_float2(0.0, 1.0) };
+
+    vtx[1] = (Vertex) { .position = simd_make_float4(halfSize, -halfSize, 0.0, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, 1.0),
+                        .uv = simd_make_float2(1.0, 1.0) };
+
+    vtx[2] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, 0.0, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, 1.0),
+                        .uv = simd_make_float2(0.0, 0.0) };
+
+    vtx[3] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, 0.0, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, 1.0),
+                        .uv = simd_make_float2(1.0, 0.0) };
+
+    ind[0] = (TriangleIndices) { .i0 = 0, .i1 = 3, .i2 = 2 };
+    ind[1] = (TriangleIndices) { .i0 = 0, .i1 = 1, .i2 = 3 };
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
+GeometryData generateSphereGeometryData(float radius, int angularResolution,
+                                        int verticalResolution) {
+    const int phi = angularResolution > 2 ? angularResolution : 3;
+    const int layers = verticalResolution > 3 ? verticalResolution : 3;
+
+    const float phif = (float)phi;
+
+    const int layersMinusOne = layers - 1;
+    const float layersMinusOnef = layersMinusOne;
+
+    const float phiMax = M_PI * 2.0;
+    const float thetaMax = M_PI;
+
+    const float phiInc = phiMax / phif;
+    const float layerInc = thetaMax / layersMinusOnef;
+
+    int perLoop = phi + 1;
+
+    const int vertices = layers * perLoop;
+    const int triangles = layersMinusOne * perLoop * 2;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+    for (int layer = 0; layer < layers; layer++) {
+        const float layerf = (float)layer;
+        const float thetaAngle = layerf * layerInc;
+        const float cosTheta = cos(thetaAngle);
+        const float sinTheta = sin(thetaAngle);
+        const float radiusTimesCosTheta = radius * cosTheta;
+        const float radiusTimesSinTheta = radius * sinTheta;
+
+        for (int p = 0; p <= phi; p++) {
+            const float pf = (float)p;
+            const float phiAngle = pf * phiInc;
+            const float cosPhi = cos(phiAngle);
+            const float sinPhi = sin(phiAngle);
+
+            const float x = radiusTimesSinTheta * cosPhi;
+            const float y = radiusTimesCosTheta;
+            const float z = radiusTimesSinTheta * sinPhi;
+
+            vtx[vertexIndex++] =
+                (Vertex) { .position = simd_make_float4(x, y, z, 1.0),
+                           .normal = simd_normalize(simd_make_float3(x, y, z)),
+                           .uv = simd_make_float2(pf / phif, 1.0 - (layerf / layersMinusOnef)) };
+
+            if (p != phi && layer != layersMinusOne) {
+                const uint32_t index = p + layer * perLoop;
+
+                const uint32_t tl = index;
+                const uint32_t tr = tl + 1;
+                const uint32_t bl = index + perLoop;
+                const uint32_t br = bl + 1;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tl, .i1 = tr, .i2 = bl };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tr, .i1 = br, .i2 = bl };
+            }
+        }
+    }
+
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
 
 GeometryData generateIcoSphereGeometryData(float radius, int res) {
     const float phi = (1.0 + sqrt(5)) * 0.5;
@@ -132,52 +656,51 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
 
 GeometryData generateSquircleGeometryData(float size, float p, int angularResolution,
                                           int radialResolution) {
-    float r = size * 0.5;
-    int angular = angularResolution > 2 ? angularResolution : 3;
-    int radial = radialResolution > 1 ? radialResolution : 2;
+    const float rad = size * 0.5;
+    const int angular = angularResolution > 2 ? angularResolution : 3;
+    const int radial = radialResolution > 1 ? radialResolution : 1;
 
-    int perLoop = angular + 1;
-    int vertices = radial * perLoop;
-    int triangles = angular * 2.0 * radial;
+    const int perLoop = angular + 1;
+    const int vertices = perLoop * (radial + 1);
+    const int triangles = angular * 2 * radial;
 
     Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
     TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
 
-    int triIndex = 0;
-    for (int j = 0; j < radial; j++) {
-        float k = j / (float)(radial - 1);
-        float radius = map(j, 0.0, (radial - 1), 0.0, r);
-        for (int i = 0; i <= angular; i++) {
-            float t = i / (float)angular;
-            float theta = 2.0 * M_PI * t;
-            float cost = cos(theta);
-            float sint = sin(theta);
-            float den = pow(fabs(cost), p) + pow(fabs(sint), p);
-            float phi = 1.0 / pow(den, 1.0 / p);
-            float x = radius * phi * cost;
-            float y = radius * phi * sint;
+    int vertexIndex = 0;
+    int triangleIndex = 0;
 
-            int index = j * perLoop + i;
-            vtx[index].position = simd_make_float4(x, y, 0.0, 1.0);
-            vtx[index].normal = simd_make_float3(0.0, 0.0, 1.0);
-            vtx[index].uv = simd_make_float2(t, k);
+    for (int r = 0; r <= radial; r++) {
+        const float k = r / (float)radial;
+        const float radius = map(r, 0.0, radial, 0.0, rad);
 
-            if (j != (radial - 1) && i != angular) {
-                int currLevel = j * perLoop;
-                int nextLevel = (j + 1) * perLoop;
+        for (int a = 0; a <= angular; a++) {
+            const float t = a / (float)angular;
+            const float theta = 2.0 * M_PI * t;
 
-                int curr = i;
-                int next = (i + 1);
+            const float cost = cos(theta);
+            const float sint = sin(theta);
 
-                int i0 = curr + currLevel;
-                int i1 = next + currLevel;
-                int i2 = curr + nextLevel;
-                int i3 = next + nextLevel;
+            const float den = pow(fabs(cost), p) + pow(fabs(sint), p);
+            const float phi = 1.0 / pow(den, 1.0 / p);
 
-                ind[triIndex] = (TriangleIndices) { i0, i2, i3 };
-                triIndex++;
-                ind[triIndex] = (TriangleIndices) { i0, i3, i1 };
-                triIndex++;
+            const float x = radius * phi * cost;
+            const float y = radius * phi * sint;
+
+            vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, y, 0.0, 1.0),
+                                            .normal = simd_make_float3(0.0, 0.0, 1.0),
+                                            .uv = simd_make_float2(t, k) };
+
+            if (r != radial && a != angular) {
+                const uint32_t index = a + r * perLoop;
+
+                const uint32_t tl = index;
+                const uint32_t tr = tl + 1;
+                const uint32_t bl = index + perLoop;
+                const uint32_t br = bl + 1;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tl, .i1 = bl, .i2 = tr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = tr, .i1 = bl, .i2 = br };
             }
         }
     }

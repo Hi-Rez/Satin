@@ -88,24 +88,23 @@ void appendPolyline2D(Polyline2D *dst, Polyline2D *src) {
     }
 }
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 Polyline2D getAdaptiveLinearPath2(simd_float2 a, simd_float2 b, float distanceLimit) {
     const float length = simd_length(b - a);
-    if(length > distanceLimit) {
+    if (length > distanceLimit) {
         const int sections = MAX(ceilf(length / distanceLimit), 2);
-        const float inc = 1.0 / (float)(sections-1);
+        const float inc = 1.0 / (float)(sections - 1);
         simd_float2 *data = (simd_float2 *)malloc(sections * sizeof(simd_float2));
         simd_float2 t = 0.0;
-        for(int i = 0; i < sections; i++) {
+        for (int i = 0; i < sections; i++) {
             data[i] = simd_mix(a, b, t);
             t += inc;
             t = MIN(MAX(t, 0.0), 1.0);
         }
         return (Polyline2D) { .count = sections, .data = data };
-    }
-    else {
+    } else {
         simd_float2 *data = (simd_float2 *)malloc(2 * sizeof(simd_float2));
         data[0] = a;
         data[1] = b;

@@ -346,7 +346,7 @@ open class TextGeometry: Geometry {
             cData = cacheData
             characterPaths[char] = charPaths
         } else if let glyphPath = CTFontCreatePathForGlyph(ctFont, glyph, nil) {
-            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize/10.0)
+            let glyphPaths = getPolylines(glyphPath, angleLimit, fontSize / 10.0)
             
             var _paths: [UnsafeMutablePointer<simd_float2>?] = []
             var _lengths: [Int32] = []
