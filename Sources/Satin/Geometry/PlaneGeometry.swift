@@ -9,7 +9,7 @@
 import simd
 
 open class PlaneGeometry: Geometry {
-    public enum Orientation: Int32 {
+    public enum PlaneOrientation: Int32 {
         case xy = 0 // points in +z direction
         case yx = 1 // points in -z direction
         case xz = 2 // points in -y direction
@@ -23,12 +23,12 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size, height: size, resU: 1, resV: 1)
     }
     
-    public init(size: Float, plane: Orientation = .xy) {
+    public init(size: Float, plane: PlaneOrientation = .xy) {
         super.init()
         self.setupData(width: size, height: size, resU: 1, resV: 1, plane: plane)
     }
     
-    public init(size: Float, plane: Orientation = .xy, centered: Bool = true) {
+    public init(size: Float, plane: PlaneOrientation = .xy, centered: Bool = true) {
         super.init()
         self.setupData(width: size, height: size, resU: 1, resV: 1, plane: plane, centered: centered)
     }
@@ -38,12 +38,12 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size, height: size, resU: res, resV: res)
     }
     
-    public init(size: Float, res: Int, plane: Orientation = .xy) {
+    public init(size: Float, res: Int, plane: PlaneOrientation = .xy) {
         super.init()
         self.setupData(width: size, height: size, resU: res, resV: res, plane: plane)
     }
     
-    public init(size: Float, res: Int, plane: Orientation = .xy, centered: Bool = true) {
+    public init(size: Float, res: Int, plane: PlaneOrientation = .xy, centered: Bool = true) {
         super.init()
         self.setupData(width: size, height: size, resU: res, resV: res, plane: plane, centered: centered)
     }
@@ -53,12 +53,12 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size.width, height: size.height, resU: 1, resV: 1)
     }
     
-    public init(size: (width: Float, height: Float), plane: Orientation = .xy) {
+    public init(size: (width: Float, height: Float), plane: PlaneOrientation = .xy) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane)
     }
     
-    public init(size: (width: Float, height: Float), plane: Orientation = .xy, centered: Bool = true) {
+    public init(size: (width: Float, height: Float), plane: PlaneOrientation = .xy, centered: Bool = true) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: 1, resV: 1, plane: plane, centered: centered)
     }
@@ -68,12 +68,12 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size.width, height: size.height, resU: res, resV: res)
     }
     
-    public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy) {
+    public init(size: (width: Float, height: Float), res: Int, plane: PlaneOrientation = .xy) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: res, resV: res, plane: plane)
     }
     
-    public init(size: (width: Float, height: Float), res: Int, plane: Orientation = .xy, centered: Bool = true) {
+    public init(size: (width: Float, height: Float), res: Int, plane: PlaneOrientation = .xy, centered: Bool = true) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: res, resV: res, plane: plane, centered: centered)
     }
@@ -83,17 +83,17 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v)
     }
     
-    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy) {
+    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: PlaneOrientation = .xy) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane)
     }
     
-    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: Orientation = .xy, centered: Bool = true) {
+    public init(size: (width: Float, height: Float), res: (u: Int, v: Int), plane: PlaneOrientation = .xy, centered: Bool = true) {
         super.init()
         self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)
     }
     
-    func setupData(width: Float, height: Float, resU: Int, resV: Int, plane: Orientation = .xy, centered: Bool = true) {
+    func setupData(width: Float, height: Float, resU: Int, resV: Int, plane: PlaneOrientation = .xy, centered: Bool = true) {
         var geometryData = generatePlaneGeometryData(width, height, Int32(resU), Int32(resV), plane.rawValue, centered)
         setFrom(&geometryData)
         freeGeometryData(&geometryData)
