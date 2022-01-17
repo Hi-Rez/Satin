@@ -12,6 +12,203 @@
 #include "Geometry.h"
 #include "Helpers.h"
 
+GeometryData generateBoxGeometryData(float width, float height, float depth,
+                                     float centerX, float centerY, float centerZ,
+                                     int widthResolution, int heightResolution, int depthResolution)
+{
+    const int resWidth = widthResolution > 0 ? widthResolution : 1;
+    const int resHeight = heightResolution > 0 ? heightResolution : 1;
+    const int resDepth = depthResolution > 0 ? depthResolution : 1;
+
+    const float resWidthf = (float)resWidth;
+    const float resHeightf = (float)resHeight;
+    const float resDepthf = (float)resDepth;
+
+    const float halfWidth = width * 0.5;
+    const float halfHeight = height * 0.5;
+    const float halfDepth = depth * 0.5;
+
+    const float widthInc = width / resWidthf;
+    const float heightInc = height / resHeightf;
+    const float depthInc = depth / resDepthf;
+
+    const int perRowWidth = resWidth + 1;
+    const int perRowHeight = resHeight + 1;
+    const int perRowDepth = resDepth + 1;
+    
+    const int perWidthHeightFace = perRowWidth * perRowHeight;
+    const int verticesPerFaceWidthHeight = perWidthHeightFace;
+    const int trianglesPerFaceWidthHeight = resWidth * resHeight * 2;
+    
+    const int perWidthDepthFace = perRowWidth * perRowDepth;
+    const int verticesPerFaceWidthDepth = perWidthDepthFace;
+    const int trianglesPerFaceWidthDepth = resWidth * resDepth * 2;
+    
+    const int perDepthHeightFace = perRowDepth * perRowHeight;
+    const int verticesPerFaceDepthHeight = perDepthHeightFace;
+    const int trianglesPerFaceDepthHeight = resDepth * resHeight * 2;
+    
+    const int vertices = (verticesPerFaceWidthHeight + verticesPerFaceWidthDepth + verticesPerFaceDepthHeight) * 2;
+    const int triangles = (trianglesPerFaceWidthHeight + trianglesPerFaceWidthDepth + trianglesPerFaceDepthHeight) * 2;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+    
+    int vertexIndex = 0;
+    int triangleIndex = 0;
+    int vertexOffset = vertexIndex;
+    
+    // Front (XYZ+) & Rear (XYZ-) Faces
+    simd_float3 normal0 = simd_make_float3(0.0, 0.0, 1.0);
+    simd_float3 normal1 = -normal0;
+    simd_float2 uv;
+    for(int y = 0; y <= resHeight; y++) {
+        const float fy = (float)y;
+        const float yPos = -halfHeight + fy * heightInc;
+        uv.y = fy / resHeightf;
+
+        for(int x = 0; x <= resWidth; x++) {
+            const float fx = (float)x;
+            const float xPos = fx * widthInc;
+            uv.x = fx / resWidthf;
+
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(-halfWidth + xPos + centerX, yPos + centerY, halfDepth + centerZ, 1.0),
+                .normal = normal0,
+                .uv = uv
+            };
+
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(halfWidth - xPos + centerX, yPos + centerY, -halfDepth + centerZ, 1.0),
+                .normal = normal1,
+                .uv = uv
+            };
+
+            if(x != resWidth && y != resHeight) {
+                const uint32_t findex = vertexOffset + x * 2 + y * perRowWidth * 2;
+
+                const uint32_t fbl = findex;
+                const uint32_t fbr = fbl + 2;
+                const uint32_t ftl = fbl + perRowWidth * 2;
+                const uint32_t ftr = ftl + 2;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = fbr, .i2 = ftr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = ftr, .i2 = ftl };
+
+                const uint32_t rbl = findex + 1;
+                const uint32_t rbr = rbl + 2;
+                const uint32_t rtl = rbl + perRowWidth * 2;
+                const uint32_t rtr = rtl + 2;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rbr, .i2 = rtr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rtr, .i2 = rtl };
+            }
+        }
+    }
+    
+    vertexOffset = vertexIndex;
+    
+    // Top (XY+Z) & Bottom (XY+Z) Faces
+    normal0 = simd_make_float3(0.0, 1.0, 0.0);
+    normal1 = -normal0;
+    for(int z = 0; z <= resDepth; z++) {
+        const float fz = (float)z;
+        const float zPos = fz * depthInc;
+        uv.y = fz / resDepthf;
+
+        for(int x = 0; x <= resWidth; x++) {
+            const float fx = (float)x;
+            const float xPos = -halfWidth + fx * widthInc;
+            uv.x = fx / resWidthf;
+
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(xPos + centerX, halfHeight + centerY, halfDepth - zPos + centerZ, 1.0),
+                .normal = normal0,
+                .uv = uv
+            };
+
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(xPos + centerX, -halfHeight + centerY, -halfDepth + zPos + centerZ, 1.0),
+                .normal = normal1,
+                .uv = uv
+            };
+
+            if(x != resWidth && z != resDepth) {
+                const uint32_t findex = vertexOffset + x * 2 + z * perRowWidth * 2;
+
+                const uint32_t fbl = findex;
+                const uint32_t fbr = fbl + 2;
+                const uint32_t ftl = fbl + perRowWidth * 2;
+                const uint32_t ftr = ftl + 2;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = fbr, .i2 = ftr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = ftr, .i2 = ftl };
+
+                const uint32_t rbl = findex + 1;
+                const uint32_t rbr = rbl + 2;
+                const uint32_t rtl = rbl + perRowWidth * 2;
+                const uint32_t rtr = rtl + 2;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rbr, .i2 = rtr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rtr, .i2 = rtl };
+            }
+        }
+    }
+    
+    vertexOffset = vertexIndex;
+    
+    // Right (X+YZ) & Left (X-YZ) Faces
+    normal0 = simd_make_float3(1.0, 0.0, 0.0);
+    normal1 = -normal0;
+    for(int y = 0; y <= resHeight; y++) {
+        const float fy = (float)y;
+        const float yPos = -halfHeight + fy * heightInc;
+        uv.y = fy / resHeightf;
+        
+        for(int z = 0; z <= resDepth; z++) {
+            const float fz = (float)z;
+            const float zPos = fz * depthInc;
+            uv.x = fz / resDepthf;
+            
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(halfWidth + centerX, yPos + centerY, halfDepth - zPos + centerZ, 1.0),
+                .normal = normal0,
+                .uv = uv
+            };
+            
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(-halfWidth + centerX, yPos + centerY, -halfDepth + zPos + centerZ, 1.0),
+                .normal = normal1,
+                .uv = uv
+            };
+            
+            if(y != resHeight && z != resDepth) {
+                const uint32_t findex = vertexOffset + z * 2 + y * perRowDepth * 2;
+                                
+                const uint32_t fbl = findex;
+                const uint32_t fbr = fbl + 2;
+                const uint32_t ftl = fbl + perRowDepth * 2;
+                const uint32_t ftr = ftl + 2;
+                
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = fbr, .i2 = ftr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = fbl, .i1 = ftr, .i2 = ftl };
+                                                
+                const uint32_t rbl = findex + 1;
+                const uint32_t rbr = rbl + 2;
+                const uint32_t rtl = rbl + perRowDepth * 2;
+                const uint32_t rtr = rtl + 2;
+
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rbr, .i2 = rtr };
+                ind[triangleIndex++] = (TriangleIndices) { .i0 = rbl, .i1 = rtr, .i2 = rtl };
+            }
+        }
+    }
+    
+    return (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+}
+
 GeometryData generateCylinderWallGeometryData(float radius, float height, int angularResolution,
                                               int verticalResolution) {
     const int vertical = verticalResolution > 0 ? verticalResolution : 1;

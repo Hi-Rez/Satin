@@ -11,6 +11,10 @@
 #include <stdio.h>
 #include "Types.h"
 
+GeometryData generateBoxGeometryData(float width, float height, float depth,
+                                     float centerX, float centerY, float centerZ,
+                                     int widthResolution, int heightResolution, int depthResolution);
+
 GeometryData generateCapsuleGeometryData(float radius, float height, int angularResolution, int radialResolution, int verticalResolution, int axis); 
 
 GeometryData generateConeGeometryData(float radius, float height, int angularResolution,
