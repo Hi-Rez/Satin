@@ -7,6 +7,7 @@
 
 #include "Helpers.h"
 #include "Transforms.h"
+#include <stdio.h>
 
 simd_float4x4 translationMatrixf(float x, float y, float z) {
     simd_float4x4 result = matrix_identity_float4x4;
@@ -98,17 +99,17 @@ simd_float4x4 lookAtMatrix3f(simd_float3 eye, simd_float3 at, simd_float3 up) {
     const simd_float3 yAxis = simd_normalize(simd_cross(zAxis, xAxis));
 
     result.columns[0].x = xAxis.x;
-    result.columns[0].y = yAxis.x;
-    result.columns[0].z = zAxis.x;
+    result.columns[0].y = xAxis.y;
+    result.columns[0].z = xAxis.z;
 
-    result.columns[1].x = xAxis.y;
+    result.columns[1].x = yAxis.x;
     result.columns[1].y = yAxis.y;
-    result.columns[1].z = zAxis.y;
+    result.columns[1].z = yAxis.z;
 
-    result.columns[2].x = xAxis.z;
-    result.columns[2].y = yAxis.z;
+    result.columns[2].x = zAxis.x;
+    result.columns[2].y = zAxis.y;
     result.columns[2].z = zAxis.z;
-
+    
     result.columns[3].x = eye.x;
     result.columns[3].y = eye.y;
     result.columns[3].z = eye.z;
