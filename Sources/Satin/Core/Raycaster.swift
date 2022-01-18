@@ -41,13 +41,7 @@ open class Raycaster {
             farParam.value = far
         }
     }
-    
-    public var rebuildStructures: Bool = false {
-        didSet {
-            _rebuildStructures = rebuildStructures
-        }
-    }
-    
+
     lazy var originParam: PackedFloat3Parameter = {
         PackedFloat3Parameter("origin", ray.origin)
     }()
@@ -98,7 +92,6 @@ open class Raycaster {
         }
     }
     
-    var _rebuildStructures: Bool = true
     var rayBuffer: Buffer!
     var intersectionBuffer: Buffer!
     
@@ -158,14 +151,16 @@ open class Raycaster {
     func setupAccelerationStructures() {
         guard let context = self.context else { fatalError("Unable to create Acceleration Structures") }
         var acount = accelerationStructures.count
-        while acount > _count {
-            _ = accelerationStructures.popLast()
-            acount = accelerationStructures.count
-            _rebuildStructures = true
+        if acount > _count {
+            while acount > _count {
+                _ = accelerationStructures.popLast()
+                acount = accelerationStructures.count
+            }
         }
-        for _ in acount ..< _count {
-            accelerationStructures.append(MPSTriangleAccelerationStructure(device: context.device))
-            _rebuildStructures = true
+        else if _count > acount {
+            for _ in acount ..< _count {
+                accelerationStructures.append(MPSTriangleAccelerationStructure(device: context.device))
+            }
         }
     }
     
@@ -196,10 +191,6 @@ open class Raycaster {
             else if let submesh = object as? Submesh, let mesh = submesh.parent {
                 intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, submesh, index)
             }
-        }
-        
-        if _rebuildStructures {
-            _rebuildStructures = false
         }
         
         return commandBuffer
@@ -389,9 +380,7 @@ open class Raycaster {
             accelerationStructure.triangleCount = mesh.geometry.vertexData.count / 3
         }
         
-        if _rebuildStructures {
-            accelerationStructure.rebuild()
-        }
+        accelerationStructure.rebuild()
         
         intersector!.label = mesh.label + " Raycaster Intersector"
         intersector!.encodeIntersection(
