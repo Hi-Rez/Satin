@@ -66,6 +66,12 @@ Bounds mergeBounds(Bounds a, Bounds b) {
     return (Bounds) { .min = min, .max = max };
 }
 
+Bounds expandBounds(Bounds bounds, simd_float3 pt) {
+    bounds.min = simd_min(bounds.min, pt);
+    bounds.max = simd_max(bounds.max, pt);
+    return bounds;
+}
+
 Bounds transformBounds(Bounds a, simd_float4x4 transform) {
     simd_float3 v0 =
         simd_make_float3(simd_mul(transform, simd_make_float4(a.min.x, a.min.y, a.max.z, 1.0)));

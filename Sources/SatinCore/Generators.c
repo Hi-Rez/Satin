@@ -1098,16 +1098,16 @@ GeometryData generateQuadGeometryData(float size) {
                         .normal = simd_make_float3(0.0, 0.0, 1.0),
                         .uv = simd_make_float2(1.0, 1.0) };
 
-    vtx[2] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, 0.0, 1.0),
-                        .normal = simd_make_float3(0.0, 0.0, 1.0),
-                        .uv = simd_make_float2(0.0, 0.0) };
-
-    vtx[3] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, 0.0, 1.0),
+    vtx[2] = (Vertex) { .position = simd_make_float4(halfSize, halfSize, 0.0, 1.0),
                         .normal = simd_make_float3(0.0, 0.0, 1.0),
                         .uv = simd_make_float2(1.0, 0.0) };
 
-    ind[0] = (TriangleIndices) { .i0 = 0, .i1 = 3, .i2 = 2 };
-    ind[1] = (TriangleIndices) { .i0 = 0, .i1 = 1, .i2 = 3 };
+    vtx[3] = (Vertex) { .position = simd_make_float4(-halfSize, halfSize, 0.0, 1.0),
+                        .normal = simd_make_float3(0.0, 0.0, 1.0),
+                        .uv = simd_make_float2(0.0, 0.0) };
+
+    ind[0] = (TriangleIndices) { .i0 = 0, .i1 = 1, .i2 = 2 };
+    ind[1] = (TriangleIndices) { .i0 = 0, .i1 = 2, .i2 = 3 };
 
     return (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind

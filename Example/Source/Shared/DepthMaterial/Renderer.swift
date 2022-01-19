@@ -75,16 +75,16 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var scene: Object = {
-        let scene = Object()
-        scene.add(box)
-        scene.add(container)
-        scene.add(Mesh(geometry: IcoSphereGeometry(radius: 1.5, res: 0), material: depthMaterial))
-        scene.add(torus)
-        scene.add(cylinder)
-        scene.add(capsule)
-        scene.add(longBox)
-        scene.add(cone)
-        return scene
+        let obj = Object()
+        obj.add(box)
+        obj.add(container)
+        obj.add(Mesh(geometry: IcoSphereGeometry(radius: 1.5, res: 0), material: depthMaterial))
+        obj.add(torus)
+        obj.add(cylinder)
+        obj.add(capsule)
+        obj.add(longBox)
+        obj.add(cone)
+        return obj
     }()
     
     lazy var context: Context = {

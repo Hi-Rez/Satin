@@ -268,16 +268,6 @@ open class Object: Codable {
         return Bounds(min: worldPosition, max: worldPosition)
     }
     
-    open func computeBounds() -> Bounds
-    {
-        var result = localBounds
-        for child in children {
-            let childBounds = child.worldBounds
-            result = mergeBounds(result, childBounds)
-        }
-        return result
-    }
-    
     open func update() {
         onUpdate?()
         for child in children {

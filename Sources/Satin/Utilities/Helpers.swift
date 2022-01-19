@@ -10,7 +10,7 @@ import Foundation
 public func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Mesh] {
     var results: [Mesh] = []
     if invisible || object.visible {
-        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let _ = material.pipeline {
+        if object is Mesh, let mesh = object as? Mesh {
             let geometry = mesh.geometry
             if !geometry.vertexData.isEmpty, mesh.instanceCount > 0 {
                 results.append(object as! Mesh)

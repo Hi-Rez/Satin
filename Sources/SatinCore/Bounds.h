@@ -13,6 +13,7 @@
 Bounds computeBoundsFromVertices(Vertex *vertices, int count);
 Bounds computeBoundsFromVerticesAndTransform(Vertex *vertices, int count, simd_float4x4 transform);
 
+Bounds expandBounds(Bounds bounds, simd_float3 pt); 
 Bounds mergeBounds(Bounds a, Bounds b);
 Bounds transformBounds(Bounds a, simd_float4x4 transform);
 
