@@ -1117,30 +1117,28 @@ GeometryData generateQuadGeometryData(float size) {
 GeometryData generateSphereGeometryData(float radius, int angularResolution,
                                         int verticalResolution) {
     const int phi = angularResolution > 2 ? angularResolution : 3;
-    const int layers = verticalResolution > 3 ? verticalResolution : 3;
+    const int layers = verticalResolution > 2 ? verticalResolution : 3;
 
     const float phif = (float)phi;
-
-    const int layersMinusOne = layers - 1;
-    const float layersMinusOnef = layersMinusOne;
+    const float layersf = (float)layers;
 
     const float phiMax = M_PI * 2.0;
     const float thetaMax = M_PI;
 
     const float phiInc = phiMax / phif;
-    const float layerInc = thetaMax / layersMinusOnef;
+    const float layerInc = thetaMax / layersf;
 
     int perLoop = phi + 1;
 
-    const int vertices = layers * perLoop;
-    const int triangles = layersMinusOne * perLoop * 2;
+    const int vertices = (layers + 1) * perLoop;
+    const int triangles = layers * phi * 2;
 
     Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
     TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
 
     int vertexIndex = 0;
     int triangleIndex = 0;
-    for (int layer = 0; layer < layers; layer++) {
+    for (int layer = 0; layer <= layers; layer++) {
         const float layerf = (float)layer;
         const float thetaAngle = layerf * layerInc;
         const float cosTheta = cos(thetaAngle);
@@ -1161,9 +1159,9 @@ GeometryData generateSphereGeometryData(float radius, int angularResolution,
             vtx[vertexIndex++] =
                 (Vertex) { .position = simd_make_float4(x, y, z, 1.0),
                            .normal = simd_normalize(simd_make_float3(x, y, z)),
-                           .uv = simd_make_float2(pf / phif, 1.0 - (layerf / layersMinusOnef)) };
+                           .uv = simd_make_float2(pf / phif, 1.0 - (layerf / layersf)) };
 
-            if (p != phi && layer != layersMinusOne) {
+            if (p != phi && layer != layers) {
                 const uint32_t index = p + layer * perLoop;
 
                 const uint32_t tl = index;
