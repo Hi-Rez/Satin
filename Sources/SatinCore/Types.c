@@ -71,6 +71,27 @@ void combineGeometryData(GeometryData *dest, GeometryData *src) {
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
+void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap) {
+    combineGeometryData(destGeo, srcGeo);
+    
+    if (srcMap->count > 0) {
+        if (destMap->count > 0) {
+            int totalCount = srcMap->count + destMap->count;
+            destMap->data = realloc(destMap->data, totalCount * sizeof(uint32_t));
+            memcpy(destMap->data + destMap->count, srcMap->data, srcMap->count * sizeof(uint32_t));
+            uint32_t lastFaceIndex = destMap->data[destMap->count - 1];
+            for(int i = destMap->count; i < totalCount; i++) {
+                destMap->data[i] += lastFaceIndex + 1;
+            }
+            destMap->count += srcMap->count;
+        } else {
+            destMap->data = (uint32_t *)malloc(srcMap->count * sizeof(uint32_t));
+            memcpy(destMap->data, srcMap->data, srcMap->count * sizeof(uint32_t));
+            destMap->count = srcMap->count;
+        }
+    }
+}
+
 void combineAndOffsetGeometryData(GeometryData *dest, GeometryData *src, simd_float3 offset) {
     int destPreCombineVertexCount = dest->vertexCount;
 
