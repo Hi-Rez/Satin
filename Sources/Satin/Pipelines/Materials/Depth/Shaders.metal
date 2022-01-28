@@ -7,6 +7,13 @@ typedef struct {
     float depth;
 } DepthVertexData;
 
+typedef struct {
+    float near; //input
+    float far; //input
+    bool invert; //toggle
+    bool color; //toggle
+} DepthUniforms;
+
 vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
                                    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
                                    constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {

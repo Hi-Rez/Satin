@@ -1,3 +1,7 @@
+typedef struct {
+    bool absolute; //toggle
+} NormalColorUniforms;
+
 fragment float4 normalColorFragment(VertexData in [[stage_in]],
                                     constant NormalColorUniforms &uniforms
                                     [[buffer(FragmentBufferMaterialUniforms)]]) {

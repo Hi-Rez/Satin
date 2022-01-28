@@ -236,23 +236,22 @@ open class Renderer
             object.context = context
         }
         
-        if object is Mesh, let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
+        if let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
         {
+            renderEncoder.pushDebugGroup(mesh.label)
             mesh.update(camera: camera)
             material.update(camera: camera)
             renderEncoder.setRenderPipelineState(pipeline)
             material.bind(renderEncoder)
             mesh.draw(renderEncoder: renderEncoder)
+            renderEncoder.popDebugGroup()
         }
         
         for child in object.children
         {
             if child.visible
             {
-                let label = child.label
-                renderEncoder.pushDebugGroup(label)
                 draw(renderEncoder: renderEncoder, object: child)
-                renderEncoder.popDebugGroup()
             }
         }
     }

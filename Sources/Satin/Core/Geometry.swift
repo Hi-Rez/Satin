@@ -22,7 +22,7 @@ open class Geometry {
     public var vertexData: [Vertex] = [] {
         didSet {
             delegate?.updated(geometry: self)
-            setupVertexBuffer()
+            _updateVertexBuffer = true
             _updateBounds = true
         }
     }
@@ -30,7 +30,7 @@ open class Geometry {
     public var indexData: [UInt32] = [] {
         didSet {
             delegate?.updated(geometry: self)
-            setupIndexBuffer()
+            _updateIndexBuffer = true
         }
     }
     
@@ -40,6 +40,8 @@ open class Geometry {
         }
     }
     
+    var _updateVertexBuffer = true
+    var _updateIndexBuffer = true
     var _updateBounds: Bool = true
     var _bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
     
@@ -71,16 +73,24 @@ open class Geometry {
         setupIndexBuffer()
     }
     
-    public func update() {}
+    public func update() {
+        if _updateVertexBuffer {
+            setupVertexBuffer()
+        }
+        if _updateIndexBuffer {
+            setupIndexBuffer()
+        }
+    }
     
     func setupVertexBuffer() {
-        guard let context = context else { return }
+        guard _updateVertexBuffer, let context = context else { return }
         let device = context.device
         if !vertexData.isEmpty {
             let stride = MemoryLayout<Vertex>.stride
             let verticesSize = vertexData.count * stride
             vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
             vertexBuffer?.label = "Vertices"
+            _updateVertexBuffer = false
         }
         else {
             vertexBuffer = nil
@@ -88,12 +98,13 @@ open class Geometry {
     }
     
     func setupIndexBuffer() {
-        guard let context = context else { return }
+        guard _updateIndexBuffer, let context = context else { return }
         let device = context.device
         if !indexData.isEmpty {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
             indexBuffer = device.makeBuffer(bytes: indexData, length: indicesSize, options: [])
             indexBuffer?.label = "Indices"
+            _updateIndexBuffer = false
         }
         else {
             indexBuffer = nil

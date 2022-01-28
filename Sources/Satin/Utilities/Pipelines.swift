@@ -113,6 +113,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.label = label
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
         pipelineStateDescriptor.sampleCount = context.sampleCount

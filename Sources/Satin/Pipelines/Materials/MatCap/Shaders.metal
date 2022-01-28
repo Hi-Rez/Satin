@@ -4,16 +4,20 @@ typedef struct {
     float3 normal;
 } MatCapVertexData;
 
+typedef struct {
+    float4 color; //color
+} MatCapUniforms;
+
 vertex MatCapVertexData matCapVertex(Vertex in [[stage_in]],
                                      constant VertexUniforms &vertexUniforms
                                      [[buffer(VertexBufferVertexUniforms)]]) {
     const float4 screenSpaceNormal = vertexUniforms.modelViewMatrix * float4(in.normal, 0.0);
     const float4 worldPosition = vertexUniforms.modelViewMatrix * in.position;
     const float3 eye = normalize(worldPosition.xyz);
-    MatCapVertexData out { .position = vertexUniforms.projectionMatrix * worldPosition,
-                           .eye = eye,
-                           .normal = normalize(screenSpaceNormal.xyz)
-    };
+    MatCapVertexData out;
+    out.position = vertexUniforms.projectionMatrix * worldPosition;
+    out.eye = eye;                   
+    out.normal = normalize(screenSpaceNormal.xyz);
     return out;
 }
 

@@ -6,7 +6,6 @@
 //
 
 import Metal
-import simd
 
 open class BasicTextureMaterial: BasicColorMaterial {
     public var texture: MTLTexture?
@@ -14,10 +13,12 @@ open class BasicTextureMaterial: BasicColorMaterial {
 
     public init() {
         super.init()
+        createShader()
     }
 
     public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
         super.init()
+        createShader()
         if let texture = texture, texture.textureType != .type2D && texture.textureType != .type2DMultisample {
             fatalError("BasicTextureMaterial expects a 2D texture")
         }
@@ -48,10 +49,6 @@ open class BasicTextureMaterial: BasicColorMaterial {
         sampler = context?.device.makeSamplerState(descriptor: desc)
     }
 
-    open override func compileSource() -> String? {
-        return BasicTexturePipelineSource.setup(label: label)
-    }
-
     open func bindTexture(_ renderEncoder: MTLRenderCommandEncoder) {
         if let texture = self.texture {
             renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom0.rawValue)
@@ -68,23 +65,5 @@ open class BasicTextureMaterial: BasicColorMaterial {
         bindTexture(renderEncoder)
         bindSampler(renderEncoder)
         super.bind(renderEncoder)
-    }
-}
-
-class BasicTexturePipelineSource {
-    static let shared = BasicTexturePipelineSource()
-    private static var sharedSource: String?
-
-    class func setup(label: String) -> String? {
-        guard BasicTexturePipelineSource.sharedSource == nil else { return sharedSource }
-        do {
-            if let source = try compilePipelineSource(label) {
-                BasicTexturePipelineSource.sharedSource = source
-            }
-        }
-        catch {
-            print(error)
-        }
-        return sharedSource
     }
 }

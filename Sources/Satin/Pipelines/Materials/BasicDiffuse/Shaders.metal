@@ -8,6 +8,11 @@ typedef struct {
     float pointSize [[point_size]];
 } DiffuseVertexData;
 
+typedef struct {
+    float4 color; //color
+    float hardness; //slider
+} BasicDiffuseUniforms;
+
 vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
                                      constant VertexUniforms &vertexUniforms
                                      [[buffer(VertexBufferVertexUniforms)]]) {

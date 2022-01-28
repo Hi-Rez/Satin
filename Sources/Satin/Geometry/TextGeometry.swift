@@ -296,6 +296,7 @@ open class TextGeometry: Geometry {
             setupData()
             needsSetup = false
         }
+        super.update()
     }
     
     var angleLimit: Float = degToRad(7.5)

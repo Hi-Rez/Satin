@@ -11,22 +11,13 @@ import Satin
 
 class RayMarchedMaterial: LiveMaterial {
     var camera: PerspectiveCamera?
-    weak var mtkView: MTKView?
     
-    init(pipelinesURL: URL, camera: PerspectiveCamera?, instance: String = "") {
+    init(pipelinesURL: URL, camera: PerspectiveCamera?) {
         self.camera = camera
-        super.init(pipelinesURL: pipelinesURL, instance: instance)
+        super.init(pipelinesURL: pipelinesURL)
         self.blending = .disabled
     }
         
-    override func update() {
-        if let view = mtkView {
-            let size = view.drawableSize
-            set("Resolution", simd_make_float2(Float(size.width), Float(size.height)))
-        }
-        super.update()
-    }
-    
     override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         super.bind(renderEncoder)
         if let camera = self.camera {

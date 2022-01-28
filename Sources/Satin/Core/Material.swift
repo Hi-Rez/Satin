@@ -25,83 +25,100 @@ public struct DepthBias {
     }
 }
 
-open class Material: ParameterGroupDelegate {
-    public enum Blending {
-        case disabled
-        case alpha
-        case additive
-        case subtract
-        case custom
-    }
-    
-    public var label: String {
+open class Material: ShaderDelegate, ParameterGroupDelegate {
+    public lazy var label: String = {
         var label = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != label {
             label = label.replacingOccurrences(of: bundleName, with: "")
         }
         label = label.replacingOccurrences(of: ".", with: "")
         return label
+    }()
+    
+    public lazy var pipelineURL: URL = {
+        getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal")
+    }()
+    
+    public var shader: Shader? {
+        didSet {
+            if oldValue != shader, let shader = shader {
+                if let oldShader = oldValue, let index = oldShader.delegates.firstIndex(of: self) {
+                    oldShader.delegates.remove(at: index)
+                }
+                shader.delegate = self
+                label = shader.label
+                pipelineURL = shader.pipelineURL
+
+                if !isClone {
+                    shaderNeedsUpdate = true
+                }
+            }
+        }
     }
     
     public var sourceRGBBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != sourceRGBBlendFactor {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
 
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != sourceAlphaBlendFactor {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
 
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != destinationRGBBlendFactor {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
 
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != destinationAlphaBlendFactor {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
 
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != rgbBlendOperation {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
 
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
-            pipelineNeedsUpdate = true
+            if oldValue != alphaBlendOperation {
+                shaderBlendingNeedsUpdate = true
+            }
         }
     }
     
-    var externalUniformBuffers: Set<UniformBuffer> = []
-    var externalVertexUniformBuffersMap: [VertexBufferIndex: UniformBuffer] = [:]
-    var externalFragmentUniformBuffersMap: [FragmentBufferIndex: UniformBuffer] = [:]
-    
     public var uniforms: UniformBuffer?
-    var uniformsNeedsUpdate = true
     
-    public var parameters: ParameterGroup {
+    public var parameters = ParameterGroup() {
         didSet {
             parameters.delegate = self
             uniformsNeedsUpdate = true
         }
     }
     
+    var isClone: Bool = false
     public weak var delegate: MaterialDelegate?
     
     public var pipeline: MTLRenderPipelineState? {
-        didSet {
-            delegate?.updated(material: self)
-        }
+        return shader?.pipeline
     }
-
-    var pipelineNeedsUpdate = true
     
     public var context: Context? {
         didSet {
@@ -135,39 +152,130 @@ open class Material: ParameterGroupDelegate {
             }
         }
     }
-    
-    var depthNeedsUpdate = true
+
+    var uniformsNeedsUpdate = false
+    var shaderNeedsUpdate = false
+    var shaderBlendingNeedsUpdate = false
+    var depthNeedsUpdate = false
     
     public var depthBias: DepthBias?
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
-    public init() {
-        self.parameters = ParameterGroup()
-        parameters.label = label + "Uniforms"
-        parameters.delegate = self
+    public init(_ pipelineURL: URL? = nil) {
+        if let pipelineURL = pipelineURL {
+            self.pipelineURL = pipelineURL
+            createShader()
+        }
     }
     
-    public init(pipeline: MTLRenderPipelineState) {
-        self.pipeline = pipeline
-        self.parameters = ParameterGroup()
-        parameters.label = label + "Uniforms"
+    public init(shader: Shader) {
+        shader.delegate = self
+        self.label = shader.label
+        self.pipelineURL = shader.pipelineURL
+        self.parameters = shader.parameters.clone()
         parameters.delegate = self
+        self.shader = shader
+    }
+    
+    func generateShader() -> Shader {
+        Shader(label, pipelineURL)
+    }
+    
+    func createShader() {
+        let shader = generateShader()
+        if isClone {
+            isClone = false
+        }
+        else {
+            self.parameters = shader.parameters.clone()
+        }
+        self.shader = shader
+        updateShaderBlending()
     }
     
     open func setup() {
         setupDepthStencilState()
-        setupPipeline()
+        setupShader()
+        setupUniforms()
     }
     
     func setupDepthStencilState() {
-        guard let context = self.context, context.depthPixelFormat != .invalid else { return }
+        guard let context = context, context.depthPixelFormat != .invalid else { return }
         let device = context.device
         let depthStateDesciptor = MTLDepthStencilDescriptor()
         depthStateDesciptor.depthCompareFunction = depthCompareFunction
         depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
         guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
         depthStencilState = state
+        depthNeedsUpdate = false
+    }
+    
+    open func setupShader() {
+        guard let _ = context else { return }
+        if shader == nil || (isClone && shaderBlendingNeedsUpdate) {
+            createShader()
+        }
+        shader?.context = context
+        shaderNeedsUpdate = false
+    }
+    
+    open func setupUniforms() {
+        guard let context = context, parameters.size > 0 else { return }
+        uniforms = UniformBuffer(device: context.device, parameters: parameters)
+        uniformsNeedsUpdate = false
+    }
+    
+    open func update(camera: Camera) {}
+    
+    open func update() {
+        onUpdate?()
+        updateShader()
+        updateDepth()
+        updateUniforms()
+    }
+    
+    open func updateShader() {
+        if shaderNeedsUpdate {
+            setupShader()
+        }
+        
+        if shaderBlendingNeedsUpdate {
+            updateShaderBlending()
+        }
+    }
+    
+    open func updateDepth() {
+        if depthNeedsUpdate {
+            setupDepthStencilState()
+        }
+    }
+    
+    open func updateUniforms() {
+        if uniformsNeedsUpdate {
+            setupUniforms()
+        }
+        uniforms?.update()
+    }
+    
+    open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
+        guard let uniforms = uniforms else { return }
+        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
+        renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+    }
+    
+    open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
+        guard let depthStencilState = depthStencilState else { return }
+        renderEncoder.setDepthStencilState(depthStencilState)
+        if let depthBias = depthBias {
+            renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
+        }
+    }
+    
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        bindUniforms(renderEncoder)
+        bindDepthStencilState(renderEncoder)
+        onBind?(renderEncoder)
     }
     
     open func setupBlending() {
@@ -200,165 +308,16 @@ open class Material: ParameterGroupDelegate {
         }
     }
     
-    open func setupPipeline() {
-        guard let _ = context else { return }
-        guard var source = compileSource() else { return }
-        guard let library = makeLibrary(&source) else { return }
-        guard let pipeline = createPipeline(library) else { return }
-        self.pipeline = pipeline
-    }
-    
-    open func compileSource() -> String? {
-        return nil
-    }
-    
-    open func makeLibrary(_ source: inout String) -> MTLLibrary? {
-        guard let context = self.context else { return nil }
-        do {
-            injectConstants(source: &source)
-            injectVertex(source: &source)
-            injectVertexData(source: &source)
-            injectVertexUniforms(source: &source)
-            injectExternalUniforms(source: &source)
-            injectMaterialUniforms(source: &source)
-            injectPassThroughVertex(label: label, source: &source)
-            return try context.device.makeLibrary(source: source, options: .none)
-        }
-        catch {
-            print(error)
-        }
-        return nil
-    }
-    
-    open func injectExternalUniforms(source: inout String) {
-        var addedStructs: Set<String> = []
-        var externalStructs = ""
-        for externalUniformBuffer in externalUniformBuffers {
-            if let params = externalUniformBuffer.parameters {
-                let structName = params.label
-                if !addedStructs.contains(structName), !source.contains("} \(structName);") {
-                    externalStructs += externalUniformBuffer.parameters.structString + "\n"
-                    addedStructs.insert(structName)
-                }
-            }
-        }
-        source = source.replacingOccurrences(of: "// inject structs\n", with: externalStructs)
-    }
-
-    open func injectMaterialUniforms(source: inout String) {
-        var materialStructs = "\n"
-        if !source.contains("} \(parameters.label);") {
-            materialStructs = parameters.structString + "\n"
-        }
-        source = source.replacingOccurrences(of: "// inject material structs\n", with: materialStructs)
-    }
-    
-    open func createPipeline(_ library: MTLLibrary?, vertex: String = "", fragment: String = "") -> MTLRenderPipelineState? {
-        guard let context = self.context, let library = library else { return nil }
-        let vertex = vertex.isEmpty ? label.camelCase + "Vertex" : vertex
-        let fragment = fragment.isEmpty ? label.camelCase + "Fragment" : fragment
-        
-        do {
-            if blending == .disabled {
-                return try makeRenderPipeline(
-                    library: library,
-                    vertex: vertex,
-                    fragment: fragment,
-                    label: label.titleCase,
-                    context: context
-                )
-            }
-            else {
-                return try makeRenderPipeline(
-                    library: library,
-                    vertex: vertex,
-                    fragment: fragment,
-                    label: label.titleCase,
-                    context: context,
-                    sourceRGBBlendFactor: sourceRGBBlendFactor,
-                    sourceAlphaBlendFactor: sourceAlphaBlendFactor,
-                    destinationRGBBlendFactor: destinationRGBBlendFactor,
-                    destinationAlphaBlendFactor: destinationAlphaBlendFactor,
-                    rgbBlendOperation: rgbBlendOperation,
-                    alphaBlendOperation: alphaBlendOperation
-                )
-            }
-        }
-        catch {
-            print(error)
-        }
-        
-        return nil
-    }
-    
-    open func setupUniforms() {
-        if let context = self.context, parameters.size > 0 {
-            uniforms = UniformBuffer(device: context.device, parameters: parameters)
-        }
-        else {
-            uniforms = nil
-        }
-    }
-    
-    open func update(camera: Camera) {
-        
-    }
-    
-    open func update() {
-        onUpdate?()
-        updateDepth()
-        updatePipeline()
-        updateUniforms()
-    }
-    
-    open func updateDepth()
-    {
-        if depthNeedsUpdate {
-            setupDepthStencilState()
-            depthNeedsUpdate = false
-        }
-    }
-    
-    open func updatePipeline() {
-        if pipelineNeedsUpdate {
-            setupPipeline()
-            pipelineNeedsUpdate = false
-        }
-    }
-    
-    open func updateUniforms() {
-        if uniformsNeedsUpdate {
-            setupUniforms()
-            uniformsNeedsUpdate = false
-        }
-        uniforms?.update()
-    }
-    
-    open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
-        guard let uniforms = self.uniforms else { return }
-        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
-        for (vertexBufferIndex, externalUniforms) in externalVertexUniformBuffersMap {
-            renderEncoder.setVertexBuffer(externalUniforms.buffer, offset: externalUniforms.offset, index: vertexBufferIndex.rawValue)
-        }
-        
-        renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
-        for (fragmentBufferIndex, externalUniforms) in externalFragmentUniformBuffersMap {
-            renderEncoder.setFragmentBuffer(externalUniforms.buffer, offset: externalUniforms.offset, index: fragmentBufferIndex.rawValue)
-        }
-    }
-    
-    open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
-        guard let depthStencilState = self.depthStencilState else { return }
-        renderEncoder.setDepthStencilState(depthStencilState)
-        if let depthBias = self.depthBias {
-            renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
-        }
-    }
-    
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        bindUniforms(renderEncoder)
-        bindDepthStencilState(renderEncoder)
-        onBind?(renderEncoder)
+    func updateShaderBlending() {
+        guard let shader = shader else { return }
+        shader.blending = blending
+        shader.sourceRGBBlendFactor = sourceRGBBlendFactor
+        shader.sourceAlphaBlendFactor = sourceAlphaBlendFactor
+        shader.destinationRGBBlendFactor = destinationRGBBlendFactor
+        shader.destinationAlphaBlendFactor = destinationAlphaBlendFactor
+        shader.rgbBlendOperation = rgbBlendOperation
+        shader.alphaBlendOperation = alphaBlendOperation
+        shaderBlendingNeedsUpdate = false
     }
     
     public func set(_ name: String, _ value: [Float]) {
@@ -433,73 +392,19 @@ open class Material: ParameterGroupDelegate {
         return parameters.get(name)
     }
     
-    public func setFragmentUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: FragmentBufferIndex) {
-        var needsSetup = false
-        if !externalUniformBuffers.contains(uniformBuffer) {
-            externalUniformBuffers.insert(uniformBuffer)
-            needsSetup = true
-        }
-        externalFragmentUniformBuffersMap[index] = uniformBuffer
-        if needsSetup {
-            setupPipeline()
-        }
-    }
-    
-    public func removeFragmentUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: FragmentBufferIndex) {
-        if externalUniformBuffers.contains(uniformBuffer) {
-            externalFragmentUniformBuffersMap.removeValue(forKey: index)
-            var remove = true
-            for (_, vertexUniformBuffer) in externalVertexUniformBuffersMap {
-                if vertexUniformBuffer == uniformBuffer {
-                    remove = false
-                    break
-                }
-            }
-            if remove {
-                externalUniformBuffers.remove(uniformBuffer)
-            }
-            setupPipeline()
-        }
-    }
-    
-    public func setVertexUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: VertexBufferIndex) {
-        var needsSetup = false
-        if !externalUniformBuffers.contains(uniformBuffer) {
-            externalUniformBuffers.insert(uniformBuffer)
-            needsSetup = true
-        }
-        externalVertexUniformBuffersMap[index] = uniformBuffer
-        if needsSetup {
-            setupPipeline()
-        }
-    }
-    
-    public func removeVertexUniformBuffer(_ uniformBuffer: UniformBuffer, _ index: VertexBufferIndex) {
-        if externalUniformBuffers.contains(uniformBuffer) {
-            externalVertexUniformBuffersMap.removeValue(forKey: index)
-            var remove = true
-            for (_, fragmentUniformBuffer) in externalFragmentUniformBuffersMap {
-                if fragmentUniformBuffer == uniformBuffer {
-                    remove = false
-                    break
-                }
-            }
-            if remove {
-                externalUniformBuffers.remove(uniformBuffer)
-            }
-            setupPipeline()
-        }
-    }
-    
     deinit {}
     
     public func clone() -> Material {
         let clone = Material()
+        clone.isClone = true
+        
+        clone.label = label
+        clone.pipelineURL = pipelineURL
+        
+        clone.delegate = delegate
         clone.parameters = parameters.clone()
         
         clone.blending = blending
-        clone.pipeline = pipeline
-        
         clone.sourceRGBBlendFactor = sourceRGBBlendFactor
         clone.sourceAlphaBlendFactor = sourceAlphaBlendFactor
         clone.destinationRGBBlendFactor = destinationRGBBlendFactor
@@ -507,11 +412,19 @@ open class Material: ParameterGroupDelegate {
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
         
-        clone.context = context
+        clone.shaderBlendingNeedsUpdate = false
         
         clone.depthStencilState = depthStencilState
         clone.depthCompareFunction = depthCompareFunction
         clone.depthWriteEnabled = depthWriteEnabled
+       
+        if let shader = shader {
+            clone.shader = shader
+        }
+        
+        if let context = context {
+            clone.context = context
+        }
         
         return clone
     }
@@ -537,6 +450,13 @@ public extension Material {
     }
     
     func update(parameter: Parameter, from group: ParameterGroup) {}
+}
+
+public extension Material {
+    func updatedParameters(shader: Shader) {
+        parameters.setFrom(shader.parameters)
+        delegate?.updated(material: self)
+    }
 }
 
 extension Material: Equatable {

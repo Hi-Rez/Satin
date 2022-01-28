@@ -64,9 +64,9 @@ class Renderer: Forge.Renderer {
         )
         
         let mat = DepthMaterial()
-        mat.near.value = 10.0
-        mat.far.value = 40.0
-        mat.invert.value = true
+        mat.set("Near", 10.0)
+        mat.set("Far", 40.0)
+        mat.set("Invert", true)
         mesh = Mesh(geometry: geo, material: mat)
         scene.add(mesh)
     }

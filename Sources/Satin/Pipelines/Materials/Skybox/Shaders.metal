@@ -1,4 +1,8 @@
 typedef struct {
+    float4 color; //color
+} SkyboxUniforms;
+
+typedef struct {
     float4 position [[position]];
     float3 uv;
 } SkyVertexData;

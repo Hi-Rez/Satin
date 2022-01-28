@@ -1,5 +1,10 @@
 #include "../../Library/Shapes.metal"
 
+typedef struct {
+    float4 color; //color
+    float pointSize; //slider,0,64,2
+} BasicPointUniforms;
+
 vertex VertexData basicPointVertex(Vertex in[[stage_in]],
                  constant VertexUniforms &vertexUniforms[[buffer(VertexBufferVertexUniforms)]],
                  constant BasicPointUniforms &uniforms[[buffer(VertexBufferMaterialUniforms)]]) {
