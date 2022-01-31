@@ -11,7 +11,7 @@ open class BasicTextureMaterial: BasicColorMaterial {
     public var texture: MTLTexture?
     public var sampler: MTLSamplerState?
 
-    public init() {
+    public required init() {
         super.init()
         createShader()
     }

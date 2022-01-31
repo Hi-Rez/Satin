@@ -8,7 +8,7 @@
 import Metal
 
 open class SkyboxMaterial: BasicTextureMaterial {
-    override public init() {
+    public required init() {
         super.init()
         self.depthWriteEnabled = false
     }

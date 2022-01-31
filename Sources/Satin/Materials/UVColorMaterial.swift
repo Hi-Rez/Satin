@@ -8,7 +8,7 @@
 import Metal
 
 open class UvColorMaterial: Material {
-    public init() {
+    public required init() {
         super.init()
         createShader()
     }

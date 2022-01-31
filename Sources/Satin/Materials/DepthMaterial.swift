@@ -16,4 +16,13 @@ open class DepthMaterial: Material {
         set("Near", -1)
         set("Far", -1)
     }
+    
+    public required init() {
+        super.init()
+        createShader()
+        set("Color", true)
+        set("Invert", false)
+        set("Near", -1)
+        set("Far", -1)
+    }
 }

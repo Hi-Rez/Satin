@@ -42,4 +42,7 @@ Polyline2D getAdaptiveCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2
 simd_float3 quadraticBezier3(simd_float3 a, simd_float3 b, simd_float3 c, float t);
 simd_float3 cubicBezier3(simd_float3 a, simd_float3 b, simd_float3 c, simd_float3 d, float t);
 
+void freePolyline3D(Polyline3D *line);
+Polyline3D convertPolyline2DToPolyline3D(Polyline2D *line);
+
 #endif /* Bezier_h */

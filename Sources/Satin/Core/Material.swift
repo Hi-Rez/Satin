@@ -162,11 +162,11 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var onUpdate: (() -> ())?
     
-    public init(_ pipelineURL: URL? = nil) {
-        if let pipelineURL = pipelineURL {
-            self.pipelineURL = pipelineURL
-            createShader()
-        }
+    public required init() {}
+    
+    public init(_ pipelineURL: URL) {
+        self.pipelineURL = pipelineURL
+        createShader()
     }
     
     public init(shader: Shader) {
@@ -395,7 +395,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     deinit {}
     
     public func clone() -> Material {
-        let clone = Material()
+        let clone: Material = type(of: self).init()
         clone.isClone = true
         
         clone.label = label

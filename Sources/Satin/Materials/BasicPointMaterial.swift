@@ -16,4 +16,12 @@ open class BasicPointMaterial: Material {
         set("Color", color)
         set("Point Size", size)
     }
+    
+    public required init() {
+        super.init()
+        self.blending = .alpha
+        createShader()
+        set("Color", [1, 1, 1, 1])
+        set("Point Size", 2.0)
+    }
 }

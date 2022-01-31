@@ -12,13 +12,17 @@ open class LiveMaterial: Material {
     public var source: String? {
         shader?.source
     }
-    
+
     public init(pipelineURL: URL) {
         super.init(pipelineURL)
     }
 
     public init(pipelinesURL: URL) {
         super.init(pipelinesURL)
+    }
+    
+    public required init() {
+        super.init()
     }
     
     override func generateShader() -> Shader {

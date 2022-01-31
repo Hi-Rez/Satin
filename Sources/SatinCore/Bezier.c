@@ -333,3 +333,26 @@ simd_float3 quadraticBezier3(simd_float3 a, simd_float3 b, simd_float3 c, float 
     float oneMinusT = 1.0 - t;
     return oneMinusT * oneMinusT * a + 2.0 * oneMinusT * t * b + t * t * c;
 }
+
+void freePolyline3D(Polyline3D *line)
+{
+    if (line->count <= 0 && line->data == NULL) { return; }
+    free(line->data);
+    line->data = NULL;
+    line->count = 0;
+}
+
+Polyline3D convertPolyline2DToPolyline3D(Polyline2D *line)
+{
+    const int count = line->count;
+
+    Polyline3D result;
+    result.count = count;
+    result.data = (simd_float3 *)malloc(count * sizeof(simd_float3));
+    for(int i = 0; i < count; i++) {
+        result.data[i] = simd_make_float3(line->data[i], 0.0);
+    }
+    
+    return result;
+}
+

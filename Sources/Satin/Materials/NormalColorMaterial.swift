@@ -9,11 +9,15 @@
 import Metal
 
 open class NormalColorMaterial: Material {
-    var absolute = BoolParameter("Absolute", .toggle)
-
     public init(_ absolute: Bool = false) {
         super.init()
         createShader()
         set("Absolute", absolute)
+    }
+    
+    public required init() {
+        super.init()
+        createShader()
+        set("Absolute", false)
     }
 }

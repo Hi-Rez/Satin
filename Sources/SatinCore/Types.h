@@ -28,6 +28,11 @@ typedef struct {
 } Polyline2D;
 
 typedef struct {
+    int count;
+    simd_float3 *data;
+} Polyline3D;
+
+typedef struct {
     uint32_t i0;
     uint32_t i1;
     uint32_t i2;

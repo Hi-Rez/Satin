@@ -16,4 +16,11 @@ open class BasicColorMaterial: Material {
         createShader()
         set("Color", color)
     }
+    
+    public required init() {
+        super.init()
+        self.blending = .alpha
+        createShader()
+        set("Color", [1, 1, 1, 1])
+    }
 }

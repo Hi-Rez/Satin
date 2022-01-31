@@ -13,4 +13,10 @@ open class BasicDiffuseMaterial: BasicColorMaterial {
         createShader()
         set("Hardness", hardness)
     }
+    
+    public required init() {
+        super.init()
+        createShader()
+        set("Hardness", 0.75)
+    }
 }
