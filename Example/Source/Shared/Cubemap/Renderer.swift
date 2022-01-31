@@ -87,7 +87,7 @@ class Renderer: Forge.Renderer {
         let url = texturesURL.appendingPathComponent("Cubemap")
         
         let texture = makeCubeTexture(
-            context,
+            device,
             [
                 url.appendingPathComponent("px.png"),
                 url.appendingPathComponent("nx.png"),

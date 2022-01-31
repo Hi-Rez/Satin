@@ -15,7 +15,7 @@ open class Shader {
     var delegates: [Material?] = []
     public weak var delegate: ShaderDelegate? {
         didSet {
-            delegates.append(delegate as? Material)            
+            delegates.append(delegate as? Material)
         }
     }
     
@@ -136,10 +136,11 @@ open class Shader {
                 _updateSource = true
                 _updateLibrary = true
                 _updatePipeline = true
-                _update = false 
+                _update = false
             }
         }
     }
+
     var _updatePipeline: Bool = true
     var _updateLibrary: Bool = true
     var _updateSource: Bool = true
@@ -250,8 +251,7 @@ open class Shader {
         do {
             return try MetalFileCompiler().parse(pipelineURL)
         }
-        catch
-        {
+        catch {
             print(error.localizedDescription)
         }
         return nil
@@ -279,10 +279,8 @@ open class Shader {
     }
 }
 
-
 extension Shader: Equatable {
     public static func == (lhs: Shader, rhs: Shader) -> Bool {
         return lhs === rhs
     }
 }
-

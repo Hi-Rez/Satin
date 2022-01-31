@@ -19,7 +19,8 @@ open class Context {
                 _ sampleCount: Int,
                 _ colorPixelFormat: MTLPixelFormat,
                 _ depthPixelFormat: MTLPixelFormat = .invalid,
-                _ stencilPixelFormat: MTLPixelFormat = .invalid) {
+                _ stencilPixelFormat: MTLPixelFormat = .invalid)
+    {
         self.device = device
         self.sampleCount = sampleCount
         self.colorPixelFormat = colorPixelFormat
@@ -27,7 +28,6 @@ open class Context {
         self.stencilPixelFormat = stencilPixelFormat
     }
 }
-
 
 extension Context: Equatable {
     public static func == (lhs: Context, rhs: Context) -> Bool {

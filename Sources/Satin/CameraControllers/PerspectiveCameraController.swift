@@ -13,8 +13,7 @@ open class PerspectiveCameraController: CameraController {
     var rotateGestureRecognizer: UIPanGestureRecognizer!
     #endif
 
-    private override init()
-    {
+    override private init() {
         super.init()
     }
     
@@ -113,7 +112,7 @@ open class PerspectiveCameraController: CameraController {
         }
     }
     
-    open var zoomScalar: Float = 2.0
+    open var zoomScalar: Float = 0.5
     open var zoomDamping: Float = 0.9
     var zoomVelocity: Float = 0.0
     
@@ -154,7 +153,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     func setup() {
-        guard let camera = self.camera else { return }
+        guard let camera = camera else { return }
         target.orientation = defaultOrientation
         camera.orientation = simd_quatf(matrix_identity_float4x4)
         camera.position = [0, 0, simd_length(defaultPosition)]
@@ -166,7 +165,7 @@ open class PerspectiveCameraController: CameraController {
     
         halt()
         
-        if let camera = self.camera {
+        if let camera = camera {
             target.add(camera)
         }
         
@@ -188,7 +187,7 @@ open class PerspectiveCameraController: CameraController {
         
         halt()
         
-        if let camera = self.camera {
+        if let camera = camera {
             target.remove(camera)
         }
         
@@ -283,12 +282,12 @@ open class PerspectiveCameraController: CameraController {
     }
     
     func updateRoll() {
-        guard let camera = self.camera else { return }
+        guard let camera = camera else { return }
         target.orientation = simd_mul(target.orientation, simd_quatf(angle: rollVelocity, axis: camera.forwardDirection))
     }
     
     func updateZoom() {
-        guard let camera = self.camera else { return }
+        guard let camera = camera else { return }
         let offset = simd_make_float3(camera.forwardDirection * zoomVelocity)
         let offsetDistance = length(offset)
         let targetDistance = length(camera.worldPosition - target.position)
@@ -306,8 +305,8 @@ open class PerspectiveCameraController: CameraController {
         target.position = target.position + simd_make_float3(target.upDirection * translationVelocity.y)
     }
     
-    open override func resize(_ size: (width: Float, height: Float)) {
-        if let camera = self.camera {
+    override open func resize(_ size: (width: Float, height: Float)) {
+        if let camera = camera {
             camera.aspect = size.width / size.height
         }
     }
@@ -317,7 +316,7 @@ open class PerspectiveCameraController: CameraController {
     // MARK: - Mouse
     
     override open func mouseDown(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         if event.clickCount == 2 {
             reset()
         }
@@ -330,7 +329,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     override open func mouseDragged(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         if state == .rotating {
             let result = arcballPoint(event.locationInWindow, view.frame.size)
             let point = result.point
@@ -353,18 +352,18 @@ open class PerspectiveCameraController: CameraController {
     }
     
     override open func mouseUp(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         state = .inactive
     }
     
     // MARK: - Right Mouse
     
     override open func rightMouseDown(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
     }
     
     override open func rightMouseDragged(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window, let camera = camera else { return }
         let dy = Float(event.deltaY) / mouseDeltaSensitivity
         if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
             state = .dollying
@@ -372,24 +371,24 @@ open class PerspectiveCameraController: CameraController {
         }
         else {
             state = .zooming
-            zoomVelocity -= dy * zoomScalar
+            zoomVelocity -= dy * zoomScalar * (180.0/camera.fov)
         }
     }
     
     override open func rightMouseUp(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         state = .inactive
     }
     
     // MARK: - Other Mouse
     
     override open func otherMouseDown(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         state = .panning
     }
     
     override open func otherMouseDragged(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         let dx = Float(event.deltaX) / mouseDeltaSensitivity
         let dy = Float(event.deltaY) / mouseDeltaSensitivity
         state = .panning
@@ -398,14 +397,14 @@ open class PerspectiveCameraController: CameraController {
     }
     
     override open func otherMouseUp(with event: NSEvent) {
-        guard let view = self.view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window else { return }
         state = .inactive
     }
     
     // MARK: - Scroll Wheel
     
     override open func scrollWheel(with event: NSEvent) {
-        guard let camera = self.camera, let view = self.view, event.window == view.window else { return }
+        guard let camera = camera, let view = view, event.window == view.window else { return }
         if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
             state = .inactive
         }
@@ -418,7 +417,7 @@ open class PerspectiveCameraController: CameraController {
             else {
                 state = .zooming
                 let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-                zoomVelocity -= sdy * zoomScalar
+                zoomVelocity -= sdy * zoomScalar * (180.0/camera.fov)
             }
         }
         else if event.phase == .began || event.phase == .changed {
@@ -434,6 +433,7 @@ open class PerspectiveCameraController: CameraController {
     // MARK: - Gestures macOS
     
     override open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
+        guard  let camera = camera else { return }
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -441,7 +441,7 @@ open class PerspectiveCameraController: CameraController {
         }
         else if gestureRecognizer.state == .changed, state == .zooming {
             let velocity = newMagnification - magnification
-            zoomVelocity -= velocity * zoomScalar
+            zoomVelocity -= velocity * zoomScalar * (180.0/camera.fov)
             magnification = newMagnification
         }
         else {
@@ -486,7 +486,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     @objc open func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        guard let view = self.view else { return }
+        guard let view = view else { return }
         if gestureRecognizer.numberOfTouches == gestureRecognizer.minimumNumberOfTouches {
             if gestureRecognizer.state == .began {
                 state = .rotating
@@ -549,7 +549,7 @@ open class PerspectiveCameraController: CameraController {
     var panPreviousPoint = simd_float2(repeating: 0.0)
     
     @objc override open func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        guard let camera = self.camera, let view = self.view else { return }
+        guard let camera = camera, let view = view else { return }
         if gestureRecognizer.state == .began {
             state = .panning
             panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
@@ -574,7 +574,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     @objc override open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
-        guard let camera = self.camera else { return }
+        guard let camera = camera else { return }
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
@@ -582,7 +582,7 @@ open class PerspectiveCameraController: CameraController {
         else if gestureRecognizer.state == .changed, state == .zooming {
             let newScale = Float(gestureRecognizer.scale)
             let delta = pinchScale - newScale
-            zoomVelocity += delta * zoomScalar * (360.0/camera.fov)
+            zoomVelocity += delta * zoomScalar * (180.0 / camera.fov)
             pinchScale = newScale
         }
         else {
@@ -618,19 +618,18 @@ open class PerspectiveCameraController: CameraController {
         return (inside: inside, point: result)
     }
     
-    //MARK: - Load
+    // MARK: - Load
     
-    open override func load(_ url: URL) {
+    override open func load(_ url: URL) {
         do {
             let data = try Data(contentsOf: url)
             let loaded = try JSONDecoder().decode(PerspectiveCameraController.self, from: data)
-            self.target.setFrom(loaded.target)
-            if let camera = self.camera, let loadedCamera = loaded.camera {
+            target.setFrom(loaded.target)
+            if let camera = camera, let loadedCamera = loaded.camera {
                 camera.setFrom(loadedCamera)
             }
         }
-        catch
-        {
+        catch {
             print(error.localizedDescription)
         }
     }

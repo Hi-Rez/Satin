@@ -188,7 +188,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
             isClone = false
         }
         else {
-            self.parameters = shader.parameters.clone()
+            parameters = shader.parameters.clone()
         }
         self.shader = shader
         updateShaderBlending()
@@ -403,6 +403,9 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         
         clone.delegate = delegate
         clone.parameters = parameters.clone()
+        
+        clone.onUpdate = onUpdate
+        clone.onBind = onBind
         
         clone.blending = blending
         clone.sourceRGBBlendFactor = sourceRGBBlendFactor

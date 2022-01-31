@@ -39,24 +39,25 @@ simd_float4x4 scaleMatrix3f(simd_float3 p) {
 
 simd_float4x4 frustrumMatrixf(float left, float right, float bottom, float top, float near,
                               float far) {
-    simd_float4x4 result = matrix_identity_float4x4;
-
     const float rightMinusLeft = right - left;
     const float topMinusBottom = top - bottom;
     const float farMinusNear = far - near;
+    const float twoTimesNear = 2.0 * near;
+    
+    const float col0x = twoTimesNear / rightMinusLeft;
+    const float col1y = twoTimesNear / topMinusBottom;
+    const float col2x = (right + left) / rightMinusLeft;
+    const float col2y = (top + bottom) / topMinusBottom;
+    const float col2z = near / farMinusNear;
+    const float col2w = -1.0;
+    const float col3z = (far * near) / farMinusNear;
+    
+    const simd_float4 col0 = simd_make_float4(col0x, 0.0, 0.0, 0.0);
+    const simd_float4 col1 = simd_make_float4(0.0, col1y, 0.0, 0.0);
+    const simd_float4 col2 = simd_make_float4(col2x, col2y, col2z, col2w);
+    const simd_float4 col3 = simd_make_float4(0.0, 0.0, col3z, 0.0);
 
-    result.columns[0].x = 2.0 * near / rightMinusLeft;
-
-    result.columns[1].y = 2.0 * near / topMinusBottom;
-
-    result.columns[2].x = (right + left) / rightMinusLeft;
-    result.columns[2].y = (top + bottom) / topMinusBottom;
-    result.columns[2].z = near / farMinusNear;
-    result.columns[2].w = -1.0;
-
-    result.columns[3].z = (far * near) / farMinusNear;
-
-    return result;
+    return simd_matrix(col0, col1, col2, col3);
 }
 
 simd_float4x4 orthographicMatrixf(float left, float right, float bottom, float top, float near,

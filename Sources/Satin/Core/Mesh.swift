@@ -24,7 +24,7 @@ open class Mesh: Object, GeometryDelegate {
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var geometry: Geometry = Geometry() {
+    public var geometry = Geometry() {
         didSet {
             geometry.delegate = self
             setupGeometry()
@@ -51,7 +51,7 @@ open class Mesh: Object, GeometryDelegate {
         fatalError("init(from:) has not been implemented")
     }
     
-    open override func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode("Mesh", forKey: .type)
@@ -61,7 +61,7 @@ open class Mesh: Object, GeometryDelegate {
         case type
     }
 
-    open override func setup() {
+    override open func setup() {
         setupUniformBuffer()
         setupGeometry()
         setupSubmeshes()
@@ -69,7 +69,7 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     func setupUniformBuffer() {
-        guard let context = self.context else { return }
+        guard let context = context else { return }
         let device = context.device
         let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
         guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
@@ -79,19 +79,19 @@ open class Mesh: Object, GeometryDelegate {
     }
     
     func setupGeometry() {
-        guard let context = self.context else { return }
+        guard let context = context else { return }
         geometry.context = context
     }
     
     func setupSubmeshes() {
-        guard let context = self.context else { return }
+        guard let context = context else { return }
         for submesh in submeshes {
             submesh.context = context
         }
     }
 
     func setupMaterial() {
-        guard let context = self.context, let material = self.material else { return }
+        guard let context = context, let material = material else { return }
         material.context = context
     }
     
@@ -121,7 +121,7 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    open override func update() {
+    override open func update() {
         geometry.update()
         material?.update()
         updateUniformsBuffer()
@@ -184,9 +184,7 @@ open class Mesh: Object, GeometryDelegate {
         submeshes.append(submesh)
     }
     
-    
-    override open func computeLocalBounds() -> Bounds
-    {
+    override open func computeLocalBounds() -> Bounds {
         let count = geometry.vertexData.count
         var result = Bounds()
         geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
@@ -195,8 +193,7 @@ open class Mesh: Object, GeometryDelegate {
         return result
     }
     
-    override open func computeWorldBounds() -> Bounds
-    {
+    override open func computeWorldBounds() -> Bounds {
         let count = geometry.vertexData.count
         var result = Bounds()
         geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in

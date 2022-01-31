@@ -225,7 +225,7 @@ class Renderer: Forge.Renderer {
     
     func loadHdri() {
         let filename = "venice_sunset_2k.hdr"
-        hdriTexture = loadHDR(context, texturesURL.appendingPathComponent(filename))
+        hdriTexture = loadHDR(device, texturesURL.appendingPathComponent(filename))
     }
     
     override func update() {

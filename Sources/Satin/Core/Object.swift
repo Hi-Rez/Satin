@@ -72,7 +72,7 @@ open class Object: Codable {
         }
     }
     
-    var _localbounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
+    var _localbounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
     
     public var localBounds: Bounds {
         if _updateLocalBounds {
@@ -83,8 +83,7 @@ open class Object: Codable {
     }
     
     var _updateBounds: Bool = true
-    var _worldBounds: Bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
-    
+    var _worldBounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
     
     public var worldBounds: Bounds {
         if _updateBounds {
@@ -236,7 +235,7 @@ open class Object: Codable {
     
     public var worldMatrix: matrix_float4x4 {
         if _updateWorldMatrix {
-            if let parent = self.parent {
+            if let parent = parent {
                 _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
             }
             else {
@@ -258,13 +257,11 @@ open class Object: Codable {
     
     open func setup() {}
     
-    open func computeLocalBounds() -> Bounds
-    {
+    open func computeLocalBounds() -> Bounds {
         return Bounds(min: position, max: position)
     }
     
-    open func computeWorldBounds() -> Bounds
-    {
+    open func computeWorldBounds() -> Bounds {
         return Bounds(min: worldPosition, max: worldPosition)
     }
     
@@ -332,7 +329,7 @@ open class Object: Codable {
     }
     
     public func isVisible() -> Bool {
-        if let parent = self.parent {
+        if let parent = parent {
             return (parent.isVisible() && visible)
         }
         else {

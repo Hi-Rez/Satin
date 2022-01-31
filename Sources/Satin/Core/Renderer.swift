@@ -208,8 +208,8 @@ open class Renderer
         
         if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
         {
-            renderEncoder.pushDebugGroup(label + " Pass")
             renderEncoder.label = label + " Encoder"
+            renderEncoder.pushDebugGroup(label + " Pass")
             renderEncoder.setViewport(viewport)
            
             if scene.visible, scene is Mesh || scene.children.count > 0
@@ -236,15 +236,15 @@ open class Renderer
             object.context = context
         }
         
+        renderEncoder.pushDebugGroup(object.label)
+        
         if let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
         {
-            renderEncoder.pushDebugGroup(mesh.label)
             mesh.update(camera: camera)
             material.update(camera: camera)
             renderEncoder.setRenderPipelineState(pipeline)
             material.bind(renderEncoder)
             mesh.draw(renderEncoder: renderEncoder)
-            renderEncoder.popDebugGroup()
         }
         
         for child in object.children
@@ -254,6 +254,8 @@ open class Renderer
                 draw(renderEncoder: renderEncoder, object: child)
             }
         }
+        
+        renderEncoder.popDebugGroup()
     }
     
     public func resize(_ size: (width: Float, height: Float))

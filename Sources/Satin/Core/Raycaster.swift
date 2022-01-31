@@ -134,12 +134,12 @@ open class Raycaster {
     }
     
     func setupCommandQueue() {
-        guard let context = self.context, let commandQueue = context.device.makeCommandQueue() else { fatalError("Unable to create Command Queue") }
+        guard let context = context, let commandQueue = context.device.makeCommandQueue() else { fatalError("Unable to create Command Queue") }
         self.commandQueue = commandQueue
     }
     
     func setupIntersector() {
-        guard let context = self.context else { fatalError("Unable to create Intersector") }
+        guard let context = context else { fatalError("Unable to create Intersector") }
         let intersector = MPSRayIntersector(device: context.device)
         intersector.rayDataType = .originMinDistanceDirectionMaxDistance
         intersector.rayStride = MemoryLayout<MPSRayOriginMinDistanceDirectionMaxDistance>.stride
@@ -149,7 +149,7 @@ open class Raycaster {
     }
     
     func setupAccelerationStructures() {
-        guard let context = self.context else { fatalError("Unable to create Acceleration Structures") }
+        guard let context = context else { fatalError("Unable to create Acceleration Structures") }
         var acount = accelerationStructures.count
         if acount > _count {
             while acount > _count {
@@ -170,12 +170,12 @@ open class Raycaster {
     }
     
     func setupRayBuffers() {
-        guard let context = self.context else { fatalError("Unable to create Ray Buffers") }
+        guard let context = context else { fatalError("Unable to create Ray Buffers") }
         rayBuffer = Buffer(device: context.device, parameters: rayParams, count: _count)
     }
     
     func setupIntersectionBuffers() {
-        guard let context = self.context else { fatalError("Unable to create Intersection Buffers") }
+        guard let context = context else { fatalError("Unable to create Intersection Buffers") }
         intersectionBuffer = Buffer(device: context.device, parameters: intersectionParams, count: _count)
     }
     
@@ -319,7 +319,6 @@ open class Raycaster {
             let aN = meshWorldMatrix * simd_make_float4(a.normal) * u
             let bN = meshWorldMatrix * simd_make_float4(b.normal) * v
             let cN = meshWorldMatrix * simd_make_float4(c.normal) * w
-            
             
             let hitP = simd_make_float3(aP + bP + cP)
             let hitU = simd_make_float2(aU + bU + cU)
