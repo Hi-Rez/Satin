@@ -388,12 +388,13 @@ open class PerspectiveCameraController: CameraController {
     }
     
     override open func otherMouseDragged(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
+        guard let view = view, event.window == view.window, let camera = self.camera else { return }
         let dx = Float(event.deltaX) / mouseDeltaSensitivity
         let dy = Float(event.deltaY) / mouseDeltaSensitivity
         state = .panning
-        translationVelocity.x += dx * translationScalar
-        translationVelocity.y += dy * translationScalar
+        let cd = length(camera.worldPosition - target.position) / 10.0
+        translationVelocity.x += dx * translationScalar * cd
+        translationVelocity.y += dy * translationScalar * cd
     }
     
     override open func otherMouseUp(with event: NSEvent) {

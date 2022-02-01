@@ -8,29 +8,43 @@
 
 import Foundation
 import simd
+import SwiftUI
 
 open class Object: Codable {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)
+        label = try values.decode(String.self, forKey: .label)
         position = try values.decode(simd_float3.self, forKey: .position)
         scale = try values.decode(simd_float3.self, forKey: .scale)
         orientation = try values.decode(simd_quatf.self, forKey: .orientation)
+        visible = try values.decode(Bool.self, forKey: .visible)
+        children = try values.decode([Object].self, forKey: .children)
+        for child in children {
+            child.parent = self
+            child.context = context
+        }
     }
     
     open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
+        try container.encode(label, forKey: .label)
         try container.encode(position, forKey: .position)
         try container.encode(orientation, forKey: .orientation)
         try container.encode(scale, forKey: .scale)
+        try container.encode(visible, forKey: .visible)
+        try container.encode(children, forKey: .children)
     }
     
     private enum CodingKeys: String, CodingKey {
         case id
+        case label
         case position
         case orientation
         case scale
+        case visible
+        case children
     }
     
     open var id: String = UUID().uuidString
@@ -280,6 +294,12 @@ open class Object: Codable {
         }
     }
     
+    open func add(_ objects: [Object]) {
+        for obj in objects {
+            add(obj)
+        }
+    }
+    
     open func remove(_ child: Object) {
         for (index, object) in children.enumerated() {
             if object == child {
@@ -326,6 +346,35 @@ open class Object: Codable {
             }
         }
         return nil
+    }
+    
+    public func getChildById(_ id: String, _ recursive: Bool = true) -> Object? {
+        for child in children {
+            if child.id == id {
+                return child
+            }
+            else if recursive, let found = child.getChildById(id, recursive) {
+                return found
+            }
+        }
+        return nil
+    }
+    
+    public func getChildrenByName(_ name: String, _ recursive: Bool = true) -> [Object] {
+        var results = [Object]()
+        getChildrenByName(name, recursive, &results)
+        return results
+    }
+    
+    func getChildrenByName(_ name: String, _ recursive: Bool = true, _ results: inout [Object]) {
+        for child in children {
+            if child.label == name {
+                results.append(child)
+            }
+            else if recursive {
+                child.getChildrenByName(name, recursive, &results)
+            }
+        }
     }
     
     public func isVisible() -> Bool {
