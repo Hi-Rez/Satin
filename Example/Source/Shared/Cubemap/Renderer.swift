@@ -30,7 +30,9 @@ class Renderer: Forge.Renderer {
         return assetsURL.appendingPathComponent("Pipelines")
     }
     
-    var scene = Object()
+    lazy var scene: Object = {
+        Object("Scene", [skybox, mesh])
+    }()
     
     lazy var context: Context = {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -67,25 +69,25 @@ class Renderer: Forge.Renderer {
         let mesh = Mesh(geometry: geometry, material: customMaterial)
         mesh.cullMode = .none
         mesh.label = "Knot"
-        scene.add(mesh)
+        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
+            renderEncoder.setFragmentTexture(self.cubeTexture, index: FragmentTextureIndex.Custom0.rawValue)
+        }
         return mesh
     }()
     
     lazy var customMaterial: CustomMaterial = {
-        CustomMaterial(pipelineURL: pipelinesURL.appendingPathComponent("Shaders.metal"))
+        return CustomMaterial(pipelineURL: pipelinesURL.appendingPathComponent("Shaders.metal"))
     }()
     
     lazy var skybox: Mesh = {
         let mesh = Mesh(geometry: SkyboxGeometry(), material: SkyboxMaterial())
         mesh.label = "Skybox"
         mesh.scale = [50, 50, 50]
-        scene.add(mesh)
         return mesh
     }()
     
     lazy var cubeTexture: MTLTexture? = {
         let url = texturesURL.appendingPathComponent("Cubemap")
-        
         let texture = makeCubeTexture(
             device,
             [
@@ -98,7 +100,6 @@ class Renderer: Forge.Renderer {
             ],
             true // <- generates mipmaps
         )
-        
         if let texture = texture, let material = skybox.material as? SkyboxMaterial {
             material.texture = texture
         }
@@ -111,13 +112,6 @@ class Renderer: Forge.Renderer {
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm
-    }
-    
-    override func setup() {
-        setupMeshPreDraw()
-        #if os(macOS)
-        openEditor()
-        #endif
     }
     
     override func update() {
@@ -134,34 +128,4 @@ class Renderer: Forge.Renderer {
         camera.aspect = aspect
         renderer.resize(size)
     }
-    
-    func setupMeshPreDraw() {
-        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
-            renderEncoder.setFragmentTexture(self.cubeTexture, index: FragmentTextureIndex.Custom0.rawValue)
-        }
-    }
-    
-    #if os(macOS)
-    func openEditor() {
-        if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
-            NSWorkspace.shared.openFile(assetsURL.path, withApplication: editorPath)
-        }
-        else {
-            let openPanel = NSOpenPanel()
-            openPanel.canChooseFiles = true
-            openPanel.allowsMultipleSelection = false
-            openPanel.canCreateDirectories = false
-            openPanel.begin(completionHandler: { [unowned self] (result: NSApplication.ModalResponse) in
-                if result == .OK {
-                    if let editorUrl = openPanel.url {
-                        let editorPath = editorUrl.path
-                        UserDefaults.standard.set(editorPath, forKey: "Editor")
-                        NSWorkspace.shared.openFile(self.assetsURL.path, withApplication: editorPath)
-                    }
-                }
-                openPanel.close()
-            })
-        }
-    }
-    #endif
 }
