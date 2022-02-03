@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Metal
 
 public protocol ShaderDelegate: AnyObject {
     func updatedParameters(shader: Shader)
