@@ -79,16 +79,15 @@ open class Raycaster {
         return params
     }()
     
-    weak var context: Context?
+    weak var device: MTLDevice?
     var commandQueue: MTLCommandQueue?
     var intersector: MPSRayIntersector?
-    var accelerationStructures: [MPSTriangleAccelerationStructure] = []
+    var accelerationStructures: [String: MPSTriangleAccelerationStructure] = [:]
     
     var _count: Int = -1 {
         didSet {
             setupRayBuffers()
             setupIntersectionBuffers()
-            setupAccelerationStructures()
         }
     }
     
@@ -96,29 +95,29 @@ open class Raycaster {
     var intersectionBuffer: Buffer!
     
     // Ideally you create a raycaster on start up and reuse it over and over
-    public init(context: Context) {
-        self.context = context
+    public init(device: MTLDevice) {
+        self.device = device
         setup()
     }
     
-    public init(context: Context, _ origin: simd_float3, _ direction: simd_float3, _ near: Float = 0.0, _ far: Float = Float.infinity) {
-        self.context = context
+    public init(device: MTLDevice, _ origin: simd_float3, _ direction: simd_float3, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+        self.device = device
         ray = Ray(origin, direction)
         self.near = near
         self.far = far
         setup()
     }
     
-    public init(context: Context, _ ray: Ray, _ near: Float = 0.0, _ far: Float = Float.infinity) {
-        self.context = context
+    public init(device: MTLDevice, _ ray: Ray, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+        self.device = device
         self.ray = ray
         self.near = near
         self.far = far
         setup()
     }
     
-    public init(context: Context, _ camera: Camera, _ coordinate: simd_float2, _ near: Float = 0.0, _ far: Float = Float.infinity) {
-        self.context = context
+    public init(device: MTLDevice, _ camera: Camera, _ coordinate: simd_float2, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+        self.device = device
         setFromCamera(camera, coordinate)
         self.near = near
         self.far = far
@@ -134,34 +133,18 @@ open class Raycaster {
     }
     
     func setupCommandQueue() {
-        guard let context = context, let commandQueue = context.device.makeCommandQueue() else { fatalError("Unable to create Command Queue") }
+        guard let device = device, let commandQueue = device.makeCommandQueue() else { fatalError("Unable to create Command Queue") }
         self.commandQueue = commandQueue
     }
     
     func setupIntersector() {
-        guard let context = context else { fatalError("Unable to create Intersector") }
-        let intersector = MPSRayIntersector(device: context.device)
+        guard let device = device else { fatalError("Unable to create Intersector") }
+        let intersector = MPSRayIntersector(device: device)
         intersector.rayDataType = .originMinDistanceDirectionMaxDistance
         intersector.rayStride = MemoryLayout<MPSRayOriginMinDistanceDirectionMaxDistance>.stride
         intersector.intersectionDataType = .distancePrimitiveIndexCoordinates
         intersector.triangleIntersectionTestType = .default
         self.intersector = intersector
-    }
-    
-    func setupAccelerationStructures() {
-        guard let context = context else { fatalError("Unable to create Acceleration Structures") }
-        var acount = accelerationStructures.count
-        if acount > _count {
-            while acount > _count {
-                _ = accelerationStructures.popLast()
-                acount = accelerationStructures.count
-            }
-        }
-        else if _count > acount {
-            for _ in acount ..< _count {
-                accelerationStructures.append(MPSTriangleAccelerationStructure(device: context.device))
-            }
-        }
     }
     
     // expects a normalize point from -1 to 1 in both x & y directions
@@ -170,13 +153,13 @@ open class Raycaster {
     }
     
     func setupRayBuffers() {
-        guard let context = context else { fatalError("Unable to create Ray Buffers") }
-        rayBuffer = Buffer(device: context.device, parameters: rayParams, count: _count)
+        guard let device = device else { fatalError("Unable to create Ray Buffers") }
+        rayBuffer = Buffer(device: device, parameters: rayParams, count: _count)
     }
     
     func setupIntersectionBuffers() {
-        guard let context = context else { fatalError("Unable to create Intersection Buffers") }
-        intersectionBuffer = Buffer(device: context.device, parameters: intersectionParams, count: _count)
+        guard let device = device else { fatalError("Unable to create Intersection Buffers") }
+        intersectionBuffer = Buffer(device: device, parameters: intersectionParams, count: _count)
     }
     
     func _intersect(_ intersectables: [Any]) -> MTLCommandBuffer? {
@@ -323,7 +306,7 @@ open class Raycaster {
             let hitP = simd_make_float3(aP + bP + cP)
             let hitU = simd_make_float2(aU + bU + cU)
             let hitN = normalize(simd_make_float3(aN + bN + cN))
-            
+
             return RaycastResult(
                 barycentricCoordinates: simd_make_float3(u, v, w),
                 distance: distance,
@@ -345,6 +328,7 @@ open class Raycaster {
                    _ submesh: Submesh?,
                    _ index: Int)
     {
+        
         let meshWorldMatrix = mesh.worldMatrix
         let meshWorldMatrixInverse = meshWorldMatrix.inverse
         
@@ -359,27 +343,41 @@ open class Raycaster {
         let winding: MTLWinding = geometry.windingOrder == .counterClockwise ? .clockwise : .counterClockwise
         intersector!.frontFacingWinding = winding
         intersector!.cullMode = mesh.cullMode
+
+        var accelerationStructure: MPSAccelerationStructure? = nil
         
-        let accelerationStructure = accelerationStructures[index]
-        accelerationStructure.vertexBuffer = mesh.geometry.vertexBuffer!
-        accelerationStructure.vertexStride = MemoryLayout<Vertex>.stride
-        accelerationStructure.label = mesh.label + " Acceleration Structure"
-        
-        if let sub = submesh, let indexBuffer = sub.indexBuffer {
-            accelerationStructure.indexBuffer = indexBuffer
-            accelerationStructure.indexType = .uInt32
-            accelerationStructure.triangleCount = sub.indexData.count / 3
+        if let submesh = submesh, let structure = accelerationStructures[submesh.id] {
+            accelerationStructure = structure
         }
-        else if let indexBuffer = geometry.indexBuffer {
-            accelerationStructure.indexBuffer = indexBuffer
-            accelerationStructure.indexType = .uInt32
-            accelerationStructure.triangleCount = geometry.indexData.count / 3
+        else if let structure = accelerationStructures[mesh.id] {
+            accelerationStructure = structure
         }
-        else {
-            accelerationStructure.triangleCount = mesh.geometry.vertexData.count / 3
+        else if let device = device {
+            var id: String = mesh.id
+            let newAccelerationStructure = MPSTriangleAccelerationStructure(device: device)
+            newAccelerationStructure.vertexBuffer = mesh.geometry.vertexBuffer!
+            newAccelerationStructure.vertexStride = MemoryLayout<Vertex>.stride
+            newAccelerationStructure.label = mesh.label + " Acceleration Structure"
+            
+            if let sub = submesh, let indexBuffer = sub.indexBuffer {
+                id = sub.id
+                newAccelerationStructure.indexBuffer = indexBuffer
+                newAccelerationStructure.indexType = .uInt32
+                newAccelerationStructure.triangleCount = sub.indexData.count / 3
+            }
+            else if let indexBuffer = geometry.indexBuffer {
+                newAccelerationStructure.indexBuffer = indexBuffer
+                newAccelerationStructure.indexType = .uInt32
+                newAccelerationStructure.triangleCount = geometry.indexData.count / 3
+            }
+            else {
+                newAccelerationStructure.triangleCount = mesh.geometry.vertexData.count / 3
+            }
+            
+            newAccelerationStructure.rebuild()
+            accelerationStructure = newAccelerationStructure
+            accelerationStructures[id] = newAccelerationStructure
         }
-        
-        accelerationStructure.rebuild()
         
         intersector!.label = mesh.label + " Raycaster Intersector"
         intersector!.encodeIntersection(
@@ -390,15 +388,19 @@ open class Raycaster {
             intersectionBuffer: intersectionBuffer.buffer,
             intersectionBufferOffset: index * intersectionParams.stride,
             rayCount: 1,
-            accelerationStructure: accelerationStructure
+            accelerationStructure: accelerationStructure!
         )
     }
     
+    public func reset() {
+        accelerationStructures = [:]
+    }
+    
     deinit {
-        accelerationStructures = []
+        accelerationStructures = [:]
         intersector = nil
         commandQueue = nil
-        context = nil
+        device = nil
     }
 }
 

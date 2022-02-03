@@ -8,6 +8,7 @@
 import Metal
 
 open class Submesh {
+    public var id: String = UUID().uuidString
     public var label: String = "Submesh"
     open var context: Context? {
         didSet {

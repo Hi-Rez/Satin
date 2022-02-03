@@ -17,7 +17,11 @@ class RayMarchedMaterial: LiveMaterial {
         super.init(pipelinesURL: pipelinesURL)
         self.blending = .disabled
     }
-        
+    
+    required init() {
+        fatalError("init() has not been implemented")
+    }
+    
     override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         super.bind(renderEncoder)
         if let camera = self.camera {

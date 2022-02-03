@@ -4,6 +4,7 @@ typedef struct {
     float4 position [[position]];
     float3 viewPosition;
     float3 normal;
+    float3 eye;
     float2 uv;
     float pointSize [[point_size]];
 } DiffuseVertexData;

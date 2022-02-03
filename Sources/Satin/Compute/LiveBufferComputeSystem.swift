@@ -17,7 +17,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     public var uniforms: UniformBuffer?
     public var parameters: ParameterGroup?
     
-    public override var count: Int {
+    override public var count: Int {
         didSet {
             updateSize()
         }
@@ -76,12 +76,12 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     }
     
     open func setupPipelines() {
-        guard let source = self.source else { return }
+        guard let source = source else { return }
         guard let library = setupLibrary(source) else { return }
         setupPipelines(library)
     }
     
-    public override func update(_ commandBuffer: MTLCommandBuffer) {
+    override public func update(_ commandBuffer: MTLCommandBuffer) {
         updateUniforms()
         super.update(commandBuffer)
     }
@@ -91,12 +91,11 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     }
 
     func compileSource() -> String? {
-        if let source = self.source {
+        if let source = source {
             return source
         }
         else {
             do {
-                
                 guard let satinURL = getPipelinesSatinUrl() else { return nil }
                 let includesURL = satinURL.appendingPathComponent("Includes.metal")
                 
@@ -111,7 +110,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
                 
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase)Uniforms") {
                     params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
-                    if let parameters = self.parameters {
+                    if let parameters = parameters {
                         parameters.setFrom(params)
                     }
                     else {
@@ -152,7 +151,6 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         }
     }
     
-    
     func updateSize() {
         guard let parameters = parameters else { return }
         parameters.set("Count", count)
@@ -163,13 +161,13 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         uniforms.update()
     }
 
-    public override func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
+    override public func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
         bindUniforms(computeEncoder)
         super.dispatch(computeEncoder, pipeline)
     }
     
     open func bindUniforms(_ computeEncoder: MTLComputeCommandEncoder) {
-        guard let uniforms = self.uniforms else { return }
+        guard let uniforms = uniforms else { return }
         computeEncoder.setBuffer(uniforms.buffer, offset: uniforms.offset, index: ComputeBufferIndex.Uniforms.rawValue)
     }
     

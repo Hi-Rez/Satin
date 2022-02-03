@@ -38,7 +38,7 @@ class Renderer: Forge.Renderer {
     
     #if os(macOS) || os(iOS)
     lazy var raycaster: Raycaster = {
-        Raycaster(context: context)
+        Raycaster(device: device)
     }()
     #endif
 
