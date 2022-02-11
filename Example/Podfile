@@ -3,8 +3,7 @@ install! 'cocoapods',
          :incremental_installation => true,
          :preserve_pod_file_structure => true
 
-#pod 'Forge', :git => 'https://github.com/Hi-Rez/Forge.git'
-pod 'Forge', :path => '../../Forge'
+pod 'Forge', :git => 'https://github.com/Hi-Rez/Forge.git'
 pod 'Satin', :path => '../'
 
 use_frameworks!
