@@ -3,11 +3,11 @@
 typedef struct {
 	float4 position [[position]];
 	float3 worldPosition;
-	float3 cameraPosition;
+	float3 cameraPosition [[flat]];
 	float3 normal;
 	float2 uv;
-	float roughness;
-	float metallic;
+	float roughness [[flat]];
+	float metallic [[flat]];
 } CustomVertexData;
 
 vertex CustomVertexData customVertex(

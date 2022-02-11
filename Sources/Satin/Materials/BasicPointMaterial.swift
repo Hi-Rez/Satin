@@ -12,7 +12,6 @@ open class BasicPointMaterial: Material {
     public init(_ color: simd_float4 = simd_float4(repeating: 1.0), _ size: Float = 2.0, _ blending: Blending = .alpha) {
         super.init()
         self.blending = blending
-        createShader()
         set("Color", color)
         set("Point Size", size)
     }
@@ -20,7 +19,6 @@ open class BasicPointMaterial: Material {
     public required init() {
         super.init()
         self.blending = .alpha
-        createShader()
         set("Color", [1, 1, 1, 1])
         set("Point Size", 2.0)
     }

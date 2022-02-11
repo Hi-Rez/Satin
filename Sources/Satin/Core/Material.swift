@@ -26,17 +26,17 @@ public struct DepthBias {
 }
 
 open class Material: ShaderDelegate, ParameterGroupDelegate {
-    public lazy var label: String = {
-        var label = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
-        if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != label {
-            label = label.replacingOccurrences(of: bundleName, with: "")
+    var prefix: String {
+        var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
+        if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
+            result = result.replacingOccurrences(of: bundleName, with: "")
         }
-        label = label.replacingOccurrences(of: ".", with: "")
-        return label
-    }()
-    
-    public lazy var pipelineURL: URL = {
-        getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal")
+        result = result.replacingOccurrences(of: ".", with: "")
+        return result
+    }
+        
+    public lazy var label: String = {
+        prefix
     }()
     
     public var shader: Shader? {
@@ -45,9 +45,8 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
                 if let oldShader = oldValue, let index = oldShader.delegates.firstIndex(of: self) {
                     oldShader.delegates.remove(at: index)
                 }
+
                 shader.delegate = self
-                label = shader.label
-                pipelineURL = shader.pipelineURL
 
                 if !isClone {
                     shaderNeedsUpdate = true
@@ -106,7 +105,11 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     public var uniforms: UniformBuffer?
     
-    public var parameters = ParameterGroup() {
+    public lazy var parameters: ParameterGroup = {
+        let params = ParameterGroup(label)
+        params.delegate = self
+        return params
+    }() {
         didSet {
             parameters.delegate = self
             uniformsNeedsUpdate = true
@@ -164,34 +167,10 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     public required init() {}
     
-    public init(_ pipelineURL: URL) {
-        self.pipelineURL = pipelineURL
-        createShader()
-    }
-    
     public init(shader: Shader) {
         shader.delegate = self
         self.label = shader.label
-        self.pipelineURL = shader.pipelineURL
-        self.parameters = shader.parameters.clone()
-        parameters.delegate = self
         self.shader = shader
-    }
-    
-    func generateShader() -> Shader {
-        Shader(label, pipelineURL)
-    }
-    
-    func createShader() {
-        let shader = generateShader()
-        if isClone {
-            isClone = false
-        }
-        else {
-            parameters = shader.parameters.clone()
-        }
-        self.shader = shader
-        updateShaderBlending()
     }
     
     open func setup() {
@@ -213,10 +192,21 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     open func setupShader() {
         guard let _ = context else { return }
-        if shader == nil || (isClone && shaderBlendingNeedsUpdate) {
-            createShader()
+        
+        if shader == nil {
+            self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+            isClone = false
         }
-        shader?.context = context
+        else if let shader = shader, isClone, shaderBlendingNeedsUpdate {
+            self.shader = shader.clone()
+            isClone = false
+        }
+        
+        guard let shader = shader else { return }
+        
+        updateShaderBlending()
+        
+        shader.context = context
         shaderNeedsUpdate = false
     }
     
@@ -229,10 +219,10 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     open func update(camera: Camera) {}
     
     open func update() {
-        onUpdate?()
-        updateShader()
         updateDepth()
+        updateShader()
         updateUniforms()
+        onUpdate?()
     }
     
     open func updateShader() {
@@ -243,6 +233,8 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         if shaderBlendingNeedsUpdate {
             updateShaderBlending()
         }
+        
+        shader?.update()
     }
     
     open func updateDepth() {
@@ -353,39 +345,84 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     }
     
     public func set(_ name: String, _ value: Float) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? FloatParameter {
+            param.value = value
+        }
+        else {
+            parameters.append(FloatParameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_float2) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Float2Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float2Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_float3) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Float3Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float3Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_float4) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Float4Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float4Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: Int) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? IntParameter {
+            param.value = value
+        }
+        else {
+            parameters.append(IntParameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_int2) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Int2Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Int2Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_int3) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Int3Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Int3Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: simd_int4) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? Int4Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Int4Parameter(name, value))
+        }
     }
     
     public func set(_ name: String, _ value: Bool) {
-        parameters.set(name, value)
+        if let param = parameters.get(name) as? BoolParameter {
+            param.value = value
+        }
+        else {
+            parameters.append(BoolParameter(name, value))
+        }
     }
     
     public func get(_ name: String) -> Parameter? {
@@ -399,7 +436,6 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         clone.isClone = true
         
         clone.label = label
-        clone.pipelineURL = pipelineURL
         
         clone.delegate = delegate
         clone.parameters = parameters.clone()
@@ -458,6 +494,8 @@ public extension Material {
 public extension Material {
     func updatedParameters(shader: Shader) {
         parameters.setFrom(shader.parameters)
+        parameters.label = shader.parameters.label
+        uniformsNeedsUpdate = true
         delegate?.updated(material: self)
     }
 }
@@ -465,105 +503,5 @@ public extension Material {
 extension Material: Equatable {
     public static func == (lhs: Material, rhs: Material) -> Bool {
         return lhs === rhs
-    }
-}
-
-class PassThroughVertexPipelineSource {
-    static let shared = PassThroughVertexPipelineSource()
-    private static var sharedSource: String?
-    
-    class func get() -> String? {
-        guard PassThroughVertexPipelineSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let vertexURL = getPipelinesCommonUrl("Vertex.metal") {
-            do {
-                sharedSource = try MetalFileCompiler().parse(vertexURL)
-            }
-            catch {
-                print(error)
-            }
-        }
-        return sharedSource
-    }
-}
-
-class ConstantsSource {
-    static let shared = ConstantsSource()
-    private static var sharedSource: String?
-    
-    class func get() -> String? {
-        guard ConstantsSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let url = getPipelinesSatinUrl("Constants.metal") {
-            do {
-                sharedSource = try MetalFileCompiler().parse(url)
-            }
-            catch {
-                print(error)
-            }
-        }
-        return sharedSource
-    }
-}
-
-class VertexSource {
-    static let shared = VertexSource()
-    private static var sharedSource: String?
-    
-    class func get() -> String? {
-        guard VertexSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let url = getPipelinesSatinUrl("Vertex.metal") {
-            do {
-                sharedSource = try MetalFileCompiler().parse(url)
-            }
-            catch {
-                print(error)
-            }
-        }
-        return sharedSource
-    }
-}
-
-class VertexDataSource {
-    static let shared = VertexDataSource()
-    private static var sharedSource: String?
-    
-    class func get() -> String? {
-        guard VertexDataSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let url = getPipelinesSatinUrl("VertexData.metal") {
-            do {
-                sharedSource = try MetalFileCompiler().parse(url)
-            }
-            catch {
-                print(error)
-            }
-        }
-        return sharedSource
-    }
-}
-
-class VertexUniformsSource {
-    static let shared = VertexUniformsSource()
-    private static var sharedSource: String?
-    
-    class func get() -> String? {
-        guard VertexUniformsSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
-            do {
-                sharedSource = try MetalFileCompiler().parse(url)
-            }
-            catch {
-                print(error)
-            }
-        }
-        return sharedSource
     }
 }

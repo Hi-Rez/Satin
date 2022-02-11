@@ -7,19 +7,21 @@
 
 import Foundation
 
-class LiveShader: Shader {
+class LiveShader: SourceShader {
     let compiler = MetalFileCompiler()
 
-    override public init(_ label: String, _ pipelineURL: URL) {
+    public required init(_ label: String, _ pipelineURL: URL) {
         super.init(label, pipelineURL)
         setupCompiler()
     }
 
+    public required init() {
+        fatalError("init() has not been implemented")
+    }
+
     func setupCompiler() {
         compiler.onUpdate = { [unowned self] in
-            updateSource()
-            updateLibrary()
-            updatePipeline()
+            setup()
         }
     }
 

@@ -13,12 +13,10 @@ open class BasicTextureMaterial: BasicColorMaterial {
 
     public required init() {
         super.init()
-        createShader()
     }
 
     public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
         super.init()
-        createShader()
         if let texture = texture, texture.textureType != .type2D && texture.textureType != .type2DMultisample {
             fatalError("BasicTextureMaterial expects a 2D texture")
         }

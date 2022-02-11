@@ -20,45 +20,19 @@ open class Shader {
         }
     }
     
-    public var pipelineURL: URL {
-        didSet {
-            if oldValue != pipelineURL {
-                _update = true
-            }
-        }
+    var pipelineOptions: MTLPipelineOption {
+        [.argumentInfo, .bufferTypeInfo]
     }
-    
+
     public var pipelineReflection: MTLRenderPipelineReflection?
-    
-    public var pipelineOptions: MTLPipelineOption {
-        MTLPipelineOption()
-    }
-    
-    public var pipeline: MTLRenderPipelineState? {
-        if _updatePipeline {
-            updatePipeline()
-        }
-        return _pipeline
-    }
-    
-    public var library: MTLLibrary? {
-        if _updateLibrary {
-            updateLibrary()
-        }
-        return _library
-    }
-    
-    public var source: String? {
-        if _updateSource {
-            updateSource()
-        }
-        return _source
-    }
-    
+    public var pipeline: MTLRenderPipelineState?
+    public var library: MTLLibrary?
+    var libraryURL: URL?
+
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -66,7 +40,7 @@ open class Shader {
     public var sourceRGBBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceRGBBlendFactor {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -74,7 +48,7 @@ open class Shader {
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceAlphaBlendFactor {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -82,7 +56,7 @@ open class Shader {
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationRGBBlendFactor {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -90,7 +64,7 @@ open class Shader {
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationAlphaBlendFactor {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -98,7 +72,7 @@ open class Shader {
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != rgbBlendOperation {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -106,7 +80,7 @@ open class Shader {
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != alphaBlendOperation {
-                _updatePipeline = true
+                blendingNeedsUpdate = true
             }
         }
     }
@@ -114,7 +88,7 @@ open class Shader {
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
         didSet {
             if oldValue != vertexDescriptor {
-                _updatePipeline = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -122,91 +96,107 @@ open class Shader {
     var context: Context? {
         didSet {
             if oldValue != context {
-                _updatePipeline = true
+                setup()
             }
         }
     }
+   
+    var label: String = "Shader"
     
-    var _pipeline: MTLRenderPipelineState?
-    var _library: MTLLibrary?
-    var _source: String?
-    
-    var _update: Bool = false {
+    var libraryNeedsUpdate: Bool = true {
         didSet {
-            if _update {
-                _updateSource = true
-                _updateLibrary = true
-                _updatePipeline = true
-                _update = false
+            if libraryNeedsUpdate {
+                pipelineNeedsUpdate = true
             }
         }
     }
-
-    var _updatePipeline: Bool = true
-    var _updateLibrary: Bool = true
-    var _updateSource: Bool = true
+    
+    var pipelineNeedsUpdate: Bool = true {
+        didSet {
+            if pipelineNeedsUpdate {
+                parametersNeedsUpdate = true
+            }
+        }
+    }
+    
+    var blendingNeedsUpdate: Bool = true
+    var parametersNeedsUpdate: Bool = true
+    
+    public var vertexFunctionName: String = "shaderVertex" {
+        didSet {
+            if oldValue != vertexFunctionName {
+                pipelineNeedsUpdate = true
+            }
+        }
+    }
+    
+    public var fragmentFunctionName: String = "shaderFragment" {
+        didSet {
+            if oldValue != fragmentFunctionName {
+                pipelineNeedsUpdate = true
+            }
+        }
+    }
+    
+    var parameters = ParameterGroup() {
+        didSet {
+            for delegate in delegates {
+                delegate?.updatedParameters(shader: self)
+            }
+        }
+    }
+    
+    public required init() {}
+    
+    public init(_ label: String, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil, _ libraryURL: URL? = nil) {
+        self.label = label
+        self.vertexFunctionName = vertexFunctionName ?? label.camelCase + "Vertex"
+        self.fragmentFunctionName = fragmentFunctionName ?? label.camelCase + "Fragment"
+        self.libraryURL = libraryURL
+    }
+    
+    func setup() {
+        setupLibrary()
+        setupPipeline()
+        setupParameters()
+    }
+    
+    func update() {
+        updateLibrary()
+        updatePipeline()
+        updateParameters()
+    }
+        
+    func updateLibrary() {
+        if libraryNeedsUpdate {
+            setupLibrary()
+        }
+    }
     
     func updatePipeline() {
-        _pipeline = setupPipeline()
-        _updatePipeline = false
-    }
-    
-    func updateLibrary() {
-        _library = setupLibrary()
-        _updateLibrary = false
-    }
-    
-    func updateSource() {
-        _source = setupSource()
-        _updateSource = false
-    }
-    
-    var label: String
-    
-    var vertexFunctionName: String {
-        didSet {
-            _updatePipeline = true
+        if pipelineNeedsUpdate || blendingNeedsUpdate {
+            setupPipeline()
         }
     }
     
-    var fragmentFunctionName: String {
-        didSet {
-            _updatePipeline = true
+    func updateParameters() {
+        if parametersNeedsUpdate {
+            setupParameters()
         }
     }
-    
-    var parameters = ParameterGroup()
-    
-    public init(_ label: String, _ pipelineURL: URL) {
-        self.label = label
-        self.pipelineURL = pipelineURL
-        self.vertexFunctionName = label.camelCase + "Vertex"
-        self.fragmentFunctionName = label.camelCase + "Fragment"
-        updateSource()
-    }
-    
+        
     deinit {
-        _source = nil
-        _pipeline = nil
-        _library = nil
+        pipeline = nil
+        library = nil
         delegate = nil
         pipelineReflection = nil
         delegates = []
     }
-    
-    func setupParameters(_ source: String) {
-        guard let params = parseParameters(source: source, key: label + "Uniforms") else { return }
-        params.label = label.titleCase
-        parameters = params
-        for delegate in delegates {
-            delegate?.updatedParameters(shader: self)
-        }
-    }
 
-    func setupPipeline() -> MTLRenderPipelineState? {
-        guard let context = context, let library = library else { return nil }
+    func setupPipeline() {
+        guard let context = context, let library = library else { return }
         do {
-            guard let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return nil }
+            guard let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
             
             let device = library.device
             let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
@@ -229,54 +219,98 @@ open class Shader {
                 colorAttachment.alphaBlendOperation = alphaBlendOperation
             }
             
-            return try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
-        }
-        catch {
-            print(error)
-        }
-        return nil
-    }
-    
-    func setupLibrary() -> MTLLibrary? {
-        guard let context = context, let source = source else { return nil }
-        do {
-            return try context.device.makeLibrary(source: source, options: nil)
-        }
-        catch {
-            print(error.localizedDescription)
-        }
-        return nil
-    }
-    
-    func setupShaderSource() -> String? {
-        do {
-            return try MetalFileCompiler().parse(pipelineURL)
-        }
-        catch {
-            print(error.localizedDescription)
-        }
-        return nil
-    }
-    
-    func setupSource() -> String? {
-        guard let satinURL = getPipelinesSatinUrl(), let shaderSource = setupShaderSource() else { return nil }
-        let includesURL = satinURL.appendingPathComponent("Includes.metal")
-        do {
-            let compiler = MetalFileCompiler()
-            var source = try compiler.parse(includesURL)
-            injectConstants(source: &source)
-            injectVertex(source: &source)
-            injectVertexData(source: &source)
-            injectVertexUniforms(source: &source)
-            setupParameters(shaderSource)
-            source += shaderSource
-            injectPassThroughVertex(label: label, source: &source)
-            return source
+            pipeline = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
+            
+            blendingNeedsUpdate = false
+            pipelineNeedsUpdate = false
         }
         catch {
             print("\(label) Shader: \(error.localizedDescription)")
         }
-        return nil
+    }
+    
+    func setupParameters() {
+        guard let reflection = pipelineReflection else { return }
+        
+        if let fragmentArgs = reflection.fragmentArguments {
+            let args = fragmentArgs[FragmentBufferIndex.MaterialUniforms.rawValue]
+            let params = ParameterGroup(label.titleCase + " Uniforms")
+            if let buffer = args.bufferStructType {
+                for member in buffer.members {
+                    let name = member.name.titleCase
+                    switch member.dataType {
+                    case .float:
+                        params.append(FloatParameter(name))
+                    case .float2:
+                        params.append(Float2Parameter(name))
+                    case .float3:
+                        params.append(Float3Parameter(name))
+                    case .float4:
+                        params.append(Float4Parameter(name))
+                    case .int:
+                        params.append(IntParameter(name))
+                    case .int2:
+                        params.append(Int2Parameter(name))
+                    case .int3:
+                        params.append(Int3Parameter(name))
+                    case .int4:
+                        params.append(Int4Parameter(name))
+                    case .bool:
+                        params.append(BoolParameter(name))
+                    default:
+                        break
+                    }
+                }
+            }
+            
+            parameters = params            
+            parametersNeedsUpdate = false
+        }
+    }
+    
+    func setupLibrary() {
+        guard let context = context else { return }
+        do {
+            var library: MTLLibrary?
+            if let url = libraryURL {
+                library = try context.device.makeLibrary(URL: url)
+            }
+            else {
+                library = try context.device.makeDefaultLibrary(bundle: Bundle.main)
+            }
+            
+            self.library = library
+            
+            libraryNeedsUpdate = false
+        }
+        catch {
+            print("\(label) Shader: \(error.localizedDescription)")
+        }
+    }
+    
+    public func clone() -> Shader {
+        let clone: Shader = type(of: self).init()
+        
+        clone.label = label
+        clone.libraryURL = libraryURL
+        clone.library = library
+        clone.pipeline = pipeline
+        clone.pipelineReflection = pipelineReflection
+        
+        clone.delegates = delegates
+        clone.parameters = parameters.clone()
+        
+        clone.blending = blending
+        clone.sourceRGBBlendFactor = sourceRGBBlendFactor
+        clone.sourceAlphaBlendFactor = sourceAlphaBlendFactor
+        clone.destinationRGBBlendFactor = destinationRGBBlendFactor
+        clone.destinationAlphaBlendFactor = destinationAlphaBlendFactor
+        clone.rgbBlendOperation = rgbBlendOperation
+        clone.alphaBlendOperation = alphaBlendOperation
+        
+        clone.context = context
+        
+        return clone
     }
 }
 

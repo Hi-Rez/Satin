@@ -42,7 +42,7 @@ class Renderer: Forge.Renderer {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    var camera = PerspectiveCamera(position: [0, 0, 9], near: 0.001, far: 100.0)
+    var camera = PerspectiveCamera(position: [0, 0, 5], near: 0.001, far: 100.0)
     
     lazy var cameraController: PerspectiveCameraController = {
         PerspectiveCameraController(camera: camera, view: mtkView)

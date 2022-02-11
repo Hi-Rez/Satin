@@ -213,6 +213,14 @@ Polyline2D getAdaptiveQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_fl
     return (Polyline2D) { .count = count, .data = data };
 }
 
+float cubicBezier1(float a, float b, float c, float d, float t)
+{
+    float oneMinusT = 1.0 - t;
+    float oneMinusT2 = oneMinusT * oneMinusT;
+    float oneMinusT3 = oneMinusT2 * oneMinusT;
+    return oneMinusT3 * a + 3.0 * oneMinusT2 * t * b + 3.0 * oneMinusT * t * t * c + t * t * t * d;
+}
+
 simd_float2 cubicBezier2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d, float t) {
     float oneMinusT = 1.0 - t;
     float oneMinusT2 = oneMinusT * oneMinusT;

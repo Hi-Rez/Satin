@@ -49,7 +49,7 @@ class Renderer: Forge.Renderer, ARSessionDelegate {
         Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }()
     
-    var camera = PerspectiveCamera()    
+    var camera = PerspectiveCamera(position: .zero, near: 0.001, far: 100.0)    
     
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)

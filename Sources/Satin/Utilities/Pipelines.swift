@@ -349,3 +349,104 @@ public func injectPassThroughVertex(label: String, source: inout String) {
 public func injectPassThroughVertex(source: inout String) {
     source = source.replacingOccurrences(of: "// inject vertex shader\n", with: (PassThroughVertexPipelineSource.get() ?? "\n") + "\n")
 }
+
+
+class PassThroughVertexPipelineSource {
+    static let shared = PassThroughVertexPipelineSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard PassThroughVertexPipelineSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let vertexURL = getPipelinesCommonUrl("Vertex.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(vertexURL)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class ConstantsSource {
+    static let shared = ConstantsSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard ConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("Constants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexSource {
+    static let shared = VertexSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("Vertex.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexDataSource {
+    static let shared = VertexDataSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexDataSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("VertexData.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexUniformsSource {
+    static let shared = VertexUniformsSource()
+    private static var sharedSource: String?
+    
+    class func get() -> String? {
+        guard VertexUniformsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}

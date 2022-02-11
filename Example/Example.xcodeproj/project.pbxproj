@@ -32,6 +32,7 @@
 		529FF60FAB4D55D9236E225D /* Pods_Obj_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23B9C4E0585FA522B71345CF /* Pods_Obj_tvOS.framework */; };
 		5324DC1FEF54FE6C626D0441 /* Pods_TextureCompute_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 205563ABDD56CC0194F44B5B /* Pods_TextureCompute_macOS.framework */; };
 		54B50BEEE51959D75F2F9D1C /* Pods_3D_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC9F33C43DF5719142596BC5 /* Pods_3D_iOS.framework */; };
+		567EC3E5C106B587D4FC1668 /* Pods_Shipping_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83097CB78EC723333D37DE34 /* Pods_Shipping_macOS.framework */; };
 		5B83B4B773BA9816E5BFEDB5 /* Pods_MatCap_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C989E3F2DDE1BEF9C57E06 /* Pods_MatCap_tvOS.framework */; };
 		629B01020CECDA195F303BBC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		63C96F40464FB4FB8CC44948 /* Pods_ExtrudedText_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 695459B55DD3B58DB2DFE2A8 /* Pods_ExtrudedText_iOS.framework */; };
@@ -301,6 +302,12 @@
 		E1D6257C269D22C8000094C1 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D62565269D21C8000094C1 /* Renderer.swift */; };
 		E1D62583269D2519000094C1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E1D62582269D2519000094C1 /* Assets */; };
 		E1D95E5C244C0439008F4AB7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E1DED19D27B4D808008C9F1F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DED19727B4D7F4008C9F1F /* Renderer.swift */; };
+		E1DED19E27B4D808008C9F1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E1DED1A827B4D808008C9F1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E1DED1A927B4D808008C9F1F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E1DED1B327B4DA28008C9F1F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = E1DED1B227B4DA28008C9F1F /* Shaders.metal */; };
+		E1DED1BB27B50A11008C9F1F /* Helper.metal in Sources */ = {isa = PBXBuildFile; fileRef = E1DED1BA27B50A11008C9F1F /* Helper.metal */; };
 		E1E69D1B24A4713100EDA686 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E1E69D2224A4713100EDA686 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E1E69D2324A4713100EDA686 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
@@ -438,20 +445,21 @@
 		695459B55DD3B58DB2DFE2A8 /* Pods_ExtrudedText_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExtrudedText_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		69CB0CCAB3EBF707632681F2 /* Pods-AR-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR-iOS.debug.xcconfig"; path = "Target Support Files/Pods-AR-iOS/Pods-AR-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		6A01AB904D419FC0DE156901 /* Pods-Text-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Text-iOS.release.xcconfig"; path = "Target Support Files/Pods-Text-iOS/Pods-Text-iOS.release.xcconfig"; sourceTree = "<group>"; };
-		6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		74111599CBCCB06145E3D30E /* Pods-DepthMaterial-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-tvOS/Pods-DepthMaterial-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		750B437E2BFE85565D3BFFCF /* Pods-AR-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR-iOS.release.xcconfig"; path = "Target Support Files/Pods-AR-iOS/Pods-AR-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		7535A5B536B5D637C3DF615C /* Pods-2D-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-2D-iOS.release.xcconfig"; path = "Target Support Files/Pods-2D-iOS/Pods-2D-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		7702F593AACCCA80B8B02730 /* Pods-RayMarching-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RayMarching-macOS.debug.xcconfig"; path = "Target Support Files/Pods-RayMarching-macOS/Pods-RayMarching-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		77258EF57452BDA36F72D8AB /* Pods-FXAA-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FXAA-macOS.debug.xcconfig"; path = "Target Support Files/Pods-FXAA-macOS/Pods-FXAA-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		78B376D5FB0EFB4DBD544193 /* Pods-3D-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.debug.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7DABCC5ECA12210B3727C688 /* Pods-TextureCompute-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-iOS.debug.xcconfig"; path = "Target Support Files/Pods-TextureCompute-iOS/Pods-TextureCompute-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		80980545C11C4C193B17A42F /* Pods-MatCap-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-iOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-iOS/Pods-MatCap-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		8179099D9F51182D657D3DED /* Pods-SatinSceneKit-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-tvOS/Pods-SatinSceneKit-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		83097CB78EC723333D37DE34 /* Pods_Shipping_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shipping_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A915D34485E0EA833046C4 /* Pods-MatCap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MatCap-macOS.release.xcconfig"; path = "Target Support Files/Pods-MatCap-macOS/Pods-MatCap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		84E5C2E2C990334140E4D60D /* Pods-Cubemap-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cubemap-macOS.release.xcconfig"; path = "Target Support Files/Pods-Cubemap-macOS/Pods-Cubemap-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		86C37369065F9A14669AA518 /* Pods-SatinSceneKit-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKit-macOS.debug.xcconfig"; path = "Target Support Files/Pods-SatinSceneKit-macOS/Pods-SatinSceneKit-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.release.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		8715FBBCB72C5F898B4DD46D /* Pods-Example-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Example-iOS/Pods-Example-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		884C4791B8FD9361799D335D /* Pods-Shipping-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shipping-macOS.debug.xcconfig"; path = "Target Support Files/Pods-Shipping-macOS/Pods-Shipping-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		88AA69A983B914637F5537BC /* Pods-TextureCompute-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextureCompute-macOS.release.xcconfig"; path = "Target Support Files/Pods-TextureCompute-macOS/Pods-TextureCompute-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		88F44583C20EE75F7510E316 /* Pods_Obj_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8934F08CC243E05BBD2CD3BE /* Pods_Cubemap_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cubemap_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -477,9 +485,11 @@
 		A251FA62C0B032D026F861C6 /* Pods_2D_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_2D_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2A12B375D33C54DB5572F16 /* Pods-Obj-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Obj-iOS.debug.xcconfig"; path = "Target Support Files/Pods-Obj-iOS/Pods-Obj-iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A2E4F654A3B2C203B8BD162F /* Pods_Obj_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Obj_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A40681A43CD59A88EC351C3C /* Pods-3D-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-3D-macOS.release.xcconfig"; path = "Target Support Files/Pods-3D-macOS/Pods-3D-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		A6934A1DB52F52A20CF62A22 /* Pods-SatinSceneKitAR-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatinSceneKitAR-iOS.release.xcconfig"; path = "Target Support Files/Pods-SatinSceneKitAR-iOS/Pods-SatinSceneKitAR-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		A72A74863D8AA9BE95A4FB8A /* Pods_Text_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Text_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA03D12494E6BF75D117C7BA /* Pods_PostProcessing_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PostProcessing_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABDC9E4E5B5BB34109CE4FA0 /* Pods-Shipping-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shipping-macOS.release.xcconfig"; path = "Target Support Files/Pods-Shipping-macOS/Pods-Shipping-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		ADE46710BE2063129B8119D5 /* Pods-Geometry-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geometry-iOS.release.xcconfig"; path = "Target Support Files/Pods-Geometry-iOS/Pods-Geometry-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		B17F9CBC8BC03BB7E98CCFFF /* Pods-PBR-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PBR-macOS.debug.xcconfig"; path = "Target Support Files/Pods-PBR-macOS/Pods-PBR-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		B2FC8804E31710E1B9E9B1DD /* Pods-DepthMaterial-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DepthMaterial-macOS.release.xcconfig"; path = "Target Support Files/Pods-DepthMaterial-macOS/Pods-DepthMaterial-macOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -604,6 +614,10 @@
 		E1D6257A269D225B000094C1 /* PostProcessing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostProcessing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1D62582269D2519000094C1 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E1DED19727B4D7F4008C9F1F /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		E1DED1AF27B4D808008C9F1F /* Shipping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shipping.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1DED1B227B4DA28008C9F1F /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		E1DED1BA27B50A11008C9F1F /* Helper.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Helper.metal; sourceTree = "<group>"; };
 		E1E69D1624A4711E00EDA686 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E1E69D2924A4713100EDA686 /* DepthMaterial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DepthMaterial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E7C54C24515B8A00BD8324 /* 2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1029,6 +1043,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1DED19F27B4D808008C9F1F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				567EC3E5C106B587D4FC1668 /* Pods_Shipping_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1E69D1C24A4713100EDA686 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1179,6 +1201,7 @@
 				E1875B9D269F3CB400D3AF12 /* PostProcessing-iOS.app */,
 				E1875BB1269F3CC400D3AF12 /* PostProcessing-tvOS.app */,
 				E19B058D26BB701700D91376 /* AudioInput.app */,
+				E1DED1AF27B4D808008C9F1F /* Shipping.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1219,6 +1242,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E1DED19627B4D7D2008C9F1F /* Shipping */,
 				E19B057D26BB6FF000D91376 /* AudioInput */,
 				E1D62564269D21B6000094C1 /* PostProcessing */,
 				E1EC55D7268784F10097C140 /* RayMarching */,
@@ -1328,8 +1352,6 @@
 				8C173E0358DC789DE1D0A41D /* Pods-BufferCompute-macOS.release.xcconfig */,
 				2B1EF9EC741A27A8D5BBA708 /* Pods-BufferCompute-tvOS.debug.xcconfig */,
 				BE190F9DDFF26F1262F9ADB9 /* Pods-BufferCompute-tvOS.release.xcconfig */,
-				6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */,
-				86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */,
 				360D1A73A006CE3BFF13C922 /* Pods-Camera-iOS.debug.xcconfig */,
 				3385C0480F71FE4E7697B712 /* Pods-Camera-iOS.release.xcconfig */,
 				FF35F30D6626124905E0A12E /* Pods-Camera-macOS.debug.xcconfig */,
@@ -1364,6 +1386,10 @@
 				1EF9527D58A3F9C2BF0ACC77 /* Pods-PostProcessing-tvOS.release.xcconfig */,
 				BCA616F19E9F64964B0F1D2F /* Pods-AudioInput-macOS.debug.xcconfig */,
 				50AD2E3274FCEFC33B266D01 /* Pods-AudioInput-macOS.release.xcconfig */,
+				78B376D5FB0EFB4DBD544193 /* Pods-3D-macOS.debug.xcconfig */,
+				A40681A43CD59A88EC351C3C /* Pods-3D-macOS.release.xcconfig */,
+				884C4791B8FD9361799D335D /* Pods-Shipping-macOS.debug.xcconfig */,
+				ABDC9E4E5B5BB34109CE4FA0 /* Pods-Shipping-macOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1567,6 +1593,16 @@
 			path = PostProcessing;
 			sourceTree = "<group>";
 		};
+		E1DED19627B4D7D2008C9F1F /* Shipping */ = {
+			isa = PBXGroup;
+			children = (
+				E1DED1BA27B50A11008C9F1F /* Helper.metal */,
+				E1DED1B227B4DA28008C9F1F /* Shaders.metal */,
+				E1DED19727B4D7F4008C9F1F /* Renderer.swift */,
+			);
+			path = Shipping;
+			sourceTree = "<group>";
+		};
 		E1E69D1524A470FD00EDA686 /* DepthMaterial */ = {
 			isa = PBXGroup;
 			children = (
@@ -1658,6 +1694,7 @@
 				23343018FC981C85718B5441 /* Pods_3D_tvOS.framework */,
 				F9B6A34A6A1A48B82D9D2DDB /* Pods_AudioInput_macOS.framework */,
 				A251FA62C0B032D026F861C6 /* Pods_2D_macOS.framework */,
+				83097CB78EC723333D37DE34 /* Pods_Shipping_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2505,6 +2542,26 @@
 			productReference = E1D6257A269D225B000094C1 /* PostProcessing.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E1DED19927B4D808008C9F1F /* Shipping-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1DED1AC27B4D808008C9F1F /* Build configuration list for PBXNativeTarget "Shipping-macOS" */;
+			buildPhases = (
+				287FA34DADEF25F156DE7FB0 /* [CP] Check Pods Manifest.lock */,
+				E1DED19B27B4D808008C9F1F /* Sources */,
+				E1DED19F27B4D808008C9F1F /* Frameworks */,
+				E1DED1A727B4D808008C9F1F /* Resources */,
+				E1DED1AA27B4D808008C9F1F /* Touch Frameworks */,
+				9FE5FE4FD7CBB9B6C5AB7E14 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Shipping-macOS";
+			productName = Example;
+			productReference = E1DED1AF27B4D808008C9F1F /* Shipping.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E1E69D1724A4713100EDA686 /* DepthMaterial-macOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1E69D2624A4713100EDA686 /* Build configuration list for PBXNativeTarget "DepthMaterial-macOS" */;
@@ -2797,6 +2854,7 @@
 				E1875B89269F3CB400D3AF12 /* PostProcessing-iOS */,
 				E1875B9F269F3CC400D3AF12 /* PostProcessing-tvOS */,
 				E19B057E26BB701700D91376 /* AudioInput-macOS */,
+				E1DED19927B4D808008C9F1F /* Shipping-macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -3197,6 +3255,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1DED1A727B4D808008C9F1F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1DED1A827B4D808008C9F1F /* Assets.xcassets in Resources */,
+				E1DED1A927B4D808008C9F1F /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1E69D2124A4713100EDA686 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3322,6 +3389,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Text-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		287FA34DADEF25F156DE7FB0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shipping-macOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3719,6 +3808,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BufferCompute-tvOS/Pods-BufferCompute-tvOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9FE5FE4FD7CBB9B6C5AB7E14 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shipping-macOS/Pods-Shipping-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shipping-macOS/Pods-Shipping-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shipping-macOS/Pods-Shipping-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B5FCC64018C59B4DF50329B7 /* [CP] Embed Pods Frameworks */ = {
@@ -5739,6 +5845,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PostProcessing-macOS/Pods-PostProcessing-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E1DED1AA27B4D808008C9F1F /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
 		E1E69D1824A4713100EDA686 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -6655,6 +6779,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1DED19B27B4D808008C9F1F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1DED1B327B4DA28008C9F1F /* Shaders.metal in Sources */,
+				E1DED1BB27B50A11008C9F1F /* Helper.metal in Sources */,
+				E1DED19D27B4D808008C9F1F /* Renderer.swift in Sources */,
+				E1DED19E27B4D808008C9F1F /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1E69D1924A4713100EDA686 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6866,20 +7001,21 @@
 		};
 		66E67898243EC73B0070B294 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FCA8077B7EC5CCF3D9BEB43 /* Pods-3D-macOS.debug.xcconfig */;
+			baseConfigurationReference = 78B376D5FB0EFB4DBD544193 /* Pods-3D-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -6887,20 +7023,21 @@
 		};
 		66E67899243EC73B0070B294 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 86E66F25F158940C3822E6C0 /* Pods-3D-macOS.release.xcconfig */;
+			baseConfigurationReference = A40681A43CD59A88EC351C3C /* Pods-3D-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -6912,14 +7049,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -6933,14 +7070,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -6955,12 +7092,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -6975,12 +7113,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = 3D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -6998,13 +7137,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.fxaa;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.fxaa";
 				PRODUCT_NAME = FXAA;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7018,13 +7158,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.fxaa;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.fxaa";
 				PRODUCT_NAME = FXAA;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7039,13 +7180,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7060,13 +7202,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7078,14 +7221,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7099,14 +7242,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7121,14 +7264,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/AR/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.ar;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.ar";
 				PRODUCT_NAME = AR;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7142,14 +7285,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/AR/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.ar;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.ar";
 				PRODUCT_NAME = AR;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7164,14 +7307,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.buffercompute;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.buffercompute";
 				PRODUCT_NAME = BufferCompute;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7185,14 +7328,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.buffercompute;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.buffercompute";
 				PRODUCT_NAME = BufferCompute;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7207,12 +7350,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = BufferCompute;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7227,12 +7371,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = BufferCompute;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7251,13 +7396,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.camera";
 				PRODUCT_NAME = Camera;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7272,13 +7418,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.camera";
 				PRODUCT_NAME = Camera;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7290,14 +7437,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.camera";
 				PRODUCT_NAME = Camera;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7311,14 +7458,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.camera;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.camera";
 				PRODUCT_NAME = Camera;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7333,14 +7480,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7354,14 +7501,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7376,12 +7523,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7396,12 +7544,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7417,14 +7566,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -7439,14 +7588,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -7462,12 +7611,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7482,12 +7632,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekit;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekit";
 				PRODUCT_NAME = SatinSceneKit;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7503,14 +7654,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/SatinSceneKitAR/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekitar;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekitar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7524,14 +7675,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/SatinSceneKitAR/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.scenekitar;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.scenekitar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7549,13 +7700,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.pbr";
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -7572,13 +7724,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.pbr";
 				PRODUCT_NAME = PBR;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -7591,14 +7744,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7612,14 +7765,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7634,12 +7787,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7654,12 +7808,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7677,13 +7832,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7697,13 +7853,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.obj;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.obj";
 				PRODUCT_NAME = Obj;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7717,13 +7874,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7737,13 +7895,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7758,13 +7917,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.text;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.text";
 				PRODUCT_NAME = Text;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7779,13 +7939,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.text;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.text";
 				PRODUCT_NAME = Text;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7800,13 +7961,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7821,13 +7983,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SWIFT_VERSION = 5.0;
 			};
@@ -7839,14 +8002,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7860,14 +8023,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7882,12 +8045,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7902,12 +8066,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.extrudedtext;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.extrudedtext";
 				PRODUCT_NAME = ExtrudedText;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7930,7 +8095,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7951,7 +8116,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -7972,7 +8137,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -7993,7 +8158,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8009,14 +8174,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.pbr";
 				PRODUCT_NAME = PBR;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8030,14 +8195,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.pbr;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.pbr";
 				PRODUCT_NAME = PBR;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8055,13 +8220,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -8078,13 +8244,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -8097,14 +8264,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8119,14 +8286,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8142,12 +8309,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8163,12 +8331,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.cubemap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.cubemap";
 				PRODUCT_NAME = Cubemap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8187,13 +8356,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.livecode;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.livecode";
 				PRODUCT_NAME = LiveCode;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8207,13 +8377,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.livecode;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.livecode";
 				PRODUCT_NAME = LiveCode;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8228,13 +8399,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -8251,13 +8423,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -8270,12 +8443,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8291,12 +8465,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.matcap;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.matcap";
 				PRODUCT_NAME = MatCap;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/MatCap/Utilities/Matcap-Bridging-Header.h";
@@ -8315,13 +8490,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/Shared/AudioInput/AudioInput.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/AudioInput/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.audioinput;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.audioinput";
 				PRODUCT_MODULE_NAME = AudioInput;
 				PRODUCT_NAME = AudioInput;
 				SWIFT_VERSION = 5.0;
@@ -8336,13 +8512,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/Shared/AudioInput/AudioInput.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/Shared/AudioInput/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.audioinput;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.audioinput";
 				PRODUCT_MODULE_NAME = AudioInput;
 				PRODUCT_NAME = AudioInput;
 				SWIFT_VERSION = 5.0;
@@ -8355,14 +8532,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
@@ -8377,14 +8554,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
@@ -8400,12 +8577,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
@@ -8421,12 +8599,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
@@ -8446,13 +8625,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8467,13 +8647,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8485,14 +8666,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8506,14 +8687,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8528,12 +8709,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8548,12 +8730,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.tc;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.tc";
 				PRODUCT_NAME = TextureCompute;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8574,13 +8757,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -8599,13 +8783,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.geometry;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.geometry";
 				PRODUCT_NAME = Geometry;
 				SWIFT_OBJC_BRIDGING_HEADER = "Source/Shared/Geometry/Utilities/Geometry-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -8628,7 +8813,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = PostProcessing;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8650,8 +8835,52 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.postprocessing;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.postprocessing";
 				PRODUCT_NAME = PostProcessing;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E1DED1AD27B4D808008C9F1F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 884C4791B8FD9361799D335D /* Pods-Shipping-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.shipping";
+				PRODUCT_NAME = Shipping;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E1DED1AE27B4D808008C9F1F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ABDC9E4E5B5BB34109CE4FA0 /* Pods-Shipping-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.shipping";
+				PRODUCT_NAME = Shipping;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -8665,13 +8894,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8686,13 +8916,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8704,14 +8935,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8725,14 +8956,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8747,12 +8978,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8767,12 +8999,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.2d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.2d";
 				PRODUCT_NAME = 2D;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8791,13 +9024,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8812,13 +9046,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.raymarching;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.raymarching";
 				PRODUCT_NAME = RayMarching;
 				SWIFT_VERSION = 5.0;
 			};
@@ -8830,14 +9065,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8851,14 +9086,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8873,12 +9108,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8893,12 +9129,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.depthmaterial;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.depthmaterial";
 				PRODUCT_NAME = DepthMaterial;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8914,14 +9151,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = Text;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8935,14 +9172,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CC7PU3PUHS;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = Text;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -8957,12 +9194,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = Text;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -8977,12 +9215,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.3d;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
 				PRODUCT_NAME = Text;
 				SDKROOT = appletvos;
 				SWIFT_VERSION = 5.0;
@@ -9001,13 +9240,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.buffercompute;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.buffercompute";
 				PRODUCT_NAME = BufferCompute;
 				SWIFT_VERSION = 5.0;
 			};
@@ -9022,13 +9262,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.buffercompute;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.buffercompute";
 				PRODUCT_NAME = BufferCompute;
 				SWIFT_VERSION = 5.0;
 			};
@@ -9042,13 +9283,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.export;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.export";
 				PRODUCT_NAME = Export;
 				SWIFT_VERSION = 5.0;
 			};
@@ -9062,13 +9304,14 @@
 				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
 				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.satin.export;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.export";
 				PRODUCT_NAME = Export;
 				SWIFT_VERSION = 5.0;
 			};
@@ -9460,6 +9703,15 @@
 			buildConfigurations = (
 				E1D62578269D225B000094C1 /* Debug */,
 				E1D62579269D225B000094C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1DED1AC27B4D808008C9F1F /* Build configuration list for PBXNativeTarget "Shipping-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1DED1AD27B4D808008C9F1F /* Debug */,
+				E1DED1AE27B4D808008C9F1F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

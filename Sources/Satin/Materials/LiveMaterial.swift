@@ -10,25 +10,27 @@ import Metal
 
 open class LiveMaterial: Material {
     public var source: String? {
-        shader?.source
+        if let live = shader as? LiveShader {
+            return live.source
+        }
+        return nil
     }
 
     public init(pipelineURL: URL) {
-        super.init(pipelineURL)
+        super.init()
+        _init(pipelineURL: pipelineURL)
     }
 
     public init(pipelinesURL: URL) {
-        super.init(pipelinesURL)
+        super.init()
+        _init(pipelineURL: pipelinesURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal"))
+    }
+    
+    func _init(pipelineURL: URL) {
+        self.shader = LiveShader(label, pipelineURL)
     }
     
     public required init() {
         super.init()
-    }
-    
-    override func generateShader() -> Shader {
-        if pipelineURL.pathExtension != "metal" {
-            pipelineURL = pipelineURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal")
-        }
-        return LiveShader(label, pipelineURL)
     }
 }

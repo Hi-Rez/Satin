@@ -28,7 +28,7 @@ extension Renderer {
         }
         
         camera.viewMatrix = frame.camera.viewMatrix(for: orientation)
-        camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
+        camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.001, zFar: 100.0)
     }
     
     // MARK: - ARSessionDelegate
