@@ -48,7 +48,7 @@ open class Renderer
             {
                 let width = Double(size.width)
                 let height = Double(size.height)
-                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
+                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: Double(camera.near), zfar: Double(camera.far))
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true

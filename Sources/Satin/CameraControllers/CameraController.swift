@@ -91,7 +91,7 @@ open class CameraController: Codable {
         }
     }
 
-    var flagsEnabled: Bool = true
+    public var flagsEnabled: Bool = true
     
     var leftMouseDownHandler: Any?
     var leftMouseDraggedHandler: Any?
