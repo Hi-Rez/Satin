@@ -252,6 +252,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     if setOptions {
                         mfp.min = p.min
                         mfp.max = p.max
+                        mfp.controlType = p.controlType
                     }
                 }
             }
@@ -268,6 +269,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.minY = p.minY
                         mfp.maxX = p.maxX
                         mfp.maxY = p.maxY
+                        mfp.controlType = p.controlType
                     }
                 }
             }
@@ -286,6 +288,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.maxX = p.maxX
                         mfp.maxY = p.maxY
                         mfp.maxZ = p.maxZ
+                        mfp.controlType = p.controlType
                     }
                 }
             }
@@ -304,6 +307,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.maxX = p.maxX
                         mfp.maxY = p.maxY
                         mfp.maxZ = p.maxZ
+                        mfp.controlType = p.controlType
                     }
                 }
             }
@@ -324,6 +328,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.maxY = p.maxY
                         mfp.maxZ = p.maxZ
                         mfp.maxW = p.maxW
+                        mfp.controlType = p.controlType
                     }
                 }
             }
@@ -338,6 +343,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     if setOptions {
                         mip.min = p.min
                         mip.max = p.max
+                        mip.controlType = p.controlType
                     }
                 }
             }
@@ -354,6 +360,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mip.minY = p.minY
                         mip.maxX = p.maxX
                         mip.maxY = p.maxY
+                        mip.controlType = p.controlType
                     }
                 }
             }
@@ -372,6 +379,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mip.maxX = p.maxX
                         mip.maxY = p.maxY
                         mip.maxZ = p.maxZ
+                        mip.controlType = p.controlType
                     }
                 }
             }
@@ -386,6 +394,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     if setOptions {
                         mdp.min = p.min
                         mdp.max = p.max
+                        mdp.controlType = p.controlType
                     }
                 }
             }
@@ -396,6 +405,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                 if let mbp = mp as? BoolParameter {
                     if setValue {
                         mbp.value = p.value
+                        mbp.controlType = p.controlType
                     }
                 }
             }
@@ -409,6 +419,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     }
                     if setOptions {
                         mbp.options = p.options
+                        mbp.controlType = p.controlType
                     }
                 }
             }
@@ -423,6 +434,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     if setOptions {
                         mbp.min = p.min
                         mbp.max = p.max
+                        mbp.controlType = p.controlType
                     }
                 }
             }
@@ -437,6 +449,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     }
                     if setOptions {
                         mbp.allowedTypes = p.allowedTypes
+                        mbp.controlType = p.controlType
                     }
                 }
             }
