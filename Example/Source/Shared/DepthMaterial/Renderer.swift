@@ -68,7 +68,9 @@ class Renderer: Forge.Renderer {
         mesh.label = "Box"
         mesh.position = [2.5, 3.0, -3]
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([1.0, -0.25, 0.25]))
-        mesh.add(Mesh(geometry: CylinderGeometry(size: (0.1, 6.0), res: (24, 1, 1)), material: depthMaterial))
+        let rod = Mesh(geometry: CylinderGeometry(size: (0.1, 6.0), res: (24, 1, 1)), material: depthMaterial)
+        rod.label = "Rod"
+        mesh.add(rod)
         return mesh
     }()
     
