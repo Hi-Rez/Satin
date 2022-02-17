@@ -186,7 +186,7 @@ open class Mesh: Object, GeometryDelegate {
     
     override open func computeLocalBounds() -> Bounds {
         let count = geometry.vertexData.count
-        var result = Bounds()
+        var result = Bounds(min: position, max: position)
         geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
             result = computeBoundsFromVerticesAndTransform(vtxPtr.baseAddress!, Int32(count), localMatrix)
         }
@@ -195,9 +195,12 @@ open class Mesh: Object, GeometryDelegate {
     
     override open func computeWorldBounds() -> Bounds {
         let count = geometry.vertexData.count
-        var result = Bounds()
+        var result = Bounds(min: worldPosition, max: worldPosition)
         geometry.vertexData.withUnsafeMutableBufferPointer { vtxPtr in
             result = computeBoundsFromVerticesAndTransform(vtxPtr.baseAddress!, Int32(count), worldMatrix)
+        }
+        children.forEach { child in
+            result = mergeBounds(result, child.worldBounds)
         }
         return result
     }

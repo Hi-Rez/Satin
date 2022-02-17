@@ -13,6 +13,12 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
+    #if os(macOS) || os(iOS)
+    lazy var raycaster: Raycaster = {
+        Raycaster(device: device)
+    }()
+    #endif
+    
     lazy var depthMaterial: DepthMaterial = {
         let material = DepthMaterial()
         // Options to play with
@@ -28,12 +34,14 @@ class Renderer: Forge.Renderer {
     
     lazy var container: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(size: 10), material: depthMaterial)
+        mesh.label = "Container"
         mesh.geometry.windingOrder = .clockwise
         return mesh
     }()
     
     lazy var torus: Mesh = {
         let mesh = Mesh(geometry: TorusGeometry(radius: (0.5, 2.0), res: (90, 30)), material: depthMaterial)
+        mesh.label = "Torus"
         mesh.position = [2, -2, -2]
         mesh.orientation = simd_quatf(angle: Float.pi * 0.25, axis: normalize([1, 1, 1]))
         return mesh
@@ -41,6 +49,7 @@ class Renderer: Forge.Renderer {
     
     lazy var cylinder: Mesh = {
         let mesh = Mesh(geometry: CylinderGeometry(size: (0.5, 2.0), res: (60, 1, 1)), material: depthMaterial)
+        mesh.label = "Cylinder"
         mesh.position = [-2, 2, 2]
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, 1, 1]))
         return mesh
@@ -48,6 +57,7 @@ class Renderer: Forge.Renderer {
     
     lazy var capsule: Mesh = {
         let mesh = Mesh(geometry: CapsuleGeometry(size: (0.5, 2.0), res: (60, 30, 1)), material: depthMaterial)
+        mesh.label = "Capsule"
         mesh.position = [2, -2, 2]
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, 0.5, 1]))
         return mesh
@@ -55,35 +65,46 @@ class Renderer: Forge.Renderer {
     
     lazy var box: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(), material: depthMaterial)
+        mesh.label = "Box"
         mesh.position = [2.5, 3.0, -3]
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([1.0, -0.25, 0.25]))
+        mesh.add(Mesh(geometry: CylinderGeometry(size: (0.1, 6.0), res: (24, 1, 1)), material: depthMaterial))
         return mesh
     }()
     
     lazy var longBox: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(size: (0.5, 2.0, 4.0)), material: depthMaterial)
+        mesh.label = "Long Box"
         mesh.position = [-2, -3, 0]
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, -0.5, 0.25]))
         return mesh
     }()
     
     lazy var cone: Mesh = {
-        let mesh = Mesh(geometry: ConeGeometry(size: (1.0, 2.0), res:(30,30,30)), material: depthMaterial)
+        let mesh = Mesh(geometry: ConeGeometry(size: (1.0, 2.0), res: (30, 30, 30)), material: depthMaterial)
+        mesh.label = "Cone"
         mesh.position = [-3, 0, -2]
         mesh.orientation = simd_quatf(angle: Float.pi * 0.25, axis: normalize([1.0, 0.5, 0.25]))
         return mesh
     }()
     
+    lazy var sphere: Mesh = {
+        let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.5, res: 0), material: depthMaterial)
+        mesh.label = "Sphere"
+        return mesh
+    }()
+    
     lazy var scene: Object = {
-        let obj = Object()
-        obj.add(box)
-        obj.add(container)
-        obj.add(Mesh(geometry: IcoSphereGeometry(radius: 1.5, res: 0), material: depthMaterial))
-        obj.add(torus)
-        obj.add(cylinder)
-        obj.add(capsule)
-        obj.add(longBox)
-        obj.add(cone)
+        let obj = Object("Scene", [
+            container,
+            box,
+            sphere,
+            torus,
+            cylinder,
+            capsule,
+            longBox,
+            cone
+        ])
         return obj
     }()
     
@@ -117,7 +138,16 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        // Setup things here
+//        // Setup things here
+//        let mat = UvColorMaterial()
+//        let boundingBoxes = Object("Bounding Boxes")
+//        scene.apply { object in
+//            let mesh = Mesh(geometry: BoxGeometry(bounds: object.worldBounds), material: mat)
+//            mesh.label = object.label + " Bounds"
+//            mesh.triangleFillMode = .lines
+//            boundingBoxes.add(mesh)
+//        }
+//        scene.add(boundingBoxes)
     }
     
     override func update() {
@@ -132,5 +162,43 @@ class Renderer: Forge.Renderer {
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
+    }
+    
+    #if !targetEnvironment(simulator)
+    #if os(macOS)
+    override func mouseDown(with event: NSEvent) {
+        let m = event.locationInWindow
+        let pt = normalizePoint(m, mtkView.frame.size)
+        raycaster.setFromCamera(camera, pt)
+        let results = raycaster.intersect(scene, true)
+        for result in results {
+            print(result.object.label)
+            print(result.position)
+        }
+    }
+
+    #elseif os(iOS)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let first = touches.first {
+            let point = first.location(in: mtkView)
+            let size = mtkView.frame.size
+            let pt = normalizePoint(point, size)
+            raycaster.setFromCamera(camera, pt)
+            let results = raycaster.intersect(scene, true)
+            for result in results {
+                print(result.object.label)
+                print(result.position)
+            }
+        }
+    }
+    #endif
+    #endif
+
+    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
+        #if os(macOS)
+        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
+        #else
+        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
+        #endif
     }
 }
