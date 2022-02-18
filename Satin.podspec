@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                   = "Satin"
-  spec.version                = "1.6.0"
+  spec.version                = "1.6.1"
   spec.summary                = "Satin is a Swift based creative coding toolkit built on top of Metal"
   spec.description            = <<-DESC
   Satin is a swift based creative coding toolkit built on top of Metal. Satin contains classes & helpers that make create graphics with Metal fun and fast!
