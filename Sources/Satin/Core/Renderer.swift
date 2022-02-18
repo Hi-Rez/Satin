@@ -212,8 +212,7 @@ open class Renderer
             renderEncoder.pushDebugGroup(label + " Pass")
             renderEncoder.setViewport(viewport)
            
-            if scene.visible, scene is Mesh || scene.children.count > 0
-            {
+            if scene.visible {
                 preDraw?(renderEncoder)
                 draw(renderEncoder: renderEncoder, object: scene)
                 postDraw?(renderEncoder)
