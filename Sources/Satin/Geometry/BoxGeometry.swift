@@ -35,15 +35,15 @@ open class BoxGeometry: Geometry {
         self.setupData(width: size.width, height: size.height, depth: size.depth, resWidth: res.width, resHeight: res.height, resDepth: res.depth)
     }
 
-    public init(bounds: Bounds) {
+    public init(bounds: Bounds, res: (width: Int, height: Int, depth: Int) = (1, 1, 1)) {
         super.init()
-        self.setupData(bounds)
+        self.setupData(bounds, res)
     }
 
-    func setupData(_ bounds: Bounds) {
+    func setupData(_ bounds: Bounds, _ res: (width: Int, height: Int, depth: Int)) {
         let size = bounds.size
         let center = bounds.center
-        var geometryData = generateBoxGeometryData(size.x, size.y, size.z, center.x, center.y, center.z, Int32(1), Int32(1), Int32(1))
+        var geometryData = generateBoxGeometryData(size.x, size.y, size.z, center.x, center.y, center.z, Int32(res.width), Int32(res.height), Int32(res.depth))
         setFrom(&geometryData)
         freeGeometryData(&geometryData)
     }
