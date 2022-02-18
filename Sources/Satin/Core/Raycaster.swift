@@ -148,7 +148,7 @@ open class Raycaster {
     }
     
     // expects a normalize point from -1 to 1 in both x & y directions
-    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2) {
+    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
         ray = Ray(camera, coordinate)
     }
     
