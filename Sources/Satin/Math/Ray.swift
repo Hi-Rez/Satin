@@ -16,7 +16,7 @@ open class Ray {
         self.direction = simd_make_float3(0.0, 0.0, 1.0)
     }
     
-    public convenience init(_ camera: Camera, _ coordinate: simd_float2) {
+    public convenience init(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
         self.init()
         setFromCamera(camera, coordinate)
     }
@@ -30,7 +30,7 @@ open class Ray {
         return direction * t + origin
     }
     
-    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2) {
+    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
         if camera is PerspectiveCamera {
             origin = camera.worldPosition
             let unproject = camera.unProject(coordinate)
