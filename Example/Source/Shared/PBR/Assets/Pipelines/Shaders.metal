@@ -114,7 +114,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 	float3 kD = 1.0 - kS;
 	kD *= 1.0 - metallic;
 	const float3 irradiance = irradianceTex.sample( s, normal ).rgb;
-	const float3 diffuse = irradiance * albedo;
+//	const float3 diffuse = irradiance * albedo;
+    const float3 diffuse = albedo;
 
 	// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
 	const float levels = float( specularTex.get_num_mip_levels() - 1 );
