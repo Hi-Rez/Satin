@@ -180,7 +180,7 @@ open class Raycaster {
     }
     
     public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false, _ callback: @escaping (_ results: [RaycastResult]) -> ()) {
-        let intersectables = getIntersectables(object, recursive, invisible)
+        let intersectables = getIntersectables([object], recursive, invisible)
         guard let commandBuffer = _intersect(intersectables) else { return }
         commandBuffer.addCompletedHandler { [weak self] _ in
             if let self = self {
@@ -191,29 +191,39 @@ open class Raycaster {
     }
     
     public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
-        let intersectables = getIntersectables(object, recursive, invisible)
+        let intersectables = getIntersectables([object], recursive, invisible)
         guard let commandBuffer = _intersect(intersectables) else { return [] }
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
         return getResults(intersectables)
     }
     
-    func getIntersectables(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [Any] {
-        let meshes: [Mesh] = getMeshes(object, recursive, invisible)
-        var intersectables: [Any] = []
+    public func intersect(_ objects: [Object], _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
+        let intersectables = getIntersectables(objects, recursive, invisible)
+        guard let commandBuffer = _intersect(intersectables) else { return [] }
+        commandBuffer.commit()
+        commandBuffer.waitUntilCompleted()
+        return getResults(intersectables)
+    }
+    
+    func getIntersectables(_ objects: [Object], _ recursive: Bool = true, _ invisible: Bool = false) -> [Any] {
         var count = 0
-        for mesh in meshes {
-            var times = simd_float2(repeating: -1.0)
-            guard rayBoundsIntersection(ray.origin, ray.direction, transformBounds(mesh.geometry.bounds, mesh.worldMatrix), &times) else { continue }
-            let submeshes = mesh.submeshes
-            count += max(mesh.submeshes.count, 1)
-            if !submeshes.isEmpty {
-                for submesh in submeshes {
-                    intersectables.append(submesh)
+        var intersectables: [Any] = []
+        for object in objects {
+            let meshes: [Mesh] = getMeshes(object, recursive, invisible)
+            for mesh in meshes {
+                var times = simd_float2(repeating: -1.0)
+                guard rayBoundsIntersection(ray.origin, ray.direction, transformBounds(mesh.geometry.bounds, mesh.worldMatrix), &times) else { continue }
+                let submeshes = mesh.submeshes
+                count += max(mesh.submeshes.count, 1)
+                if !submeshes.isEmpty {
+                    for submesh in submeshes {
+                        intersectables.append(submesh)
+                    }
                 }
-            }
-            else {
-                intersectables.append(mesh)
+                else {
+                    intersectables.append(mesh)
+                }
             }
         }
         

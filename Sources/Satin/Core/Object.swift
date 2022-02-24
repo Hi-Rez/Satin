@@ -10,8 +10,42 @@ import Foundation
 import simd
 import SwiftUI
 
-open class Object: Codable {
+@objc public protocol ObjectDelegate: AnyObject {
+    @objc optional func updatedPosition(_ object: Object)
+    @objc optional func updatedScale(_ object: Object)
+    @objc optional func updatedOrientation(_ object: Object)
+    @objc optional func updatedLabel(_ object: Object)
+    @objc optional func updatedVisibility(_ object: Object)
+    @objc optional func updatedParent(_ object: Object)
+    @objc optional func updatedChildren(_ object: Object)
+}
+
+class MulticastObserver<T> {
+    private let observers: NSHashTable<AnyObject> = NSHashTable.weakObjects()
+
+    public func add(_ observer: T) {
+        observers.add(observer as AnyObject)
+    }
+
+    public func remove(_ observerToRemove: T) {
+        for observer in observers.allObjects.reversed() {
+            if observer === observerToRemove as AnyObject {
+                observers.remove(observer)
+                return
+            }
+        }
+    }
+
+    func invoke(_ invocation: (T) -> ()) {
+        for observer in observers.allObjects.reversed() {
+            invocation(observer as! T)
+        }
+    }
+}
+
+@objc open class Object: NSObject, Codable {
     public required init(from decoder: Decoder) throws {
+        super.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)
         label = try values.decode(String.self, forKey: .label)
@@ -48,8 +82,18 @@ open class Object: Codable {
     }
     
     open var id: String = UUID().uuidString
-    open var label: String = "Object"
-    open var visible: Bool = true
+    
+    open var label: String = "Object" {
+        didSet {
+            observers.invoke { $0.updatedLabel?(self) }
+        }
+    }
+    
+    open var visible: Bool = true {
+        didSet {
+            observers.invoke { $0.updatedVisibility?(self) }
+        }
+    }
     
     open var context: Context? = nil {
         didSet {
@@ -62,21 +106,24 @@ open class Object: Codable {
         }
     }
     
-    public var position = simd_make_float3(0, 0, 0) {
+    open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
+            observers.invoke { $0.updatedPosition?(self) }
         }
     }
     
-    public var orientation = simd_quatf(matrix_identity_float4x4) {
+    open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
+            observers.invoke { $0.updatedOrientation?(self) }
         }
     }
     
-    public var scale = simd_make_float3(1, 1, 1) {
+    open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
+            observers.invoke { $0.updatedScale?(self) }
         }
     }
     
@@ -143,15 +190,17 @@ open class Object: Codable {
         return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldRightDirection)
     }
     
-    public weak var parent: Object? {
+    open weak var parent: Object? {
         didSet {
             updateMatrix = true
+            observers.invoke { $0.updatedParent?(self) }
         }
     }
     
-    public var children: [Object] = [] {
+    open var children: [Object] = [] {
         didSet {
             _updateBounds = true
+            observers.invoke { $0.updatedChildren?(self) }
         }
     }
     
@@ -260,9 +309,22 @@ open class Object: Codable {
         return _worldMatrix
     }
     
-    public init() {}
+    // MARK: - Observers
+    
+    var observers = MulticastObserver<ObjectDelegate>()
+    
+    public func addObserver(_ observer: ObjectDelegate) {
+        observers.add(observer)
+    }
+    
+    public func removeObserver(_ observer: ObjectDelegate) {
+        observers.remove(observer)
+    }
+    
+    override public init() {}
     
     public init(_ label: String, _ children: [Object] = []) {
+        super.init()
         self.label = label
         for child in children {
             add(child)
@@ -397,14 +459,14 @@ open class Object: Codable {
     }
 }
 
-extension Object: Equatable {
-    public static func == (lhs: Object, rhs: Object) -> Bool {
-        return lhs === rhs
-    }
-}
-
-extension Object: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self).hashValue)
-    }
-}
+// extension Object: Equatable {
+//    public static func == (lhs: Object, rhs: Object) -> Bool {
+//        return lhs === rhs
+//    }
+// }
+//
+// extension Object: Hashable {
+//    public func hash(into hasher: inout Hasher) {
+//        hasher.combine(ObjectIdentifier(self).hashValue)
+//    }
+// }
