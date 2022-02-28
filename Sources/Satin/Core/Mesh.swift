@@ -101,13 +101,9 @@ open class Mesh: Object, GeometryDelegate {
             vertexUniforms[0].viewMatrix = camera.viewMatrix
             vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].projectionMatrix = camera.projectionMatrix
-            vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.projectionMatrix, vertexUniforms[0].modelViewMatrix)
+            vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.viewProjectionMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].inverseViewMatrix = camera.worldMatrix
-            let n = vertexUniforms[0].modelMatrix.inverse.transpose
-            let c0 = n.columns.0
-            let c1 = n.columns.1
-            let c2 = n.columns.2
-            vertexUniforms[0].normalMatrix = simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
+            vertexUniforms[0].normalMatrix = normalMatrix
             vertexUniforms[0].worldCameraPosition = camera.worldPosition
             vertexUniforms[0].worldCameraViewDirection = camera.viewDirection
         }

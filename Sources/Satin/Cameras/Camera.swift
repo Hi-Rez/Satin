@@ -10,13 +10,20 @@ import simd
 
 open class Camera: Object
 {
-    var _viewMatrix: matrix_float4x4 = matrix_identity_float4x4
-    var _projectionMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
     public var viewDirection: simd_float3
     {
         let q = simd_quatf(worldMatrix)
         return simd_normalize(simd_matrix3x3(q) * simd_make_float3(0.0, 0.0, -1.0))
+    }
+    
+    public var viewProjectionMatrix: matrix_float4x4
+    {
+        if _updateViewProjectionMatrix
+        {
+            _viewProjectionMatrix = simd_mul(projectionMatrix, viewMatrix)
+            _updateViewProjectionMatrix = false
+        }
+        return _viewProjectionMatrix
     }
     
     public var viewMatrix: matrix_float4x4
@@ -69,8 +76,29 @@ open class Camera: Object
         }
     }
     
+    var _updateViewProjectionMatrix: Bool = true
+    
     public var updateProjectionMatrix: Bool = true
+    {
+        didSet
+        {
+            if updateProjectionMatrix
+            {
+                _updateViewProjectionMatrix = true
+            }
+        }
+    }
+    
     public var updateViewMatrix: Bool = true
+    {
+        didSet
+        {
+            if updateViewMatrix
+            {
+                _updateViewProjectionMatrix = true
+            }
+        }
+    }
     
     override var updateMatrix: Bool
     {
@@ -80,7 +108,11 @@ open class Camera: Object
         }
     }
     
-    public override init()
+    var _viewMatrix: matrix_float4x4 = matrix_identity_float4x4
+    var _projectionMatrix: matrix_float4x4 = matrix_identity_float4x4
+    var _viewProjectionMatrix: matrix_float4x4 = matrix_identity_float4x4
+    
+    override public init()
     {
         super.init()
     }
@@ -93,7 +125,7 @@ open class Camera: Object
         far = try values.decode(Float.self, forKey: .far)
     }
     
-    open override func encode(to encoder: Encoder) throws
+    override open func encode(to encoder: Encoder) throws
     {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -112,7 +144,7 @@ open class Camera: Object
     open func project(_ worldCoordinate: simd_float3) -> simd_float2
     {
         var wc = simd_make_float4(worldCoordinate, 1.0)
-        wc = projectionMatrix * viewMatrix * wc
+        wc = viewProjectionMatrix * wc
         return simd_make_float2(wc) / wc.w
     }
     
@@ -130,9 +162,11 @@ open class Camera: Object
         return simd_make_float3(origin)
     }
     
-    public override func setFrom(_ object: Object) {
+    override public func setFrom(_ object: Object)
+    {
         super.setFrom(object)
-        if let camera = object as? Camera {
+        if let camera = object as? Camera
+        {
             near = camera.near
             far = camera.far
         }

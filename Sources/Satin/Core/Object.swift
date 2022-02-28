@@ -97,7 +97,7 @@ class MulticastObserver<T> {
     
     open var context: Context? = nil {
         didSet {
-            if context != nil {
+            if context != nil, context != oldValue {
                 setup()
                 for child in children {
                     child.context = context
@@ -211,6 +211,7 @@ class MulticastObserver<T> {
             if updateMatrix {
                 _updateLocalMatrix = true
                 _updateLocalBounds = true
+                _updateNormalMatrix = true
                 _updateWorldMatrix = true
                 _updateWorldPosition = true
                 _updateWorldScale = true
@@ -307,6 +308,21 @@ class MulticastObserver<T> {
             _updateWorldMatrix = false
         }
         return _worldMatrix
+    }
+    
+    var _updateNormalMatrix: Bool = true
+    var _normalMatrix: matrix_float3x3 = matrix_identity_float3x3
+    
+    public var normalMatrix: matrix_float3x3 {
+        if _updateNormalMatrix {
+            let n = worldMatrix.inverse.transpose
+            let c0 = n.columns.0
+            let c1 = n.columns.1
+            let c2 = n.columns.2
+            _normalMatrix  = simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
+            _updateNormalMatrix = false
+        }
+        return _normalMatrix
     }
     
     // MARK: - Observers
@@ -457,16 +473,8 @@ class MulticastObserver<T> {
         orientation = object.orientation
         scale = object.scale
     }
+    
+    public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
+        localMatrix = lookAtMatrix3f(position, center, up)
+    }
 }
-
-// extension Object: Equatable {
-//    public static func == (lhs: Object, rhs: Object) -> Bool {
-//        return lhs === rhs
-//    }
-// }
-//
-// extension Object: Hashable {
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(ObjectIdentifier(self).hashValue)
-//    }
-// }
