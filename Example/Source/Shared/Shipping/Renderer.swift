@@ -59,10 +59,10 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        shippingMaterial.depthWriteEnabled = false
-        shippingMaterial.blending = .additive
-        shippingMaterial.set("Color", [1.0, 1.0, 1.0, 0.5])
-        shippingMaterial.set("Absolute", true)
+        shippingMaterial.depthWriteEnabled = true
+        shippingMaterial.blending = .alpha
+        shippingMaterial.set("Color", [1.0, 1.0, 1.0, 1.0])
+        shippingMaterial.set("Absolute", false)
     }
     
     override func update() {

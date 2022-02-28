@@ -20,7 +20,7 @@ class Renderer: Forge.Renderer {
     #endif
     
     lazy var mesh: Mesh = {
-        Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 0), material: BasicDiffuseMaterial(0.7))
+        return Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 0), material: BasicDiffuseMaterial(0.7))
     }()
     
     lazy var scene: Object = {

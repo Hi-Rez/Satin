@@ -1,5 +1,5 @@
 typedef struct {
-    float4 color; //color
+    float4 color; // color
 } SkyboxUniforms;
 
 typedef struct {
@@ -7,8 +7,7 @@ typedef struct {
     float3 uv;
 } SkyVertexData;
 
-vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
-                                  constant VertexUniforms &vertexUniforms
+vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]], constant VertexUniforms &vertexUniforms
                                   [[buffer(VertexBufferVertexUniforms)]]) {
     const float4 position = v.position;
     SkyVertexData out;
@@ -18,7 +17,8 @@ vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
 }
 
 fragment float4 skyboxFragment(SkyVertexData in [[stage_in]],
-                               constant SkyboxUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]],
+                               constant SkyboxUniforms &uniforms
+                               [[buffer(FragmentBufferMaterialUniforms)]],
                                texturecube<half> cubeTex [[texture(FragmentTextureCustom0)]],
                                sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]]) {
     return uniforms.color * float4(cubeTex.sample(cubeTexSampler, in.uv));
