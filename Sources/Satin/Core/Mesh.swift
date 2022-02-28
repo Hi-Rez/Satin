@@ -19,6 +19,7 @@ open class Mesh: Object, GeometryDelegate {
     
     public var uniformBufferIndex: Int = 0
     public var uniformBufferOffset: Int = 0
+    
     public var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
     public var vertexUniformsBuffer: MTLBuffer!
     

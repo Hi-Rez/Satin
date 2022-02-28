@@ -109,6 +109,7 @@ class MulticastObserver<T> {
     open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
+            _updateTranslationMatrix = true
             observers.invoke { $0.updatedPosition?(self) }
         }
     }
@@ -116,6 +117,8 @@ class MulticastObserver<T> {
     open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
+            _updateRotationMatrix = true
+            _updateOrientationMatrix = true
             observers.invoke { $0.updatedOrientation?(self) }
         }
     }
@@ -123,6 +126,7 @@ class MulticastObserver<T> {
     open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
+            _updateScaleMatrix = true
             observers.invoke { $0.updatedScale?(self) }
         }
     }
@@ -154,28 +158,60 @@ class MulticastObserver<T> {
         return _worldBounds
     }
     
+    var _updateTranslationMatrix: Bool = true
+    var _translationMatrix: matrix_float4x4 = matrix_identity_float4x4
+    
     public var translationMatrix: matrix_float4x4 {
-        return translationMatrix3f(position)
+        if _updateTranslationMatrix {
+            _translationMatrix = translationMatrix3f(position)
+            _updateTranslationMatrix = false
+        }
+        return _translationMatrix
     }
+    
+    var _updateScaleMatrix: Bool = true
+    var _scaleMatrix: matrix_float4x4 = matrix_identity_float4x4
     
     public var scaleMatrix: matrix_float4x4 {
-        return scaleMatrix3f(scale)
+        if _updateScaleMatrix {
+            _scaleMatrix = scaleMatrix3f(scale)
+            _updateScaleMatrix = false
+        }
+        return _scaleMatrix
     }
     
+    var _updateRotationMatrix: Bool = true
+    var _rotationMatrix: matrix_float4x4 = matrix_identity_float4x4
+    
     public var rotationMatrix: matrix_float4x4 {
-        return matrix_float4x4(orientation)
+        if _updateRotationMatrix {
+            _rotationMatrix = matrix_float4x4(orientation)
+            _updateRotationMatrix = false
+        }
+        return _rotationMatrix
+    }
+    
+    var _updateOrientationMatrix: Bool = true
+    var _orientationMatrix: matrix_float3x3 = matrix_identity_float3x3
+    
+    public var orientationMatrix: matrix_float3x3 {
+        if _updateOrientationMatrix {
+            _orientationMatrix = simd_matrix3x3(orientation)
+            _updateOrientationMatrix = false
+        }
+        return _orientationMatrix
     }
     
     public var forwardDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldForwardDirection)
+        return simd_normalize(orientationMatrix * Satin.worldForwardDirection)
     }
     
     public var upDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldUpDirection)
+        return simd_normalize(orientationMatrix * Satin.worldUpDirection)
     }
     
     public var rightDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(orientation) * Satin.worldRightDirection)
+        return simd_normalize(orientationMatrix * Satin.worldRightDirection)
     }
     
     public var worldForwardDirection: simd_float3 {
