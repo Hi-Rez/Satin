@@ -6,6 +6,7 @@ typedef struct {
     matrix_float4x4 modelViewProjectionMatrix;
     matrix_float4x4 inverseViewMatrix;
     matrix_float3x3 normalMatrix;
+    float4 viewport;
     float3 worldCameraPosition;
     float3 worldCameraViewDirection;
 } VertexUniforms;

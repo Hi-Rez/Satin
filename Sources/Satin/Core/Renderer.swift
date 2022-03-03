@@ -48,7 +48,7 @@ open class Renderer
             {
                 let width = Double(size.width)
                 let height = Double(size.height)
-                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: Double(camera.near), zfar: Double(camera.far))
+                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true
@@ -77,7 +77,18 @@ open class Renderer
     public var stencilStoreAction: MTLStoreAction = .dontCare
     public var clearStencil: UInt32 = 0
     
-    public var viewport = MTLViewport()
+    public var viewport = MTLViewport() {
+        didSet {
+            _viewport = simd_make_float4(
+                Float(viewport.originX),
+                Float(viewport.originY),
+                Float(viewport.width),
+                Float(viewport.height)
+            )
+        }
+    }
+    
+    private var _viewport: simd_float4 = .zero
     
     public init(context: Context,
                 scene: Object,
@@ -239,7 +250,7 @@ open class Renderer
         
         if let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
         {
-            mesh.update(camera: camera)
+            mesh.update(camera: camera, viewport: _viewport)
             material.update(camera: camera)
             renderEncoder.setRenderPipelineState(pipeline)
             material.bind(renderEncoder)

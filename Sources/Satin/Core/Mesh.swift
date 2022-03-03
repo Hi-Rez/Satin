@@ -96,7 +96,7 @@ open class Mesh: Object, GeometryDelegate {
         material.context = context
     }
     
-    func updateUniforms(camera: Camera) {
+    func updateUniforms(camera: Camera, viewport: simd_float4) {
         if vertexUniforms != nil {
             vertexUniforms[0].modelMatrix = worldMatrix
             vertexUniforms[0].viewMatrix = camera.viewMatrix
@@ -105,6 +105,7 @@ open class Mesh: Object, GeometryDelegate {
             vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.viewProjectionMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].inverseViewMatrix = camera.worldMatrix
             vertexUniforms[0].normalMatrix = normalMatrix
+            vertexUniforms[0].viewport = viewport
             vertexUniforms[0].worldCameraPosition = camera.worldPosition
             vertexUniforms[0].worldCameraViewDirection = camera.viewDirection
         }
@@ -125,8 +126,8 @@ open class Mesh: Object, GeometryDelegate {
         super.update()
     }
     
-    open func update(camera: Camera) {
-        updateUniforms(camera: camera)
+    open func update(camera: Camera, viewport: simd_float4) {
+        updateUniforms(camera: camera, viewport: viewport)
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder) {
