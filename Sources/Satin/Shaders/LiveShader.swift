@@ -30,7 +30,7 @@ class LiveShader: SourceShader {
             return try compiler.parse(pipelineURL)
         }
         catch {
-            print(error.localizedDescription)
+            print("\(label) Shader: \(error.localizedDescription)")
         }
         return nil
     }
