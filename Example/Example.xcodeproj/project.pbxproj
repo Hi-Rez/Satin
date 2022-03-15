@@ -582,7 +582,6 @@
 		E17D2C1126BBB7DF005A136A /* AudioInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
 		E17E831424A8213200F23EAD /* Text.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Text.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E180FD6F27E13A53002D6DF5 /* Octasphere-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Octasphere-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E180FD7027E13A53002D6DF5 /* 3D-macOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "3D-macOS copy-Info.plist"; path = "/Users/rezaali/Code/Apple/Satin/Example/3D-macOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		E180FD7127E13A85002D6DF5 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E182809B24C52061000810D1 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E18280AB24C520AB000810D1 /* ExtrudedText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtrudedText.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1171,7 +1170,6 @@
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
-				E180FD7027E13A53002D6DF5 /* 3D-macOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -8097,7 +8095,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = H5N5GRKN9A;
-				INFOPLIST_FILE = "3D-macOS copy-Info.plist";
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -8119,7 +8117,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = H5N5GRKN9A;
-				INFOPLIST_FILE = "3D-macOS copy-Info.plist";
+				INFOPLIST_FILE = Source/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
