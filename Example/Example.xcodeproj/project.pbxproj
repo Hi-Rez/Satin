@@ -179,6 +179,17 @@
 		E17E830524A8213200F23EAD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E17E830D24A8213200F23EAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E17E830E24A8213200F23EAD /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E180FD5E27E13A53002D6DF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E180FD6027E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6127E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6227E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6327E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6427E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6527E13A53002D6DF5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E180FD6627E13A53002D6DF5 /* Pods_3D_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1635347F5656298D445729B4 /* Pods_3D_macOS.framework */; };
+		E180FD6827E13A53002D6DF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E180FD6927E13A53002D6DF5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E180FD7227E13A85002D6DF5 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E180FD7127E13A85002D6DF5 /* Renderer.swift */; };
 		E18280A024C520AB000810D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E18280A424C520AB000810D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E18280A524C520AB000810D1 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
@@ -570,6 +581,9 @@
 		E17B986E2451488100216411 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E17D2C1126BBB7DF005A136A /* AudioInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
 		E17E831424A8213200F23EAD /* Text.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Text.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E180FD6F27E13A53002D6DF5 /* Octasphere-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Octasphere-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E180FD7027E13A53002D6DF5 /* 3D-macOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "3D-macOS copy-Info.plist"; path = "/Users/rezaali/Code/Apple/Satin/Example/3D-macOS copy-Info.plist"; sourceTree = "<absolute>"; };
+		E180FD7127E13A85002D6DF5 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E182809B24C52061000810D1 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E18280AB24C520AB000810D1 /* ExtrudedText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtrudedText.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18280BE24C5216C000810D1 /* ExtrudedText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtrudedText.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -865,6 +879,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E180FD5F27E13A53002D6DF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E180FD6027E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6127E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6227E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6327E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6427E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6527E13A53002D6DF5 /* (null) in Frameworks */,
+				E180FD6627E13A53002D6DF5 /* Pods_3D_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E18280A124C520AB000810D1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1143,6 +1171,7 @@
 				66E6788A243EC73A0070B294 /* Products */,
 				A334006F224D8A4174A05BA2 /* Pods */,
 				E8DB960D2E2F0A7613DAFDAF /* Frameworks */,
+				E180FD7027E13A53002D6DF5 /* 3D-macOS copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1202,6 +1231,7 @@
 				E1875BB1269F3CC400D3AF12 /* PostProcessing-tvOS.app */,
 				E19B058D26BB701700D91376 /* AudioInput.app */,
 				E1DED1AF27B4D808008C9F1F /* Shipping.app */,
+				E180FD6F27E13A53002D6DF5 /* Octasphere-macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1242,6 +1272,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E180FD5927E13A24002D6DF5 /* Octasphere */,
 				E1DED19627B4D7D2008C9F1F /* Shipping */,
 				E19B057D26BB6FF000D91376 /* AudioInput */,
 				E1D62564269D21B6000094C1 /* PostProcessing */,
@@ -1506,6 +1537,14 @@
 				E1F1B32324BAA91F00563923 /* Renderer.swift */,
 			);
 			path = Text;
+			sourceTree = "<group>";
+		};
+		E180FD5927E13A24002D6DF5 /* Octasphere */ = {
+			isa = PBXGroup;
+			children = (
+				E180FD7127E13A85002D6DF5 /* Renderer.swift */,
+			);
+			path = Octasphere;
 			sourceTree = "<group>";
 		};
 		E182809A24C52041000810D1 /* ExtrudedText */ = {
@@ -2140,6 +2179,26 @@
 			name = "Text-macOS";
 			productName = Example;
 			productReference = E17E831424A8213200F23EAD /* Text.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E180FD5A27E13A53002D6DF5 /* Octasphere-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E180FD6C27E13A53002D6DF5 /* Build configuration list for PBXNativeTarget "Octasphere-macOS" */;
+			buildPhases = (
+				E180FD5B27E13A53002D6DF5 /* [CP] Check Pods Manifest.lock */,
+				E180FD5C27E13A53002D6DF5 /* Sources */,
+				E180FD5F27E13A53002D6DF5 /* Frameworks */,
+				E180FD6727E13A53002D6DF5 /* Resources */,
+				E180FD6A27E13A53002D6DF5 /* Touch Frameworks */,
+				E180FD6B27E13A53002D6DF5 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Octasphere-macOS";
+			productName = Example;
+			productReference = E180FD6F27E13A53002D6DF5 /* Octasphere-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E182809C24C520AB000810D1 /* ExtrudedText-macOS */ = {
@@ -2855,6 +2914,7 @@
 				E1875B9F269F3CC400D3AF12 /* PostProcessing-tvOS */,
 				E19B057E26BB701700D91376 /* AudioInput-macOS */,
 				E1DED19927B4D808008C9F1F /* Shipping-macOS */,
+				E180FD5A27E13A53002D6DF5 /* Octasphere-macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -3065,6 +3125,15 @@
 			files = (
 				E17E830D24A8213200F23EAD /* Assets.xcassets in Resources */,
 				E17E830E24A8213200F23EAD /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E180FD6727E13A53002D6DF5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E180FD6827E13A53002D6DF5 /* Assets.xcassets in Resources */,
+				E180FD6927E13A53002D6DF5 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4743,6 +4812,63 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E180FD5B27E13A53002D6DF5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-3D-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E180FD6A27E13A53002D6DF5 /* Touch Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Touch Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step makes sures that changes to development pods\n# are properly recompiled and reflected in each app run\nfind \"${SRCROOT}/Pods\" -type f -name *frameworks.sh -exec bash -c \"touch \\\"{}\\\"\" \\;\n";
+		};
+		E180FD6B27E13A53002D6DF5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-3D-macOS/Pods-3D-macOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		E182809D24C520AB000810D1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6588,6 +6714,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E180FD5C27E13A53002D6DF5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E180FD7227E13A85002D6DF5 /* Renderer.swift in Sources */,
+				E180FD5E27E13A53002D6DF5 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E182809E24C520AB000810D1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7948,6 +8083,50 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.text";
 				PRODUCT_NAME = Text;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E180FD6D27E13A53002D6DF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 78B376D5FB0EFB4DBD544193 /* Pods-3D-macOS.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = "3D-macOS copy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E180FD6E27E13A53002D6DF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A40681A43CD59A88EC351C3C /* Pods-3D-macOS.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = "3D-macOS copy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.3d";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -9523,6 +9702,15 @@
 			buildConfigurations = (
 				E17E831224A8213200F23EAD /* Debug */,
 				E17E831324A8213200F23EAD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E180FD6C27E13A53002D6DF5 /* Build configuration list for PBXNativeTarget "Octasphere-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E180FD6D27E13A53002D6DF5 /* Debug */,
+				E180FD6E27E13A53002D6DF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

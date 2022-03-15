@@ -1,12 +1,13 @@
 //
-//  IcoSphereGeometry.swift
+//  OctaSphereGeometry.swift
 //  Satin
 //
-//  Created by Reza Ali on 9/11/19.
-//  Copyright © 2019 Reza Ali. All rights reserved.
+//  Created by Reza Ali on 3/15/22.
 //
 
-open class IcoSphereGeometry: Geometry {
+import Foundation
+
+open class OctaSphereGeometry: Geometry {
     override public init() {
         super.init()
         setupData(radius: 1, res: 1)
@@ -18,7 +19,7 @@ open class IcoSphereGeometry: Geometry {
     }
 
     func setupData(radius: Float, res: Int) {
-        var geometryData = generateIcoSphereGeometryData(radius, Int32(res))
+        var geometryData = generateOctaSphereGeometryData(radius, Int32(res))
         setFrom(&geometryData)
         freeGeometryData(&geometryData)
     }

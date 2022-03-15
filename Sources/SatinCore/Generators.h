@@ -45,6 +45,8 @@ GeometryData generateSphereGeometryData(float radius, int angularResolution,
 
 GeometryData generateIcoSphereGeometryData(float radius, int res);
 
+GeometryData generateOctaSphereGeometryData(float radius, int res);
+
 GeometryData generateSquircleGeometryData(float size, float p, int angularResolution,
                                           int radialResolution);
 

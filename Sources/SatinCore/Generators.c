@@ -1299,6 +1299,126 @@ GeometryData generateIcoSphereGeometryData(float radius, int res) {
     };
 }
 
+// Referenced from: https://prideout.net/blog/octasphere/
+
+GeometryData generateOctaSphereGeometryData(float radius, int res)
+{
+    const int n = (1 << res) + 1;
+    const float nf = (float)n;
+    
+    const int verticesPerPatch = n * (n + 1) / 2;
+    const int trianglesPerPatch = (n - 2) * (n - 1) + n - 1;
+    const int patches = 1;
+    
+    const int vertices = verticesPerPatch * patches;
+    const int triangles = trianglesPerPatch * patches;
+
+    Vertex *vtx = (Vertex *)malloc(vertices * sizeof(Vertex));
+    TriangleIndices *ind = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
+
+    const int nMinusOne = n - 1;
+    const float nMinusOnef = nf - 1.0;
+    
+    const simd_float2 uv = simd_make_float2(0.0, 0.0);
+    const simd_float3 normal = simd_make_float3(0.0, 0.0, 0.0);
+    
+    int vertexIndex = 0;
+    for (int v = 0; v < n; v++) {
+        const float vf = (float)v;
+        const float theta = M_PI_2 * vf / nMinusOnef;
+        
+        const float cosTheta = cos(theta);
+        const float sinTheta = sin(theta);
+        
+        const simd_float3 a = simd_make_float3(0.0, sinTheta, cosTheta);
+        const simd_float3 b = simd_make_float3(cosTheta, sinTheta, 0.0);
+        
+        const int segments = n - 1 - v;
+        
+        vtx[vertexIndex++] = (Vertex) {
+            .position = simd_make_float4(radius * a, 1.0),
+            .normal = normal,
+            .uv = uv
+        };
+        
+        if(segments > 0) {
+            const float angle = acos(simd_dot(a, b));
+            const float angleInc = angle / (float)segments;
+            const simd_float3 axis = simd_normalize(simd_cross(a, b));
+            
+            for(int s = 1; s < segments; s++) {
+                const float sf = (float)s;
+                const simd_quatf quat = simd_quaternion(sf * angleInc, axis);
+                const simd_float3 p = simd_act(quat, a);
+                vtx[vertexIndex++] = (Vertex) {
+                    .position = simd_make_float4(radius * p, 1.0),
+                    .normal = normal,
+                    .uv = uv
+                };
+            }
+        
+            vtx[vertexIndex++] = (Vertex) {
+                .position = simd_make_float4(radius * b, 1.0),
+                .normal = normal,
+                .uv = uv
+            };
+        }
+    }
+    
+    int j0 = 0;
+    int triangleIndex = 0;
+    for (int col_index = 0; col_index < nMinusOne; col_index++) {
+        const int col_height = n - 1 - col_index;
+        const int j1 = j0 + 1;
+        const int j2 = j0 + col_height + 1;
+        const int j3 = j0 + col_height + 2;
+        for (int row = 0; row < col_height - 1; row++) {
+            ind[triangleIndex++] = (TriangleIndices) { .i0 = j0 + row, .i1 = j1 + row, .i2 = j2 + row };
+            ind[triangleIndex++] = (TriangleIndices) { .i0 = j2 + row, .i1 = j1 + row, .i2 = j3 + row };
+        }
+        const int row = col_height - 1;
+        ind[triangleIndex++] = (TriangleIndices) { .i0 = j0 + row, .i1 = j1 + row, .i2 = j2 + row };
+        j0 = j2;
+    }
+    
+    GeometryData geoData = (GeometryData) {
+        .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
+    };
+    
+    {
+        GeometryData copied;
+        copyGeometryData(&copied, &geoData);
+        transformGeometryData(&copied, simd_matrix4x4(simd_quaternion(M_PI_2, simd_make_float3(0.0, 1.0, 0.0))));
+        combineGeometryData(&geoData, &copied);
+        freeGeometryData(&copied);
+    }
+    
+    {
+        GeometryData copied;
+        copyGeometryData(&copied, &geoData);
+        transformGeometryData(&copied, simd_matrix4x4(simd_quaternion(M_PI, simd_make_float3(0.0, 1.0, 0.0))));
+        combineGeometryData(&geoData, &copied);
+        freeGeometryData(&copied);
+    }
+    
+    {
+        GeometryData copied;
+        copyGeometryData(&copied, &geoData);
+        transformGeometryData(&copied, simd_matrix4x4(simd_quaternion(M_PI, simd_make_float3(1.0, 0.0, 0.0))));
+        combineGeometryData(&geoData, &copied);
+        freeGeometryData(&copied);
+    }
+    
+    for (int i = 0; i < geoData.vertexCount; i++) {
+        const simd_float4 p = geoData.vertexData[i].position;
+        const simd_float3 n = simd_normalize(simd_make_float3(p.x, p.y, p.z));
+        geoData.vertexData[i].normal = n;
+        geoData.vertexData[i].uv = simd_make_float2((atan2(n.x, n.z) + M_PI) / (2.0 * M_PI), acos(n.y) / M_PI);
+    }
+    
+    return geoData;
+}
+
 GeometryData generateSquircleGeometryData(float size, float p, int angularResolution,
                                           int radialResolution) {
     const float rad = size * 0.5;
