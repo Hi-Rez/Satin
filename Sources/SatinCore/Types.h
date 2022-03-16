@@ -52,11 +52,15 @@ typedef struct {
     TriangleIndices *indexData;
 } GeometryData;
 
+GeometryData createGeometryData(void);
+
 void freeGeometryData(GeometryData *data);
 
 void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int end);
 void copyGeometryIndexData(GeometryData *dest, GeometryData *src, int start, int end);
 void copyGeometryData(GeometryData *dest, GeometryData *src);
+
+void addTrianglesToGeometryData(GeometryData *dest, TriangleIndices *triangles, int triangleCount);
 
 void combineGeometryData(GeometryData *dest, GeometryData *src);
 void combineAndOffsetGeometryData(GeometryData *dest, GeometryData *src, simd_float3 offset);

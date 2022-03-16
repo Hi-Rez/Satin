@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E180FD5A27E13A53002D6DF5"
-               BuildableName = "3D-macOS copy.app"
+               BuildableName = "Octasphere-macOS.app"
                BlueprintName = "Octasphere-macOS"
                ReferencedContainer = "container:Example.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E180FD5A27E13A53002D6DF5"
-            BuildableName = "3D-macOS copy.app"
+            BuildableName = "Octasphere-macOS.app"
             BlueprintName = "Octasphere-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E180FD5A27E13A53002D6DF5"
-            BuildableName = "3D-macOS copy.app"
+            BuildableName = "Octasphere-macOS.app"
             BlueprintName = "Octasphere-macOS"
             ReferencedContainer = "container:Example.xcodeproj">
          </BuildableReference>

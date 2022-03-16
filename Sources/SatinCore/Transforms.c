@@ -58,14 +58,14 @@ simd_float4x4 frustrumMatrixf(float left, float right, float bottom, float top, 
     const float topMinusBottom = top - bottom;
     const float farMinusNear = far - near;
     const float twoTimesNear = 2.0 * near;
-    
+
     const float col0x = twoTimesNear / rightMinusLeft;
     const float col1y = twoTimesNear / topMinusBottom;
     const float col2x = (right + left) / rightMinusLeft;
     const float col2y = (top + bottom) / topMinusBottom;
     const float col2z = near / farMinusNear;
     const float col3z = (far * near) / farMinusNear;
-    
+
     const simd_float4 col0 = simd_make_float4(col0x, 0.0, 0.0, 0.0);
     const simd_float4 col1 = simd_make_float4(0.0, col1y, 0.0, 0.0);
     const simd_float4 col2 = simd_make_float4(col2x, col2y, col2z, -1.0);
@@ -109,7 +109,7 @@ simd_float4x4 lookAtMatrix3f(simd_float3 eye, simd_float3 at, simd_float3 up) {
     result.columns[2].x = zAxis.x;
     result.columns[2].y = zAxis.y;
     result.columns[2].z = zAxis.z;
-    
+
     result.columns[3].x = eye.x;
     result.columns[3].y = eye.y;
     result.columns[3].z = eye.z;

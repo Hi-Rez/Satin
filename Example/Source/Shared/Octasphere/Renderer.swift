@@ -20,7 +20,8 @@ class Renderer: Forge.Renderer {
     #endif
     
     lazy var mesh: Mesh = {
-        return Mesh(geometry: OctaSphereGeometry(radius: 1.0, res: 3), material: BasicDiffuseMaterial(0.7))
+        let geo = OctaSphereGeometry(radius: 1, res: 3)
+        return Mesh(geometry: geo, material: BasicDiffuseMaterial(0.75))
     }()
     
     lazy var scene: Object = {
@@ -34,11 +35,8 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var camera: PerspectiveCamera = {
-        let camera = PerspectiveCamera()
+        let camera = PerspectiveCamera(position: simd_make_float3(0.0, 0.0, 5.0), near: 0.01, far: 100.0)
         camera.fov = 30
-        camera.near = 0.01
-        camera.far = 100.0
-        camera.position = simd_make_float3(0.0, 0.0, 5.0)
         return camera
     }()
     

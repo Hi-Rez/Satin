@@ -11,14 +11,15 @@
 #include <stdio.h>
 #include "Types.h"
 
-GeometryData generateBoxGeometryData(float width, float height, float depth,
-                                     float centerX, float centerY, float centerZ,
-                                     int widthResolution, int heightResolution, int depthResolution);
+GeometryData generateBoxGeometryData(float width, float height, float depth, float centerX,
+                                     float centerY, float centerZ, int widthResolution,
+                                     int heightResolution, int depthResolution);
 
-GeometryData generateCapsuleGeometryData(float radius, float height, int angularResolution, int radialResolution, int verticalResolution, int axis); 
+GeometryData generateCapsuleGeometryData(float radius, float height, int angularResolution,
+                                         int radialResolution, int verticalResolution, int axis);
 
 GeometryData generateConeGeometryData(float radius, float height, int angularResolution,
-                                          int radialResolution, int verticalResolution);
+                                      int radialResolution, int verticalResolution);
 
 GeometryData generateCylinderGeometryData(float radius, float height, int angularResolution,
                                           int radialResolution, int verticalResolution);
@@ -58,5 +59,11 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
                                                      float radius, int angularResolution,
                                                      int edgeXResolution, int edgeYResolution,
                                                      int edgeZResolution, int radialResolution);
+
+GeometryData generateTubeGeometryData(float radius, float height, float startAngle, float endAngle,
+                                      int angularResolution, int verticalResolution);
+
+GeometryData generateRoundedBoxGeometryData(float width, float height, float depth, float radius,
+                                            int res);
 
 #endif /* Generators_h */

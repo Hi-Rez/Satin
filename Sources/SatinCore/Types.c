@@ -17,6 +17,10 @@ void freeTriangleFaceMap(TriangleFaceMap *map) {
     map->count = 0;
 }
 
+GeometryData createGeometryData() {
+    return (GeometryData) { .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL };
+}
+
 void freeGeometryData(GeometryData *data) {
     if (data->vertexCount <= 0 && data->vertexData == NULL) { return; }
     free(data->vertexData);
@@ -47,6 +51,21 @@ void combineIndexGeometryData(GeometryData *dest, GeometryData *src,
             dest->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * src->indexCount);
             memcpy(dest->indexData, src->indexData, sizeof(TriangleIndices) * src->indexCount);
             dest->indexCount = src->indexCount;
+        }
+    }
+}
+
+void addTrianglesToGeometryData(GeometryData *dest, TriangleIndices *triangles, int triangleCount) {
+    if (triangleCount > 0) {
+        if (dest->indexCount > 0) {
+            int totalCount = triangleCount + dest->indexCount;
+            dest->indexData = realloc(dest->indexData, totalCount * sizeof(TriangleIndices));
+            memcpy(dest->indexData + dest->indexCount, triangles, triangleCount * sizeof(TriangleIndices));
+            dest->indexCount += triangleCount;
+        } else {
+            dest->indexData = (TriangleIndices *)malloc(sizeof(TriangleIndices) * triangleCount);
+            memcpy(dest->indexData, triangles, sizeof(TriangleIndices) * triangleCount);
+            dest->indexCount = triangleCount;
         }
     }
 }
