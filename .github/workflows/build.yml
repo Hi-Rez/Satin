@@ -4,13 +4,12 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        xcode_version: latest 
     runs-on: macos-latest
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
       - name: Check out Satin 
         uses: actions/checkout@v2
       - name: Build Satin 
