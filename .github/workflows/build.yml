@@ -1,14 +1,12 @@
 name: CI
 
 on: [push, pull_request]
-env:
-  XCODE_VER: 12.4
 
 jobs:
   build:
     strategy:
       matrix:
-        xcode_version: ['12.4']
+        xcode_version: latest 
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
