@@ -16,9 +16,9 @@ typedef struct {
 
 typedef struct {
     float4 position [[position]];
-    float4 near;
     float4 far;
-    float2 uv;
+    float3 cameraPosition [[flat]];
+    float2 cameraDepth [[flat]];
 } RayMarchedData;
 
 struct FragOut {
@@ -61,14 +61,25 @@ float render( float3 ro, float3 rd )
 vertex RayMarchedData rayMarchedVertex( Vertex in [[stage_in]],
     constant VertexUniforms &uniforms [[buffer( VertexBufferVertexUniforms )]] )
 {
+    const float4x4 projectionMatrix = uniforms.projectionMatrix;
+    const float4x4 inverseViewMatrix = uniforms.inverseViewMatrix;
     const float4x4 inverseModelViewProjectionMatrix = uniforms.inverseModelViewProjectionMatrix;
+
+    const float c = projectionMatrix[2].z;
+    const float d = projectionMatrix[3].z;
+    const float near = d / c;
+    const float far = d / (1.0 + c);
+
+    const float cameraDelta = far - near;
+    const float cameraA = far / cameraDelta;
+    const float cameraB = (far * near) / cameraDelta;
 
     RayMarchedData out;
     out.position = in.position;
-    out.uv = in.uv;
     auto pos = out.position.xy / out.position.w;
-    out.near = inverseModelViewProjectionMatrix * float4(pos, -1.0, 1.0);
     out.far = inverseModelViewProjectionMatrix * float4(pos, +1.0, 1.0);
+    out.cameraDepth = float2(cameraA, cameraB);
+    out.cameraPosition = inverseViewMatrix[3].xyz;
 
     return out;
 }
@@ -77,7 +88,7 @@ fragment FragOut rayMarchedFragment( RayMarchedData in [[stage_in]],
     constant RayMarchedUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]],
     constant float4x4 *view [[buffer( FragmentBufferCustom0 )]] )
 {
-    const float3 ro = in.near.xyz / in.near.w;
+    const float3 ro = in.cameraPosition;
     const float3 rd = normalize( in.far.xyz / in.far.w - ro );
 
     const float d = render( ro, rd );
@@ -88,7 +99,12 @@ fragment FragOut rayMarchedFragment( RayMarchedData in [[stage_in]],
     }
 
     FragOut out;
-    out.depth = 0;
+    const float2 cameraDepth = in.cameraDepth;
+    const float a = cameraDepth.x;
+    const float b = cameraDepth.y;
+
+    const float4 ep = ( *view ) * float4( p, 1.0 );
+    out.depth = ( a + b / ep.z );
 
     const float3 color = float3( 1.00000, 0.52941, 0.19216 );
     out.color = float4( color, 1.0 );
