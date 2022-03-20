@@ -65,6 +65,8 @@ vertex RayMarchedData rayMarchedVertex( Vertex in [[stage_in]],
     const float4x4 inverseViewMatrix = uniforms.inverseViewMatrix;
     const float4x4 inverseModelViewProjectionMatrix = uniforms.inverseModelViewProjectionMatrix;
 
+    // See https://www.iquilezles.org/www/articles/raypolys/raypolys.htm
+
     const float c = projectionMatrix[2].z;
     const float d = projectionMatrix[3].z;
     const float near = d / c;
