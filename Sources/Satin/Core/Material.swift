@@ -496,6 +496,7 @@ public extension Material {
         parameters.setFrom(shader.parameters)
         parameters.label = shader.parameters.label
         uniformsNeedsUpdate = true
+        setupUniforms()
         delegate?.updated(material: self)
     }
 }
