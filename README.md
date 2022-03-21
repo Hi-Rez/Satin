@@ -1,5 +1,10 @@
 # Satin - A 3D Graphics Framework built on Apple's Metal
 
+![build status](https://github.com/Hi-Rez/Satin/actions/workflows/build.yml/badge.svg)
+<img src="https://img.shields.io/badge/SPM-5.5-blue.svg?style=flat"
+     alt="Swift Package Manager (SPM) compatible" />
+
+
 # About :wave:
 
 Satin is a 3D graphics framework (inspired by threejs) that helps designers and developers work with Apple's Metal API. Satin provides helpful classes for creating meshes, materials, buffers, uniforms, geometries, pipelines (shaders), compute kernels, etc and render them on screen or to textures. 

@@ -1,0 +1,18 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
+      - name: Check out Satin 
+        uses: actions/checkout@v2
+      - name: Build Satin 
+        run: |
+          set -euo pipefail
+          swift build
