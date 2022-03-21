@@ -103,6 +103,7 @@ open class Mesh: Object, GeometryDelegate {
             vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
             vertexUniforms[0].projectionMatrix = camera.projectionMatrix
             vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.viewProjectionMatrix, vertexUniforms[0].modelMatrix)
+            vertexUniforms[0].inverseModelViewProjectionMatrix = simd_inverse(vertexUniforms[0].modelViewProjectionMatrix)
             vertexUniforms[0].inverseViewMatrix = camera.worldMatrix
             vertexUniforms[0].normalMatrix = normalMatrix
             vertexUniforms[0].viewport = viewport
