@@ -181,6 +181,17 @@ open class ParameterGroup: Codable, ParameterDelegate {
             }
         }
     }
+    
+    public func setValuesFrom(_ incomingParams: ParameterGroup) {
+        let incomingKeys = Set(Array(incomingParams.paramsMap.keys))
+        let exisitingKeys = Set(Array(self.paramsMap.keys))
+        let commonKeys = exisitingKeys.intersection(incomingKeys)
+        for key in commonKeys {
+            if let inParam = incomingParams.paramsMap[key] {
+                setParameterFrom(param: inParam, setValue: true, setOptions: false, append: false)
+            }
+        }
+    }
 
     private enum CodingKeys: CodingKey {
         case params, title
