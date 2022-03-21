@@ -16,8 +16,8 @@ open class SourceShader: Shader {
         }
     }
 
-    public var source: String?
-    var shaderSource: String?
+    public private(set) var source: String?
+    public private(set) var shaderSource: String?
 
     var sourceNeedsUpdate: Bool = true {
         didSet {
@@ -27,9 +27,9 @@ open class SourceShader: Shader {
         }
     }
 
-    public required init(_ label: String, _ pipelineURL: URL) {
+    public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
-        super.init(label)
+        super.init(label, vertexFunctionName, fragmentFunctionName)
         setupSource()
     }
 
@@ -92,11 +92,18 @@ open class SourceShader: Shader {
         do {
             let compiler = MetalFileCompiler()
             var source = try compiler.parse(includesURL)
+
             injectConstants(source: &source)
             injectVertex(source: &source)
             injectVertexData(source: &source)
             injectVertexUniforms(source: &source)
+
             source += shaderSource
+
+            if !shaderSource.contains(vertexFunctionName) {
+
+            }
+            
             injectPassThroughVertex(label: label, source: &source)
             self.shaderSource = shaderSource
             self.source = source
@@ -108,7 +115,7 @@ open class SourceShader: Shader {
     }
 
     override public func clone() -> Shader {
-        let clone: SourceShader = type(of: self).init(label, pipelineURL)
+        let clone: SourceShader = type(of: self).init(label, pipelineURL, vertexFunctionName, fragmentFunctionName)
 
         clone.label = label
         clone.pipelineURL = pipelineURL
