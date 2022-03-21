@@ -24,9 +24,9 @@ open class Shader {
         [.argumentInfo, .bufferTypeInfo]
     }
 
-    public var pipelineReflection: MTLRenderPipelineReflection?
-    public var pipeline: MTLRenderPipelineState?
-    public var library: MTLLibrary?
+    public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
+    public internal(set) var pipeline: MTLRenderPipelineState?
+    public internal(set) var library: MTLLibrary?
     var libraryURL: URL?
 
     public var blending: Blending = .alpha {
@@ -231,40 +231,13 @@ open class Shader {
     
     func setupParameters() {
         guard let reflection = pipelineReflection else { return }
-        
         if let fragmentArgs = reflection.fragmentArguments {
             let args = fragmentArgs[FragmentBufferIndex.MaterialUniforms.rawValue]
-            let params = ParameterGroup(label.titleCase + " Uniforms")
-            if let buffer = args.bufferStructType {
-                for member in buffer.members {
-                    let name = member.name.titleCase
-                    switch member.dataType {
-                    case .float:
-                        params.append(FloatParameter(name))
-                    case .float2:
-                        params.append(Float2Parameter(name))
-                    case .float3:
-                        params.append(Float3Parameter(name))
-                    case .float4:
-                        params.append(Float4Parameter(name))
-                    case .int:
-                        params.append(IntParameter(name))
-                    case .int2:
-                        params.append(Int2Parameter(name))
-                    case .int3:
-                        params.append(Int3Parameter(name))
-                    case .int4:
-                        params.append(Int4Parameter(name))
-                    case .bool:
-                        params.append(BoolParameter(name))
-                    default:
-                        break
-                    }
-                }
+            if let bufferStruct = args.bufferStructType {
+                parameters = parseParameters(bufferStruct: bufferStruct)
+                parameters.label = label.titleCase + " Uniforms"
+                parametersNeedsUpdate = false
             }
-            
-            parameters = params            
-            parametersNeedsUpdate = false
         }
     }
     
