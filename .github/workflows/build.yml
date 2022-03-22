@@ -16,3 +16,7 @@ jobs:
         run: |
           set -euo pipefail
           swift build
+      - name: Test Satin
+        run: |
+          set -euo pipefail
+          swift test 
