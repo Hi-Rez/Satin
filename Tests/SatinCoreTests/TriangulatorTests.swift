@@ -7,6 +7,19 @@
 
 import XCTest
 import SatinCore
+import CryptoKit
+
+func MD5(data: Data) -> String {
+    let digest = Insecure.MD5.hash(data: data)
+
+    return digest.map {
+        String(format: "%02hhx", $0)
+    }.joined()
+}
+
+func MD5<T>(ptr: UnsafeMutablePointer<T>, count: Int) -> String {
+    MD5(data: Data(bytesNoCopy: UnsafeMutableRawPointer(ptr), count: count * MemoryLayout<T>.stride, deallocator: .none))
+}
 
 class TriangulatorTests: XCTestCase {
     
@@ -17,8 +30,8 @@ class TriangulatorTests: XCTestCase {
         [(0.589844, 5.738281), (1.411458, 5.738281), (2.233073, 5.738281), (3.054688, 5.738281), (3.297546, 5.728882), (3.522217, 5.700684), (3.728699, 5.653687), (3.916992, 5.587891), (4.004318, 5.547943), (4.087097, 5.503296), (4.165329, 5.453949), (4.239014, 5.399902), (4.308151, 5.341156), (4.372742, 5.277710), (4.432785, 5.209564), (4.488281, 5.136719), (4.546875, 5.046143), (4.597656, 4.952148), (4.640625, 4.854736), (4.675781, 4.753906), (4.703125, 4.649658), (4.722656, 4.541992), (4.734375, 4.430908), (4.738281, 4.316406), (4.733459, 4.183716), (4.718994, 4.057129), (4.694885, 3.936646), (4.661133, 3.822266), (4.617737, 3.713989), (4.564697, 3.611816), (4.502014, 3.515747), (4.429688, 3.425781), (4.340820, 3.335938), (4.234375, 3.250000), (4.110352, 3.167969), (3.968750, 3.089844), (4.175537, 3.003174), (4.354492, 2.911133), (4.505615, 2.813721), (4.570740, 2.763000), (4.628906, 2.710938), (4.719543, 2.612732), (4.798096, 2.505615), (4.864563, 2.389587), (4.918945, 2.264648), (4.961243, 2.130798), (4.991455, 1.988037), (5.009583, 1.836365), (5.015625, 1.675781), (5.010193, 1.538757), (4.993896, 1.405029), (4.966736, 1.274597), (4.928711, 1.147461), (4.879822, 1.023621), (4.820068, 0.903076), (4.749451, 0.785828), (4.667969, 0.671875), (4.600632, 0.590515), (4.528503, 0.514404), (4.451584, 0.443542), (4.369873, 0.377930), (4.283371, 0.317566), (4.192078, 0.262451), (3.995117, 0.167969), (3.778992, 0.094482), (3.543701, 0.041992), (3.289246, 0.010498), (3.015625, 0.000000), (2.207031, 0.000000), (1.398438, 0.000000), (0.589844, 0.000000), (0.589844, 0.819754), (0.589844, 1.639509), (0.589844, 2.459264), (0.589844, 3.279018), (0.589844, 4.098773), (0.589844, 4.918527), ]
     ]
 
-    func testTriangulatePerf() {
-        
+    func buildPaths() -> ([Int32], [UnsafeMutablePointer<simd_float2>?]) {
+
         var _lengths: [Int32] = []
         var _paths: [UnsafeMutablePointer<simd_float2>?] = []
         for path in paths {
@@ -29,6 +42,33 @@ class TriangulatorTests: XCTestCase {
             }
             _paths.append(p)
         }
+
+        return (_lengths, _paths)
+    }
+
+    func testTriangulate() {
+
+        var (_lengths, _paths) = buildPaths()
+
+        var cData = GeometryData(vertexCount: 0, vertexData: nil, indexCount: 0, indexData: nil)
+        triangulate(&_paths, &_lengths, 3, &cData)
+
+        XCTAssertEqual(cData.vertexCount, 161)
+        XCTAssertEqual(cData.indexCount, 163)
+        XCTAssertEqual(MD5(ptr: cData.vertexData, count: Int(cData.vertexCount)), "7831a04ee8532b4bdee45d3bd580dce3")
+        XCTAssertEqual(MD5(ptr: cData.indexData, count: Int(cData.indexCount)), "ca5d4028863569f75629928ba570c9fd")
+
+        freeGeometryData(&cData)
+
+        for path in _paths {
+            path?.deallocate()
+        }
+
+    }
+
+    func testTriangulatePerf() {
+
+        var (_lengths, _paths) = buildPaths()
         
         measure {
             for _ in 0..<100 {
