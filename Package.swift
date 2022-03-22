@@ -22,7 +22,11 @@ let package = Package(
         .target(
             name: "SatinCore",
             path: "Sources/SatinCore"
-        )
+        ),
+        .testTarget(
+            name: "SatinCoreTests",
+            dependencies: ["SatinCore"]
+        ),
     ],
     swiftLanguageVersions: [.v5]
 )
