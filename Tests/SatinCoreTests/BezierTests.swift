@@ -34,8 +34,8 @@ class BezierTests: XCTestCase {
 
         if depth > 8 { return }
 
-        let startMiddleAngle = acos(simd_dot(aVel, bVel))
-        let middleEndAngle = acos(simd_dot(bVel, cVel))
+        let startMiddleAngle = acos(dot(aVel, bVel))
+        let middleEndAngle = acos(dot(bVel, cVel))
 
         if (startMiddleAngle + middleEndAngle) > angleLimit {
             // Split curve into two curves (start, end)
@@ -63,9 +63,9 @@ class BezierTests: XCTestCase {
                                     _ b: SIMD2<Float>,
                                     _ c: SIMD2<Float>,
                                     _ angleLimit: Float) -> [SIMD2<Float>] {
-        let aVel = simd_normalize(quadraticBezierVelocity2(a, b, c, 0.0));
-        let bVel = simd_normalize(quadraticBezierVelocity2(a, b, c, 0.5));
-        let cVel = simd_normalize(quadraticBezierVelocity2(a, b, c, 1.0));
+        let aVel = normalize(quadraticBezierVelocity2(a, b, c, 0.0));
+        let bVel = normalize(quadraticBezierVelocity2(a, b, c, 0.5));
+        let cVel = normalize(quadraticBezierVelocity2(a, b, c, 1.0));
 
         var pts: [SIMD2<Float>] = []
         pts.reserveCapacity(513)
