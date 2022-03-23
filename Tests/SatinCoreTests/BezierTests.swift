@@ -68,7 +68,6 @@ class BezierTests: XCTestCase {
         let cVel = normalize(quadraticBezierVelocity2(a, b, c, 1.0));
 
         var pts: [SIMD2<Float>] = []
-        pts.reserveCapacity(513)
         pts.append(a)
 
         _adaptiveQuadBezierCurve2(a, b, c, aVel, bVel, cVel, angleLimit, 0, &pts);
