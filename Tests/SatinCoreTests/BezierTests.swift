@@ -11,6 +11,7 @@ import simd
 
 class BezierTests: XCTestCase {
 
+    // 0.008 in release mode
     func testAdaptiveQuadraticBezierPath2Perf() {
         self.measure {
             for _ in 0..<100 {
@@ -77,6 +78,7 @@ class BezierTests: XCTestCase {
         return pts
     }
 
+    // 0.002 in release mode.
     func testAdaptiveQuadBezierPath2Perf() {
         self.measure {
             for _ in 0..<100 {
