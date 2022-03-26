@@ -11,6 +11,13 @@ import simd
 
 class BezierTests: XCTestCase {
 
+    func testAdaptiveQuadraticBezierPath2() {
+        var polyline = getAdaptiveQuadraticBezierPath2(.init(0, 0), .init(1,0), .init(0,1), 0.001)
+        XCTAssertEqual(polyline.count, 513)
+        XCTAssertEqual(MD5(ptr: polyline.data, count: Int(polyline.count)), "a31487bac34e0cc7403463d6aef9087b")
+        freePolyline2D(&polyline)
+    }
+
     // 0.008 in release mode
     func testAdaptiveQuadraticBezierPath2Perf() {
         self.measure {
