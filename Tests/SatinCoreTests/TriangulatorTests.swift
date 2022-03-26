@@ -21,6 +21,15 @@ func MD5<T>(ptr: UnsafeMutablePointer<T>, count: Int) -> String {
     MD5(data: Data(bytesNoCopy: UnsafeMutableRawPointer(ptr), count: count * MemoryLayout<T>.stride, deallocator: .none))
 }
 
+func MD5<T>(array: [T]) -> String {
+    var hash = Insecure.MD5()
+    array.withUnsafeBytes { hash.update(bufferPointer: $0) }
+    let digest = hash.finalize()
+    return digest.map {
+        String(format: "%02hhx", $0)
+    }.joined()
+}
+
 class TriangulatorTests: XCTestCase {
     
     // 'B'
@@ -55,7 +64,10 @@ class TriangulatorTests: XCTestCase {
 
         XCTAssertEqual(cData.vertexCount, 161)
         XCTAssertEqual(cData.indexCount, 163)
-        XCTAssertEqual(MD5(ptr: cData.vertexData, count: Int(cData.vertexCount)), "7831a04ee8532b4bdee45d3bd580dce3")
+
+        // Hash only positions because Vertex contains a float3 which has an extra four uninitized bytes for alignment.
+        let positions = UnsafeMutableBufferPointer(start: cData.vertexData, count: Int(cData.vertexCount)).map { $0.position }
+        XCTAssertEqual(MD5(array: positions), "06415fc00db61e530d6756ffc63b7953")
         XCTAssertEqual(MD5(ptr: cData.indexData, count: Int(cData.indexCount)), "ca5d4028863569f75629928ba570c9fd")
 
         freeGeometryData(&cData)
