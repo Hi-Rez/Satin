@@ -40,7 +40,7 @@ void removeFirstPointInPolyline2D(Polyline2D *line) {
     if (line->count > 0 || line->data != NULL) {
         line->count--;
         if (line->count > 0) {
-            memcpy(line->data, line->data + 1, line->count * sizeof(simd_float2));
+            memmove(line->data, line->data + 1, line->count * sizeof(simd_float2));
         } else {
             freePolyline2D(line);
         }
