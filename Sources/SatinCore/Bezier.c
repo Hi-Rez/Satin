@@ -22,31 +22,25 @@ void freePolyline2D(Polyline2D *line) {
     free(line->data);
     line->data = NULL;
     line->count = 0;
+    line->capacity = 0;
 }
 
 void addPointToPolyline2D(simd_float2 p, Polyline2D *line) {
-    if (line->count == 0 || line->data == NULL) {
-        line->data = (simd_float2 *)malloc(1 * sizeof(simd_float2));
-        line->count = 1;
-        line->data[0] = p;
-    } else {
-        int newCount = line->count + 1;
-        line->data = (simd_float2 *)realloc(line->data, newCount * sizeof(simd_float2));
-        line->data[line->count] = p;
-        line->count = newCount;
+
+    if (line->count+1 >= line->capacity) {
+        line->capacity = (line->capacity+1) * 2;
+        line->data = (simd_float2 *)realloc(line->data, line->capacity * sizeof(simd_float2));
     }
+
+    line->data[line->count] = p;
+    line->count++;
 }
 
 void removeFirstPointInPolyline2D(Polyline2D *line) {
     if (line->count > 0 || line->data != NULL) {
-        int newCount = line->count - 1;
-        if (newCount > 0) {
-            size_t newSize = newCount * sizeof(simd_float2);
-            simd_float2 *newData = (simd_float2 *)malloc(newSize);
-            memcpy(newData, line->data + 1, newSize);
-            free(line->data);
-            line->data = newData;
-            line->count = newCount;
+        line->count--;
+        if (line->count > 0) {
+            memcpy(line->data, line->data + 1, line->count * sizeof(simd_float2));
         } else {
             freePolyline2D(line);
         }
@@ -55,36 +49,16 @@ void removeFirstPointInPolyline2D(Polyline2D *line) {
 
 void removeLastPointInPolyline2D(Polyline2D *line) {
     if (line->count > 0 || line->data != NULL) {
-        int newCount = line->count - 1;
-        if (newCount > 0) {
-            size_t newSize = newCount * sizeof(simd_float2);
-            simd_float2 *newData = (simd_float2 *)malloc(newSize);
-            memcpy(newData, line->data, newSize);
-            free(line->data);
-            line->data = newData;
-            line->count = newCount;
-        } else {
+        line->count--;
+        if (line->count == 0) {
             freePolyline2D(line);
         }
     }
 }
 
 void appendPolyline2D(Polyline2D *dst, Polyline2D *src) {
-    if (src->count > 0 && src->data != NULL) {
-
-        if (dst->count == 0 || dst->data == NULL) {
-            int newCount = src->count;
-            size_t newSize = newCount * sizeof(simd_float2);
-            dst->data = (simd_float2 *)malloc(newSize);
-            memcpy(dst->data, src->data, newSize);
-            dst->count = newCount;
-        } else {
-            int newCount = dst->count + src->count;
-            size_t newSize = newCount * sizeof(simd_float2);
-            dst->data = (simd_float2 *)realloc(dst->data, newSize);
-            memcpy(dst->data + dst->count, src->data, src->count * sizeof(simd_float2));
-            dst->count = newCount;
-        }
+    for(int i=0;i<src->count;++i) {
+        addPointToPolyline2D(src->data[i], dst);
     }
 }
 

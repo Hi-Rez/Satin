@@ -24,6 +24,7 @@ typedef struct {
 
 typedef struct {
     int count;
+    int capacity;
     simd_float2 *data;
 } Polyline2D;
 
