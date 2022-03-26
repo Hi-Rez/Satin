@@ -24,6 +24,10 @@ let package = Package(
             path: "Sources/SatinCore"
         ),
         .testTarget(
+            name: "SatinTests",
+            dependencies: ["Satin"]
+        ),
+        .testTarget(
             name: "SatinCoreTests",
             dependencies: ["SatinCore"]
         ),
