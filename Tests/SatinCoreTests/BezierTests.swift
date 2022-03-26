@@ -94,4 +94,11 @@ class BezierTests: XCTestCase {
         }
     }
 
+    func testAdaptiveCubicBezierPath2() {
+        var polyline = getAdaptiveCubicBezierPath2(.init(0, 0), .init(1,0), .init(1,1), .init(0,1), 0.001)
+        XCTAssertEqual(polyline.count, 513)
+        XCTAssertEqual(MD5(ptr: polyline.data, count: Int(polyline.count)), "cb2fd4c1b0333a3ff12def35d2f831a9")
+        freePolyline2D(&polyline)
+    }
+
 }
