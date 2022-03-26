@@ -10,13 +10,6 @@
 
 #include "Bezier.h"
 
-typedef struct Point2DStructure Point2D;
-struct Point2DStructure {
-    int index;
-    simd_float2 position;
-    Point2D *next;
-};
-
 void freePolyline2D(Polyline2D *line) {
     if (line->count <= 0 && line->data == NULL) { return; }
     free(line->data);
@@ -203,10 +196,10 @@ Polyline2D getCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, simd
     return (Polyline2D) { .count = res, .capacity = res, .data = data };
 }
 
-int _adaptiveCubicBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
+void _adaptiveCubicBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
                                simd_float2 aVel, simd_float2 bVel, simd_float2 cVel,
-                               float angleLimit, int depth, Point2D *start, Point2D *end) {
-    if (depth > 8) { return end->index; }
+                               float angleLimit, int depth, Polyline2D* line) {
+    if (depth > 8) { return; }
 
     const float startMiddleAngle = acos(simd_dot(aVel, bVel));
     const float middleEndAngle = acos(simd_dot(bVel, cVel));
@@ -224,24 +217,16 @@ int _adaptiveCubicBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd
         // Start Curve:  a,      ab,     abc,    abcd
         // End Curve:    abcd,   bcd,    cd,     d
 
-        Point2D *middle = (Point2D *)malloc(sizeof(Point2D));
-        middle->index = start->index + 1;
-        middle->position = abcd;
-        middle->next = end;
-
-        start->next = middle;
-
         simd_float2 sVel = simd_normalize(cubicBezierVelocity2(a, ab, abc, abcd, 0.5));
 
-        middle->index = _adaptiveCubicBezierCurve2(a, ab, abc, abcd, aVel, sVel, bVel, angleLimit,
-                                                   depth + 1, start, middle);
-        end->index = middle->index + 1;
+        _adaptiveCubicBezierCurve2(a, ab, abc, abcd, aVel, sVel, bVel, angleLimit,
+                                   depth + 1, line);
+
+        addPointToPolyline2D(abcd, line);
 
         simd_float2 eVel = simd_normalize(cubicBezierVelocity2(abcd, bcd, cd, d, 0.5));
-        return _adaptiveCubicBezierCurve2(abcd, bcd, cd, d, bVel, eVel, cVel, angleLimit, depth + 1,
-                                          middle, end);
-    } else {
-        return end->index;
+        _adaptiveCubicBezierCurve2(abcd, bcd, cd, d, bVel, eVel, cVel, angleLimit, depth + 1,
+                                   line);
     }
 }
 
@@ -251,30 +236,12 @@ Polyline2D getAdaptiveCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2
     simd_float2 bVel = simd_normalize(cubicBezierVelocity2(a, b, c, d, 0.5));
     simd_float2 cVel = simd_normalize(cubicBezierVelocity2(a, b, c, d, 1.0));
 
-    Point2D *start = (Point2D *)malloc(sizeof(Point2D));
-    Point2D *end = (Point2D *)malloc(sizeof(Point2D));
+    Polyline2D line = {};
+    addPointToPolyline2D(a, &line);
+    _adaptiveCubicBezierCurve2(a, b, c, d, aVel, bVel, cVel, angleLimit, 0, &line);
+    addPointToPolyline2D(d, &line);
 
-    start->index = 0;
-    start->position = a;
-    start->next = end;
-
-    end->index = 1;
-    end->position = d;
-    end->next = start;
-
-    const int count =
-        _adaptiveCubicBezierCurve2(a, b, c, d, aVel, bVel, cVel, angleLimit, 0, start, end) + 1;
-    simd_float2 *data = (simd_float2 *)malloc(count * sizeof(simd_float2));
-
-    Point2D *iterator = start;
-    for (int i = 0; i < count; i++) {
-        data[iterator->index] = iterator->position;
-        Point2D *cache = iterator;
-        iterator = iterator->next;
-        free(cache);
-    }
-
-    return (Polyline2D) { .count = count, .capacity = count, .data = data };
+    return line;
 }
 
 simd_float3 cubicBezier3(simd_float3 a, simd_float3 b, simd_float3 c, simd_float3 d, float t) {

@@ -101,7 +101,7 @@ class BezierTests: XCTestCase {
         freePolyline2D(&polyline)
     }
 
-    // 0.008 in release mode
+    // 0.002 in release mode
     func testAdaptiveCubicBezierPath2Perf() {
         self.measure {
             for _ in 0..<100 {
