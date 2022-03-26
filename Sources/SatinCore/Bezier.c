@@ -116,7 +116,7 @@ Polyline2D getQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, 
     return (Polyline2D) { .count = res, .capacity = res, .data = data };
 }
 
-int _adaptiveQuadraticBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 aVel,
+void _adaptiveQuadraticBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 aVel,
                                    simd_float2 bVel, simd_float2 cVel, float angleLimit, int depth,
                                    Polyline2D* line) {
     if (depth > 8) { return; }
