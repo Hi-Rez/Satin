@@ -101,4 +101,15 @@ class BezierTests: XCTestCase {
         freePolyline2D(&polyline)
     }
 
+    // 0.008 in release mode
+    func testAdaptiveCubicBezierPath2Perf() {
+        self.measure {
+            for _ in 0..<100 {
+                var polyline = getAdaptiveCubicBezierPath2(.init(0, 0), .init(1,0), .init(1,1), .init(0,1), 0.001)
+                XCTAssertEqual(polyline.count, 513)
+                freePolyline2D(&polyline)
+            }
+        }
+    }
+
 }
