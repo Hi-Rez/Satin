@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Forge",
+        "repositoryURL": "https://github.com/Hi-Rez/Forge",
+        "state": {
+          "branch": "master",
+          "revision": "85a8c6965160a37833fb4c9446b38c8710aab2f0",
+          "version": null
+        }
+      },
+      {
+        "package": "Spectra",
+        "repositoryURL": "https://github.com/Hi-Rez/Spectra",
+        "state": {
+          "branch": "master",
+          "revision": "43a24736252863edfbde73e1d3754d7ecdcf46fe",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

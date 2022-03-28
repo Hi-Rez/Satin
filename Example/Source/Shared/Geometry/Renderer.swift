@@ -19,7 +19,7 @@ open class IcosahedronGeometry: Geometry {
         super.init()
         setupData(size: size, res: res)
     }
-    
+
     func setupData(size: Float, res: Int) {
         primitiveType = .triangle
         var geo = generateIcosahedronGeometryData(size, Int32(res))
@@ -27,7 +27,7 @@ open class IcosahedronGeometry: Geometry {
         if vCount > 0, let data = geo.vertexData {
             vertexData = Array(UnsafeBufferPointer(start: data, count: vCount))
         }
-        
+
         let indexCount = Int(geo.indexCount)*3
         if indexCount > 0, let data = geo.indexData {
             data.withMemoryRebound(to: UInt32.self, capacity: indexCount) { ptr in

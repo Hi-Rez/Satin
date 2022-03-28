@@ -9,7 +9,7 @@
 #ifndef IcoSphereGenerator_h
 #define IcoSphereGenerator_h
 
-#include "Types.h"
+#include "SatinCore.h"
 
 GeometryData generateIcosahedronGeometryData(float radius, int res);
 
