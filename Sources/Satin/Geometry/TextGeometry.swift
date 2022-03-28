@@ -373,7 +373,7 @@ open class TextGeometry: Geometry {
     
     func getPolylines(_ glyphPath: CGPath, _ angleLimit: Float, _ distanceLimit: Float) -> [Polyline2D] {
         var glyphPaths = [Polyline2D]()
-        var path = Polyline2D(count: 0, data: nil)
+        var path = Polyline2D(count: 0, capacity: 0, data: nil)
         glyphPath.applyWithBlock { (elementPtr: UnsafePointer<CGPathElement>) in
             let element = elementPtr.pointee
             var pointsPtr = element.points
@@ -420,7 +420,7 @@ open class TextGeometry: Geometry {
                 appendPolyline2D(&path, &line)
                 freePolyline2D(&line)
                 glyphPaths.append(path)
-                path = Polyline2D(count: 0, data: nil)
+                path = Polyline2D(count: 0, capacity: 0, data: nil)
             default:
                 break
             }
