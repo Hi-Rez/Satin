@@ -9,7 +9,7 @@ let package = Package(
         .library(
             name: "Satin",
             targets: ["Satin"]
-        ),
+        )
     ],
     dependencies: [],
     targets: [
@@ -21,7 +21,9 @@ let package = Package(
         ),
         .target(
             name: "SatinCore",
-            path: "Sources/SatinCore"
+            path: "Sources/SatinCore",
+            publicHeadersPath: "include",
+            cSettings: [.headerSearchPath("include")]
         ),
         .testTarget(
             name: "SatinTests",
