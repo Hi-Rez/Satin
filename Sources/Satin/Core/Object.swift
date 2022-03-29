@@ -43,21 +43,6 @@ class MulticastObserver<T> {
     }
 }
 
-struct ValueCache<T> {
-    var value: T?
-
-    mutating func get(_ compute: () -> T) -> T {
-        if let v = value { return v }
-        let v = compute()
-        value = v
-        return v
-    }
-
-    mutating func clear() {
-        value = nil
-    }
-}
-
 @objc open class Object: NSObject, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
