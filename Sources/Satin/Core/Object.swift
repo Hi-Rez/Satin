@@ -116,8 +116,8 @@ class MulticastObserver<T> {
     open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
-            _updateRotationMatrix = true
-            _updateOrientationMatrix = true
+            _rotationMatrix.clear()
+            _orientationMatrix.clear()
             observers.invoke { $0.updatedOrientation?(self) }
         }
     }
@@ -139,26 +139,14 @@ class MulticastObserver<T> {
     
     public var scaleMatrix: matrix_float4x4 { scaleMatrix3f(scale) }
     
-    var _updateRotationMatrix: Bool = true
-    var _rotationMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+    var _rotationMatrix = ValueCache<matrix_float4x4>()
     public var rotationMatrix: matrix_float4x4 {
-        if _updateRotationMatrix {
-            _rotationMatrix = matrix_float4x4(orientation)
-            _updateRotationMatrix = false
-        }
-        return _rotationMatrix
+        _rotationMatrix.get { matrix_float4x4(orientation) }
     }
-    
-    var _updateOrientationMatrix: Bool = true
-    var _orientationMatrix: matrix_float3x3 = matrix_identity_float3x3
-    
+
+    var _orientationMatrix = ValueCache<matrix_float3x3>()
     public var orientationMatrix: matrix_float3x3 {
-        if _updateOrientationMatrix {
-            _orientationMatrix = simd_matrix3x3(orientation)
-            _updateOrientationMatrix = false
-        }
-        return _orientationMatrix
+        _orientationMatrix.get { matrix_float3x3(orientation) }
     }
     
     public var forwardDirection: simd_float3 {
