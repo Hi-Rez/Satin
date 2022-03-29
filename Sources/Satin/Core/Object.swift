@@ -125,7 +125,6 @@ class MulticastObserver<T> {
     open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
-            _updateScaleMatrix = true
             observers.invoke { $0.updatedScale?(self) }
         }
     }
@@ -138,16 +137,7 @@ class MulticastObserver<T> {
     
     public var translationMatrix: matrix_float4x4 { translationMatrix3f(position) }
     
-    var _updateScaleMatrix: Bool = true
-    var _scaleMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
-    public var scaleMatrix: matrix_float4x4 {
-        if _updateScaleMatrix {
-            _scaleMatrix = scaleMatrix3f(scale)
-            _updateScaleMatrix = false
-        }
-        return _scaleMatrix
-    }
+    public var scaleMatrix: matrix_float4x4 { scaleMatrix3f(scale) }
     
     var _updateRotationMatrix: Bool = true
     var _rotationMatrix: matrix_float4x4 = matrix_identity_float4x4
