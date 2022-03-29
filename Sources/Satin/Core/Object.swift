@@ -240,7 +240,6 @@ class MulticastObserver<T> {
     }
     
     var _worldOrientation = ValueCache<simd_quatf>()
-    
     public var worldOrientation: simd_quatf {
         _worldOrientation.get {
             let ws = worldScale
