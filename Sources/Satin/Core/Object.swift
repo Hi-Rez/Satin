@@ -43,6 +43,21 @@ class MulticastObserver<T> {
     }
 }
 
+struct ValueCache<T> {
+    var value: T?
+
+    mutating func get(_ compute: () -> T) -> T {
+        if let v = value { return v }
+        let v = compute()
+        value = v
+        return v
+    }
+
+    mutating func clear() {
+        value = nil
+    }
+}
+
 @objc open class Object: NSObject, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
@@ -109,7 +124,6 @@ class MulticastObserver<T> {
     open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
-            _updateTranslationMatrix = true
             observers.invoke { $0.updatedPosition?(self) }
         }
     }
@@ -131,43 +145,13 @@ class MulticastObserver<T> {
         }
     }
     
-    var _updateLocalBounds: Bool = true {
-        didSet {
-            _updateBounds = true
-        }
-    }
+    var _localBounds = ValueCache<Bounds>()
+    public var localBounds: Bounds { _localBounds.get(computeLocalBounds) }
+
+    var _worldBounds = ValueCache<Bounds>()
+    public var worldBounds: Bounds { _worldBounds.get(computeWorldBounds) }
     
-    var _localbounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
-    
-    public var localBounds: Bounds {
-        if _updateLocalBounds {
-            _localbounds = computeLocalBounds()
-            _updateLocalBounds = false
-        }
-        return _localbounds
-    }
-    
-    var _updateBounds: Bool = true
-    var _worldBounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
-    
-    public var worldBounds: Bounds {
-        if _updateBounds {
-            _worldBounds = computeWorldBounds()
-            _updateBounds = false
-        }
-        return _worldBounds
-    }
-    
-    var _updateTranslationMatrix: Bool = true
-    var _translationMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
-    public var translationMatrix: matrix_float4x4 {
-        if _updateTranslationMatrix {
-            _translationMatrix = translationMatrix3f(position)
-            _updateTranslationMatrix = false
-        }
-        return _translationMatrix
-    }
+    public var translationMatrix: matrix_float4x4 { translationMatrix3f(position) }
     
     var _updateScaleMatrix: Bool = true
     var _scaleMatrix: matrix_float4x4 = matrix_identity_float4x4
@@ -235,7 +219,7 @@ class MulticastObserver<T> {
     
     open var children: [Object] = [] {
         didSet {
-            _updateBounds = true
+            _worldBounds.clear()
             observers.invoke { $0.updatedChildren?(self) }
         }
     }
@@ -245,13 +229,12 @@ class MulticastObserver<T> {
     var updateMatrix: Bool = true {
         didSet {
             if updateMatrix {
-                _updateLocalMatrix = true
-                _updateLocalBounds = true
-                _updateNormalMatrix = true
-                _updateWorldMatrix = true
-                _updateWorldPosition = true
-                _updateWorldScale = true
-                _updateWorldOrientation = true
+                _localMatrix.clear()
+                _localBounds.clear()
+                _worldBounds.clear()
+                _normalMatrix.clear()
+                _worldMatrix.clear()
+                _worldOrientation.clear()
                 updateMatrix = false
                 for child in children {
                     child.updateMatrix = true
@@ -260,16 +243,12 @@ class MulticastObserver<T> {
         }
     }
     
-    var _updateLocalMatrix: Bool = true
-    var _localMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+    var _localMatrix = ValueCache<matrix_float4x4>()
     public var localMatrix: matrix_float4x4 {
         get {
-            if _updateLocalMatrix {
-                _localMatrix = simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
-                _updateLocalMatrix = false
+            _localMatrix.get {
+                simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
             }
-            return _localMatrix
         }
         set {
             position = simd_make_float3(newValue.columns.3)
@@ -283,39 +262,24 @@ class MulticastObserver<T> {
             orientation = simd_quatf(simd_float3x3(columns: (rx, ry, rz)))
         }
     }
-    
-    var _updateWorldPosition: Bool = true
-    var _worldPosition = simd_make_float3(0, 0, 0)
-    
+
     public var worldPosition: simd_float3 {
-        if _updateWorldPosition {
-            let wp = worldMatrix.columns.3
-            _worldPosition = simd_make_float3(wp.x, wp.y, wp.z)
-            _updateWorldPosition = false
-        }
-        return _worldPosition
+        let wp = worldMatrix.columns.3
+        return simd_make_float3(wp.x, wp.y, wp.z)
     }
-    
-    var _updateWorldScale: Bool = true
-    var _worldScale = simd_make_float3(0, 0, 0)
     
     public var worldScale: simd_float3 {
-        if _updateWorldScale {
-            let wm = worldMatrix
-            let sx = wm.columns.0
-            let sy = wm.columns.1
-            let sz = wm.columns.2
-            _worldScale = simd_make_float3(length(sx), length(sy), length(sz))
-            _updateWorldScale = false
-        }
-        return _worldScale
+        let wm = worldMatrix
+        let sx = wm.columns.0
+        let sy = wm.columns.1
+        let sz = wm.columns.2
+        return simd_make_float3(length(sx), length(sy), length(sz))
     }
     
-    var _updateWorldOrientation: Bool = true
-    var _worldOrientation = simd_quaternion(0, simd_make_float3(0, 0, 1))
+    var _worldOrientation = ValueCache<simd_quatf>()
     
     public var worldOrientation: simd_quatf {
-        if _updateWorldOrientation {
+        _worldOrientation.get {
             let ws = worldScale
             let wm = worldMatrix
             let c0 = wm.columns.0
@@ -324,41 +288,31 @@ class MulticastObserver<T> {
             let x = simd_make_float3(c0.x, c0.y, c0.z) / ws.x
             let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
             let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
-            _worldOrientation = simd_quatf(simd_float3x3(columns: (x, y, z)))
-            _updateWorldOrientation = false
+            return simd_quatf(simd_float3x3(columns: (x, y, z)))
         }
-        return _worldOrientation
     }
     
-    var _updateWorldMatrix: Bool = true
-    var _worldMatrix: matrix_float4x4 = matrix_identity_float4x4
-    
+    var _worldMatrix = ValueCache<matrix_float4x4>()
     public var worldMatrix: matrix_float4x4 {
-        if _updateWorldMatrix {
+        _worldMatrix.get {
             if let parent = parent {
-                _worldMatrix = simd_mul(parent.worldMatrix, localMatrix)
+                return simd_mul(parent.worldMatrix, localMatrix)
             }
             else {
-                _worldMatrix = localMatrix
+                return localMatrix
             }
-            _updateWorldMatrix = false
         }
-        return _worldMatrix
     }
     
-    var _updateNormalMatrix: Bool = true
-    var _normalMatrix: matrix_float3x3 = matrix_identity_float3x3
-    
+    var _normalMatrix = ValueCache<matrix_float3x3>()
     public var normalMatrix: matrix_float3x3 {
-        if _updateNormalMatrix {
+        _normalMatrix.get {
             let n = worldMatrix.inverse.transpose
             let c0 = n.columns.0
             let c1 = n.columns.1
             let c2 = n.columns.2
-            _normalMatrix  = simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
-            _updateNormalMatrix = false
+            return simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
         }
-        return _normalMatrix
     }
     
     // MARK: - Observers
