@@ -29,7 +29,7 @@ open class Mesh: Object, GeometryDelegate {
         didSet {
             geometry.delegate = self
             setupGeometry()
-            _updateLocalBounds = true
+            _localBounds.clear()
         }
     }
     
@@ -198,6 +198,6 @@ open class Mesh: Object, GeometryDelegate {
     // MARK: - Geometry Delegate:
     
     public func updated(geometry: Geometry) {
-        _updateLocalBounds = true
+        _localBounds.clear()
     }
 }

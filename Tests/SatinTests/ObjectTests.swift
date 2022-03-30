@@ -10,7 +10,7 @@ import Satin
 
 class ObjectTests: XCTestCase {
 
-    func testObjectTransforms() throws {
+    func testObjectLocalTransforms() throws {
         let object = Object()
 
         XCTAssertTrue(simd_equal(object.localMatrix, matrix_identity_float4x4))
@@ -23,6 +23,18 @@ class ObjectTests: XCTestCase {
         object.scale = .init(1,2,3)
         XCTAssertTrue(simd_equal(object.localMatrix, scaleMatrix3f(object.scale)))
         object.scale = .init(1,1,1)
+
+    }
+
+    func testObjectWorldTransforms() throws {
+
+        let object = Object()
+        let child = Object()
+        object.add(child)
+        object.position = .init(1, 2, 3)
+
+        XCTAssert(simd_equal(child.localMatrix, matrix_identity_float4x4))
+        XCTAssert(simd_equal(child.worldMatrix, translationMatrix3f(object.position)))
 
     }
 
