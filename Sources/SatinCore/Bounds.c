@@ -9,12 +9,12 @@
 
 #include "Bounds.h"
 
-Bounds computeBoundsFromVertices(Vertex *vertices, int count) {
+Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
     if (count > 0) {
         simd_float3 min = simd_make_float3(INFINITY, INFINITY, INFINITY);
         simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
         for (int i = 0; i < count; i++) {
-            Vertex *vertex = &vertices[i];
+            const Vertex *vertex = &vertices[i];
             simd_float4 pos = vertex->position;
 
             min.x = simd_min(pos.x, min.x);
@@ -31,12 +31,12 @@ Bounds computeBoundsFromVertices(Vertex *vertices, int count) {
                       .max = simd_make_float3(0.0, 0.0, 0.0) };
 }
 
-Bounds computeBoundsFromVerticesAndTransform(Vertex *vertices, int count, simd_float4x4 transform) {
+Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, simd_float4x4 transform) {
     if (count > 0) {
         simd_float3 min = simd_make_float3(INFINITY, INFINITY, INFINITY);
         simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
         for (int i = 0; i < count; i++) {
-            Vertex *vertex = &vertices[i];
+            const Vertex *vertex = &vertices[i];
             simd_float4 pos = simd_mul(transform, vertex->position);
 
             min.x = simd_min(pos.x, min.x);

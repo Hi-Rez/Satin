@@ -10,8 +10,8 @@
 
 #include "Types.h"
 
-Bounds computeBoundsFromVertices(Vertex *vertices, int count);
-Bounds computeBoundsFromVerticesAndTransform(Vertex *vertices, int count, simd_float4x4 transform);
+Bounds computeBoundsFromVertices(const Vertex *vertices, int count);
+Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, simd_float4x4 transform);
 
 Bounds expandBounds(Bounds bounds, simd_float3 pt); 
 Bounds mergeBounds(Bounds a, Bounds b);

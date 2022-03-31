@@ -158,12 +158,7 @@ open class Geometry {
     }
     
     func computeBounds() -> Bounds {
-        let count = vertexData.count
-        var result = Bounds()
-        vertexData.withUnsafeMutableBufferPointer { vtxPtr in
-            result = computeBoundsFromVertices(vtxPtr.baseAddress!, Int32(count))
-        }
-        return result
+        return computeBoundsFromVertices(&vertexData, Int32(vertexData.count))
     }
     
     deinit {
