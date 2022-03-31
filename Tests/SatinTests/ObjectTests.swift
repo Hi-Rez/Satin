@@ -8,6 +8,12 @@
 import XCTest
 import Satin
 
+extension Bounds: Equatable {
+    public static func == (lhs: Bounds, rhs: Bounds) -> Bool {
+        simd_equal(lhs.min, rhs.min) && simd_equal(lhs.max, rhs.max)
+    }
+}
+
 class ObjectTests: XCTestCase {
 
     func testObjectLocalTransforms() throws {
@@ -47,6 +53,12 @@ class ObjectTests: XCTestCase {
         XCTAssertEqual(object.children.count, 1)
         object.remove(child)
         XCTAssertEqual(object.children.count, 0)
+    }
+
+    func testLocalBounds() {
+        let sphere = SphereGeometry(radius: 1)
+        let mesh = Mesh(geometry: sphere, material: nil)
+        XCTAssertEqual(mesh.localBounds, Bounds(min: .init(-1, -1, -1), max: .init(1,1,1)))
     }
 
 }
