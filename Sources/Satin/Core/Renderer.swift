@@ -21,7 +21,7 @@ open class Renderer
     {
         didSet
         {
-            if let context = context
+            if scene.context != context
             {
                 scene.context = context
             }
@@ -29,7 +29,7 @@ open class Renderer
     }
     
     public var camera = Camera()
-    public var context: Context?
+    public var context: Context
     {
         didSet
         {
@@ -77,8 +77,10 @@ open class Renderer
     public var stencilStoreAction: MTLStoreAction = .dontCare
     public var clearStencil: UInt32 = 0
     
-    public var viewport = MTLViewport() {
-        didSet {
+    public var viewport = MTLViewport()
+    {
+        didSet
+        {
             _viewport = simd_make_float4(
                 Float(viewport.originX),
                 Float(viewport.originY),
@@ -90,17 +92,10 @@ open class Renderer
     
     private var _viewport: simd_float4 = .zero
     
-    public init(context: Context,
-                scene: Object,
-                camera: Camera)
+    public init(context: Context, scene: Object, camera: Camera)
     {
         self.scene = scene
         self.camera = camera
-        setContext(context)
-    }
-    
-    public func setContext(_ context: Context)
-    {
         self.context = context
     }
     
@@ -111,8 +106,6 @@ open class Renderer
     
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
     {
-        guard let context = context else { return }
-        
         if context.sampleCount > 1
         {
             let resolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
@@ -135,8 +128,6 @@ open class Renderer
         
         camera.update()
         scene.update()
-        
-        guard let context = context else { return }
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
         let inColorResolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
@@ -223,7 +214,8 @@ open class Renderer
             renderEncoder.pushDebugGroup(label + " Pass")
             renderEncoder.setViewport(viewport)
            
-            if scene.visible {
+            if scene.visible
+            {
                 preDraw?(renderEncoder)
                 draw(renderEncoder: renderEncoder, object: scene)
                 postDraw?(renderEncoder)
@@ -275,7 +267,7 @@ open class Renderer
     
     public func setupDepthTexture()
     {
-        guard let context = context, updateDepthTexture else { return }
+        guard updateDepthTexture else { return }
         let sampleCount = context.sampleCount
         let depthPixelFormat = context.depthPixelFormat
         if depthPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -301,7 +293,7 @@ open class Renderer
     
     public func setupStencilTexture()
     {
-        guard let context = context, updateStencilTexture else { return }
+        guard updateStencilTexture else { return }
         let sampleCount = context.sampleCount
         let stencilPixelFormat = context.stencilPixelFormat
         if stencilPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -327,7 +319,7 @@ open class Renderer
     
     public func setupColorTexture()
     {
-        guard let context = context, updateColorTexture else { return }
+        guard updateColorTexture else { return }
         let sampleCount = context.sampleCount
         let colorPixelFormat = context.colorPixelFormat
         if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1

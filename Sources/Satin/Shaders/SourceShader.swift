@@ -58,10 +58,10 @@ open class SourceShader: Shader {
     }
 
     override func setupParameters() {
-        guard let shaderSource = shaderSource else { return }
-        guard let params = parseParameters(source: shaderSource, key: label + "Uniforms") else { return }
-        params.label = label.titleCase
-        parameters = params
+        if let shaderSource = shaderSource, let params = parseParameters(source: shaderSource, key: label + "Uniforms") {
+            params.label = label.titleCase
+            parameters = params
+        }
         parametersNeedsUpdate = false
     }
 

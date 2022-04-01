@@ -230,15 +230,14 @@ open class Shader {
     }
     
     func setupParameters() {
-        guard let reflection = pipelineReflection else { return }
-        if let fragmentArgs = reflection.fragmentArguments {
+        if let reflection = pipelineReflection, let fragmentArgs = reflection.fragmentArguments {
             let args = fragmentArgs[FragmentBufferIndex.MaterialUniforms.rawValue]
             if let bufferStruct = args.bufferStructType {
                 parameters = parseParameters(bufferStruct: bufferStruct)
                 parameters.label = label.titleCase + " Uniforms"
-                parametersNeedsUpdate = false
             }
         }
+        parametersNeedsUpdate = false
     }
     
     func setupLibrary() {
