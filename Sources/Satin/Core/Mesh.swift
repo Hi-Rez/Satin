@@ -6,10 +6,11 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Metal
 import simd
 
-open class Mesh: Object, GeometryDelegate {
+open class Mesh: Object {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
     public var triangleFillMode: MTLTriangleFillMode = .fill
@@ -27,7 +28,7 @@ open class Mesh: Object, GeometryDelegate {
     
     public var geometry = Geometry() {
         didSet {
-            geometry.delegate = self
+            setupGeometrySubscriber()
             setupGeometry()
             _localBounds.clear()
         }
@@ -39,17 +40,23 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
+    internal var geometrySubscriber: AnyCancellable?
+    
     public var submeshes: [Submesh] = []
     
     public init(geometry: Geometry, material: Material?) {
         super.init()
         self.geometry = geometry
-        self.geometry.delegate = self
         self.material = material
+        setupGeometrySubscriber()
     }
     
     public required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
+    }
+    
+    deinit {
+        cleanupGeometrySubscriber()
     }
     
     override open func encode(to encoder: Encoder) throws {
@@ -69,7 +76,7 @@ open class Mesh: Object, GeometryDelegate {
         setupMaterial()
     }
     
-    func setupUniformBuffer() {
+    internal func setupUniformBuffer() {
         guard let context = context else { return }
         let device = context.device
         let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
@@ -79,24 +86,36 @@ open class Mesh: Object, GeometryDelegate {
         vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
     }
     
-    func setupGeometry() {
+    internal func setupGeometrySubscriber() {
+        geometrySubscriber?.cancel()
+        geometrySubscriber = geometry.publisher.sink { [unowned self] _ in
+            self._localBounds.clear()
+        }
+    }
+    
+    internal func cleanupGeometrySubscriber() {
+        geometrySubscriber?.cancel()
+        geometrySubscriber = nil
+    }
+    
+    internal func setupGeometry() {
         guard let context = context else { return }
         geometry.context = context
     }
     
-    func setupSubmeshes() {
+    internal func setupSubmeshes() {
         guard let context = context else { return }
         for submesh in submeshes {
             submesh.context = context
         }
     }
 
-    func setupMaterial() {
+    internal func setupMaterial() {
         guard let context = context, let material = material else { return }
         material.context = context
     }
     
-    func updateUniforms(camera: Camera, viewport: simd_float4) {
+    internal func updateUniforms(camera: Camera, viewport: simd_float4) {
         if vertexUniforms != nil {
             vertexUniforms[0].modelMatrix = worldMatrix
             vertexUniforms[0].viewMatrix = camera.viewMatrix
@@ -112,7 +131,7 @@ open class Mesh: Object, GeometryDelegate {
         }
     }
     
-    func updateUniformsBuffer() {
+    internal func updateUniformsBuffer() {
         if vertexUniformsBuffer != nil {
             uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
             uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
@@ -193,11 +212,5 @@ open class Mesh: Object, GeometryDelegate {
             result = mergeBounds(result, child.worldBounds)
         }
         return result
-    }
-    
-    // MARK: - Geometry Delegate:
-    
-    public func updated(geometry: Geometry) {
-        _localBounds.clear()
     }
 }

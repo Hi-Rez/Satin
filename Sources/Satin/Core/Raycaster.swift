@@ -7,6 +7,7 @@
 
 #if os(iOS) || os(macOS)
 
+import Combine
 import Metal
 import MetalPerformanceShaders
 import simd
@@ -42,23 +43,23 @@ open class Raycaster {
         }
     }
 
-    lazy var originParam: PackedFloat3Parameter = {
+    internal lazy var originParam: PackedFloat3Parameter = {
         PackedFloat3Parameter("origin", ray.origin)
     }()
     
-    lazy var nearParam: FloatParameter = {
+    internal lazy var nearParam: FloatParameter = {
         FloatParameter("near", near)
     }()
     
-    lazy var directionParam: PackedFloat3Parameter = {
+    internal lazy var directionParam: PackedFloat3Parameter = {
         PackedFloat3Parameter("direction", ray.direction)
     }()
     
-    lazy var farParam: FloatParameter = {
+    internal lazy var farParam: FloatParameter = {
         FloatParameter("far", far)
     }()
     
-    lazy var rayParams: ParameterGroup = {
+    internal lazy var rayParams: ParameterGroup = {
         let params = ParameterGroup("Ray")
         params.append(originParam)
         params.append(nearParam)
@@ -67,11 +68,11 @@ open class Raycaster {
         return params
     }()
     
-    var distanceParam = FloatParameter("distance")
-    var indexParam = UInt32Parameter("index")
-    var coordinatesParam = Float2Parameter("coordinates")
+    internal var distanceParam = FloatParameter("distance")
+    internal var indexParam = UInt32Parameter("index")
+    internal var coordinatesParam = Float2Parameter("coordinates")
     
-    lazy var intersectionParams: ParameterGroup = {
+    internal lazy var intersectionParams: ParameterGroup = {
         let params = ParameterGroup("Intersection")
         params.append(distanceParam)
         params.append(indexParam)
@@ -79,10 +80,11 @@ open class Raycaster {
         return params
     }()
     
-    weak var device: MTLDevice?
-    var commandQueue: MTLCommandQueue?
-    var intersector: MPSRayIntersector?
-    var accelerationStructures: [String: MPSTriangleAccelerationStructure] = [:]
+    internal weak var device: MTLDevice?
+    internal var commandQueue: MTLCommandQueue?
+    internal var intersector: MPSRayIntersector?
+    internal var accelerationStructures: [Geometry: MPSTriangleAccelerationStructure] = [:]
+    internal var subscriptions: [Geometry: AnyCancellable] = [:]
     
     var _count: Int = -1 {
         didSet {
@@ -124,11 +126,16 @@ open class Raycaster {
         setup()
     }
     
+    deinit {
+        subscriptions.removeAll()
+        accelerationStructures = [:]
+        intersector = nil
+        commandQueue = nil
+        device = nil
+    }
+    
     func setup() {
-        // setup command queue
         setupCommandQueue()
-        
-        // setup intersector
         setupIntersector()
     }
     
@@ -338,7 +345,6 @@ open class Raycaster {
                    _ submesh: Submesh?,
                    _ index: Int)
     {
-        
         let meshWorldMatrix = mesh.worldMatrix
         let meshWorldMatrixInverse = meshWorldMatrix.inverse
         
@@ -354,23 +360,18 @@ open class Raycaster {
         intersector!.frontFacingWinding = winding
         intersector!.cullMode = mesh.cullMode
 
-        var accelerationStructure: MPSAccelerationStructure? = nil
+        var accelerationStructure: MPSAccelerationStructure?
         
-        if let submesh = submesh, let structure = accelerationStructures[submesh.id] {
-            accelerationStructure = structure
-        }
-        else if let structure = accelerationStructures[mesh.id] {
+        if let structure = accelerationStructures[geometry] {
             accelerationStructure = structure
         }
         else if let device = device {
-            var id: String = mesh.id
             let newAccelerationStructure = MPSTriangleAccelerationStructure(device: device)
             newAccelerationStructure.vertexBuffer = mesh.geometry.vertexBuffer!
             newAccelerationStructure.vertexStride = MemoryLayout<Vertex>.stride
             newAccelerationStructure.label = mesh.label + " Acceleration Structure"
             
             if let sub = submesh, let indexBuffer = sub.indexBuffer {
-                id = sub.id
                 newAccelerationStructure.indexBuffer = indexBuffer
                 newAccelerationStructure.indexType = .uInt32
                 newAccelerationStructure.triangleCount = sub.indexData.count / 3
@@ -386,7 +387,14 @@ open class Raycaster {
             
             newAccelerationStructure.rebuild()
             accelerationStructure = newAccelerationStructure
-            accelerationStructures[id] = newAccelerationStructure
+            accelerationStructures[geometry] = newAccelerationStructure
+            
+            let subscription = geometry.publisher.sink { [unowned self] _ in
+                self.accelerationStructures[geometry] = nil
+                self.subscriptions[geometry]?.cancel()
+                self.subscriptions[geometry] = nil
+            }
+            subscriptions[geometry] = subscription
         }
         
         intersector!.label = mesh.label + " Raycaster Intersector"
@@ -404,13 +412,6 @@ open class Raycaster {
     
     public func reset() {
         accelerationStructures = [:]
-    }
-    
-    deinit {
-        accelerationStructures = [:]
-        intersector = nil
-        commandQueue = nil
-        device = nil
     }
 }
 

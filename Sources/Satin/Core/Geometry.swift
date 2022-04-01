@@ -6,22 +6,22 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Metal
 import simd
 
-public protocol GeometryDelegate: AnyObject {
-    func updated(geometry: Geometry)
-}
+import SatinCore
 
 open class Geometry {
     public var primitiveType: MTLPrimitiveType = .triangle
     public var windingOrder: MTLWinding = .counterClockwise
     public var indexType: MTLIndexType = .uint32
-    public weak var delegate: GeometryDelegate?
+    
+    public let publisher = PassthroughSubject<Geometry, Never>()
     
     public var vertexData: [Vertex] = [] {
         didSet {
-            delegate?.updated(geometry: self)
+            publisher.send(self)
             _updateVertexBuffer = true
             _updateBounds = true
         }
@@ -29,7 +29,7 @@ open class Geometry {
     
     public var indexData: [UInt32] = [] {
         didSet {
-            delegate?.updated(geometry: self)
+            publisher.send(self)
             _updateIndexBuffer = true
         }
     }
@@ -88,13 +88,18 @@ open class Geometry {
         if !vertexData.isEmpty {
             let stride = MemoryLayout<Vertex>.stride
             let verticesSize = vertexData.count * stride
-            vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
-            vertexBuffer?.label = "Vertices"
-            _updateVertexBuffer = false
+            if let vertexBuffer = vertexBuffer, vertexBuffer.length == verticesSize {
+                vertexBuffer.contents().copyMemory(from: &vertexData, byteCount: verticesSize)
+            }
+            else {
+                vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
+                vertexBuffer?.label = "Vertices"
+            }
         }
         else {
             vertexBuffer = nil
         }
+        _updateVertexBuffer = false
     }
     
     func setupIndexBuffer() {
@@ -104,11 +109,11 @@ open class Geometry {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
             indexBuffer = device.makeBuffer(bytes: indexData, length: indicesSize, options: [])
             indexBuffer?.label = "Indices"
-            _updateIndexBuffer = false
         }
         else {
             indexBuffer = nil
         }
+        _updateIndexBuffer = false
     }
     
     public func setFrom(_ geometryData: inout GeometryData) {
@@ -157,6 +162,10 @@ open class Geometry {
         freeGeometryData(&unrolled)
     }
     
+    public func transform(_ matrix: simd_float4x4) {
+        transformVertices(&vertexData, Int32(vertexData.count), matrix)
+    }
+    
     func computeBounds() -> Bounds {
         return computeBoundsFromVertices(&vertexData, Int32(vertexData.count))
     }
@@ -166,5 +175,17 @@ open class Geometry {
         vertexData = []
         vertexBuffer = nil
         indexBuffer = nil
+    }
+}
+
+extension Geometry: Equatable {
+    public static func == (lhs: Geometry, rhs: Geometry) -> Bool {
+        return lhs === rhs
+    }
+}
+
+extension Geometry: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
     }
 }
