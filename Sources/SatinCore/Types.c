@@ -317,16 +317,20 @@ void reverseFacesOfGeometryData(GeometryData *data) {
     }
 }
 
-void transformGeometryData(GeometryData *data, simd_float4x4 transform) {
+void transformVertices(Vertex *vertices, int vertexCount, simd_float4x4 transform) {
     simd_float4x4 rotation = simd_transpose(simd_inverse(transform));
     simd_float3x3 rot =
         simd_matrix(simd_make_float3(rotation.columns[0]), simd_make_float3(rotation.columns[1]),
                     simd_make_float3(rotation.columns[2]));
-    int count = data->vertexCount;
+    int count = vertexCount;
     for (int i = 0; i < count; i++) {
-        data->vertexData[i].position = simd_mul(transform, data->vertexData[i].position);
-        data->vertexData[i].normal = simd_mul(rot, data->vertexData[i].normal);
+        vertices[i].position = simd_mul(transform, vertices[i].position);
+        vertices[i].normal = simd_mul(rot, vertices[i].normal);
     }
+}
+
+void transformGeometryData(GeometryData *data, simd_float4x4 transform) {
+    transformVertices(data->vertexData, data->vertexCount, transform);
 }
 
 void deindexGeometryData(GeometryData *dest, GeometryData *src) {
