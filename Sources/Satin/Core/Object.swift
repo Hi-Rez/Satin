@@ -8,44 +8,10 @@
 
 import Foundation
 import simd
-import SwiftUI
+import Combine
 
-@objc public protocol ObjectDelegate: AnyObject {
-    @objc optional func updatedPosition(_ object: Object)
-    @objc optional func updatedScale(_ object: Object)
-    @objc optional func updatedOrientation(_ object: Object)
-    @objc optional func updatedLabel(_ object: Object)
-    @objc optional func updatedVisibility(_ object: Object)
-    @objc optional func updatedParent(_ object: Object)
-    @objc optional func updatedChildren(_ object: Object)
-}
-
-class MulticastObserver<T> {
-    private let observers: NSHashTable<AnyObject> = NSHashTable.weakObjects()
-
-    public func add(_ observer: T) {
-        observers.add(observer as AnyObject)
-    }
-
-    public func remove(_ observerToRemove: T) {
-        for observer in observers.allObjects.reversed() {
-            if observer === observerToRemove as AnyObject {
-                observers.remove(observer)
-                return
-            }
-        }
-    }
-
-    func invoke(_ invocation: (T) -> ()) {
-        for observer in observers.allObjects.reversed() {
-            invocation(observer as! T)
-        }
-    }
-}
-
-@objc open class Object: NSObject, Codable {
+open class Object: Codable, ObservableObject {
     public required init(from decoder: Decoder) throws {
-        super.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)
         label = try values.decode(String.self, forKey: .label)
@@ -81,19 +47,11 @@ class MulticastObserver<T> {
         case children
     }
     
-    open var id: String = UUID().uuidString
+    @Published open var id: String = UUID().uuidString
     
-    open var label: String = "Object" {
-        didSet {
-            observers.invoke { $0.updatedLabel?(self) }
-        }
-    }
+    @Published open var label: String = "Object"
     
-    open var visible: Bool = true {
-        didSet {
-            observers.invoke { $0.updatedVisibility?(self) }
-        }
-    }
+    @Published open var visible: Bool = true
     
     open var context: Context? = nil {
         didSet {
@@ -106,26 +64,23 @@ class MulticastObserver<T> {
         }
     }
     
-    open var position = simd_make_float3(0, 0, 0) {
+    @Published open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
-            observers.invoke { $0.updatedPosition?(self) }
         }
     }
     
-    open var orientation = simd_quatf(matrix_identity_float4x4) {
+    @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
             _rotationMatrix.clear()
             _orientationMatrix.clear()
-            observers.invoke { $0.updatedOrientation?(self) }
         }
     }
     
-    open var scale = simd_make_float3(1, 1, 1) {
+    @Published open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
-            observers.invoke { $0.updatedScale?(self) }
         }
     }
     
@@ -176,14 +131,12 @@ class MulticastObserver<T> {
     open weak var parent: Object? {
         didSet {
             updateMatrix = true
-            observers.invoke { $0.updatedParent?(self) }
         }
     }
     
-    open var children: [Object] = [] {
+    @Published open var children: [Object] = [] {
         didSet {
             _worldBounds.clear()
-            observers.invoke { $0.updatedChildren?(self) }
         }
     }
     
@@ -277,22 +230,9 @@ class MulticastObserver<T> {
         }
     }
     
-    // MARK: - Observers
-    
-    var observers = MulticastObserver<ObjectDelegate>()
-    
-    public func addObserver(_ observer: ObjectDelegate) {
-        observers.add(observer)
-    }
-    
-    public func removeObserver(_ observer: ObjectDelegate) {
-        observers.remove(observer)
-    }
-    
-    override public init() {}
+    public init() {}
     
     public init(_ label: String, _ children: [Object] = []) {
-        super.init()
         self.label = label
         for child in children {
             add(child)
@@ -428,5 +368,17 @@ class MulticastObserver<T> {
     
     public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
         localMatrix = lookAtMatrix3f(position, center, up)
+    }
+}
+
+extension Object: Equatable {
+    public static func == (lhs: Object, rhs: Object) -> Bool {
+        return lhs === rhs
+    }
+}
+
+extension Object: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
     }
 }
