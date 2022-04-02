@@ -10,8 +10,6 @@ import Combine
 import Metal
 import simd
 
-import SatinCore
-
 open class Geometry {
     public var primitiveType: MTLPrimitiveType = .triangle
     public var windingOrder: MTLWinding = .counterClockwise
