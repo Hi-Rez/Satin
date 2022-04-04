@@ -6,9 +6,9 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Foundation
 import simd
-import Combine
 
 open class Object: Codable, ObservableObject {
     public required init(from decoder: Decoder) throws {
@@ -261,7 +261,7 @@ open class Object: Codable, ObservableObject {
     }
     
     open func add(_ child: Object) {
-        if !children.contains(where: { $0 === child}) {
+        if !children.contains(where: { $0 === child }) {
             child.parent = self
             child.context = context
             children.append(child)
@@ -373,13 +373,13 @@ open class Object: Codable, ObservableObject {
 
 extension Object: Equatable {
     public static func == (lhs: Object, rhs: Object) -> Bool {
-      return lhs.id == rhs.id &&
-        lhs.label == rhs.label &&
-        lhs.position == rhs.position &&
-        lhs.orientation == rhs.orientation &&
-        lhs.scale == rhs.scale &&
-        lhs.visible == rhs.visible &&
-        lhs.children == rhs.children
+        return lhs.id == rhs.id &&
+            lhs.label == rhs.label &&
+            lhs.position == rhs.position &&
+            lhs.orientation == rhs.orientation &&
+            lhs.scale == rhs.scale &&
+            lhs.visible == rhs.visible &&
+            lhs.children == rhs.children
     }
 }
 

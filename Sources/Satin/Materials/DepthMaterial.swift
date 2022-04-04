@@ -12,15 +12,15 @@ open class DepthMaterial: Material {
         super.init()
         set("Color", color)
         set("Invert", invert)
-        set("Near", -1)
-        set("Far", -1)
+        set("Near", -1.0)
+        set("Far", -1.0)
     }
     
     public required init() {
         super.init()
         set("Color", true)
         set("Invert", false)
-        set("Near", -1)
-        set("Far", -1)
+        set("Near", -1.0)
+        set("Far", -1.0)
     }
 }

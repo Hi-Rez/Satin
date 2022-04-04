@@ -17,7 +17,7 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var scene = Object()
+    public var scene: Object
     {
         didSet
         {
@@ -28,7 +28,7 @@ open class Renderer
         }
     }
     
-    public var camera = Camera()
+    public var camera: Camera
     public var context: Context
     {
         didSet
@@ -97,6 +97,7 @@ open class Renderer
         self.scene = scene
         self.camera = camera
         self.context = context
+        self.scene.context = context
     }
     
     public func setClearColor(_ color: simd_float4)

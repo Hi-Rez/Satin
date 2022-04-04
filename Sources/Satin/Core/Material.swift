@@ -125,7 +125,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     public var context: Context? {
         didSet {
-            if oldValue != context {
+            if context != nil, context != oldValue {
                 setup()
             }
         }
@@ -180,39 +180,38 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     }
     
     func setupDepthStencilState() {
-        guard let context = context, context.depthPixelFormat != .invalid else { return }
-        let device = context.device
-        let depthStateDesciptor = MTLDepthStencilDescriptor()
-        depthStateDesciptor.depthCompareFunction = depthCompareFunction
-        depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
-        guard let state = device.makeDepthStencilState(descriptor: depthStateDesciptor) else { return }
-        depthStencilState = state
+        if let context = context, context.depthPixelFormat != .invalid {
+            let depthStateDesciptor = MTLDepthStencilDescriptor()
+            depthStateDesciptor.depthCompareFunction = depthCompareFunction
+            depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
+            depthStencilState = context.device.makeDepthStencilState(descriptor: depthStateDesciptor)
+        }
         depthNeedsUpdate = false
     }
     
     open func setupShader() {
-        guard let _ = context else { return }
-        
-        if shader == nil {
-            self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
-            isClone = false
+        if let context = context {
+            if shader == nil {
+                self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+                isClone = false
+            }
+            else if let shader = shader, isClone, shaderBlendingNeedsUpdate {
+                self.shader = shader.clone()
+                isClone = false
+            }
+            
+            if let shader = shader {
+                updateShaderBlending()
+                shader.context = context
+            }
         }
-        else if let shader = shader, isClone, shaderBlendingNeedsUpdate {
-            self.shader = shader.clone()
-            isClone = false
-        }
-        
-        guard let shader = shader else { return }
-        
-        updateShaderBlending()
-        
-        shader.context = context
         shaderNeedsUpdate = false
     }
     
     open func setupUniforms() {
-        guard let context = context, parameters.size > 0 else { return }
-        uniforms = UniformBuffer(device: context.device, parameters: parameters)
+        if let context = context, parameters.size > 0 {
+            uniforms = UniformBuffer(device: context.device, parameters: parameters)
+        }
         uniformsNeedsUpdate = false
     }
     
@@ -496,7 +495,6 @@ public extension Material {
         parameters.setFrom(shader.parameters)
         parameters.label = shader.parameters.label
         uniformsNeedsUpdate = true
-        setupUniforms()
         delegate?.updated(material: self)
     }
 }

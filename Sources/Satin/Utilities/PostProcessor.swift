@@ -12,6 +12,7 @@ open class PostProcessor {
         didSet {
             renderer.label = label + " Renderer"
             mesh.label = label + " Mesh"
+            scene.label = label + " Scene"
         }
     }
     
