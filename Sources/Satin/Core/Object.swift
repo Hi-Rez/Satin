@@ -261,7 +261,7 @@ open class Object: Codable, ObservableObject {
     }
     
     open func add(_ child: Object) {
-        if !children.contains(child) {
+        if !children.contains(where: { $0 === child}) {
             child.parent = self
             child.context = context
             children.append(child)
@@ -276,8 +276,8 @@ open class Object: Codable, ObservableObject {
     
     open func remove(_ child: Object) {
         for (index, object) in children.enumerated() {
-            if object == child {
-                if object.parent == self {
+            if object === child {
+                if object.parent === self {
                     object.parent = nil
                 }
                 children.remove(at: index)
@@ -373,12 +373,18 @@ open class Object: Codable, ObservableObject {
 
 extension Object: Equatable {
     public static func == (lhs: Object, rhs: Object) -> Bool {
-        return lhs === rhs
+      return lhs.id == rhs.id &&
+        lhs.label == rhs.label &&
+        lhs.position == rhs.position &&
+        lhs.orientation == rhs.orientation &&
+        lhs.scale == rhs.scale &&
+        lhs.visible == rhs.visible &&
+        lhs.children == rhs.children
     }
 }
 
 extension Object: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self).hashValue)
+        hasher.combine(id)
     }
 }
