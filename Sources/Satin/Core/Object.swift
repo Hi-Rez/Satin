@@ -47,11 +47,11 @@ open class Object: Codable, ObservableObject {
         case children
     }
     
-    @Published open var id: String = UUID().uuidString
+    @PublishedDidSet open var id: String = UUID().uuidString
     
-    @Published open var label: String = "Object"
+    @PublishedDidSet open var label: String = "Object"
     
-    @Published open var visible: Bool = true
+    @PublishedDidSet open var visible: Bool = true
     
     open var context: Context? = nil {
         didSet {
@@ -64,13 +64,13 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @Published open var position = simd_make_float3(0, 0, 0) {
+    @PublishedDidSet open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
         }
     }
     
-    @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
+    @PublishedDidSet open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
             _rotationMatrix.clear()
@@ -78,7 +78,7 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @Published open var scale = simd_make_float3(1, 1, 1) {
+    @PublishedDidSet open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
         }
@@ -134,7 +134,7 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @Published open var children: [Object] = [] {
+    @PublishedDidSet open var children: [Object] = [] {
         didSet {
             _worldBounds.clear()
         }
