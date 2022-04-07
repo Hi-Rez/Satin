@@ -248,7 +248,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         parameters.set(name, value)
     }
     
-    public func get(_ name: String) -> Parameter? {
+    public func get(_ name: String) -> BaseParameter? {
         guard let parameters = parameters else { return nil }
         return parameters.get(name)
     }

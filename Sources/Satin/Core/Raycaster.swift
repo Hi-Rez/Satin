@@ -44,7 +44,7 @@ open class Raycaster {
     }
 
     internal lazy var originParam: PackedFloat3Parameter = {
-        PackedFloat3Parameter("origin", ray.origin)
+        PackedFloat3Parameter("origin", ray.origin, .zero, .one)
     }()
     
     internal lazy var nearParam: FloatParameter = {
@@ -68,9 +68,9 @@ open class Raycaster {
         return params
     }()
     
-    internal var distanceParam = FloatParameter("distance")
-    internal var indexParam = UInt32Parameter("index")
-    internal var coordinatesParam = Float2Parameter("coordinates")
+    internal var distanceParam = FloatParameter("distance", 0.0)
+    internal var indexParam = UInt32Parameter("index", 0)
+    internal var coordinatesParam = Float2Parameter("coordinates", .zero)
     
     internal lazy var intersectionParams: ParameterGroup = {
         let params = ParameterGroup("Intersection")

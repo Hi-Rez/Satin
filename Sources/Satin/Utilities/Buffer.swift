@@ -67,34 +67,38 @@ open class Buffer {
             else if param is Int2Parameter {
                 let intParam = param as! Int2Parameter
                 let isize = MemoryLayout<Int32>.size
-                intParam.x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
+                intParam.value = .init(x, y)
             }
             else if param is Int3Parameter {
                 let intParam = param as! Int3Parameter
                 let isize = MemoryLayout<Int32>.size
-                intParam.x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.z = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let z = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
                 // because alignment is 16 not 12
                 pointer += isize
+                intParam.value = .init(x, y, z)
             }
             else if param is Int4Parameter {
                 let intParam = param as! Int4Parameter
                 let isize = MemoryLayout<Int32>.size
-                intParam.x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.z = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let z = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                intParam.w = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
+                let w = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
+                
+                intParam.value = .init(x, y, z, w)
             }
             else if param is FloatParameter {
                 let floatParam = param as! FloatParameter
@@ -104,44 +108,48 @@ open class Buffer {
             else if param is Float2Parameter {
                 let floatParam = param as! Float2Parameter
                 let fsize = MemoryLayout<Float>.size
-                floatParam.x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
+                floatParam.value = .init(x, y)
             }
             else if param is Float3Parameter {
                 let floatParam = param as! Float3Parameter
                 let fsize = MemoryLayout<Float>.size
-                floatParam.x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
                 // because alignment is 16 not 12
                 pointer += fsize
+                floatParam.value = .init(x, y, z)
             }
             else if param is PackedFloat3Parameter {
                 let floatParam = param as! PackedFloat3Parameter
                 let fsize = MemoryLayout<Float>.size
-                floatParam.x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
+                floatParam.value = .init(x, y, z)
             }
             else if param is Float4Parameter {
                 let floatParam = param as! Float4Parameter
                 let fsize = MemoryLayout<Float>.size
-                floatParam.x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                let z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
-                floatParam.w = pointer.bindMemory(to: Float.self, capacity: 1).pointee
-                pointer += fsize
+                let w = pointer.bindMemory(to: Float.self, capacity: 1).pointee
+                pointer += fsize                
+                floatParam.value = .init(x, y, z, w)
             }
             pointerOffset += size
         }

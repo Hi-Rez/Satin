@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import Combine
 import simd
 
 public protocol ParameterGroupDelegate: AnyObject {
-    func added(parameter: Parameter, from group: ParameterGroup)
-    func removed(parameter: Parameter, from group: ParameterGroup)
-    func update(parameter: Parameter, from group: ParameterGroup)
+    func added(parameter: BaseParameter, from group: ParameterGroup)
+    func removed(parameter: BaseParameter, from group: ParameterGroup)
+    func update(parameter: BaseParameter, from group: ParameterGroup)
     func loaded(group: ParameterGroup)
     func saved(group: ParameterGroup)
     func cleared(group: ParameterGroup)
@@ -20,7 +21,7 @@ public protocol ParameterGroupDelegate: AnyObject {
 
 open class ParameterGroup: Codable, ParameterDelegate {
     public var label: String = ""
-    public var params: [Parameter] = [] {
+    public private(set) var params: [BaseParameter] = [] {
         didSet {
             _updateSize = true
             _updateStride = true
@@ -30,9 +31,9 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
     
-    public var paramsMap: [String: Parameter] = [:]
+    public var paramsMap: [String: BaseParameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
-
+    
     deinit {
         params = []
         paramsMap = [:]
@@ -42,18 +43,18 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    public init(_ label: String = "", _ parameters: [Parameter] = []) {
+    public init(_ label: String = "", _ parameters: [BaseParameter] = []) {
         self.label = label
         append(parameters)
     }
 
-    public func append(_ parameters: [Parameter]) {
+    public func append(_ parameters: [BaseParameter]) {
         for p in parameters {
             append(p)
         }
     }
         
-    public func append(_ param: Parameter) {
+    public func append(_ param: BaseParameter) {
         if param.delegate == nil {
             param.delegate = self
         }
@@ -62,7 +63,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         delegate?.added(parameter: param, from: self)
     }
 
-    public func remove(_ param: Parameter) {
+    public func remove(_ param: BaseParameter) {
         let key = param.label
         paramsMap.removeValue(forKey: key)
         for (i, p) in params.enumerated() {
@@ -130,11 +131,6 @@ open class ParameterGroup: Codable, ParameterDelegate {
             else if let p = param as? UInt32Parameter {
                 append(UInt32Parameter(label, p.value, p.min, p.max, p.controlType))
             }
-            else if let p = param as? FileParameter {
-                let fp = FileParameter(label, p.value, p.allowedTypes, p.controlType)
-                fp.recents = p.recents
-                append(fp)
-            }
         }
     }
 
@@ -173,7 +169,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
             }
         }
 
-        let paramsMap: [String: Parameter] = self.paramsMap
+        let paramsMap: [String: BaseParameter] = self.paramsMap
         clear()
         for key in order {
             if let param = paramsMap[key] {
@@ -209,13 +205,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
 
     public func save(_ url: URL, baseURL: URL? = nil) {
         do {
-            var userInfo = [CodingUserInfoKey: Any]()
-            if let baseURL = baseURL {
-                userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
-            }
-
             let jsonEncoder = JSONEncoder()
-            jsonEncoder.userInfo = userInfo
             jsonEncoder.outputFormatting = .prettyPrinted
             let payload: Data = try jsonEncoder.encode(self)
             try payload.write(to: url)
@@ -228,14 +218,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
 
     public func load(_ url: URL, append: Bool = true, baseURL: URL? = nil) {
         do {
-            var userInfo = [CodingUserInfoKey: Any]()
-            if let baseURL = baseURL {
-                userInfo[FileParameter.baseURLCodingUserInfoKey] = baseURL
-            }
-
+           
             let jsonDecoder = JSONDecoder()
-            jsonDecoder.userInfo = userInfo
-
             let data = try Data(contentsOf: url)
             let loaded = try jsonDecoder.decode(ParameterGroup.self, from: data)
             for param in loaded.params {
@@ -248,7 +232,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool, append: Bool = true) {
+    func setParameterFrom(param: BaseParameter, setValue: Bool, setOptions: Bool, append: Bool = true) {
         let label = param.label
         if append, paramsMap[label] == nil {
             self.append(param)
@@ -276,10 +260,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.value = p.value
                     }
                     if setOptions {
-                        mfp.minX = p.minX
-                        mfp.minY = p.minY
-                        mfp.maxX = p.maxX
-                        mfp.maxY = p.maxY
+                        mfp.min = p.min
+                        mfp.max = p.max
                         mfp.controlType = p.controlType
                     }
                 }
@@ -293,12 +275,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.value = p.value
                     }
                     if setOptions {
-                        mfp.minX = p.minX
-                        mfp.minY = p.minY
-                        mfp.minZ = p.minZ
-                        mfp.maxX = p.maxX
-                        mfp.maxY = p.maxY
-                        mfp.maxZ = p.maxZ
+                        mfp.min = p.min
+                        mfp.max = p.max
                         mfp.controlType = p.controlType
                     }
                 }
@@ -312,12 +290,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.value = p.value
                     }
                     if setOptions {
-                        mfp.minX = p.minX
-                        mfp.minY = p.minY
-                        mfp.minZ = p.minZ
-                        mfp.maxX = p.maxX
-                        mfp.maxY = p.maxY
-                        mfp.maxZ = p.maxZ
+                        mfp.min = p.min
+                        mfp.max = p.max
                         mfp.controlType = p.controlType
                     }
                 }
@@ -331,14 +305,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mfp.value = p.value
                     }
                     if setOptions {
-                        mfp.minX = p.minX
-                        mfp.minY = p.minY
-                        mfp.minZ = p.minZ
-                        mfp.minW = p.minW
-                        mfp.maxX = p.maxX
-                        mfp.maxY = p.maxY
-                        mfp.maxZ = p.maxZ
-                        mfp.maxW = p.maxW
+                        mfp.min = p.min
+                        mfp.max = p.max
                         mfp.controlType = p.controlType
                     }
                 }
@@ -367,10 +335,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mip.value = p.value
                     }
                     if setOptions {
-                        mip.minX = p.minX
-                        mip.minY = p.minY
-                        mip.maxX = p.maxX
-                        mip.maxY = p.maxY
+                        mip.min = p.min
+                        mip.max = p.max
                         mip.controlType = p.controlType
                     }
                 }
@@ -384,12 +350,8 @@ open class ParameterGroup: Codable, ParameterDelegate {
                         mip.value = p.value
                     }
                     if setOptions {
-                        mip.minX = p.minX
-                        mip.minY = p.minY
-                        mip.minZ = p.minZ
-                        mip.maxX = p.maxX
-                        mip.maxY = p.maxY
-                        mip.maxZ = p.maxZ
+                        mip.min = p.min
+                        mip.max = p.max
                         mip.controlType = p.controlType
                     }
                 }
@@ -445,21 +407,6 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     if setOptions {
                         mbp.min = p.min
                         mbp.max = p.max
-                        mbp.controlType = p.controlType
-                    }
-                }
-            }
-        }
-        else if param is FileParameter {
-            let p = param as! FileParameter
-            if let mp = paramsMap[label] {
-                if let mbp = mp as? FileParameter {
-                    if setValue {
-                        mbp.value = p.value
-                        mbp.recents = p.recents
-                    }
-                    if setOptions {
-                        mbp.allowedTypes = p.allowedTypes
                         mbp.controlType = p.controlType
                     }
                 }
@@ -666,11 +613,11 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    public func get(_ name: String) -> Parameter? {
+    public func get(_ name: String) -> BaseParameter? {
         return paramsMap[name]
     }
 
-    public func updated(parameter: Parameter) {
+    public func updated(parameter: BaseParameter) {
         _updateData = true
         delegate?.update(parameter: parameter, from: self)
     }

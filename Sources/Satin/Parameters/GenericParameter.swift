@@ -1,0 +1,141 @@
+//
+//  File.swift
+//  
+//
+//  Created by Reza Ali on 4/7/22.
+//
+
+import Foundation
+import Combine
+
+public class GenericParameter<T: Codable>: ValueParameter {
+    public typealias ValueType = T
+    
+    // Delegate
+    public weak var delegate: ParameterDelegate?
+
+    // Getable Properties
+    public var type: ParameterType { .generic }
+    public var string: String { "generic" }
+
+    // Computed Properties
+    public var size: Int { return MemoryLayout<ValueType>.size }
+    public var stride: Int { return MemoryLayout<ValueType>.stride }
+    public var alignment: Int { return MemoryLayout<ValueType>.alignment }
+    public var count: Int { -1 }
+
+    // Setable Properties
+    public var controlType = ControlType.none
+    public var label: String
+    
+    @PublishedDidSet public var value: ValueType {
+        didSet {
+            delegate?.updated(parameter: self)
+        }
+    }
+    
+    var subscribers = Set<AnyCancellable>()
+
+    public subscript<T>(index: Int) -> T {
+        get {
+            return value as! T
+        }
+        set {
+            value = newValue as! ValueType
+        }
+    }
+
+    public func dataType<T>() -> T.Type {
+        return T.self
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        controlType = try container.decode(ControlType.self, forKey: .controlType)
+        label = try container.decode(String.self, forKey: .label)
+        value = try container.decode(ValueType.self, forKey: .value)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(controlType, forKey: .controlType)
+        try container.encode(label, forKey: .label)
+        try container.encode(value, forKey: .value)
+    }
+
+    public init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
+        self.label = label
+        self.controlType = controlType
+        self.value = value
+        // we drop the first because we expect to fire only after the first value is set
+        _ = self.$value.dropFirst()
+        if let action = action {
+            $value.sink(receiveValue: action).store(in: &subscribers)
+        }
+    }
+
+    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = pointer
+        let rem = offset % alignment
+        if rem > 0 {
+            let remOffset = alignment - rem
+            data += remOffset
+            offset += remOffset
+        }
+        return data
+    }
+
+    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
+        var data = alignData(pointer: pointer, offset: &offset)
+        offset += size
+
+        data.storeBytes(of: value, as: dataType())
+        data += size
+
+        return data
+    }
+}
+
+public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
+    @PublishedDidSet public var min: ValueType
+    @PublishedDidSet public var max: ValueType
+
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+        case min
+        case max
+    }
+
+    public init(_ label: String, _ value: ValueType, _ min: ValueType, _ max: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
+        self.min = min
+        self.max = max
+        super.init(label, value, controlType, action)
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let controlType = try container.decode(ControlType.self, forKey: .controlType)
+        let label = try container.decode(String.self, forKey: .label)
+        let value = try container.decode(ValueType.self, forKey: .value)
+        self.min = try container.decode(ValueType.self, forKey: .min)
+        self.max = try container.decode(ValueType.self, forKey: .max)
+        super.init(label, value, controlType)
+    }
+
+    override public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(controlType, forKey: .controlType)
+        try container.encode(label, forKey: .label)
+        try container.encode(value, forKey: .value)
+        try container.encode(min, forKey: .min)
+        try container.encode(max, forKey: .max)
+    }
+}
