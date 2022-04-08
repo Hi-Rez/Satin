@@ -11,9 +11,9 @@ import Combine
 import simd
 
 public protocol ParameterGroupDelegate: AnyObject {
-    func added(parameter: BaseParameter, from group: ParameterGroup)
-    func removed(parameter: BaseParameter, from group: ParameterGroup)
-    func update(parameter: BaseParameter, from group: ParameterGroup)
+    func added(parameter: Parameter, from group: ParameterGroup)
+    func removed(parameter: Parameter, from group: ParameterGroup)
+    func update(parameter: Parameter, from group: ParameterGroup)
     func loaded(group: ParameterGroup)
     func saved(group: ParameterGroup)
     func cleared(group: ParameterGroup)
@@ -21,7 +21,7 @@ public protocol ParameterGroupDelegate: AnyObject {
 
 open class ParameterGroup: Codable, ParameterDelegate {
     public var label: String = ""
-    public private(set) var params: [BaseParameter] = [] {
+    public private(set) var params: [Parameter] = [] {
         didSet {
             _updateSize = true
             _updateStride = true
@@ -31,7 +31,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
     
-    public var paramsMap: [String: BaseParameter] = [:]
+    public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
     
     deinit {
@@ -43,18 +43,18 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    public init(_ label: String = "", _ parameters: [BaseParameter] = []) {
+    public init(_ label: String = "", _ parameters: [Parameter] = []) {
         self.label = label
         append(parameters)
     }
 
-    public func append(_ parameters: [BaseParameter]) {
+    public func append(_ parameters: [Parameter]) {
         for p in parameters {
             append(p)
         }
     }
         
-    public func append(_ param: BaseParameter) {
+    public func append(_ param: Parameter) {
         if param.delegate == nil {
             param.delegate = self
         }
@@ -63,7 +63,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         delegate?.added(parameter: param, from: self)
     }
 
-    public func remove(_ param: BaseParameter) {
+    public func remove(_ param: Parameter) {
         let key = param.label
         paramsMap.removeValue(forKey: key)
         for (i, p) in params.enumerated() {
@@ -169,7 +169,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
             }
         }
 
-        let paramsMap: [String: BaseParameter] = self.paramsMap
+        let paramsMap: [String: Parameter] = self.paramsMap
         clear()
         for key in order {
             if let param = paramsMap[key] {
@@ -232,7 +232,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    func setParameterFrom(param: BaseParameter, setValue: Bool, setOptions: Bool, append: Bool = true) {
+    func setParameterFrom(param: Parameter, setValue: Bool, setOptions: Bool, append: Bool = true) {
         let label = param.label
         if append, paramsMap[label] == nil {
             self.append(param)
@@ -613,11 +613,11 @@ open class ParameterGroup: Codable, ParameterDelegate {
         }
     }
 
-    public func get(_ name: String) -> BaseParameter? {
+    public func get(_ name: String) -> Parameter? {
         return paramsMap[name]
     }
 
-    public func updated(parameter: BaseParameter) {
+    public func updated(parameter: Parameter) {
         _updateData = true
         delegate?.update(parameter: parameter, from: self)
     }

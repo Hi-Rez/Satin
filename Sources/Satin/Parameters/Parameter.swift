@@ -10,10 +10,10 @@ import Foundation
 import Combine
 
 public protocol ParameterDelegate: AnyObject {
-    func updated(parameter: BaseParameter)
+    func updated(parameter: Parameter)
 }
     
-public protocol BaseParameter: Codable, AnyObject {
+public protocol Parameter: Codable, AnyObject {
     var type: ParameterType { get }
     var string: String { get }
     
@@ -34,7 +34,7 @@ public protocol BaseParameter: Codable, AnyObject {
     func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
 }
 
-public protocol ValueParameter: BaseParameter {
+public protocol ValueParameter: Parameter {
     associatedtype ValueType
     var value: ValueType { get set }
 }
@@ -58,7 +58,7 @@ public enum ControlType: String, Codable {
 public enum ParameterType: String, Codable {
     case float, float2, float3, float4, bool, int, int2, int3, int4, double, string, packedfloat3, uint32, generic
 
-    var metatype: BaseParameter.Type {
+    var metatype: Parameter.Type {
         switch self {
         case .bool:
             return BoolParameter.self

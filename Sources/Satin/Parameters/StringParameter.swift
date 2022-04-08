@@ -15,6 +15,13 @@ public class StringParameter: GenericParameter<String> {
     
     @PublishedDidSet public var options: [String] = []
     
+    private enum CodingKeys: String, CodingKey {
+        case controlType
+        case label
+        case value
+        case options
+    }
+    
     public convenience init(_ label: String, _ value: ValueType = "", _ options: [String], _ controlType: ControlType = .dropdown, _ action: ((ValueType) -> Void)? = nil) {
         self.init(label, value, controlType, action)
         self.options = options

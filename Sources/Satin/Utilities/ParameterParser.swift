@@ -233,7 +233,7 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                         if let min = min, let max = max, let value = value, let label = label {
                             if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
-                                var parameter: BaseParameter?
+                                var parameter: Parameter?
                                 if vType == "float" {
                                     parameter = FloatParameter(label, fValue, fMin, fMax, .slider)
                                 }
@@ -279,7 +279,7 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                             if let min = min, let max = max, let value = value, let label = vName {
                                 if let fMin = Float(min), let fMax = Float(max), let fValue = Float(value) {
-                                    var parameter: BaseParameter?
+                                    var parameter: Parameter?
                                     if vType == "float" {
                                         parameter = FloatParameter(label.titleCase, fValue, fMin, fMax, .slider)
                                     }
@@ -302,7 +302,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                         let firstChar = String(label[label.startIndex])
                         label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
 
-                        var parameter: BaseParameter?
+                        var parameter: Parameter?
                         if vType == "float" {
                             parameter = FloatParameter(label.titleCase, 0.5, 0.0, 1.0, .slider)
                         }
@@ -344,7 +344,7 @@ func parseParameters(source: String) -> ParameterGroup? {
 
                         if let value = value, let label = label {
                             if let fValue = Float(value) {
-                                var parameter: BaseParameter?
+                                var parameter: Parameter?
 
                                 if vType == "float" {
                                     parameter = FloatParameter(label, fValue, .inputfield)
@@ -405,7 +405,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                             if let value = value, value.count > 0, let fValue = Float(value), let name = vName {
                                 var label = name
                                 label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
-                                var parameter: BaseParameter?
+                                var parameter: Parameter?
 
                                 if vType == "float" {
                                     parameter = FloatParameter(label.titleCase, fValue, .inputfield)
@@ -449,7 +449,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                         let firstChar = String(label[label.startIndex])
                         label = label.replacingCharacters(in: ...label.startIndex, with: firstChar.uppercased())
 
-                        var parameter: BaseParameter?
+                        var parameter: Parameter?
 
                         if vType == "float" {
                             parameter = FloatParameter(label.titleCase, .zero, .inputfield)

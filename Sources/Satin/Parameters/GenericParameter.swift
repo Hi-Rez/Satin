@@ -118,6 +118,9 @@ public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
         self.min = min
         self.max = max
         super.init(label, value, controlType, action)
+        // we drop the first because we expect to fire only after the first value is set
+        _ = self.$min.dropFirst()
+        _ = self.$max.dropFirst()
     }
 
     public required init(from decoder: Decoder) throws {

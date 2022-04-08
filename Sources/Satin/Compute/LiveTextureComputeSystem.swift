@@ -262,7 +262,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         parameters.set(name, value)
     }
     
-    public func get(_ name: String) -> BaseParameter? {
+    public func get(_ name: String) -> Parameter? {
         guard let parameters = parameters else { return nil }
         return parameters.get(name)
     }

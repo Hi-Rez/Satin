@@ -424,7 +424,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         }
     }
     
-    public func get(_ name: String) -> BaseParameter? {
+    public func get(_ name: String) -> Parameter? {
         return parameters.get(name)
     }
     
@@ -469,11 +469,11 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
 }
 
 public extension Material {
-    func added(parameter: BaseParameter, from group: ParameterGroup) {
+    func added(parameter: Parameter, from group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
     
-    func removed(parameter: BaseParameter, from group: ParameterGroup) {
+    func removed(parameter: Parameter, from group: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
     
@@ -487,7 +487,7 @@ public extension Material {
         uniformsNeedsUpdate = true
     }
     
-    func update(parameter: BaseParameter, from group: ParameterGroup) {}
+    func update(parameter: Parameter, from group: ParameterGroup) {}
 }
 
 public extension Material {

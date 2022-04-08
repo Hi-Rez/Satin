@@ -44,7 +44,7 @@ open class Raycaster {
     }
 
     internal lazy var originParam: PackedFloat3Parameter = {
-        PackedFloat3Parameter("origin", ray.origin, .zero, .one)
+        PackedFloat3Parameter("origin", ray.origin)
     }()
     
     internal lazy var nearParam: FloatParameter = {
