@@ -6,17 +6,17 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public protocol ParameterDelegate: AnyObject {
     func updated(parameter: Parameter)
 }
-    
+
 public protocol Parameter: Codable, AnyObject {
     var type: ParameterType { get }
     var string: String { get }
-    
+
     var size: Int { get }
     var stride: Int { get }
     var alignment: Int { get }
@@ -24,18 +24,18 @@ public protocol Parameter: Codable, AnyObject {
 
     var controlType: ControlType { get set }
     var label: String { get }
-    
+
     var delegate: ParameterDelegate? { get set }
-    
+
     subscript<T>(index: Int) -> T { get set }
     func dataType<T>() -> T.Type
-
+    
     func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
     func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
 }
 
 public protocol ValueParameter: Parameter {
-    associatedtype ValueType
+    associatedtype ValueType: Codable
     var value: ValueType { get set }
 }
 

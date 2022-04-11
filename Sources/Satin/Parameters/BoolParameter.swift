@@ -6,110 +6,11 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public class BoolParameter: GenericParameter<Bool> {
     override public var type: ParameterType { .bool }
     override public var string: String { "bool" }
     override public var count: Int { 1 }
 }
-
-
-//open class BoolParameter: Parameter, Codable {
-//    public weak var delegate: ParameterDelegate?
-//
-//    public var type = ParameterType.bool
-//    public var controlType: ControlType
-//    public let label: String
-//    public var string: String { return "bool" }
-//    public var size: Int { return MemoryLayout<Bool>.size }
-//    public var stride: Int { return MemoryLayout<Bool>.stride }
-//    public var alignment: Int { return MemoryLayout<Bool>.alignment }
-//    public var count: Int { return 1 }
-//    public let publisher = PassthroughSubject<Bool, Never>()
-//    public var actions: [(Bool) -> Void] = []
-//
-//    public func onChange(_ fn: @escaping ((Bool) -> ())) {
-//        actions.append(fn)
-//    }
-//
-//    public subscript<Bool>(index: Int) -> Bool {
-//        get {
-//            return value as! Bool
-//        }
-//        set {
-//            value = newValue as! Swift.Bool
-//        }
-//    }
-//
-//    public func dataType<Bool>() -> Bool.Type {
-//        return Bool.self
-//    }
-//
-//    public var value: Bool {
-//        didSet {
-//            if oldValue != value {
-//                emit()
-//            }
-//        }
-//    }
-//
-//    private enum CodingKeys: String, CodingKey {
-//        case controlType
-//        case label
-//        case value
-//    }
-//
-//    public init(_ label: String, _ value: Bool = false, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
-//        self.label = label
-//        self.controlType = controlType
-//        self.value = value
-//        if let a = action {
-//            actions.append(a)
-//        }
-//    }
-//
-//    public init(_ label: String, _ controlType: ControlType = .unknown, _ action: ((Bool) -> Void)? = nil) {
-//        self.label = label
-//        self.controlType = controlType
-//        self.value = false
-//        if let a = action {
-//            actions.append(a)
-//        }
-//    }
-//
-//    public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
-//        var data = pointer
-//        let rem = offset % alignment
-//        if rem > 0 {
-//            let remOffset = alignment - rem
-//            data += remOffset
-//            offset += remOffset
-//        }
-//        return data
-//    }
-//
-//    public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
-//        var data = alignData(pointer: pointer, offset: &offset)
-//        offset += size
-//
-//        data.storeBytes(of: value, as: Bool.self)
-//        data += size
-//
-//        return data
-//    }
-//
-//    func emit() {
-//        delegate?.updated(parameter: self)
-//        publisher.send(value)
-//        for action in actions {
-//            action(value)
-//        }
-//    }
-//
-//    deinit {
-//        delegate = nil
-//        actions = []
-//    }
-//}

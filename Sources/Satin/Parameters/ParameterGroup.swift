@@ -6,8 +6,8 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 import simd
 
 public protocol ParameterGroupDelegate: AnyObject {
@@ -30,10 +30,10 @@ open class ParameterGroup: Codable, ParameterDelegate {
             _updateData = true
         }
     }
-    
+
     public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
-    
+
     deinit {
         params = []
         paramsMap = [:]
@@ -53,7 +53,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
             append(p)
         }
     }
-        
+
     public func append(_ param: Parameter) {
         if param.delegate == nil {
             param.delegate = self
@@ -177,10 +177,10 @@ open class ParameterGroup: Codable, ParameterDelegate {
             }
         }
     }
-    
+
     public func setValuesFrom(_ incomingParams: ParameterGroup) {
         let incomingKeys = Set(Array(incomingParams.paramsMap.keys))
-        let exisitingKeys = Set(Array(self.paramsMap.keys))
+        let exisitingKeys = Set(Array(paramsMap.keys))
         let commonKeys = exisitingKeys.intersection(incomingKeys)
         for key in commonKeys {
             if let inParam = incomingParams.paramsMap[key] {
@@ -218,7 +218,6 @@ open class ParameterGroup: Codable, ParameterDelegate {
 
     public func load(_ url: URL, append: Bool = true, baseURL: URL? = nil) {
         do {
-           
             let jsonDecoder = JSONDecoder()
             let data = try Data(contentsOf: url)
             let loaded = try jsonDecoder.decode(ParameterGroup.self, from: data)
@@ -237,178 +236,120 @@ open class ParameterGroup: Codable, ParameterDelegate {
         if append, paramsMap[label] == nil {
             self.append(param)
         }
-        else if param is FloatParameter {
-            let p = param as! FloatParameter
-            if let mp = paramsMap[label] {
-                if let mfp = mp as? FloatParameter {
-                    if setValue {
-                        mfp.value = p.value
-                    }
-                    if setOptions {
-                        mfp.min = p.min
-                        mfp.max = p.max
-                        mfp.controlType = p.controlType
-                    }
+        else if let mp = paramsMap[label] {
+            if let p = param as? FloatParameter, let mfp = mp as? FloatParameter {
+                if setValue {
+                    mfp.value = p.value
+                }
+                if setOptions {
+                    mfp.min = p.min
+                    mfp.max = p.max
+                    mfp.controlType = p.controlType
                 }
             }
-        }
-        else if param is Float2Parameter {
-            let p = param as! Float2Parameter
-            if let mp = paramsMap[label] {
-                if let mfp = mp as? Float2Parameter {
-                    if setValue {
-                        mfp.value = p.value
-                    }
-                    if setOptions {
-                        mfp.min = p.min
-                        mfp.max = p.max
-                        mfp.controlType = p.controlType
-                    }
+            else if let p = param as? Float2Parameter, let mfp = mp as? Float2Parameter {
+                if setValue {
+                    mfp.value = p.value
+                }
+                if setOptions {
+                    mfp.min = p.min
+                    mfp.max = p.max
+                    mfp.controlType = p.controlType
                 }
             }
-        }
-        else if param is Float3Parameter {
-            let p = param as! Float3Parameter
-            if let mp = paramsMap[label] {
-                if let mfp = mp as? Float3Parameter {
-                    if setValue {
-                        mfp.value = p.value
-                    }
-                    if setOptions {
-                        mfp.min = p.min
-                        mfp.max = p.max
-                        mfp.controlType = p.controlType
-                    }
+            else if let p = param as? Float3Parameter, let mfp = mp as? Float3Parameter {
+                if setValue {
+                    mfp.value = p.value
+                }
+                if setOptions {
+                    mfp.min = p.min
+                    mfp.max = p.max
+                    mfp.controlType = p.controlType
                 }
             }
-        }
-        else if param is PackedFloat3Parameter {
-            let p = param as! PackedFloat3Parameter
-            if let mp = paramsMap[label] {
-                if let mfp = mp as? PackedFloat3Parameter {
-                    if setValue {
-                        mfp.value = p.value
-                    }
-                    if setOptions {
-                        mfp.min = p.min
-                        mfp.max = p.max
-                        mfp.controlType = p.controlType
-                    }
+            else if let p = param as? PackedFloat3Parameter, let mfp = mp as? PackedFloat3Parameter {
+                if setValue {
+                    mfp.value = p.value
+                }
+                if setOptions {
+                    mfp.min = p.min
+                    mfp.max = p.max
+                    mfp.controlType = p.controlType
                 }
             }
-        }
-        else if param is Float4Parameter {
-            let p = param as! Float4Parameter
-            if let mp = paramsMap[label] {
-                if let mfp = mp as? Float4Parameter {
-                    if setValue {
-                        mfp.value = p.value
-                    }
-                    if setOptions {
-                        mfp.min = p.min
-                        mfp.max = p.max
-                        mfp.controlType = p.controlType
-                    }
+            else if let p = param as? Float4Parameter, let mfp = mp as? Float4Parameter {
+                if setValue {
+                    mfp.value = p.value
+                }
+                if setOptions {
+                    mfp.min = p.min
+                    mfp.max = p.max
+                    mfp.controlType = p.controlType
                 }
             }
-        }
-        else if param is IntParameter {
-            let p = param as! IntParameter
-            if let mp = paramsMap[label] {
-                if let mip = mp as? IntParameter {
-                    if setValue {
-                        mip.value = p.value
-                    }
-                    if setOptions {
-                        mip.min = p.min
-                        mip.max = p.max
-                        mip.controlType = p.controlType
-                    }
+            else if let p = param as? IntParameter, let mip = mp as? IntParameter {
+                if setValue {
+                    mip.value = p.value
+                }
+                if setOptions {
+                    mip.min = p.min
+                    mip.max = p.max
+                    mip.controlType = p.controlType
                 }
             }
-        }
-        else if param is Int2Parameter {
-            let p = param as! Int2Parameter
-            if let mp = paramsMap[label] {
-                if let mip = mp as? Int2Parameter {
-                    if setValue {
-                        mip.value = p.value
-                    }
-                    if setOptions {
-                        mip.min = p.min
-                        mip.max = p.max
-                        mip.controlType = p.controlType
-                    }
+            else if let p = param as? Int2Parameter, let mip = mp as? Int2Parameter {
+                if setValue {
+                    mip.value = p.value
+                }
+                if setOptions {
+                    mip.min = p.min
+                    mip.max = p.max
+                    mip.controlType = p.controlType
                 }
             }
-        }
-        else if param is Int3Parameter {
-            let p = param as! Int3Parameter
-            if let mp = paramsMap[label] {
-                if let mip = mp as? Int3Parameter {
-                    if setValue {
-                        mip.value = p.value
-                    }
-                    if setOptions {
-                        mip.min = p.min
-                        mip.max = p.max
-                        mip.controlType = p.controlType
-                    }
+            else if let p = param as? Int3Parameter, let mip = mp as? Int3Parameter {
+                if setValue {
+                    mip.value = p.value
+                }
+                if setOptions {
+                    mip.min = p.min
+                    mip.max = p.max
+                    mip.controlType = p.controlType
                 }
             }
-        }
-        else if param is DoubleParameter {
-            let p = param as! DoubleParameter
-            if let mp = paramsMap[label] {
-                if let mdp = mp as? DoubleParameter {
-                    if setValue {
-                        mdp.value = p.value
-                    }
-                    if setOptions {
-                        mdp.min = p.min
-                        mdp.max = p.max
-                        mdp.controlType = p.controlType
-                    }
+            else if let p = param as? DoubleParameter, let mdp = mp as? DoubleParameter {
+                if setValue {
+                    mdp.value = p.value
+                }
+                if setOptions {
+                    mdp.min = p.min
+                    mdp.max = p.max
+                    mdp.controlType = p.controlType
                 }
             }
-        }
-        else if param is BoolParameter {
-            let p = param as! BoolParameter
-            if let mp = paramsMap[label] {
-                if let mbp = mp as? BoolParameter {
-                    if setValue {
-                        mbp.value = p.value
-                        mbp.controlType = p.controlType
-                    }
+            else if let p = param as? BoolParameter, let mbp = mp as? BoolParameter {
+                if setValue {
+                    mbp.value = p.value
+                    mbp.controlType = p.controlType
                 }
             }
-        }
-        else if param is StringParameter {
-            let p = param as! StringParameter
-            if let mp = paramsMap[label] {
-                if let mbp = mp as? StringParameter {
-                    if setValue {
-                        mbp.value = p.value
-                    }
-                    if setOptions {
-                        mbp.options = p.options
-                        mbp.controlType = p.controlType
-                    }
+            else if let p = param as? StringParameter, let mbp = mp as? StringParameter {
+                if setValue {
+                    mbp.value = p.value
+                }
+                if setOptions {
+                    mbp.options = p.options
+                    mbp.controlType = p.controlType
                 }
             }
-        }
-        else if param is UInt32Parameter {
-            let p = param as! UInt32Parameter
-            if let mp = paramsMap[label] {
-                if let mbp = mp as? UInt32Parameter {
-                    if setValue {
-                        mbp.value = p.value
-                    }
-                    if setOptions {
-                        mbp.min = p.min
-                        mbp.max = p.max
-                        mbp.controlType = p.controlType
-                    }
+            else if let p = param as? UInt32Parameter, let mbp = mp as? UInt32Parameter {
+                if setValue {
+                    mbp.value = p.value
+                }
+                if setOptions {
+                    mbp.min = p.min
+                    mbp.max = p.max
+                    mbp.controlType = p.controlType
                 }
             }
         }
@@ -498,7 +439,7 @@ open class ParameterGroup: Codable, ParameterDelegate {
         _dataAllocated = true
         return UnsafeMutableRawPointer.allocate(byteCount: size, alignment: alignment)
     }()
-    
+
     func allocateData() -> UnsafeMutableRawPointer {
         if _dataAllocated {
             _data.deallocate()

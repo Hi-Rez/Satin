@@ -1,16 +1,16 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Reza Ali on 4/7/22.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public class GenericParameter<T: Codable>: ValueParameter {
     public typealias ValueType = T
-    
+
     // Delegate
     public weak var delegate: ParameterDelegate?
 
@@ -27,13 +27,13 @@ public class GenericParameter<T: Codable>: ValueParameter {
     // Setable Properties
     public var controlType = ControlType.none
     public var label: String
-    
+
     @PublishedDidSet public var value: ValueType {
         didSet {
             delegate?.updated(parameter: self)
         }
     }
-    
+
     var subscribers = Set<AnyCancellable>()
 
     public subscript<T>(index: Int) -> T {
@@ -74,7 +74,7 @@ public class GenericParameter<T: Codable>: ValueParameter {
         self.controlType = controlType
         self.value = value
         // we drop the first because we expect to fire only after the first value is set
-        _ = self.$value.dropFirst()
+        _ = $value.dropFirst()
         if let action = action {
             $value.sink(receiveValue: action).store(in: &subscribers)
         }
@@ -93,11 +93,9 @@ public class GenericParameter<T: Codable>: ValueParameter {
 
     public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
         var data = alignData(pointer: pointer, offset: &offset)
-        offset += size
-
         data.storeBytes(of: value, as: dataType())
         data += size
-
+        offset += size
         return data
     }
 }
@@ -119,8 +117,8 @@ public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
         self.max = max
         super.init(label, value, controlType, action)
         // we drop the first because we expect to fire only after the first value is set
-        _ = self.$min.dropFirst()
-        _ = self.$max.dropFirst()
+        _ = $min.dropFirst()
+        _ = $max.dropFirst()
     }
 
     public required init(from decoder: Decoder) throws {

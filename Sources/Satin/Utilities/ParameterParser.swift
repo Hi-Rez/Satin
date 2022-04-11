@@ -84,37 +84,33 @@ func parseStruct(source: String) -> ParameterGroup? {
             if let r1 = Range(match.range(at: 1), in: source) {
                 vType = String(source[r1])
             }
+
             if let r2 = Range(match.range(at: 2), in: source) {
                 vName = String(source[r2])
             }
 
             if let type = vType, let name = vName {
-                if type == "bool" {
-                    params.append(BoolParameter(name, false))
-                }
-                else if type == "int" {
-                    params.append(IntParameter(name, 0))
-                }
-                else if type == "int2" {
-                    params.append(Int2Parameter(name, .zero))
-                }
-                else if type == "int3" {
-                    params.append(Int3Parameter(name, .zero))
-                }
-                else if type == "int4" {
-                    params.append(Int4Parameter(name, .zero))
-                }
-                else if type == "float" {
-                    params.append(FloatParameter(name, .zero))
-                }
-                else if type == "float2" {
-                    params.append(Float2Parameter(name, .zero))
-                }
-                else if type == "float3" {
-                    params.append(Float3Parameter(name, .zero))
-                }
-                else if type == "float4" {
-                    params.append(Float4Parameter(name, .zero))
+                switch type {
+                    case "bool":
+                        params.append(BoolParameter(name, false))
+                    case "int":
+                        params.append(IntParameter(name, 0))
+                    case "int2":
+                        params.append(Int2Parameter(name, .zero))
+                    case "int3":
+                        params.append(Int3Parameter(name, .zero))
+                    case "int4":
+                        params.append(Int4Parameter(name, .zero))
+                    case "float":
+                        params.append(FloatParameter(name, .zero))
+                    case "float2":
+                        params.append(Float2Parameter(name, .zero))
+                    case "float3":
+                        params.append(Float3Parameter(name, .zero))
+                    case "float4":
+                        params.append(Float4Parameter(name, .zero))
+                    default:
+                        break
                 }
             }
         }
@@ -127,32 +123,27 @@ func parseStruct(source: String) -> ParameterGroup? {
 }
 
 func addParameter(group: ParameterGroup, type: String, name: String, control: ControlType = .none) {
-    if type == "float" {
-        group.append(FloatParameter(name, 0.0, control))
-    }
-    else if type == "float2" {
-        group.append(Float2Parameter(name, .zero, control))
-    }
-    else if type == "float3" {
-        group.append(Float3Parameter(name, .zero, control))
-    }
-    else if type == "float4" {
-        group.append(Float4Parameter(name, .zero, control))
-    }
-    else if type == "int" {
-        group.append(IntParameter(name, .zero, control))
-    }
-    else if type == "int2" {
-        group.append(Int2Parameter(name, .zero, control))
-    }
-    else if type == "int3" {
-        group.append(Int3Parameter(name, .zero, control))
-    }
-    else if type == "int4" {
-        group.append(Int4Parameter(name, .zero, control))
-    }
-    else if type == "bool" {
-        group.append(BoolParameter(name, false, control))
+    switch type {
+        case "float":
+            group.append(FloatParameter(name, 0.0, control))
+        case "float2":
+            group.append(Float2Parameter(name, .zero, control))
+        case "float3":
+            group.append(Float3Parameter(name, .zero, control))
+        case "float4":
+            group.append(Float4Parameter(name, .zero, control))
+        case "int":
+            group.append(IntParameter(name, .zero, control))
+        case "int2":
+            group.append(Int2Parameter(name, .zero, control))
+        case "int3":
+            group.append(Int3Parameter(name, .zero, control))
+        case "int4":
+            group.append(Int4Parameter(name, .zero, control))
+        case "bool":
+            group.append(BoolParameter(name, false, control))
+        default:
+            break
     }
 }
 
@@ -485,7 +476,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                 else if uiType == "toggle", vType == "bool" {
                     var success = false
                     let subPattern = #" *?(\w*) *?, *(.*)"#
-                    var subRegex: NSRegularExpression = NSRegularExpression()
+                    var subRegex = NSRegularExpression()
                     do {
                         subRegex = try NSRegularExpression(pattern: subPattern, options: [])
                     }
@@ -530,7 +521,7 @@ func parseParameters(source: String) -> ParameterGroup? {
                 else if uiType == "color", vType == "float4" {
                     var success = false
                     var subPattern = #" *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *(.*)"#
-                    var subRegex: NSRegularExpression = NSRegularExpression()
+                    var subRegex = NSRegularExpression()
 
                     do {
                         subRegex = try NSRegularExpression(pattern: subPattern, options: [])
