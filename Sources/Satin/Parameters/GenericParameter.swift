@@ -73,8 +73,6 @@ public class GenericParameter<T: Codable>: ValueParameter {
         self.label = label
         self.controlType = controlType
         self.value = value
-        // we drop the first because we expect to fire only after the first value is set
-        _ = $value.dropFirst()
         if let action = action {
             $value.sink(receiveValue: action).store(in: &subscribers)
         }
@@ -116,9 +114,6 @@ public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
         self.min = min
         self.max = max
         super.init(label, value, controlType, action)
-        // we drop the first because we expect to fire only after the first value is set
-        _ = $min.dropFirst()
-        _ = $max.dropFirst()
     }
 
     public required init(from decoder: Decoder) throws {
