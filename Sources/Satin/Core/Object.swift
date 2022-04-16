@@ -180,8 +180,18 @@ open class Object: Codable, ObservableObject {
     }
 
     public var worldPosition: simd_float3 {
-        let wp = worldMatrix.columns.3
-        return simd_make_float3(wp.x, wp.y, wp.z)
+        get {
+            let wp = worldMatrix.columns.3
+            return simd_make_float3(wp.x, wp.y, wp.z)
+        }
+        set {
+            if let parent = parent {
+                position = simd_make_float3(parent.worldMatrix.inverse * simd_make_float4(newValue, 1.0))
+            }
+            else {
+                position = newValue
+            }
+        }
     }
     
     public var worldScale: simd_float3 {
