@@ -26,6 +26,13 @@ class Renderer: Forge.Renderer {
         return assetsURL.appendingPathComponent("Models")
     }
     
+    
+    lazy var material: Material = {
+        let material = MatCapMaterial(texture: matcapTexture)
+        material.vertexDescriptor = CustomVertexDescriptor()
+        return material
+    }()
+    
     var scene = Object()
     
     lazy var matcapTexture: MTLTexture? = {
@@ -82,19 +89,112 @@ class Renderer: Forge.Renderer {
 //        loadKnot()
     }
     
+    struct CustomVertex {
+        var position: simd_float4
+        var normal: simd_float3
+        var uv: simd_float2
+        var tangent: simd_float3
+    }
+    
+    public func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
+        let descriptor = MDLVertexDescriptor()
+        
+        var offset = 0
+        descriptor.attributes[0] = MDLVertexAttribute(
+            name: MDLVertexAttributePosition,
+            format: .float4,
+            offset: offset,
+            bufferIndex: 0
+        )
+        offset += MemoryLayout<Float>.size * 4
+        
+        descriptor.attributes[1] = MDLVertexAttribute(
+            name: MDLVertexAttributeNormal,
+            format: .float3,
+            offset: offset,
+            bufferIndex: 0
+        )
+        offset += MemoryLayout<Float>.size * 4
+        
+        descriptor.attributes[2] = MDLVertexAttribute(
+            name: MDLVertexAttributeTextureCoordinate,
+            format: .float2,
+            offset: offset,
+            bufferIndex: 0
+        )
+        offset += MemoryLayout<Float>.size * 2
+        
+        descriptor.attributes[3] = MDLVertexAttribute(
+            name: MDLVertexAttributeTangent,
+            format: .float3,
+            offset: offset,
+            bufferIndex: 0
+        )
+        
+        descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<CustomVertex>.stride)
+        
+        return descriptor
+    }
+    
+    public func CustomVertexDescriptor() -> MTLVertexDescriptor {
+        // position
+        let vertexDescriptor = MTLVertexDescriptor()
+        var offset = 0
+        
+        vertexDescriptor.attributes[0].format = MTLVertexFormat.float4
+        vertexDescriptor.attributes[0].offset = offset
+        vertexDescriptor.attributes[0].bufferIndex = 0
+        offset += MemoryLayout<Float>.size * 4
+        
+        // normal
+        vertexDescriptor.attributes[1].format = MTLVertexFormat.float3
+        vertexDescriptor.attributes[1].offset = offset
+        vertexDescriptor.attributes[1].bufferIndex = 0
+        offset += MemoryLayout<Float>.size * 4
+        
+        // uv
+        vertexDescriptor.attributes[2].format = MTLVertexFormat.float2
+        vertexDescriptor.attributes[2].offset = offset
+        vertexDescriptor.attributes[2].bufferIndex = 0
+        offset += MemoryLayout<Float>.size * 2
+        
+        // tangent
+        vertexDescriptor.attributes[3].format = MTLVertexFormat.float3
+        vertexDescriptor.attributes[3].offset = offset
+        vertexDescriptor.attributes[3].bufferIndex = 0
+        offset += MemoryLayout<Float>.size * 4
+        
+        vertexDescriptor.layouts[0].stride = MemoryLayout<CustomVertex>.stride
+        vertexDescriptor.layouts[0].stepRate = 1
+        vertexDescriptor.layouts[0].stepFunction = .perVertex
+        
+        return vertexDescriptor
+    }
+    
     func loadModel() {
-        let asset = MDLAsset(url: modelsURL.appendingPathComponent("suzanne_high.obj"), vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        print(MDLVertexAttributePosition)
+        print(MDLVertexAttributeNormal)
+        print(MDLVertexAttributeTextureCoordinate)
+        print(MDLVertexAttributeTangent)
+        print(MDLVertexAttributeColor)
+        
+        let customVertexDescriptor = CustomModelIOVertexDescriptor()
+        print(customVertexDescriptor)
+        
+        let asset = MDLAsset(url: modelsURL.appendingPathComponent("suzanne_high.obj"), vertexDescriptor: customVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         
         // MatCapMaterial inspired by @TheSpite
         // https://www.clicktorelease.com/code/spherical-normal-mapping/
         
-        mesh = Mesh(geometry: Geometry(), material: MatCapMaterial(texture: matcapTexture!))
+        mesh = Mesh(geometry: Geometry(), material: material)
         mesh.label = "Suzanne"
         
         let geo = mesh.geometry
         let object0 = asset.object(at: 0)
         if let objMesh = object0 as? MDLMesh {
             objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
+            objMesh.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, normalAttributeNamed: MDLVertexAttributeNormal, tangentAttributeNamed: MDLVertexAttributeTangent)
+            
             
             let vertexData = objMesh.vertexBuffers[0].map().bytes.bindMemory(to: Vertex.self, capacity: objMesh.vertexCount)
             geo.vertexData = Array(UnsafeBufferPointer(start: vertexData, count: objMesh.vertexCount))
@@ -123,7 +223,7 @@ class Renderer: Forge.Renderer {
         // MatCapMaterial inspired by @TheSpite
         // https://www.clicktorelease.com/code/spherical-normal-mapping/
         
-        mesh = Mesh(geometry: geometry, material: MatCapMaterial(texture: matcapTexture!))
+        mesh = Mesh(geometry: geometry, material: material)
         mesh.cullMode = .none
         mesh.label = "Knot"
         scene.add(mesh)

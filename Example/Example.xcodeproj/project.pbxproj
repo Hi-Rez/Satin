@@ -216,6 +216,19 @@
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
+		E1624934280DC31E00DAE5F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F1B32724BAA93300563923 /* Renderer.swift */; };
+		E1624935280DC31E00DAE5F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
+		E1624937280DC31E00DAE5F7 /* Forge in Frameworks */ = {isa = PBXBuildFile; productRef = E1624930280DC31E00DAE5F7 /* Forge */; };
+		E1624938280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E1624939280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E162493A280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E162493B280DC31E00DAE5F7 /* Satin in Frameworks */ = {isa = PBXBuildFile; productRef = E1624932280DC31E00DAE5F7 /* Satin */; };
+		E162493C280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E162493D280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E162493E280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		E1624940280DC31E00DAE5F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
+		E1624941280DC31E00DAE5F7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
+		E1624948280DC45B00DAE5F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1624947280DC45B00DAE5F7 /* Renderer.swift */; };
 		E1653EEE2684F0D90012C97F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678B8243EC9FD0070B294 /* AppDelegate.swift */; };
 		E1653EF52684F0D90012C97F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678E5243EE7670070B294 /* Assets.xcassets */; };
 		E1653EFD2684F1170012C97F /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E11CD0002683EBDD005BEA88 /* Assets */; };
@@ -462,6 +475,8 @@
 		E152A9FC2688F426002EF5B1 /* RayMarching.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RayMarching.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E152AA122688F512002EF5B1 /* RayMarching.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RayMarching.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E160CA4F24876781005D37A4 /* MatCap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatCap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1624945280DC31E00DAE5F7 /* VertexAttributes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VertexAttributes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1624947280DC45B00DAE5F7 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E1653EFB2684F0D90012C97F /* SatinSceneKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SatinSceneKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1653F112684F46D0012C97F /* SatinSceneKitAR-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SatinSceneKitAR-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1653F152684F4D50012C97F /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
@@ -699,6 +714,21 @@
 				E10CC14827F10A3F00E04B2B /* Forge in Frameworks */,
 				F8600421B47B20340EFAD160 /* (null) in Frameworks */,
 				99944A954CFDF4CA65C627CA /* (null) in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1624936280DC31E00DAE5F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1624937280DC31E00DAE5F7 /* Forge in Frameworks */,
+				E1624938280DC31E00DAE5F7 /* (null) in Frameworks */,
+				E1624939280DC31E00DAE5F7 /* (null) in Frameworks */,
+				E162493A280DC31E00DAE5F7 /* (null) in Frameworks */,
+				E162493B280DC31E00DAE5F7 /* Satin in Frameworks */,
+				E162493C280DC31E00DAE5F7 /* (null) in Frameworks */,
+				E162493D280DC31E00DAE5F7 /* (null) in Frameworks */,
+				E162493E280DC31E00DAE5F7 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1158,6 +1188,7 @@
 				E19B058D26BB701700D91376 /* AudioInput.app */,
 				E1DED1AF27B4D808008C9F1F /* Shipping.app */,
 				E180FD6F27E13A53002D6DF5 /* Octasphere-macOS.app */,
+				E1624945280DC31E00DAE5F7 /* VertexAttributes.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1198,6 +1229,7 @@
 		66E678CD243EE2190070B294 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E162492E280DC2E800DAE5F7 /* VertexAttributes */,
 				E180FD5927E13A24002D6DF5 /* Octasphere */,
 				E1DED19627B4D7D2008C9F1F /* Shipping */,
 				E19B057D26BB6FF000D91376 /* AudioInput */,
@@ -1286,6 +1318,14 @@
 				E1CC09892489751A00B92285 /* Renderer.swift */,
 			);
 			path = Geometry;
+			sourceTree = "<group>";
+		};
+		E162492E280DC2E800DAE5F7 /* VertexAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				E1624947280DC45B00DAE5F7 /* Renderer.swift */,
+			);
+			path = VertexAttributes;
 			sourceTree = "<group>";
 		};
 		E1653F132684F4AB0012C97F /* SatinSceneKitAR */ = {
@@ -1798,6 +1838,27 @@
 			);
 			productName = "Example-iOS";
 			productReference = E160CA4F24876781005D37A4 /* MatCap.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E162492F280DC31E00DAE5F7 /* VertexAttributes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1624942280DC31E00DAE5F7 /* Build configuration list for PBXNativeTarget "VertexAttributes" */;
+			buildPhases = (
+				E1624933280DC31E00DAE5F7 /* Sources */,
+				E1624936280DC31E00DAE5F7 /* Frameworks */,
+				E162493F280DC31E00DAE5F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VertexAttributes;
+			packageProductDependencies = (
+				E1624930280DC31E00DAE5F7 /* Forge */,
+				E1624932280DC31E00DAE5F7 /* Satin */,
+			);
+			productName = Example;
+			productReference = E1624945280DC31E00DAE5F7 /* VertexAttributes.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1653EEA2684F0D90012C97F /* SatinSceneKit-tvOS */ = {
@@ -2740,6 +2801,7 @@
 				E19B057E26BB701700D91376 /* AudioInput-macOS */,
 				E1DED19927B4D808008C9F1F /* Shipping-macOS */,
 				E180FD5A27E13A53002D6DF5 /* Octasphere-macOS */,
+				E162492F280DC31E00DAE5F7 /* VertexAttributes */,
 			);
 		};
 /* End PBXProject section */
@@ -2874,6 +2936,15 @@
 				E160CA4724876781005D37A4 /* Assets.xcassets in Resources */,
 				E1CC097524896ED800B92285 /* Assets in Resources */,
 				E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E162493F280DC31E00DAE5F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1624940280DC31E00DAE5F7 /* Assets.xcassets in Resources */,
+				E1624941280DC31E00DAE5F7 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3387,6 +3458,16 @@
 				E1CC097624896EEC00B92285 /* TorusKnotGenerator.c in Sources */,
 				E1CC097424896ED300B92285 /* Renderer.swift in Sources */,
 				E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1624933280DC31E00DAE5F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1624934280DC31E00DAE5F7 /* Renderer.swift in Sources */,
+				E1624948280DC45B00DAE5F7 /* Renderer.swift in Sources */,
+				E1624935280DC31E00DAE5F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4454,6 +4535,48 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E1624943280DC31E00DAE5F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.vertexattributes";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E1624944280DC31E00DAE5F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Source/macOS/Example.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H5N5GRKN9A;
+				INFOPLIST_FILE = Source/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.hi-rez.vertexattributes";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -6271,6 +6394,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		E1624942280DC31E00DAE5F7 /* Build configuration list for PBXNativeTarget "VertexAttributes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1624943280DC31E00DAE5F7 /* Debug */,
+				E1624944280DC31E00DAE5F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E1653EF82684F0D90012C97F /* Build configuration list for PBXNativeTarget "SatinSceneKit-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -6645,6 +6777,14 @@
 		E1385EE127F219C5005EB579 /* XCRemoteSwiftPackageReference "Spectra" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Hi-Rez/Spectra";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E1624931280DC31E00DAE5F7 /* XCRemoteSwiftPackageReference "Forge" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Hi-Rez/Forge";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -7143,6 +7283,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E1385EE127F219C5005EB579 /* XCRemoteSwiftPackageReference "Spectra" */;
 			productName = Spectra;
+		};
+		E1624930280DC31E00DAE5F7 /* Forge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1624931280DC31E00DAE5F7 /* XCRemoteSwiftPackageReference "Forge" */;
+			productName = Forge;
+		};
+		E1624932280DC31E00DAE5F7 /* Satin */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Satin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

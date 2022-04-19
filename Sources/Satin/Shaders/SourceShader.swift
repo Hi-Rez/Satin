@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Metal
 
 open class SourceShader: Shader {
     public var pipelineURL: URL {
@@ -16,6 +17,15 @@ open class SourceShader: Shader {
         }
     }
 
+    public override var vertexDescriptor: MTLVertexDescriptor {
+        didSet {
+            if oldValue != vertexDescriptor {
+                sourceNeedsUpdate = true
+                print("source needs update")
+            }
+        }
+    }
+    
     public private(set) var source: String?
     public private(set) var shaderSource: String?
 
@@ -94,15 +104,11 @@ open class SourceShader: Shader {
             var source = try compiler.parse(includesURL)
 
             injectConstants(source: &source)
-            injectVertex(source: &source)
+            injectVertex(source: &source, vertexDescriptor: vertexDescriptor)
             injectVertexData(source: &source)
             injectVertexUniforms(source: &source)
 
             source += shaderSource
-
-            if !shaderSource.contains(vertexFunctionName) {
-
-            }
             
             injectPassThroughVertex(label: label, source: &source)
             self.shaderSource = shaderSource

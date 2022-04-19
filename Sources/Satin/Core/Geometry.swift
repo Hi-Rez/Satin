@@ -8,27 +8,72 @@
 
 import Combine
 import Metal
+import ModelIO
 import simd
 
-open class Geometry {
+public protocol VertexType {
+    var descriptor: MDLVertexDescriptor { get }
+    var position: simd_float4 { get }
+    var normal: simd_float3 { get }
+    var uv: simd_float2 { get }
+}
+
+extension Vertex: VertexType {
+    public var descriptor: MDLVertexDescriptor {
+        SatinModelIOVertexDescriptor()
+    }
+}
+
+extension Bounds {
+    init() {
+        self.init(min: .zero, max: .zero)
+    }
+}
+
+public protocol BaseGeometry: Hashable {
+    var id: String { get set }
+    var primitiveType: MTLPrimitiveType { get set }
+    var windingOrder: MTLWinding { get set }
+    var indexType: MTLIndexType { get set }
+
+    var vertexData: [VertexType] { get }
+    var indexData: [UInt32] { get set }
+    
+    var context: Context? { get set }
+    
+    var bounds: Bounds { get }
+        
+    var vertexBuffer: MTLBuffer? { get set }
+    var indexBuffer: MTLBuffer? { get set }
+    
+    var vertexDescriptor: MDLVertexDescriptor { get }
+    
+    func setup()
+    func update()
+}
+
+open class Geometry: BaseGeometry {
+    public var id: String = UUID().uuidString
+    
+    public var vertexDescriptor: MDLVertexDescriptor {
+        SatinModelIOVertexDescriptor()
+    }
+    
     public var primitiveType: MTLPrimitiveType = .triangle
     public var windingOrder: MTLWinding = .counterClockwise
     public var indexType: MTLIndexType = .uint32
     
-    public let publisher = PassthroughSubject<Geometry, Never>()
-    
-    public var vertexData: [Vertex] = [] {
+    @PublishedDidSet public var vertexData: [VertexType] = [] {
         didSet {
-            publisher.send(self)
             _updateVertexBuffer = true
             _updateBounds = true
         }
     }
     
-    public var indexData: [UInt32] = [] {
+    @PublishedDidSet public var indexData: [UInt32] = [] {
         didSet {
-            publisher.send(self)
             _updateIndexBuffer = true
+            _updateBounds = true
         }
     }
     
@@ -51,8 +96,17 @@ open class Geometry {
         return _bounds
     }
     
-    public var vertexBuffer: MTLBuffer?
-    public var indexBuffer: MTLBuffer?
+    public var vertexBuffer: MTLBuffer? {
+        didSet {
+            _updateVertexBuffer = vertexBuffer == nil
+        }
+    }
+
+    public var indexBuffer: MTLBuffer? {
+        didSet {
+            _updateIndexBuffer = indexBuffer == nil
+        }
+    }
     
     public init() {}
     
@@ -66,7 +120,7 @@ open class Geometry {
         self.indexType = indexType
     }
     
-    func setup() {
+    public func setup() {
         setupVertexBuffer()
         setupIndexBuffer()
     }
@@ -81,21 +135,16 @@ open class Geometry {
     }
     
     func setupVertexBuffer() {
-        guard _updateVertexBuffer, let context = context else { return }
+        guard _updateVertexBuffer, let context = context, var data = vertexData as? [Vertex], !data.isEmpty else { return }
         let device = context.device
-        if !vertexData.isEmpty {
-            let stride = MemoryLayout<Vertex>.stride
-            let verticesSize = vertexData.count * stride
-            if let vertexBuffer = vertexBuffer, vertexBuffer.length == verticesSize {
-                vertexBuffer.contents().copyMemory(from: &vertexData, byteCount: verticesSize)
-            }
-            else {
-                vertexBuffer = device.makeBuffer(bytes: vertexData, length: verticesSize, options: [])
-                vertexBuffer?.label = "Vertices"
-            }
+        let verticesSize = data.count * MemoryLayout<Vertex>.stride
+        
+        if let vertexBuffer = vertexBuffer, vertexBuffer.length == verticesSize {
+            vertexBuffer.contents().copyMemory(from: &data, byteCount: verticesSize)
         }
         else {
-            vertexBuffer = nil
+            vertexBuffer = device.makeBuffer(bytes: data, length: verticesSize, options: [])
+            vertexBuffer?.label = "Vertices"
         }
         _updateVertexBuffer = false
     }
@@ -139,9 +188,14 @@ open class Geometry {
         data.vertexCount = Int32(vertexData.count)
         data.indexCount = Int32(indexData.count / 3)
         
-        vertexData.withUnsafeMutableBufferPointer { vtxPtr in
-            data.vertexData = vtxPtr.baseAddress!
+        if var v = vertexData as? [Vertex] {
+            v.withUnsafeMutableBufferPointer { vtxPtr in
+                data.vertexData = vtxPtr.baseAddress!
+            }
         }
+//        vertexData.withUnsafeMutableBufferPointer { vtxPtr in
+//            data.vertexData = vtxPtr.baseAddress!
+//        }
         
         indexData.withUnsafeMutableBufferPointer { indPtr in
             let raw = UnsafeRawBufferPointer(indPtr)
@@ -161,11 +215,16 @@ open class Geometry {
     }
     
     public func transform(_ matrix: simd_float4x4) {
-        transformVertices(&vertexData, Int32(vertexData.count), matrix)
+        if var v = vertexData as? [Vertex] {
+            transformVertices(&v, Int32(vertexData.count), matrix)
+        }
     }
     
     func computeBounds() -> Bounds {
-        return computeBoundsFromVertices(&vertexData, Int32(vertexData.count))
+        if var v = vertexData as? [Vertex] {
+            return computeBoundsFromVertices(&v, Int32(vertexData.count))
+        }
+        return Bounds()
     }
     
     deinit {

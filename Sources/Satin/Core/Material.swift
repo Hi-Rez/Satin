@@ -39,6 +39,14 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         prefix
     }()
     
+    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
+        didSet {
+            if oldValue != vertexDescriptor {
+                shaderNeedsUpdate = true
+            }
+        }
+    }
+    
     public var shader: Shader? {
         didSet {
             if oldValue != shader, let shader = shader {
@@ -193,6 +201,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         if let context = context {
             if shader == nil {
                 self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+                self.shader!.vertexDescriptor = self.vertexDescriptor
                 isClone = false
             }
             else if let shader = shader, isClone, shaderBlendingNeedsUpdate {

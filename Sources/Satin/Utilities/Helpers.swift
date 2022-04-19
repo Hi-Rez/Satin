@@ -12,7 +12,7 @@ public func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) ->
     if invisible || object.visible {
         if object is Mesh, let mesh = object as? Mesh {
             let geometry = mesh.geometry
-            if !geometry.vertexData.isEmpty, mesh.instanceCount > 0 {
+            if geometry.vertexData.count > 0, mesh.instanceCount > 0 {
                 results.append(object as! Mesh)
             }
         }

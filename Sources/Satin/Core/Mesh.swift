@@ -10,6 +10,9 @@ import Combine
 import Metal
 import simd
 
+// consider making a renderable protocol
+// consider making a intersectable protocol
+
 open class Mesh: Object {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
@@ -26,7 +29,7 @@ open class Mesh: Object {
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var geometry = Geometry() {
+    public var geometry: BaseGeometry = Geometry() {
         didSet {
             setupGeometrySubscriber()
             setupGeometry()
@@ -44,7 +47,7 @@ open class Mesh: Object {
     
     public var submeshes: [Submesh] = []
     
-    public init(geometry: Geometry, material: Material?) {
+    public init(geometry: BaseGeometry, material: Material?) {
         super.init()
         self.geometry = geometry
         self.material = material
@@ -88,7 +91,7 @@ open class Mesh: Object {
     
     internal func setupGeometrySubscriber() {
         geometrySubscriber?.cancel()
-        geometrySubscriber = geometry.publisher.sink { [unowned self] _ in
+        geometrySubscriber = geometry.$vertexData.sink { [unowned self] _ in
             self._localBounds.clear()
         }
     }
