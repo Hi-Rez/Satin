@@ -63,7 +63,7 @@ open class Geometry {
     public var windingOrder: MTLWinding = .counterClockwise
     public var indexType: MTLIndexType = .uint32
     
-    @PublishedDidSet public var vertexData: [VertexType] = [] {
+    @PublishedDidSet public var vertexData: [Vertex] = [] {
         didSet {
             _updateVertexBuffer = true
             _updateBounds = true

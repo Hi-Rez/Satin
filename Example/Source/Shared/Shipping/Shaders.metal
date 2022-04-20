@@ -16,7 +16,6 @@ vertex VertexData normalColorVertex(Vertex in [[stage_in]],
     out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
     out.normal = normalize(vertexUniforms.normalMatrix * in.normal);
     out.uv = in.uv;
-    out.pointSize = 2.0;
     return out;
 }
 
