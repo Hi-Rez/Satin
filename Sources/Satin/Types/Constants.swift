@@ -38,6 +38,46 @@ public enum VertexAttribute: Int {
     case Custom8 = 12
     case Custom9 = 13
     case Custom10 = 14
+
+    
+    public var description: String {
+        return String(describing: self)
+    }
+        
+    public var name: String {
+        switch self {
+        case .Position:
+            return "position"
+        case .Normal:
+            return "normal"
+        case .Texcoord:
+            return "uv"
+        case .Tangent:
+            return "tangent"
+        case .Custom0:
+            return "custom0"
+        case .Custom1:
+            return "custom1"
+        case .Custom2:
+            return "custom2"
+        case .Custom3:
+            return "custom3"
+        case .Custom4:
+            return "custom4"
+        case .Custom5:
+            return "custom5"
+        case .Custom6:
+            return "custom6"
+        case .Custom7:
+            return "custom7"
+        case .Custom8:
+            return "custom8"
+        case .Custom9:
+            return "custom9"
+        case .Custom10:
+            return "custom10"
+        }
+    }
 }
 
 public enum VertexBufferIndex: Int {

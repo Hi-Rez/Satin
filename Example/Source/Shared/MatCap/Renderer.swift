@@ -305,15 +305,17 @@ class Renderer: Forge.Renderer {
         metalKitView.colorPixelFormat = .bgra8Unorm
     }
     
-    
     override func setup() {
         let material = CustomMaterial(pipelinesURL: pipelinesURL, vertexDescriptor: CustomVertexDescriptor())
         loadedMesh = LoadedMesh(url: modelsURL.appendingPathComponent("suzanne_high.obj"), material: material)
         scene.add(loadedMesh)
     }
     
+    var frame: Float = 0.0
     override func update() {
         cameraController.update()
+        loadedMesh.position = .init(0.0, 0.25 * sin(frame), 0.0)
+        frame += 0.05
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

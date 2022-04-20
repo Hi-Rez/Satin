@@ -21,7 +21,6 @@ open class SourceShader: Shader {
         didSet {
             if oldValue != vertexDescriptor {
                 sourceNeedsUpdate = true
-                print("source needs update")
             }
         }
     }
@@ -40,7 +39,6 @@ open class SourceShader: Shader {
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
         super.init(label, vertexFunctionName, fragmentFunctionName)
-        setupSource()
     }
 
     public required init() {

@@ -85,7 +85,7 @@ open class Shader {
         }
     }
     
-    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
+    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
             if oldValue != vertexDescriptor {
                 pipelineNeedsUpdate = true

@@ -20,7 +20,7 @@ public protocol VertexType {
 
 extension Vertex: VertexType {
     public var descriptor: MDLVertexDescriptor {
-        SatinModelIOVertexDescriptor()
+        SatinModelIOVertexDescriptor
     }
 }
 
@@ -56,7 +56,7 @@ open class Geometry {
     public var id: String = UUID().uuidString
     
     public var vertexDescriptor: MDLVertexDescriptor {
-        SatinModelIOVertexDescriptor()
+        SatinModelIOVertexDescriptor
     }
     
     public var primitiveType: MTLPrimitiveType = .triangle

@@ -11,7 +11,7 @@ vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]], constant VertexUniforms
                                   [[buffer(VertexBufferVertexUniforms)]]) {
     const float4 position = v.position;
     SkyVertexData out;
-    out.position = vertexUniforms.projectionMatrix * vertexUniforms.modelViewMatrix * position;
+    out.position = vertexUniforms.modelViewProjectionMatrix * position;
     out.uv = float3(position.xy, -position.z);
     return out;
 }

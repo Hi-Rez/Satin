@@ -39,7 +39,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         prefix
     }()
     
-    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
+    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
             if oldValue != vertexDescriptor {
                 shaderNeedsUpdate = true

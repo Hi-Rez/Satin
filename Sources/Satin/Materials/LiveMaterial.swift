@@ -16,13 +16,13 @@ open class LiveMaterial: Material {
         return nil
     }
 
-    public init(pipelineURL: URL, vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor()) {
+    public init(pipelineURL: URL, vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor) {
         super.init()
         self.vertexDescriptor = vertexDescriptor
         _init(pipelineURL: pipelineURL)
     }
 
-    public init(pipelinesURL: URL, vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor()) {
+    public init(pipelinesURL: URL, vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor) {
         super.init()
         self.vertexDescriptor = vertexDescriptor
         _init(pipelineURL: pipelinesURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal"))

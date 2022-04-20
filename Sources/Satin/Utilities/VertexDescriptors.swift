@@ -8,7 +8,7 @@
 import Metal
 import ModelIO
 
-public func SatinVertexDescriptor() -> MTLVertexDescriptor {
+func createSatinVertexDescriptor() -> MTLVertexDescriptor {
     // position
     let vertexDescriptor = MTLVertexDescriptor()
     
@@ -33,7 +33,9 @@ public func SatinVertexDescriptor() -> MTLVertexDescriptor {
     return vertexDescriptor
 }
 
-public func SatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
+public let SatinVertexDescriptor = createSatinVertexDescriptor()
+
+public func createSatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
     let descriptor = MDLVertexDescriptor()
     
     var offset = 0
@@ -68,3 +70,5 @@ public func SatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
     
     return descriptor
 }
+
+public let SatinModelIOVertexDescriptor = createSatinModelIOVertexDescriptor()
