@@ -12,7 +12,224 @@ import MetalKit
 import Forge
 import Satin
 
+struct CustomVertex {
+    var position: simd_float4
+    var normal: simd_float3
+    var uv: simd_float2
+    var tangent: simd_float3
+}
+
+func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
+    let descriptor = MDLVertexDescriptor()
+    
+    var offset = 0
+    descriptor.attributes[0] = MDLVertexAttribute(
+        name: MDLVertexAttributePosition,
+        format: .float4,
+        offset: offset,
+        bufferIndex: 0
+    )
+    offset += MemoryLayout<Float>.size * 4
+    
+    descriptor.attributes[1] = MDLVertexAttribute(
+        name: MDLVertexAttributeNormal,
+        format: .float3,
+        offset: offset,
+        bufferIndex: 0
+    )
+    offset += MemoryLayout<Float>.size * 4
+    
+    descriptor.attributes[2] = MDLVertexAttribute(
+        name: MDLVertexAttributeTextureCoordinate,
+        format: .float2,
+        offset: offset,
+        bufferIndex: 0
+    )
+    offset += MemoryLayout<Float>.size * 2
+    
+    descriptor.attributes[3] = MDLVertexAttribute(
+        name: MDLVertexAttributeTangent,
+        format: .float3,
+        offset: offset,
+        bufferIndex: 0
+    )
+    
+    descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<CustomVertex>.stride)
+    
+    return descriptor
+}
+
+func CustomVertexDescriptor() -> MTLVertexDescriptor {
+    // position
+    let vertexDescriptor = MTLVertexDescriptor()
+    var offset = 0
+    
+    vertexDescriptor.attributes[0].format = MTLVertexFormat.float4
+    vertexDescriptor.attributes[0].offset = offset
+    vertexDescriptor.attributes[0].bufferIndex = 0
+    offset += MemoryLayout<Float>.size * 4
+    
+    // normal
+    vertexDescriptor.attributes[1].format = MTLVertexFormat.float3
+    vertexDescriptor.attributes[1].offset = offset
+    vertexDescriptor.attributes[1].bufferIndex = 0
+    offset += MemoryLayout<Float>.size * 4
+    
+    // uv
+    vertexDescriptor.attributes[2].format = MTLVertexFormat.float2
+    vertexDescriptor.attributes[2].offset = offset
+    vertexDescriptor.attributes[2].bufferIndex = 0
+    offset += MemoryLayout<Float>.size * 2
+    
+    // tangent
+    vertexDescriptor.attributes[3].format = MTLVertexFormat.float3
+    vertexDescriptor.attributes[3].offset = offset
+    vertexDescriptor.attributes[3].bufferIndex = 0
+    offset += MemoryLayout<Float>.size * 4
+    
+    vertexDescriptor.layouts[0].stride = MemoryLayout<CustomVertex>.stride
+    vertexDescriptor.layouts[0].stepRate = 1
+    vertexDescriptor.layouts[0].stepFunction = .perVertex
+    
+    return vertexDescriptor
+}
+
+class LoadedMesh: Object, Renderable {
+    public var uniformBufferIndex: Int = 0
+    public var uniformBufferOffset: Int = 0
+    
+    var vertexUniformParameters = createVertexUniformParameters()
+    var vertexUniforms: UniformBuffer!
+    
+    var url: URL?
+    var material: Material?
+    
+    var indexBuffer: MTLBuffer?
+    var vertexBuffer: MTLBuffer?
+    var indexCount: Int = 0
+    var vertexCount: Int = 0
+    
+    
+    init(url: URL, material: Material) {
+        self.url = url
+        self.material = material
+        super.init("LoadedMesh")
+    }
+    
+    override func setup() {
+        setupUniformBuffer()
+        setupModel()
+        setupMaterial()
+    }
+    
+    func setupModel() {
+        guard let url = url, let context = context else { return }
+        let customVertexDescriptor = CustomModelIOVertexDescriptor()
+        
+        let asset = MDLAsset(url: url, vertexDescriptor: customVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        
+        let object0 = asset.object(at: 0)
+        if let objMesh = object0 as? MDLMesh {
+            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
+            objMesh.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, normalAttributeNamed: MDLVertexAttributeNormal, tangentAttributeNamed: MDLVertexAttributeTangent)
+            
+            if let meshBuffer = objMesh.vertexBuffers.first as? MTKMeshBuffer {
+                vertexBuffer = meshBuffer.buffer
+                vertexCount = objMesh.vertexCount
+            }
+            
+            if let submeshes = objMesh.submeshes, let first = submeshes.firstObject, let sub: MDLSubmesh = first as? MDLSubmesh {
+                indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
+                indexCount = sub.indexCount
+            }
+        }
+    }
+    
+    func setupMaterial() {
+        guard let context = context, let material = material else { return }
+        material.context = context
+    }
+    
+    func setupUniformBuffer() {
+        guard let context = context else { return }
+        vertexUniforms = UniformBuffer(device: context.device, parameters: vertexUniformParameters)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+
+    // MARK: - Update
+    
+    override func update() {
+        updateUniformsBuffer()
+        material?.update()
+        super.update()
+    }
+
+    func update(camera: Camera, viewport: simd_float4) {
+        material?.update(camera: camera)
+        updateUniforms(camera: camera, viewport: viewport)
+    }
+    
+    func updateUniforms(camera: Camera, viewport: simd_float4) {
+        let mvp = simd_mul(camera.viewProjectionMatrix, worldMatrix)
+        vertexUniformParameters.set("Model Matrix", worldMatrix)
+        vertexUniformParameters.set("View Matrix", camera.viewMatrix)
+        vertexUniformParameters.set("Model View Matrix", simd_mul(camera.viewMatrix, worldMatrix))
+        vertexUniformParameters.set("Projection Matrix", camera.projectionMatrix)
+        vertexUniformParameters.set("Model View Projection Matrix", mvp)
+        vertexUniformParameters.set("Inverse Model View Projection Matrix", simd_inverse(mvp))
+        vertexUniformParameters.set("Inverse View Matrix", camera.worldMatrix)
+        vertexUniformParameters.set("Normal Matrix", normalMatrix)
+        vertexUniformParameters.set("Viewport", viewport)
+        vertexUniformParameters.set("World Camera Position", camera.worldPosition)
+        vertexUniformParameters.set("World Camera View Direction", camera.viewDirection)
+    }
+    
+    func updateUniformsBuffer() {
+        vertexUniforms.update()
+    }
+    
+    // MARK: - Draw
+    
+    open func draw(renderEncoder: MTLRenderCommandEncoder) {
+        draw(renderEncoder: renderEncoder, instanceCount: 1)
+    }
+    
+    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
+        guard instanceCount > 0, let vertexBuffer = vertexBuffer, let material = material, let _ = material.pipeline else { return }
+        
+        material.bind(renderEncoder)
+        renderEncoder.setFrontFacing(.counterClockwise)
+        renderEncoder.setCullMode(.back)
+        renderEncoder.setTriangleFillMode(.fill)
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
+        renderEncoder.setVertexBuffer(vertexUniforms.buffer, offset: vertexUniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
+        
+        if let indexBuffer = indexBuffer {
+            renderEncoder.drawIndexedPrimitives(
+                type: .triangle,
+                indexCount: indexCount,
+                indexType: .uint32,
+                indexBuffer: indexBuffer,
+                indexBufferOffset: 0,
+                instanceCount: instanceCount
+            )
+        } else {
+            renderEncoder.drawPrimitives(
+                type: .triangle,
+                vertexStart: 0,
+                vertexCount: vertexCount,
+                instanceCount: instanceCount
+            )
+        }
+    }
+}
+
 class Renderer: Forge.Renderer {
+    class CustomMaterial: LiveMaterial {}
+    
     var assetsURL: URL {
         let resourcesURL = Bundle.main.resourceURL!
         return resourcesURL.appendingPathComponent("Assets")
@@ -24,6 +241,10 @@ class Renderer: Forge.Renderer {
     
     var modelsURL: URL {
         return assetsURL.appendingPathComponent("Models")
+    }
+    
+    var pipelinesURL: URL {
+        return assetsURL.appendingPathComponent("Pipelines")
     }
     
     
@@ -75,7 +296,7 @@ class Renderer: Forge.Renderer {
         return renderer
     }()
     
-    var mesh: Mesh!
+    var loadedMesh: Object!
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -84,149 +305,11 @@ class Renderer: Forge.Renderer {
         metalKitView.colorPixelFormat = .bgra8Unorm
     }
     
+    
     override func setup() {
-        loadModel()
-//        loadKnot()
-    }
-    
-    struct CustomVertex {
-        var position: simd_float4
-        var normal: simd_float3
-        var uv: simd_float2
-        var tangent: simd_float3
-    }
-    
-    public func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
-        let descriptor = MDLVertexDescriptor()
-        
-        var offset = 0
-        descriptor.attributes[0] = MDLVertexAttribute(
-            name: MDLVertexAttributePosition,
-            format: .float4,
-            offset: offset,
-            bufferIndex: 0
-        )
-        offset += MemoryLayout<Float>.size * 4
-        
-        descriptor.attributes[1] = MDLVertexAttribute(
-            name: MDLVertexAttributeNormal,
-            format: .float3,
-            offset: offset,
-            bufferIndex: 0
-        )
-        offset += MemoryLayout<Float>.size * 4
-        
-        descriptor.attributes[2] = MDLVertexAttribute(
-            name: MDLVertexAttributeTextureCoordinate,
-            format: .float2,
-            offset: offset,
-            bufferIndex: 0
-        )
-        offset += MemoryLayout<Float>.size * 2
-        
-        descriptor.attributes[3] = MDLVertexAttribute(
-            name: MDLVertexAttributeTangent,
-            format: .float3,
-            offset: offset,
-            bufferIndex: 0
-        )
-        
-        descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<CustomVertex>.stride)
-        
-        return descriptor
-    }
-    
-    public func CustomVertexDescriptor() -> MTLVertexDescriptor {
-        // position
-        let vertexDescriptor = MTLVertexDescriptor()
-        var offset = 0
-        
-        vertexDescriptor.attributes[0].format = MTLVertexFormat.float4
-        vertexDescriptor.attributes[0].offset = offset
-        vertexDescriptor.attributes[0].bufferIndex = 0
-        offset += MemoryLayout<Float>.size * 4
-        
-        // normal
-        vertexDescriptor.attributes[1].format = MTLVertexFormat.float3
-        vertexDescriptor.attributes[1].offset = offset
-        vertexDescriptor.attributes[1].bufferIndex = 0
-        offset += MemoryLayout<Float>.size * 4
-        
-        // uv
-        vertexDescriptor.attributes[2].format = MTLVertexFormat.float2
-        vertexDescriptor.attributes[2].offset = offset
-        vertexDescriptor.attributes[2].bufferIndex = 0
-        offset += MemoryLayout<Float>.size * 2
-        
-        // tangent
-        vertexDescriptor.attributes[3].format = MTLVertexFormat.float3
-        vertexDescriptor.attributes[3].offset = offset
-        vertexDescriptor.attributes[3].bufferIndex = 0
-        offset += MemoryLayout<Float>.size * 4
-        
-        vertexDescriptor.layouts[0].stride = MemoryLayout<CustomVertex>.stride
-        vertexDescriptor.layouts[0].stepRate = 1
-        vertexDescriptor.layouts[0].stepFunction = .perVertex
-        
-        return vertexDescriptor
-    }
-    
-    func loadModel() {
-        print(MDLVertexAttributePosition)
-        print(MDLVertexAttributeNormal)
-        print(MDLVertexAttributeTextureCoordinate)
-        print(MDLVertexAttributeTangent)
-        print(MDLVertexAttributeColor)
-        
-        let customVertexDescriptor = CustomModelIOVertexDescriptor()
-        print(customVertexDescriptor)
-        
-        let asset = MDLAsset(url: modelsURL.appendingPathComponent("suzanne_high.obj"), vertexDescriptor: customVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
-        
-        // MatCapMaterial inspired by @TheSpite
-        // https://www.clicktorelease.com/code/spherical-normal-mapping/
-        
-        mesh = Mesh(geometry: Geometry(), material: material)
-        mesh.label = "Suzanne"
-        
-        let geo = mesh.geometry
-        let object0 = asset.object(at: 0)
-        if let objMesh = object0 as? MDLMesh {
-            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
-            objMesh.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, normalAttributeNamed: MDLVertexAttributeNormal, tangentAttributeNamed: MDLVertexAttributeTangent)
-            
-            
-            let vertexData = objMesh.vertexBuffers[0].map().bytes.bindMemory(to: Vertex.self, capacity: objMesh.vertexCount)
-            geo.vertexData = Array(UnsafeBufferPointer(start: vertexData, count: objMesh.vertexCount))
-            geo.vertexBuffer = (objMesh.vertexBuffers[0] as! MTKMeshBuffer).buffer
-            guard let submeshes = objMesh.submeshes, let first = submeshes.firstObject, let sub: MDLSubmesh = first as? MDLSubmesh else { return }
-            let indexDataPtr = sub.indexBuffer(asIndexType: .uInt32).map().bytes.bindMemory(to: UInt32.self, capacity: sub.indexCount)
-            let indexData = Array(UnsafeBufferPointer(start: indexDataPtr, count: sub.indexCount))
-            geo.indexData = indexData
-            geo.indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
-        }
-        
-        scene.add(mesh)
-    }
-    
-    func loadKnot() {
-        let twoPi = Float.pi * 2.0
-        let geometry = ParametricGeometry(u: (0.0, twoPi), v: (0.0, twoPi), res: (300, 16), generator: { u, v in
-            let R: Float = 0.75
-            let r: Float = 0.25
-            let c: Float = 0.1
-            let q: Float = 1.0
-            let p: Float = 3.0
-            return torusKnotGenerator(u, v, R, r, c, q, p)
-        })
-        
-        // MatCapMaterial inspired by @TheSpite
-        // https://www.clicktorelease.com/code/spherical-normal-mapping/
-        
-        mesh = Mesh(geometry: geometry, material: material)
-        mesh.cullMode = .none
-        mesh.label = "Knot"
-        scene.add(mesh)
+        let material = CustomMaterial(pipelinesURL: pipelinesURL, vertexDescriptor: CustomVertexDescriptor())
+        loadedMesh = LoadedMesh(url: modelsURL.appendingPathComponent("suzanne_high.obj"), material: material)
+        scene.add(loadedMesh)
     }
     
     override func update() {

@@ -125,6 +125,12 @@ open class ParameterGroup: Codable, ParameterDelegate {
             else if let p = param as? BoolParameter {
                 append(BoolParameter(label, p.value, p.controlType))
             }
+            else if let p = param as? Float3x3Parameter {
+                append(Float3x3Parameter(label, p.value, p.controlType))
+            }
+            else if let p = param as? Float4x4Parameter {
+                append(Float4x4Parameter(label, p.value, p.controlType))
+            }
             else if let p = param as? StringParameter {
                 append(StringParameter(label, p.value, p.options, p.controlType))
             }
@@ -352,6 +358,18 @@ open class ParameterGroup: Codable, ParameterDelegate {
                     mbp.controlType = p.controlType
                 }
             }
+            else if let p = param as? Float3x3Parameter, let mbp = mp as? Float3x3Parameter {
+                if setValue {
+                    mbp.value = p.value
+                    mbp.controlType = p.controlType
+                }
+            }
+            else if let p = param as? Float4x4Parameter, let mbp = mp as? Float4x4Parameter {
+                if setValue {
+                    mbp.value = p.value
+                    mbp.controlType = p.controlType
+                }
+            }
         }
     }
 
@@ -520,6 +538,18 @@ open class ParameterGroup: Codable, ParameterDelegate {
 
     public func set(_ name: String, _ value: simd_float4) {
         if let param = paramsMap[name], let p = param as? Float4Parameter {
+            p.value = value
+        }
+    }
+    
+    public func set(_ name: String, _ value: simd_float3x3) {
+        if let param = paramsMap[name], let p = param as? Float3x3Parameter {
+            p.value = value
+        }
+    }
+    
+    public func set(_ name: String, _ value: simd_float4x4) {
+        if let param = paramsMap[name], let p = param as? Float4x4Parameter {
             p.value = value
         }
     }

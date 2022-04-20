@@ -21,3 +21,21 @@ public struct VertexUniforms {
     public var worldCameraPosition: simd_float3
     public var worldCameraViewDirection: simd_float3
 }
+
+public func createVertexUniformParameters() -> ParameterGroup {
+    let parameters = ParameterGroup("VertexUniforms")
+    parameters.append(Float4x4Parameter("Model Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("View Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("Model View Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("Projection Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("Model View Projection Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("Inverse Model View Projection Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float4x4Parameter("Inverse View Matrix", matrix_identity_float4x4, .none))
+    parameters.append(Float3x3Parameter("Normal Matrix", matrix_identity_float3x3, .none))
+    parameters.append(Float4Parameter("Viewport", .zero, .none))
+    parameters.append(Float3Parameter("World Camera Position", .zero, .none))
+    parameters.append(Float3Parameter("World Camera View Direction", .zero, .none))
+    return parameters
+}
+
+

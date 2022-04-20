@@ -52,7 +52,7 @@ public protocol BaseGeometry: Hashable {
     func update()
 }
 
-open class Geometry: BaseGeometry {
+open class Geometry {
     public var id: String = UUID().uuidString
     
     public var vertexDescriptor: MDLVertexDescriptor {

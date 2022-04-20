@@ -29,3 +29,47 @@ extension simd_quatf: Codable {
         case x, y, z, w
     }
 }
+
+extension simd_float4x4: Codable {
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let c0 = try values.decode(simd_float4.self, forKey: .col0)
+        let c1 = try values.decode(simd_float4.self, forKey: .col1)
+        let c2 = try values.decode(simd_float4.self, forKey: .col2)
+        let c3 = try values.decode(simd_float4.self, forKey: .col3)
+        self.init(c0, c1, c2, c3)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.columns.0, forKey: .col0)
+        try container.encode(self.columns.1, forKey: .col1)
+        try container.encode(self.columns.2, forKey: .col2)
+        try container.encode(self.columns.3, forKey: .col3)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case col0, col1, col2, col3
+    }
+}
+
+extension simd_float3x3: Codable {
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let c0 = try values.decode(simd_float3.self, forKey: .col0)
+        let c1 = try values.decode(simd_float3.self, forKey: .col1)
+        let c2 = try values.decode(simd_float3.self, forKey: .col2)
+        self.init(c0, c1, c2)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.columns.0, forKey: .col0)
+        try container.encode(self.columns.1, forKey: .col1)
+        try container.encode(self.columns.2, forKey: .col2)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case col0, col1, col2
+    }
+}

@@ -201,7 +201,6 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         if let context = context {
             if shader == nil {
                 self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
-                self.shader!.vertexDescriptor = self.vertexDescriptor
                 isClone = false
             }
             else if let shader = shader, isClone, shaderBlendingNeedsUpdate {
@@ -211,6 +210,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
             
             if let shader = shader {
                 updateShaderBlending()
+                shader.vertexDescriptor = self.vertexDescriptor
                 shader.context = context
             }
         }
@@ -258,6 +258,11 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         uniforms?.update()
     }
     
+    open func bindPipeline(_ renderEncoder: MTLRenderCommandEncoder) {
+        guard let pipeline = pipeline else { return }
+        renderEncoder.setRenderPipelineState(pipeline)
+    }
+    
     open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let uniforms = uniforms else { return }
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
@@ -273,6 +278,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     }
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        bindPipeline(renderEncoder)
         bindUniforms(renderEncoder)
         bindDepthStencilState(renderEncoder)
         onBind?(renderEncoder)

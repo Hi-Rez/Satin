@@ -241,13 +241,10 @@ open class Renderer
         
         renderEncoder.pushDebugGroup(object.label)
         
-        if let mesh = object as? Mesh, let material = mesh.material, let pipeline = material.pipeline, mesh.instanceCount > 0
+        if let renderable = object as? Renderable
         {
-            mesh.update(camera: camera, viewport: _viewport)
-            material.update(camera: camera)
-            renderEncoder.setRenderPipelineState(pipeline)
-            material.bind(renderEncoder)
-            mesh.draw(renderEncoder: renderEncoder)
+            renderable.update(camera: camera, viewport: _viewport)
+            renderable.draw(renderEncoder: renderEncoder)
         }
         
         for child in object.children

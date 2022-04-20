@@ -13,7 +13,7 @@ import simd
 // consider making a renderable protocol
 // consider making a intersectable protocol
 
-open class Mesh: Object {
+open class Mesh: Object, Renderable {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
     
     public var triangleFillMode: MTLTriangleFillMode = .fill
@@ -29,7 +29,7 @@ open class Mesh: Object {
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var geometry: BaseGeometry = Geometry() {
+    public var geometry: Geometry {
         didSet {
             setupGeometrySubscriber()
             setupGeometry()
@@ -47,10 +47,10 @@ open class Mesh: Object {
     
     public var submeshes: [Submesh] = []
     
-    public init(geometry: BaseGeometry, material: Material?) {
-        super.init()
+    public init(geometry: Geometry, material: Material?) {
         self.geometry = geometry
         self.material = material
+        super.init()
         setupGeometrySubscriber()
     }
     
@@ -150,6 +150,7 @@ open class Mesh: Object {
     }
     
     open func update(camera: Camera, viewport: simd_float4) {
+        material?.update(camera: camera)
         updateUniforms(camera: camera, viewport: viewport)
     }
     
@@ -158,10 +159,11 @@ open class Mesh: Object {
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard instanceCount > 0, let vertexBuffer = geometry.vertexBuffer else { return }
+        guard instanceCount > 0, let vertexBuffer = geometry.vertexBuffer, let material = material, let _ = material.pipeline else { return }
         
         preDraw?(renderEncoder)
         
+        material.bind(renderEncoder)
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)

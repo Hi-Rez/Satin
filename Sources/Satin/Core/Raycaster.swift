@@ -355,7 +355,7 @@ open class Raycaster {
         directionParam.value = simd_make_float3(direction)
         rayBuffer.update(index)
         
-        let geometry = mesh.geometry as! Geometry
+        let geometry = mesh.geometry
         let winding: MTLWinding = geometry.windingOrder == .counterClockwise ? .clockwise : .counterClockwise
         intersector!.frontFacingWinding = winding
         intersector!.cullMode = mesh.cullMode

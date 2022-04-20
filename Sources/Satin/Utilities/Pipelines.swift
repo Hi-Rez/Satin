@@ -328,7 +328,7 @@ public func injectVertex(source: inout String) {
 }
 
 public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescriptor) {
-//    print(vertexDescriptor.description)
+    print(vertexDescriptor.description)
     source = source.replacingOccurrences(of: "// inject vertex\n", with: (VertexSource.get() ?? "\n") + "\n")
 }
 
