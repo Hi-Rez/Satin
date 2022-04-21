@@ -188,7 +188,7 @@ open class Raycaster {
     
     public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false, _ callback: @escaping (_ results: [RaycastResult]) -> ()) {
         let intersectables = getIntersectables([object], recursive, invisible)
-        guard let commandBuffer = _intersect(intersectables) else { return }
+        guard let commandBuffer = _intersect(intersectables) else { return callback([]) }
         commandBuffer.addCompletedHandler { [weak self] _ in
             if let self = self {
                 callback(self.getResults(intersectables))

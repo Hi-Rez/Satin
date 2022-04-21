@@ -204,39 +204,36 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     }
     
     func setupDepthStencilState() {
-        if let context = context, context.depthPixelFormat != .invalid {
-            let depthStateDesciptor = MTLDepthStencilDescriptor()
-            depthStateDesciptor.depthCompareFunction = depthCompareFunction
-            depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
-            depthStencilState = context.device.makeDepthStencilState(descriptor: depthStateDesciptor)
-        }
+        guard let context = context, context.depthPixelFormat != .invalid else { return }
+        let depthStateDesciptor = MTLDepthStencilDescriptor()
+        depthStateDesciptor.depthCompareFunction = depthCompareFunction
+        depthStateDesciptor.isDepthWriteEnabled = depthWriteEnabled
+        depthStencilState = context.device.makeDepthStencilState(descriptor: depthStateDesciptor)
         depthNeedsUpdate = false
     }
     
     open func setupShader() {
-        if let context = context {
-            if shader == nil {
-                self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
-                isClone = false
-            }
-            else if let shader = shader, isClone, (shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate) {
-                self.shader = shader.clone()
-                isClone = false
-            }
+        guard let context = context else { return }
+        if shader == nil {
+            shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+            isClone = false
+        }
+        else if let shader = shader, isClone, shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate {
+            self.shader = shader.clone()
+            isClone = false
+        }
             
-            if let shader = shader {
-                updateShaderBlending()
-                updateShaderVertexDescriptor()
-                shader.context = context
-            }
+        if let shader = shader {
+            updateShaderBlending()
+            updateShaderVertexDescriptor()
+            shader.context = context
         }
         shaderNeedsUpdate = false
     }
     
     open func setupUniforms() {
-        if let context = context, parameters.size > 0 {
-            uniforms = UniformBuffer(device: context.device, parameters: parameters)
-        }
+        guard let context = context, parameters.size > 0 else { return }
+        uniforms = UniformBuffer(device: context.device, parameters: parameters)
         uniformsNeedsUpdate = false
     }
     

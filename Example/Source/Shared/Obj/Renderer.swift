@@ -57,7 +57,7 @@ class Renderer: Forge.Renderer {
     func loadOBJ() {
         guard let url = Bundle.main.resourceURL?.appendingPathComponent("Assets/suzanne.obj") else { return }
         
-        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.9))
         mesh.label = "Suzanne"
         
@@ -86,7 +86,7 @@ class Renderer: Forge.Renderer {
     func loadUSD() {
         let fileName = "flower_tulip"
         guard let url = Bundle.main.resourceURL?.appendingPathComponent("Assets/\(fileName).usdz") else { return }
-        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         scene = Object()
         let object = asset.object(at: 0)
         print(object.name)
