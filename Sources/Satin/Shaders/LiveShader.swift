@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Metal
 
 open class LiveShader: SourceShader {
     let compiler = MetalFileCompiler()

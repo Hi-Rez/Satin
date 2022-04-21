@@ -91,11 +91,11 @@ open class Mesh: Object, Renderable {
     
     internal func setupGeometrySubscriber() {
         geometrySubscriber?.cancel()
-        geometrySubscriber = geometry.$vertexData.sink { [unowned self] _ in
+        geometrySubscriber = geometry.publisher.sink { [unowned self] _ in
             self._localBounds.clear()
         }
     }
-    
+        
     internal func cleanupGeometrySubscriber() {
         geometrySubscriber?.cancel()
         geometrySubscriber = nil

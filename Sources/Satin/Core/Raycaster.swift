@@ -297,9 +297,9 @@ open class Raycaster {
                 i2 = index + 2
             }
             
-            let a: VertexType = geometry.vertexData[i0]
-            let b: VertexType = geometry.vertexData[i1]
-            let c: VertexType = geometry.vertexData[i2]
+            let a: Vertex = geometry.vertexData[i0]
+            let b: Vertex = geometry.vertexData[i1]
+            let c: Vertex = geometry.vertexData[i2]
             
             let coords = coordinatesParam.value
             let u: Float = coords.x
@@ -389,7 +389,7 @@ open class Raycaster {
             accelerationStructure = newAccelerationStructure
             accelerationStructures[geometry] = newAccelerationStructure
             
-            let subscription = geometry.$vertexData.sink { [unowned self] _ in
+            let subscription = geometry.publisher.sink { [unowned self] _ in
                 self.accelerationStructures[geometry] = nil
                 self.subscriptions[geometry]?.cancel()
                 self.subscriptions[geometry] = nil

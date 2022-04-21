@@ -42,7 +42,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
             if oldValue != vertexDescriptor {
-                shaderNeedsUpdate = true
+                shaderVertexDescriptorNeedsUpdate = true
             }
         }
     }
@@ -166,7 +166,23 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
 
     var uniformsNeedsUpdate = false
     var shaderNeedsUpdate = false
-    var shaderBlendingNeedsUpdate = false
+    
+    var shaderBlendingNeedsUpdate = false {
+        didSet {
+            if shaderBlendingNeedsUpdate, isClone {
+                shaderNeedsUpdate = true
+            }
+        }
+    }
+    
+    var shaderVertexDescriptorNeedsUpdate = false {
+        didSet {
+            if shaderVertexDescriptorNeedsUpdate, isClone {
+                shaderNeedsUpdate = true
+            }
+        }
+    }
+    
     var depthNeedsUpdate = false
     
     public var depthBias: DepthBias?
@@ -203,14 +219,14 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
                 self.shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
                 isClone = false
             }
-            else if let shader = shader, isClone, shaderBlendingNeedsUpdate {
+            else if let shader = shader, isClone, (shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate) {
                 self.shader = shader.clone()
                 isClone = false
             }
             
             if let shader = shader {
                 updateShaderBlending()
-                shader.vertexDescriptor = self.vertexDescriptor
+                updateShaderVertexDescriptor()
                 shader.context = context
             }
         }
@@ -240,6 +256,10 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         
         if shaderBlendingNeedsUpdate {
             updateShaderBlending()
+        }
+        
+        if shaderVertexDescriptorNeedsUpdate {
+            updateShaderVertexDescriptor()
         }
         
         shader?.update()
@@ -324,6 +344,12 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         shader.rgbBlendOperation = rgbBlendOperation
         shader.alphaBlendOperation = alphaBlendOperation
         shaderBlendingNeedsUpdate = false
+    }
+    
+    func updateShaderVertexDescriptor() {
+        guard let shader = shader else { return }
+        shader.vertexDescriptor = vertexDescriptor
+        shaderVertexDescriptorNeedsUpdate = false
     }
     
     public func set(_ name: String, _ value: [Float]) {
@@ -450,6 +476,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         clone.isClone = true
         
         clone.label = label
+        clone.vertexDescriptor = vertexDescriptor
         
         clone.delegate = delegate
         clone.parameters = parameters.clone()
@@ -465,6 +492,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
         
+        clone.shaderVertexDescriptorNeedsUpdate = false
         clone.shaderBlendingNeedsUpdate = false
         
         clone.depthStencilState = depthStencilState
