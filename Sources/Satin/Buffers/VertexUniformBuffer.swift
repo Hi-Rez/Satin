@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  VertexUniformBuffer.swift
+//
 //
 //  Created by Reza Ali on 4/21/22.
 //

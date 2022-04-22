@@ -99,16 +99,16 @@ public func makeIndirectRenderPipeline(library: MTLLibrary?,
 }
 
 public func makeRenderPipeline(library: MTLLibrary?,
-                                    vertex: String,
-                                    fragment: String,
-                                    label: String,
-                                    context: Context,
-                                    sourceRGBBlendFactor: MTLBlendFactor,
-                                    sourceAlphaBlendFactor: MTLBlendFactor,
-                                    destinationRGBBlendFactor: MTLBlendFactor,
-                                    destinationAlphaBlendFactor: MTLBlendFactor,
-                                    rgbBlendOperation: MTLBlendOperation,
-                                    alphaBlendOperation: MTLBlendOperation) throws -> MTLRenderPipelineState?
+                               vertex: String,
+                               fragment: String,
+                               label: String,
+                               context: Context,
+                               sourceRGBBlendFactor: MTLBlendFactor,
+                               sourceAlphaBlendFactor: MTLBlendFactor,
+                               destinationRGBBlendFactor: MTLBlendFactor,
+                               destinationAlphaBlendFactor: MTLBlendFactor,
+                               rgbBlendOperation: MTLBlendOperation,
+                               alphaBlendOperation: MTLBlendOperation) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
         let device = library.device
@@ -124,7 +124,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
 
         if let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
             colorAttachment.isBlendingEnabled = true
-            
+
             colorAttachment.sourceRGBBlendFactor = sourceRGBBlendFactor
             colorAttachment.sourceAlphaBlendFactor = sourceAlphaBlendFactor
             colorAttachment.destinationRGBBlendFactor = destinationRGBBlendFactor
@@ -444,22 +444,22 @@ public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescri
                 vertexDataType.append("short")
             case .half:
                 vertexDataType.append("half")
-            
+
             @unknown default:
                 fatalError("Unknown vertex format: \(format)")
             }
-            
+
             if let attri = VertexAttribute(rawValue: i) {
                 vertexName.append(attri.name)
                 vertexAttributes.append(attri.description)
             }
         }
-        
+
         var structMembers: [String] = []
         for i in 0..<vertexDataType.count {
             structMembers.append("\t\(vertexDataType[i]) \(vertexName[i]) [[attribute(VertexAttribute\(vertexAttributes[i]))]];")
         }
-        
+
         if !structMembers.isEmpty {
             var generatedVertexSource = "typedef struct {\n"
             generatedVertexSource += structMembers.joined(separator: "\n")
@@ -467,7 +467,7 @@ public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescri
             vertexSource = generatedVertexSource
         }
     }
-    
+
     source = source.replacingOccurrences(of: "// inject vertex\n", with: (vertexSource ?? "\n") + "\n")
 }
 
@@ -494,11 +494,10 @@ public func injectPassThroughVertex(source: inout String) {
     source = source.replacingOccurrences(of: "// inject vertex shader\n", with: (PassThroughVertexPipelineSource.get() ?? "\n") + "\n")
 }
 
-
 class PassThroughVertexPipelineSource {
     static let shared = PassThroughVertexPipelineSource()
     private static var sharedSource: String?
-    
+
     class func get() -> String? {
         guard PassThroughVertexPipelineSource.sharedSource == nil else {
             return sharedSource
@@ -518,7 +517,7 @@ class PassThroughVertexPipelineSource {
 class ConstantsSource {
     static let shared = ConstantsSource()
     private static var sharedSource: String?
-    
+
     class func get() -> String? {
         guard ConstantsSource.sharedSource == nil else {
             return sharedSource
@@ -538,7 +537,7 @@ class ConstantsSource {
 class VertexSource {
     static let shared = VertexSource()
     private static var sharedSource: String?
-    
+
     class func get() -> String? {
         guard VertexSource.sharedSource == nil else {
             return sharedSource
@@ -558,7 +557,7 @@ class VertexSource {
 class VertexDataSource {
     static let shared = VertexDataSource()
     private static var sharedSource: String?
-    
+
     class func get() -> String? {
         guard VertexDataSource.sharedSource == nil else {
             return sharedSource
@@ -578,7 +577,7 @@ class VertexDataSource {
 class VertexUniformsSource {
     static let shared = VertexUniformsSource()
     private static var sharedSource: String?
-    
+
     class func get() -> String? {
         guard VertexUniformsSource.sharedSource == nil else {
             return sharedSource

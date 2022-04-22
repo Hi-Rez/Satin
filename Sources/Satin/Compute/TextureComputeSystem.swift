@@ -22,7 +22,7 @@ open class TextureComputeSystem {
     }
 
     public weak var delegate: TextureComputeSystemDelegate?
-    
+
     public var feedback: Bool {
         didSet {
             if oldValue != feedback {
@@ -51,7 +51,7 @@ open class TextureComputeSystem {
     }
 
     public var textures: [MTLTexture] = []
-        
+
     public var resetPipeline: MTLComputePipelineState? {
         didSet {
             if resetPipeline != nil {
@@ -59,7 +59,7 @@ open class TextureComputeSystem {
             }
         }
     }
-    
+
     public var updatePipeline: MTLComputePipelineState?
 
     public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
@@ -71,6 +71,7 @@ open class TextureComputeSystem {
             _index = 0
         }
     }
+
     private var _setupTextures: Bool = true
     private var _index: Int = 0
     private var _useDispatchThreads: Bool = false
@@ -81,7 +82,8 @@ open class TextureComputeSystem {
                 textureDescriptors: [MTLTextureDescriptor],
                 updatePipeline: MTLComputePipelineState?,
                 resetPipeline: MTLComputePipelineState?,
-                feedback: Bool = false) {
+                feedback: Bool = false)
+    {
         self.device = device
         self.textureDescriptors = textureDescriptors
         self.updatePipeline = updatePipeline
@@ -93,7 +95,8 @@ open class TextureComputeSystem {
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 updatePipeline: MTLComputePipelineState?,
-                feedback: Bool = false) {
+                feedback: Bool = false)
+    {
         self.device = device
         self.textureDescriptors = textureDescriptors
         self.updatePipeline = updatePipeline
@@ -103,7 +106,8 @@ open class TextureComputeSystem {
 
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
-                feedback: Bool = false) {
+                feedback: Bool = false)
+    {
         self.device = device
         self.textureDescriptors = textureDescriptors
         self.feedback = feedback
@@ -171,9 +175,8 @@ open class TextureComputeSystem {
     open func resetTextures() {
         _setupTextures = true
     }
-    
-    open func update()
-    {
+
+    open func update() {
         if _setupTextures {
             setupTextures()
             _index = 0
@@ -184,13 +187,13 @@ open class TextureComputeSystem {
     open func bind(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
         return setTextures(computeEncoder)
     }
-    
+
     public func update(_ commandBuffer: MTLCommandBuffer) {
         update()
         if textureDescriptors.count > 0, resetPipeline != nil || updatePipeline != nil, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
 
-            if _reset, let pipeline = self.resetPipeline {
+            if _reset, let pipeline = resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 let count = feedback ? 2 : 1
                 for _ in 0..<count {
@@ -203,7 +206,7 @@ open class TextureComputeSystem {
                 _reset = false
             }
 
-            if let pipeline = self.updatePipeline {
+            if let pipeline = updatePipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 let offset = bind(computeEncoder)
                 preUpdate?(computeEncoder, offset)
@@ -233,14 +236,14 @@ open class TextureComputeSystem {
                 computeEncoder.setTexture(textures[textureIndex], index: index)
                 textureIndex += 1
                 index += 1
-            }            
+            }
         }
 
         return index
     }
 
     func dispatch(_ computeEncoder: MTLComputeCommandEncoder, _ pipeline: MTLComputePipelineState) {
-        guard let texture = self.texture.first else { return }
+        guard let texture = texture.first else { return }
         #if os(iOS) || os(macOS)
         if _useDispatchThreads {
             _dispatchThreads(texture, computeEncoder, pipeline)

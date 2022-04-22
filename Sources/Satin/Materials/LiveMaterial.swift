@@ -26,11 +26,11 @@ open class LiveMaterial: Material {
         self.vertexDescriptor = vertexDescriptor
         _init(pipelineURL: pipelinesURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal"))
     }
-    
+
     func _init(pipelineURL: URL) {
-        self.shader = LiveShader(label, pipelineURL)
+        shader = LiveShader(label, pipelineURL)
     }
-    
+
     public required init() {
         super.init()
     }

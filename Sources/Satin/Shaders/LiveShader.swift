@@ -14,12 +14,12 @@ open class LiveShader: SourceShader {
     public required init() {
         fatalError("init() has not been implemented")
     }
-    
+
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         super.init(label, pipelineURL, vertexFunctionName, fragmentFunctionName)
         setupCompiler()
     }
-    
+
     func setupCompiler() {
         compiler.onUpdate = { [unowned self] in
             setup()

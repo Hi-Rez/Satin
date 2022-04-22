@@ -80,7 +80,7 @@ open class OrthographicCameraController: CameraController {
         setup()
     }
     
-    open override func update() {
+    override open func update() {
         if needsSetup {
             needsSetup = setupCamera()
         }

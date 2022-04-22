@@ -15,7 +15,7 @@ public extension Bounds {
     var size: simd_float3 {
         max - min
     }
-    
+
     var center: simd_float3 {
         (max + min) * 0.5
     }

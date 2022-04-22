@@ -29,7 +29,7 @@ open class BufferComputeSystem {
     }
 
     public weak var delegate: BufferComputeSystemDelegate?
-    
+
     public var feedback: Bool {
         didSet {
             _reset = true
@@ -64,7 +64,8 @@ open class BufferComputeSystem {
                 updatePipeline: MTLComputePipelineState?,
                 params: [ParameterGroup],
                 count: Int,
-                feedback: Bool = false) {
+                feedback: Bool = false)
+    {
         if count <= 0 {
             fatalError("Compute System count: \(count) must be greater than zero!")
         }
@@ -169,7 +170,7 @@ open class BufferComputeSystem {
 
         if bufferMap.count > 0, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
-            if _reset, let pipeline = self.resetPipeline {
+            if _reset, let pipeline = resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 for i in 0..<bufferCount {
                     let offset = setBuffers(computeEncoder, i, ComputeBufferIndex.Custom0.rawValue)
@@ -180,7 +181,7 @@ open class BufferComputeSystem {
                 _reset = false
             }
 
-            if let pipeline = self.updatePipeline {
+            if let pipeline = updatePipeline {
                 computeEncoder.setComputePipelineState(pipeline)
                 let offset = setBuffers(computeEncoder, ComputeBufferIndex.Custom0.rawValue)
                 preUpdate?(computeEncoder, offset)

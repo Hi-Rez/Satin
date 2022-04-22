@@ -13,7 +13,7 @@ open class NormalColorMaterial: Material {
         super.init()
         set("Absolute", absolute)
     }
-    
+
     public required init() {
         super.init()
         set("Absolute", false)

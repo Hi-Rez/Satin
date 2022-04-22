@@ -174,9 +174,9 @@ open class Camera: Object
     
     override public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection)
     {
-        let zAxis = simd_normalize(position - center);
-        let xAxis = simd_normalize(simd_cross(up, zAxis));
-        let yAxis = simd_normalize(simd_cross(zAxis, xAxis));
+        let zAxis = simd_normalize(position - center)
+        let xAxis = simd_normalize(simd_cross(up, zAxis))
+        let yAxis = simd_normalize(simd_cross(zAxis, xAxis))
         orientation = simd_quatf(simd_float3x3(xAxis, yAxis, zAxis))
     }
 }

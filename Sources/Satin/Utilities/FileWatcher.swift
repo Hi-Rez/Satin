@@ -8,7 +8,8 @@
 
 import Foundation
 
-public protocol FileWatcherDelegate: AnyObject {
+public protocol FileWatcherDelegate: AnyObject
+{
     func updated(watcher: FileWatcher, filePath: String)
 }
 
@@ -90,7 +91,7 @@ open class FileWatcher
 
     open func unwatch()
     {
-        if let timer = self.timer
+        if let timer = timer
         {
             timer.invalidate()
         }

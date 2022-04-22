@@ -15,7 +15,7 @@ open class DepthMaterial: Material {
         set("Near", -1.0)
         set("Far", -1.0)
     }
-    
+
     public required init() {
         super.init()
         set("Color", true)

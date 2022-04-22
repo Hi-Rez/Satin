@@ -143,9 +143,11 @@ open class PerspectiveCamera: Camera
         return simd_make_float3(wc) / wc.w
     }
     
-    public override func setFrom(_ object: Object) {
+    override public func setFrom(_ object: Object)
+    {
         super.setFrom(object)
-        if let camera = object as? PerspectiveCamera {
+        if let camera = object as? PerspectiveCamera
+        {
             fov = camera.fov
             aspect = camera.aspect
         }

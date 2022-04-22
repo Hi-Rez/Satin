@@ -15,7 +15,7 @@ open class BasicPointMaterial: Material {
         set("Color", color)
         set("Point Size", size)
     }
-    
+
     public required init() {
         super.init()
         self.blending = .alpha

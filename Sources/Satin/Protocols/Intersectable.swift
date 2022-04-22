@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Intersectable.swift
+//
 //
 //  Created by Reza Ali on 4/19/22.
 //

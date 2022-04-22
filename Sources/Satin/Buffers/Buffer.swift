@@ -97,7 +97,7 @@ open class Buffer {
                 pointer += isize
                 let w = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
-                
+
                 intParam.value = .init(x, y, z, w)
             }
             else if param is FloatParameter {
@@ -148,7 +148,7 @@ open class Buffer {
                 let z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
                 let w = pointer.bindMemory(to: Float.self, capacity: 1).pointee
-                pointer += fsize                
+                pointer += fsize
                 floatParam.value = .init(x, y, z, w)
             }
             pointerOffset += size

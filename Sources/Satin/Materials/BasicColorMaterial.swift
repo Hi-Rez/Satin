@@ -15,7 +15,7 @@ open class BasicColorMaterial: Material {
         self.blending = blending
         set("Color", color)
     }
-    
+
     public required init() {
         super.init()
         self.blending = .alpha

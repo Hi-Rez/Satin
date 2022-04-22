@@ -17,23 +17,23 @@ open class BasicTextureMaterial: BasicColorMaterial {
 
     public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
         super.init()
-        if let texture = texture, texture.textureType != .type2D && texture.textureType != .type2DMultisample {
-            fatalError("BasicTextureMaterial expects a 2D texture")
-        }
-        self.texture = texture
-        self.sampler = sampler
-    }
-    
-    public init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
-        super.init()
-        if texture.textureType != .type2D && texture.textureType != .type2DMultisample {
+        if let texture = texture, texture.textureType != .type2D, texture.textureType != .type2DMultisample {
             fatalError("BasicTextureMaterial expects a 2D texture")
         }
         self.texture = texture
         self.sampler = sampler
     }
 
-    open override func setup() {
+    public init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
+        super.init()
+        if texture.textureType != .type2D, texture.textureType != .type2DMultisample {
+            fatalError("BasicTextureMaterial expects a 2D texture")
+        }
+        self.texture = texture
+        self.sampler = sampler
+    }
+
+    override open func setup() {
         super.setup()
         setupSampler()
     }
@@ -48,18 +48,18 @@ open class BasicTextureMaterial: BasicColorMaterial {
     }
 
     open func bindTexture(_ renderEncoder: MTLRenderCommandEncoder) {
-        if let texture = self.texture {
+        if let texture = texture {
             renderEncoder.setFragmentTexture(texture, index: FragmentTextureIndex.Custom0.rawValue)
         }
     }
 
     open func bindSampler(_ renderEncoder: MTLRenderCommandEncoder) {
-        if let sampler = self.sampler {
+        if let sampler = sampler {
             renderEncoder.setFragmentSamplerState(sampler, index: FragmentSamplerIndex.Custom0.rawValue)
         }
     }
 
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+    override open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         bindTexture(renderEncoder)
         bindSampler(renderEncoder)
         super.bind(renderEncoder)

@@ -147,13 +147,13 @@ open class CameraController: Codable {
     open func update() {}
     
     open func enable() {
-        guard let view = self.view else { return }
+        guard let view = view else { return }
         if !enabled { _enable(view) }
         enabled = true
     }
     
     open func disable() {
-        guard let view = self.view else { return }
+        guard let view = view else { return }
         if enabled { _disable(view) }
         enabled = false
     }
@@ -293,47 +293,47 @@ open class CameraController: Codable {
     func _disable(_ view: MTKView) {
         #if os(macOS)
         
-        if let leftMouseDownHandler = self.leftMouseDownHandler {
+        if let leftMouseDownHandler = leftMouseDownHandler {
             NSEvent.removeMonitor(leftMouseDownHandler)
         }
         
-        if let leftMouseDraggedHandler = self.leftMouseDraggedHandler {
+        if let leftMouseDraggedHandler = leftMouseDraggedHandler {
             NSEvent.removeMonitor(leftMouseDraggedHandler)
         }
         
-        if let leftMouseUpHandler = self.leftMouseUpHandler {
+        if let leftMouseUpHandler = leftMouseUpHandler {
             NSEvent.removeMonitor(leftMouseUpHandler)
         }
         
-        if let rightMouseDownHandler = self.rightMouseDownHandler {
+        if let rightMouseDownHandler = rightMouseDownHandler {
             NSEvent.removeMonitor(rightMouseDownHandler)
         }
         
-        if let rightMouseDraggedHandler = self.rightMouseDraggedHandler {
+        if let rightMouseDraggedHandler = rightMouseDraggedHandler {
             NSEvent.removeMonitor(rightMouseDraggedHandler)
         }
         
-        if let rightMouseUpHandler = self.rightMouseUpHandler {
+        if let rightMouseUpHandler = rightMouseUpHandler {
             NSEvent.removeMonitor(rightMouseUpHandler)
         }
         
-        if let otherMouseDownHandler = self.otherMouseDownHandler {
+        if let otherMouseDownHandler = otherMouseDownHandler {
             NSEvent.removeMonitor(otherMouseDownHandler)
         }
         
-        if let otherMouseDraggedHandler = self.otherMouseDraggedHandler {
+        if let otherMouseDraggedHandler = otherMouseDraggedHandler {
             NSEvent.removeMonitor(otherMouseDraggedHandler)
         }
         
-        if let otherMouseUpHandler = self.otherMouseUpHandler {
+        if let otherMouseUpHandler = otherMouseUpHandler {
             NSEvent.removeMonitor(otherMouseUpHandler)
         }
         
-        if let scrollWheelHandler = self.scrollWheelHandler {
+        if let scrollWheelHandler = scrollWheelHandler {
             NSEvent.removeMonitor(scrollWheelHandler)
         }
         
-        if let flagsChangedHandler = self.flagsChangedHandler {
+        if let flagsChangedHandler = flagsChangedHandler {
             NSEvent.removeMonitor(flagsChangedHandler)
         }
         
@@ -352,10 +352,7 @@ open class CameraController: Codable {
         #endif
     }
     
-    open func resize(_ size: (width: Float, height: Float))
-    {
-        
-    }
+    open func resize(_ size: (width: Float, height: Float)) {}
     
     deinit {
         onStartAction = []
@@ -431,7 +428,5 @@ open class CameraController: Codable {
         }
     }
     
-    open func load(_ url: URL) {
-        
-    }
+    open func load(_ url: URL) {}
 }

@@ -62,7 +62,7 @@ func createSatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
         bufferIndex: 0
     )
     
-    descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<Vertex>.stride)    
+    descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<Vertex>.stride)
     
 //    descriptor.layouts[0].stride =
 //    descriptor.layouts[0].stepRate = 0

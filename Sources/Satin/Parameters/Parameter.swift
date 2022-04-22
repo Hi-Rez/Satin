@@ -29,7 +29,7 @@ public protocol Parameter: Codable, AnyObject {
 
     subscript<T>(index: Int) -> T { get set }
     func dataType<T>() -> T.Type
-    
+
     func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
     func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer
 }

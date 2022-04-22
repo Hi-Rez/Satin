@@ -14,17 +14,17 @@ open class CapsuleGeometry: Geometry {
         case y = 1
         case z = 2
     }
-    
+
     public init(size: (radius: Float, height: Float), axis: Axis = .y) {
         super.init()
         self.setupData(size: size, res: (60, 30, 30), axis: axis)
     }
-    
+
     public init(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int), axis: Axis = .y) {
         super.init()
         self.setupData(size: size, res: res, axis: axis)
     }
-    
+
     func setupData(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int), axis: Axis) {
         var geometryData = generateCapsuleGeometryData(size.radius, size.height, Int32(res.angular), Int32(res.radial), Int32(res.vertical), axis.rawValue)
         setFrom(&geometryData)

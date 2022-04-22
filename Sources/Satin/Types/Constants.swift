@@ -38,11 +38,10 @@ public enum VertexAttribute: Int {
     case Custom9 = 12
     case Custom10 = 13
 
-    
     public var description: String {
         return String(describing: self)
     }
-        
+
     public var name: String {
         switch self {
         case .Position:

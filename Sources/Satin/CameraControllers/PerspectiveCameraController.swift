@@ -371,7 +371,7 @@ open class PerspectiveCameraController: CameraController {
         }
         else {
             state = .zooming
-            zoomVelocity -= dy * zoomScalar * (180.0/camera.fov)
+            zoomVelocity -= dy * zoomScalar * (180.0 / camera.fov)
         }
     }
     
@@ -388,7 +388,7 @@ open class PerspectiveCameraController: CameraController {
     }
     
     override open func otherMouseDragged(with event: NSEvent) {
-        guard let view = view, event.window == view.window, let camera = self.camera else { return }
+        guard let view = view, event.window == view.window, let camera = camera else { return }
         let dx = Float(event.deltaX) / mouseDeltaSensitivity
         let dy = Float(event.deltaY) / mouseDeltaSensitivity
         state = .panning
@@ -418,7 +418,7 @@ open class PerspectiveCameraController: CameraController {
             else {
                 state = .zooming
                 let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-                zoomVelocity -= sdy * zoomScalar * (180.0/camera.fov)
+                zoomVelocity -= sdy * zoomScalar * (180.0 / camera.fov)
             }
         }
         else if event.phase == .began || event.phase == .changed {
@@ -434,7 +434,7 @@ open class PerspectiveCameraController: CameraController {
     // MARK: - Gestures macOS
     
     override open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
-        guard  let camera = camera else { return }
+        guard let camera = camera else { return }
         let newMagnification = Float(gestureRecognizer.magnification)
         if gestureRecognizer.state == .began {
             state = .zooming
@@ -442,7 +442,7 @@ open class PerspectiveCameraController: CameraController {
         }
         else if gestureRecognizer.state == .changed, state == .zooming {
             let velocity = newMagnification - magnification
-            zoomVelocity -= velocity * zoomScalar * (180.0/camera.fov)
+            zoomVelocity -= velocity * zoomScalar * (180.0 / camera.fov)
             magnification = newMagnification
         }
         else {

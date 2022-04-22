@@ -18,8 +18,8 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     public var uniforms: UniformBuffer?
     public var parameters: ParameterGroup?
         
-    public override var textureDescriptors: [MTLTextureDescriptor] {
-        didSet{
+    override public var textureDescriptors: [MTLTextureDescriptor] {
+        didSet {
             updateSize()
         }
     }
@@ -82,17 +82,17 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
     
     open func setupPipelines() {
-        guard let source = self.source else { return }
+        guard let source = source else { return }
         guard let library = setupLibrary(source) else { return }
         setupPipelines(library)
     }
     
-    open override func update() {
+    override open func update() {
         updateUniforms()
         super.update()
     }
     
-    public override func update(_ commandBuffer: MTLCommandBuffer) {
+    override public func update(_ commandBuffer: MTLCommandBuffer) {
         super.update(commandBuffer)
     }
     
@@ -101,7 +101,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
 
     func compileSource() -> String? {
-        if let source = self.source {
+        if let source = source {
             return source
         }
         else {
@@ -116,7 +116,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                                                 
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase.replacingOccurrences(of: " ", with: ""))Uniforms") {
                     params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
-                    if let parameters = self.parameters {
+                    if let parameters = parameters {
                         parameters.setFrom(params)
                     }
                     else {
@@ -162,7 +162,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         if txDsx.depth > 1 {
             parameters.set("Size", [txDsx.width, txDsx.height, txDsx.depth])
         }
-        else if txDsx.height > 1  {
+        else if txDsx.height > 1 {
             parameters.set("Size", [txDsx.width, txDsx.height])
         }
         else if txDsx.width > 1 {
@@ -175,13 +175,13 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         uniforms.update()
     }
 
-    open override func bind(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
+    override open func bind(_ computeEncoder: MTLComputeCommandEncoder) -> Int {
         bindUniforms(computeEncoder)
         return super.bind(computeEncoder)
     }
     
     open func bindUniforms(_ computeEncoder: MTLComputeCommandEncoder) {
-        guard let uniforms = self.uniforms else { return }
+        guard let uniforms = uniforms else { return }
         computeEncoder.setBuffer(uniforms.buffer, offset: uniforms.offset, index: ComputeBufferIndex.Uniforms.rawValue)
     }
     

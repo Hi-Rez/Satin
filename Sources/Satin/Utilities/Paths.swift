@@ -9,11 +9,11 @@
 import Foundation
 
 public func getResourcePath() -> String? {
-#if SWIFT_PACKAGE
-    return Bundle.module.resourcePath
-#else
-    return Bundle(for: Object.self).resourcePath
-#endif
+    #if SWIFT_PACKAGE
+        return Bundle.module.resourcePath
+    #else
+        return Bundle(for: Object.self).resourcePath
+    #endif
 }
 
 public func getResourcePath(_ path: String) -> String? {
@@ -96,11 +96,11 @@ public func getPipelinesMaterialsPath(_ path: String) -> String? {
 // URLS
 
 public func getResourceUrl() -> URL? {
-#if SWIFT_PACKAGE
-    return Bundle.module.resourceURL
-#else
-    return Bundle(for: Object.self).resourceURL
-#endif
+    #if SWIFT_PACKAGE
+        return Bundle.module.resourceURL
+    #else
+        return Bundle(for: Object.self).resourceURL
+    #endif
 }
 
 public func getResourceUrl(_ path: String) -> URL? {
@@ -146,5 +146,3 @@ public func getPipelinesMaterialsUrl() -> URL? {
 public func getPipelinesMaterialsUrl(_ path: String) -> URL? {
     return getPipelinesMaterialsUrl()?.appendingPathComponent(path)
 }
-
-

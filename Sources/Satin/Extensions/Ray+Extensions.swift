@@ -7,12 +7,12 @@
 
 import simd
 
-extension Ray {
-    public init() {
+public extension Ray {
+    init() {
         self = Ray(origin: simd_make_float3(0.0, 0.0, 0.0), direction: simd_make_float3(0.0, 0.0, 1.0))
     }
     
-    public init(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
+    init(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
         var _origin: simd_float3 = .zero
         var _direction: simd_float3 = .zero
         
@@ -29,11 +29,11 @@ extension Ray {
         self = Ray(origin: _origin, direction: _direction)
     }
     
-    public init(_ origin: simd_float3, _ direction: simd_float3) {
+    init(_ origin: simd_float3, _ direction: simd_float3) {
         self = Ray(origin: origin, direction: direction)
     }
     
-    public func at(_ t: Float) -> simd_float3 {
+    func at(_ t: Float) -> simd_float3 {
         return direction * t + origin
     }
 }

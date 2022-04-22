@@ -46,13 +46,15 @@ open class PostProcessor {
     }
     
     open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
-                     commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture) {
+                   commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
+    {
         renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer,
                       renderTarget: renderTarget)
     }
     
     open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
-                     commandBuffer: MTLCommandBuffer) {
+                   commandBuffer: MTLCommandBuffer)
+    {
         renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }
     

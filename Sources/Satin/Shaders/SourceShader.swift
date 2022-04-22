@@ -16,7 +16,7 @@ open class SourceShader: Shader {
             }
         }
     }
-    
+
     public private(set) var source: String?
     public private(set) var shaderSource: String?
 
@@ -99,7 +99,7 @@ open class SourceShader: Shader {
             injectVertexUniforms(source: &source)
 
             source += shaderSource
-            
+
             injectPassThroughVertex(label: label, source: &source)
             self.shaderSource = shaderSource
             self.source = source

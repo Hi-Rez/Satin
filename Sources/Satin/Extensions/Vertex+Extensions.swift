@@ -13,7 +13,7 @@ extension Vertex: Codable {
         case normal
         case uv
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let position = try values.decode(simd_float4.self, forKey: .position)
@@ -21,7 +21,7 @@ extension Vertex: Codable {
         let uv = try values.decode(simd_float2.self, forKey: .uv)
         self.init(position: position, normal: normal, uv: uv)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.position, forKey: .position)

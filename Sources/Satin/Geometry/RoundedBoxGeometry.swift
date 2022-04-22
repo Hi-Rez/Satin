@@ -17,7 +17,7 @@ open class RoundedBoxGeometry: Geometry {
         super.init()
         setupData(width: size, height: size, depth: size, radius: radius, res: res)
     }
-    
+
     public init(size: (width: Float, height: Float, depth: Float), radius: Float, res: Int) {
         super.init()
         setupData(width: size.width, height: size.height, depth: size.depth, radius: radius, res: res)

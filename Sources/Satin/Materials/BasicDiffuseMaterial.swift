@@ -12,7 +12,7 @@ open class BasicDiffuseMaterial: BasicColorMaterial {
         super.init()
         set("Hardness", hardness)
     }
-    
+
     public required init() {
         super.init()
         set("Hardness", 0.75)

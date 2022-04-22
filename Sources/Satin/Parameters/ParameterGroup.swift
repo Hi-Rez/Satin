@@ -541,13 +541,13 @@ open class ParameterGroup: Codable, ParameterDelegate {
             p.value = value
         }
     }
-    
+
     public func set(_ name: String, _ value: simd_float3x3) {
         if let param = paramsMap[name], let p = param as? Float3x3Parameter {
             p.value = value
         }
     }
-    
+
     public func set(_ name: String, _ value: simd_float4x4) {
         if let param = paramsMap[name], let p = param as? Float4x4Parameter {
             p.value = value

@@ -28,7 +28,7 @@ open class UniformBuffer: Buffer {
         self.buffer = buffer
     }
         
-    public override func update(_ index: Int = 0) {
+    override public func update(_ index: Int = 0) {
         updateOffset()
         updateBuffer()
     }

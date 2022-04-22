@@ -177,13 +177,15 @@ open class OrthographicCamera: Camera
         return simd_make_float3(wc) / wc.w
     }
     
-    public override func setFrom(_ object: Object) {
+    override public func setFrom(_ object: Object)
+    {
         super.setFrom(object)
-        if let camera = object as? OrthographicCamera {
+        if let camera = object as? OrthographicCamera
+        {
             left = camera.left
             right = camera.right
             bottom = camera.bottom
             top = camera.top
-        }        
+        }
     }
 }
