@@ -16,14 +16,6 @@ open class SourceShader: Shader {
             }
         }
     }
-
-    public override var vertexDescriptor: MTLVertexDescriptor {
-        didSet {
-            if oldValue != vertexDescriptor {
-                sourceNeedsUpdate = true
-            }
-        }
-    }
     
     public private(set) var source: String?
     public private(set) var shaderSource: String?
@@ -38,7 +30,7 @@ open class SourceShader: Shader {
 
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
-        super.init(label, vertexFunctionName, fragmentFunctionName)
+        super.init(label, vertexFunctionName, fragmentFunctionName, nil)
     }
 
     public required init() {

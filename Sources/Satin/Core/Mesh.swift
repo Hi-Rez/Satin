@@ -12,18 +12,12 @@ import MetalPerformanceShaders
 import simd
 
 open class Mesh: Object, Renderable {
-    let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
-    
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
     
     public var instanceCount: Int = 1
     
-    public var uniformBufferIndex: Int = 0
-    public var uniformBufferOffset: Int = 0
-    
-    public var vertexUniforms: UnsafeMutablePointer<VertexUniforms>!
-    public var vertexUniformsBuffer: MTLBuffer!
+    var uniforms: VertexUniformBuffer?
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
@@ -78,20 +72,10 @@ open class Mesh: Object, Renderable {
     }
 
     override open func setup() {
-        setupUniformBuffer()
         setupGeometry()
         setupSubmeshes()
         setupMaterial()
-    }
-    
-    internal func setupUniformBuffer() {
-        guard let context = context else { return }
-        let device = context.device
-        let uniformBufferSize = alignedUniformsSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else { return }
-        vertexUniformsBuffer = buffer
-        vertexUniformsBuffer.label = "Vertex Uniforms"
-        vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)
+        setupUniforms()
     }
     
     internal func setupGeometrySubscriber() {
@@ -124,40 +108,21 @@ open class Mesh: Object, Renderable {
         material.context = context
     }
     
-    internal func updateUniforms(camera: Camera, viewport: simd_float4) {
-        if vertexUniforms != nil {
-            vertexUniforms[0].modelMatrix = worldMatrix
-            vertexUniforms[0].viewMatrix = camera.viewMatrix
-            vertexUniforms[0].modelViewMatrix = simd_mul(vertexUniforms[0].viewMatrix, vertexUniforms[0].modelMatrix)
-            vertexUniforms[0].projectionMatrix = camera.projectionMatrix
-            vertexUniforms[0].modelViewProjectionMatrix = simd_mul(camera.viewProjectionMatrix, vertexUniforms[0].modelMatrix)
-            vertexUniforms[0].inverseModelViewProjectionMatrix = simd_inverse(vertexUniforms[0].modelViewProjectionMatrix)
-            vertexUniforms[0].inverseViewMatrix = camera.worldMatrix
-            vertexUniforms[0].normalMatrix = normalMatrix
-            vertexUniforms[0].viewport = viewport
-            vertexUniforms[0].worldCameraPosition = camera.worldPosition
-            vertexUniforms[0].worldCameraViewDirection = camera.viewDirection
-        }
-    }
-    
-    internal func updateUniformsBuffer() {
-        if vertexUniformsBuffer != nil {
-            uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
-            uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
-            vertexUniforms = UnsafeMutableRawPointer(vertexUniformsBuffer.contents() + uniformBufferOffset).bindMemory(to: VertexUniforms.self, capacity: 1)
-        }
+    internal func setupUniforms() {
+        guard let context = context else { return }
+        uniforms = VertexUniformBuffer(device: context.device)
     }
     
     override open func update() {
         geometry.update()
         material?.update()
-        updateUniformsBuffer()
+        uniforms?.update()
         super.update()
     }
     
     open func update(camera: Camera, viewport: simd_float4) {
         material?.update(camera: camera)
-        updateUniforms(camera: camera, viewport: viewport)
+        uniforms?.update(object: self, camera: camera, viewport: viewport)
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder) {
@@ -165,7 +130,12 @@ open class Mesh: Object, Renderable {
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard instanceCount > 0, let vertexBuffer = geometry.vertexBuffer, let material = material, let _ = material.pipeline else { return }
+        guard instanceCount > 0,
+              let vertexBuffer = geometry.vertexBuffer,
+              let uniforms = uniforms,
+              let material = material,
+              material.pipeline != nil
+        else { return }
         
         preDraw?(renderEncoder)
         
@@ -174,7 +144,7 @@ open class Mesh: Object, Renderable {
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
-        renderEncoder.setVertexBuffer(vertexUniformsBuffer, offset: uniformBufferOffset, index: VertexBufferIndex.VertexUniforms.rawValue)
+        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
         
         if !submeshes.isEmpty {
             for submesh in submeshes {
@@ -278,8 +248,7 @@ extension Mesh: Intersectable {
             i0 = Int(geometry.indexData[index])
             i1 = Int(geometry.indexData[index + 1])
             i2 = Int(geometry.indexData[index + 2])
-        }
-        else {
+        } else {
             i0 = index
             i1 = index + 1
             i2 = index + 2

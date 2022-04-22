@@ -1,6 +1,6 @@
 //
 //  LoadedMesh.swift
-//  
+//
 //
 //  Created by Reza Ali on 4/21/22.
 //
@@ -99,8 +99,7 @@ class LoadedMesh: Object, Renderable {
     public var uniformBufferIndex: Int = 0
     public var uniformBufferOffset: Int = 0
     
-    var vertexUniformParameters = createVertexUniformParameters()
-    var vertexUniforms: UniformBuffer!
+    var uniforms: VertexUniformBuffer?
     var geometryPublisher = PassthroughSubject<Intersectable, Never>()
     
     var url: URL?
@@ -114,6 +113,7 @@ class LoadedMesh: Object, Renderable {
             geometryPublisher.send(self)
         }
     }
+
     var indexCount: Int = 0
     var indexBitDepth: MDLIndexBitDepth = .uInt32
     var vertexBuffer: MTLBuffer? {
@@ -121,6 +121,7 @@ class LoadedMesh: Object, Renderable {
             geometryPublisher.send(self)
         }
     }
+
     var vertexCount: Int = 0
     
     init(url: URL, material: Material) {
@@ -130,7 +131,7 @@ class LoadedMesh: Object, Renderable {
     }
     
     override func setup() {
-        setupUniformBuffer()
+        setupUniforms()
         setupModel()
         setupMaterial()
     }
@@ -164,9 +165,9 @@ class LoadedMesh: Object, Renderable {
         material.context = context
     }
     
-    func setupUniformBuffer() {
+    func setupUniforms() {
         guard let context = context else { return }
-        vertexUniforms = UniformBuffer(device: context.device, parameters: vertexUniformParameters)
+        uniforms = VertexUniformBuffer(device: context.device)
     }
     
     required init(from decoder: Decoder) throws {
@@ -176,33 +177,14 @@ class LoadedMesh: Object, Renderable {
     // MARK: - Update
     
     override func update() {
-        updateUniformsBuffer()
         material?.update()
+        uniforms?.update()
         super.update()
     }
 
     func update(camera: Camera, viewport: simd_float4) {
         material?.update(camera: camera)
-        updateUniforms(camera: camera, viewport: viewport)
-    }
-    
-    func updateUniforms(camera: Camera, viewport: simd_float4) {
-        let mvp = simd_mul(camera.viewProjectionMatrix, worldMatrix)
-        vertexUniformParameters.set("Model Matrix", worldMatrix)
-        vertexUniformParameters.set("View Matrix", camera.viewMatrix)
-        vertexUniformParameters.set("Model View Matrix", simd_mul(camera.viewMatrix, worldMatrix))
-        vertexUniformParameters.set("Projection Matrix", camera.projectionMatrix)
-        vertexUniformParameters.set("Model View Projection Matrix", mvp)
-        vertexUniformParameters.set("Inverse Model View Projection Matrix", simd_inverse(mvp))
-        vertexUniformParameters.set("Inverse View Matrix", camera.worldMatrix)
-        vertexUniformParameters.set("Normal Matrix", normalMatrix)
-        vertexUniformParameters.set("Viewport", viewport)
-        vertexUniformParameters.set("World Camera Position", camera.worldPosition)
-        vertexUniformParameters.set("World Camera View Direction", camera.viewDirection)
-    }
-    
-    func updateUniformsBuffer() {
-        vertexUniforms.update()
+        uniforms?.update(object: self, camera: camera, viewport: viewport)
     }
     
     // MARK: - Draw
@@ -212,14 +194,19 @@ class LoadedMesh: Object, Renderable {
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard instanceCount > 0, let vertexBuffer = vertexBuffer, let material = material, let _ = material.pipeline else { return }
+        guard instanceCount > 0,
+              let uniforms = uniforms,
+              let vertexBuffer = vertexBuffer,
+              let material = material,
+              let _ = material.pipeline
+        else { return }
         
         material.bind(renderEncoder)
         renderEncoder.setFrontFacing(windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
-        renderEncoder.setVertexBuffer(vertexUniforms.buffer, offset: vertexUniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
+        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
         
         if let indexBuffer = indexBuffer {
             renderEncoder.drawIndexedPrimitives(
@@ -254,7 +241,7 @@ class LoadedMesh: Object, Renderable {
         var bounds = Bounds()
         guard let vertexBuffer = vertexBuffer else { return bounds }
         var vertexPtr = vertexBuffer.contents().bindMemory(to: CustomVertex.self, capacity: vertexCount)
-        for _ in 0..<vertexCount {
+        for _ in 0 ..< vertexCount {
             bounds = expandBounds(bounds, simd_make_float3(vertexPtr.pointee.position))
             vertexPtr += 1
         }
@@ -295,8 +282,7 @@ extension LoadedMesh: Intersectable {
             i1 = Int(indexPtr.pointee)
             indexPtr += 1
             i2 = Int(indexPtr.pointee)
-        }
-        else {
+        } else {
             i0 = index
             i1 = index + 1
             i2 = index + 2
@@ -333,5 +319,4 @@ extension LoadedMesh: Intersectable {
             submesh: nil
         )
     }
-    
 }

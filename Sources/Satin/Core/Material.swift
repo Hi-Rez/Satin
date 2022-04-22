@@ -53,7 +53,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
                 if let oldShader = oldValue, let index = oldShader.delegates.firstIndex(of: self) {
                     oldShader.delegates.remove(at: index)
                 }
-
+                
                 shader.delegate = self
 
                 if !isClone {
@@ -193,6 +193,16 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     public init(shader: Shader) {
         shader.delegate = self
+        
+        self.vertexDescriptor = shader.vertexDescriptor
+        self.blending = shader.blending
+        self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
+        self.sourceAlphaBlendFactor = shader.sourceAlphaBlendFactor
+        self.destinationRGBBlendFactor = shader.destinationRGBBlendFactor
+        self.destinationAlphaBlendFactor = shader.destinationAlphaBlendFactor
+        self.rgbBlendOperation = shader.rgbBlendOperation
+        self.alphaBlendOperation = shader.alphaBlendOperation
+        
         self.label = shader.label
         self.shader = shader
     }

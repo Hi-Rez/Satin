@@ -26,18 +26,17 @@ public enum VertexAttribute: Int {
     case Position = 0
     case Normal = 1
     case Texcoord = 2
-    case Tangent = 3
-    case Custom0 = 4
-    case Custom1 = 5
-    case Custom2 = 6
-    case Custom3 = 7
-    case Custom4 = 8
-    case Custom5 = 9
-    case Custom6 = 10
-    case Custom7 = 11
-    case Custom8 = 12
-    case Custom9 = 13
-    case Custom10 = 14
+    case Custom0 = 3
+    case Custom1 = 4
+    case Custom2 = 5
+    case Custom3 = 6
+    case Custom4 = 7
+    case Custom5 = 8
+    case Custom6 = 9
+    case Custom7 = 10
+    case Custom8 = 11
+    case Custom9 = 12
+    case Custom10 = 13
 
     
     public var description: String {
@@ -52,8 +51,6 @@ public enum VertexAttribute: Int {
             return "normal"
         case .Texcoord:
             return "uv"
-        case .Tangent:
-            return "tangent"
         case .Custom0:
             return "custom0"
         case .Custom1:

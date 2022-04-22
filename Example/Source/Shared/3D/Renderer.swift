@@ -62,13 +62,8 @@ class Renderer: Forge.Renderer {
         // Setup things here
     }
     
-//    var frame: Float = 0.0
     override func update() {
-//        let scale = abs(sin(frame))
-//        let scaleMatrix = scaleMatrixf(scale, scale, scale)
-//        mesh.geometry.transform(scaleMatrix)
         cameraController.update()
-//        frame += 0.1
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

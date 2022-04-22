@@ -5,7 +5,6 @@
 //  Created by Reza Ali on 6/1/20.
 //  Copyright © 2020 Hi-Rez. All rights reserved.
 //
-
 import Metal
 import MetalKit
 
@@ -13,21 +12,6 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
-    #if os(macOS) || os(iOS)
-    lazy var raycaster: Raycaster = {
-        Raycaster(device: device)
-    }()
-    #endif
-    
-    var intersectionMesh: Mesh = {
-        let mesh = Mesh(geometry: IcoSphereGeometry(radius: 0.01, res: 2), material: BasicColorMaterial([0.0, 1.0, 0.0, 1.0], .disabled))
-        mesh.label = "Intersection Mesh"
-        mesh.visible = false
-        return mesh
-    }()
-    
-    class CustomMaterial: LiveMaterial {}
-    
     var assetsURL: URL {
         let resourcesURL = Bundle.main.resourceURL!
         return resourcesURL.appendingPathComponent("Assets")
@@ -41,19 +25,7 @@ class Renderer: Forge.Renderer {
         return assetsURL.appendingPathComponent("Models")
     }
     
-    var pipelinesURL: URL {
-        return assetsURL.appendingPathComponent("Pipelines")
-    }
-    
-    lazy var material: Material = {
-        let material = MatCapMaterial(texture: matcapTexture)
-        material.vertexDescriptor = CustomVertexDescriptor()
-        return material
-    }()
-    
-    lazy var scene: Object = {
-        Object("Scene", [intersectionMesh])
-    }()
+    var scene = Object()
     
     lazy var matcapTexture: MTLTexture? = {
         // from https://github.com/nidorx/matcaps
@@ -95,7 +67,7 @@ class Renderer: Forge.Renderer {
         return renderer
     }()
     
-    var loadedMesh: Object!
+    var mesh: Mesh!
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -105,25 +77,59 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        let material = CustomMaterial(pipelinesURL: pipelinesURL, vertexDescriptor: CustomVertexDescriptor())
-        loadedMesh = LoadedMesh(url: modelsURL.appendingPathComponent("suzanne_high.obj"), material: material)
-        scene.add(loadedMesh)
+        loadModel()
+//        loadKnot()
     }
     
-    var frame: Float = 0.0
+    func loadModel() {
+        let asset = MDLAsset(url: modelsURL.appendingPathComponent("suzanne_high.obj"), vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        
+        // MatCapMaterial inspired by @TheSpite
+        // https://www.clicktorelease.com/code/spherical-normal-mapping/
+        
+        mesh = Mesh(geometry: Geometry(), material: MatCapMaterial(texture: matcapTexture!))
+        mesh.label = "Suzanne"
+        
+        let geo = mesh.geometry
+        let object0 = asset.object(at: 0)
+        if let objMesh = object0 as? MDLMesh {
+            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
+            
+            let vertexData = objMesh.vertexBuffers[0].map().bytes.bindMemory(to: Vertex.self, capacity: objMesh.vertexCount)
+            geo.vertexData = Array(UnsafeBufferPointer(start: vertexData, count: objMesh.vertexCount))
+            geo.vertexBuffer = (objMesh.vertexBuffers[0] as! MTKMeshBuffer).buffer
+            guard let submeshes = objMesh.submeshes, let first = submeshes.firstObject, let sub: MDLSubmesh = first as? MDLSubmesh else { return }
+            let indexDataPtr = sub.indexBuffer(asIndexType: .uInt32).map().bytes.bindMemory(to: UInt32.self, capacity: sub.indexCount)
+            let indexData = Array(UnsafeBufferPointer(start: indexDataPtr, count: sub.indexCount))
+            geo.indexData = indexData
+            geo.indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
+        }
+        
+        scene.add(mesh)
+    }
+    
+    func loadKnot() {
+        let twoPi = Float.pi * 2.0
+        let geometry = ParametricGeometry(u: (0.0, twoPi), v: (0.0, twoPi), res: (300, 16), generator: { u, v in
+            let R: Float = 0.75
+            let r: Float = 0.25
+            let c: Float = 0.1
+            let q: Float = 1.0
+            let p: Float = 3.0
+            return torusKnotGenerator(u, v, R, r, c, q, p)
+        })
+        
+        // MatCapMaterial inspired by @TheSpite
+        // https://www.clicktorelease.com/code/spherical-normal-mapping/
+        
+        mesh = Mesh(geometry: geometry, material: MatCapMaterial(texture: matcapTexture!))
+        mesh.cullMode = .none
+        mesh.label = "Knot"
+        scene.add(mesh)
+    }
+    
     override func update() {
         cameraController.update()
-        loadedMesh.position = .init(0.0, 0.25 * sin(frame), 0.0)
-        frame += 0.05
-        
-        raycaster.setFromCamera(camera)
-        let results = raycaster.intersect(loadedMesh, true)
-        for result in results {
-            print(result.object.label)
-            print(result.position)
-            intersectionMesh.position = result.position
-            intersectionMesh.visible = true
-        }
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
@@ -135,45 +141,5 @@ class Renderer: Forge.Renderer {
         let aspect = size.width / size.height
         camera.aspect = aspect
         renderer.resize(size)
-    }
-    
-    #if !targetEnvironment(simulator)
-    #if os(macOS)
-    override func mouseDown(with event: NSEvent) {
-        let m = event.locationInWindow
-        let pt = normalizePoint(m, mtkView.frame.size)
-        raycaster.setFromCamera(camera, pt)
-        let results = raycaster.intersect(scene, true)
-        for result in results {
-            print(result.object.label)
-            print(result.position)
-            intersectionMesh.position = result.position
-            intersectionMesh.visible = true
-        }
-    }
-
-    #elseif os(iOS)
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let first = touches.first {
-            let point = first.location(in: mtkView)
-            let size = mtkView.frame.size
-            let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
-            for result in results {
-                print(result.object.label)
-                print(result.position)
-            }
-        }
-    }
-    #endif
-    #endif
-    
-    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
-        #if os(macOS)
-        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
-        #else
-        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
-        #endif
     }
 }

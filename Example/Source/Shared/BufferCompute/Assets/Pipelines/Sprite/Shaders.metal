@@ -2,7 +2,14 @@
 #include "Library/Shapes.metal"
 #include "Library/Map.metal"
 
-vertex VertexData spriteVertex( uint instanceID [[instance_id]],
+typedef struct {
+    float4 position [[position]];
+    float3 normal;
+    float2 uv;
+    float pointSize [[point_size]];
+} CustomVertexData;
+
+vertex CustomVertexData spriteVertex( uint instanceID [[instance_id]],
     Vertex in [[stage_in]],
     constant VertexUniforms &uniforms
     [[buffer( VertexBufferVertexUniforms )]],
@@ -13,7 +20,7 @@ vertex VertexData spriteVertex( uint instanceID [[instance_id]],
     float4 position = in.position;
     position.xyz += particle.position;
 
-    VertexData out;
+    CustomVertexData out;
     out.position = uniforms.projectionMatrix * uniforms.modelViewMatrix * position;
     out.uv = in.uv;
     out.normal = normalize( uniforms.normalMatrix * in.normal );
@@ -24,7 +31,7 @@ vertex VertexData spriteVertex( uint instanceID [[instance_id]],
     return out;
 }
 
-fragment float4 spriteFragment( VertexData in [[stage_in]],
+fragment float4 spriteFragment( CustomVertexData in [[stage_in]],
     const float2 puv [[point_coord]] )
 {
     const float2 uv = 2.0 * puv - 1.0;

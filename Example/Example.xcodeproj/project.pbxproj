@@ -189,9 +189,8 @@
 		E1385EDF27F21819005EB579 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F1B32324BAA91F00563923 /* Renderer.swift */; };
 		E1385EE027F21820005EB579 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E1385EE327F219C5005EB579 /* Spectra in Frameworks */ = {isa = PBXBuildFile; productRef = E1385EE227F219C5005EB579 /* Spectra */; };
-		E144281E28120C1B006D9CD1 /* LoadedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144281D28120C1B006D9CD1 /* LoadedMesh.swift */; };
-		E144281F28120C1B006D9CD1 /* LoadedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144281D28120C1B006D9CD1 /* LoadedMesh.swift */; };
-		E144282028120C1B006D9CD1 /* LoadedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144281D28120C1B006D9CD1 /* LoadedMesh.swift */; };
+		E1442821281232A5006D9CD1 /* LoadedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144281D28120C1B006D9CD1 /* LoadedMesh.swift */; };
+		E14428252812347D006D9CD1 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = E14428242812347D006D9CD1 /* Assets */; };
 		E144FA3224D0D56D0072D456 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E144FA3A24D0D56D0072D456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E6788E243EC73B0070B294 /* Assets.xcassets */; };
 		E144FA3B24D0D56D0072D456 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E124FB3F243F8E5100380783 /* MainMenu.xib */; };
@@ -219,7 +218,6 @@
 		E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E678A0243EC8FD0070B294 /* AppDelegate.swift */; };
 		E160CA4724876781005D37A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E678A9243EC8FE0070B294 /* Assets.xcassets */; };
 		E160CA4924876781005D37A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */; };
-		E1624934280DC31E00DAE5F7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F1B32724BAA93300563923 /* Renderer.swift */; };
 		E1624935280DC31E00DAE5F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6788C243EC73A0070B294 /* AppDelegate.swift */; };
 		E1624937280DC31E00DAE5F7 /* Forge in Frameworks */ = {isa = PBXBuildFile; productRef = E1624930280DC31E00DAE5F7 /* Forge */; };
 		E1624938280DC31E00DAE5F7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
@@ -472,6 +470,7 @@
 		E12EDE9F24A6E1B800E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E12EDEB424A6E31B00E58E58 /* BufferCompute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BufferCompute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E144281D28120C1B006D9CD1 /* LoadedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadedMesh.swift; sourceTree = "<group>"; };
+		E14428242812347D006D9CD1 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		E144FA2D24D0D5550072D456 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		E144FA4124D0D56D0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E144FA6D24D21FAB0072D456 /* Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Camera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1327,6 +1326,8 @@
 		E162492E280DC2E800DAE5F7 /* VertexAttributes */ = {
 			isa = PBXGroup;
 			children = (
+				E14428242812347D006D9CD1 /* Assets */,
+				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E1624947280DC45B00DAE5F7 /* Renderer.swift */,
 			);
 			path = VertexAttributes;
@@ -1436,7 +1437,6 @@
 		E192F0072485AF9900C7EE74 /* MatCap */ = {
 			isa = PBXGroup;
 			children = (
-				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E192F05F24875D6E00C7EE74 /* Utilities */,
 				E192F01D2485B08500C7EE74 /* Assets */,
 				E192F01F2485B16C00C7EE74 /* Renderer.swift */,
@@ -2949,6 +2949,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1624940280DC31E00DAE5F7 /* Assets.xcassets in Resources */,
+				E14428252812347D006D9CD1 /* Assets in Resources */,
 				E1624941280DC31E00DAE5F7 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3461,7 +3462,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1CC097624896EEC00B92285 /* TorusKnotGenerator.c in Sources */,
-				E144281F28120C1B006D9CD1 /* LoadedMesh.swift in Sources */,
 				E1CC097424896ED300B92285 /* Renderer.swift in Sources */,
 				E160CA4324876781005D37A4 /* AppDelegate.swift in Sources */,
 			);
@@ -3471,7 +3471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1624934280DC31E00DAE5F7 /* Renderer.swift in Sources */,
+				E1442821281232A5006D9CD1 /* LoadedMesh.swift in Sources */,
 				E1624948280DC45B00DAE5F7 /* Renderer.swift in Sources */,
 				E1624935280DC31E00DAE5F7 /* AppDelegate.swift in Sources */,
 			);
@@ -3654,7 +3654,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E192F0202485B16C00C7EE74 /* Renderer.swift in Sources */,
-				E144281E28120C1B006D9CD1 /* LoadedMesh.swift in Sources */,
 				E192F05E24874CE700C7EE74 /* TorusKnotGenerator.c in Sources */,
 				E192F00C2485AFD600C7EE74 /* AppDelegate.swift in Sources */,
 			);
@@ -3665,7 +3664,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E192F08A2487632800C7EE74 /* TorusKnotGenerator.c in Sources */,
-				E144282028120C1B006D9CD1 /* LoadedMesh.swift in Sources */,
 				E192F0882487631F00C7EE74 /* Renderer.swift in Sources */,
 				E192F07C248762FA00C7EE74 /* AppDelegate.swift in Sources */,
 			);
