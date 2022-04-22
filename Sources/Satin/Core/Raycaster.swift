@@ -21,6 +21,17 @@ public struct RaycastResult {
     public let primitiveIndex: UInt32
     public let object: Object
     public let submesh: Submesh?
+    
+    public init(barycentricCoordinates: simd_float3, distance: Float, normal: simd_float3, position: simd_float3, uv: simd_float2, primitiveIndex: UInt32, object: Object, submesh: Submesh?) {
+        self.barycentricCoordinates = barycentricCoordinates
+        self.distance = distance
+        self.normal = normal
+        self.position = position
+        self.uv = uv
+        self.primitiveIndex = primitiveIndex
+        self.object = object
+        self.submesh = submesh
+    }
 }
 
 open class Raycaster {
@@ -69,27 +80,29 @@ open class Raycaster {
     }()
     
     internal var distanceParam = FloatParameter("distance", 0.0)
-    internal var indexParam = UInt32Parameter("index", 0)
-    internal var coordinatesParam = Float2Parameter("coordinates", .zero)
+    internal var primitiveIndexParam = UInt32Parameter("index", 0)
+    internal var barycentricCoordinatesParam = Float2Parameter("coordinates", .zero)
     
     internal lazy var intersectionParams: ParameterGroup = {
         let params = ParameterGroup("Intersection")
         params.append(distanceParam)
-        params.append(indexParam)
-        params.append(coordinatesParam)
+        params.append(primitiveIndexParam)
+        params.append(barycentricCoordinatesParam)
         return params
     }()
     
     internal weak var device: MTLDevice?
     internal var commandQueue: MTLCommandQueue?
     internal var intersector: MPSRayIntersector?
-    internal var accelerationStructures: [Geometry: MPSTriangleAccelerationStructure] = [:]
-    internal var subscriptions: [Geometry: AnyCancellable] = [:]
+    internal var accelerationStructures: [String: MPSTriangleAccelerationStructure] = [:]
+    internal var subscriptions: [String: AnyCancellable] = [:]
     
     var _count: Int = -1 {
         didSet {
-            setupRayBuffers()
-            setupIntersectionBuffers()
+            if _count != oldValue {
+                setupRayBuffers()
+                setupIntersectionBuffers()
+            }
         }
     }
     
@@ -127,7 +140,7 @@ open class Raycaster {
     }
     
     deinit {
-        subscriptions.removeAll()
+//        subscriptions.removeAll()
         accelerationStructures = [:]
         intersector = nil
         commandQueue = nil
@@ -159,35 +172,18 @@ open class Raycaster {
         ray = Ray(camera, coordinate)
     }
     
-    func setupRayBuffers() {
-        guard let device = device else { fatalError("Unable to create Ray Buffers") }
+    private func setupRayBuffers() {
+        guard let device = device, _count > 0 else { return }
         rayBuffer = Buffer(device: device, parameters: rayParams, count: _count)
     }
     
-    func setupIntersectionBuffers() {
-        guard let device = device else { fatalError("Unable to create Intersection Buffers") }
+    private func setupIntersectionBuffers() {
+        guard let device = device, _count > 0 else { return }
         intersectionBuffer = Buffer(device: device, parameters: intersectionParams, count: _count)
     }
     
-    func _intersect(_ intersectables: [Any]) -> MTLCommandBuffer? {
-        guard let commandBuffer = commandQueue?.makeCommandBuffer() else { return nil }
-        
-        commandBuffer.label = "Raycaster Command Buffer"
-        
-        for (index, object) in intersectables.enumerated() {
-            if let mesh = object as? Mesh {
-                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, nil, index)
-            }
-            else if let submesh = object as? Submesh, let mesh = submesh.parent {
-                intersect(commandBuffer, rayBuffer, intersectionBuffer, mesh, submesh, index)
-            }
-        }
-        
-        return commandBuffer
-    }
-    
     public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false, _ callback: @escaping (_ results: [RaycastResult]) -> ()) {
-        let intersectables = getIntersectables([object], recursive, invisible)
+        let intersectables = _getIntersectables([object], recursive, invisible)
         guard let commandBuffer = _intersect(intersectables) else { return callback([]) }
         commandBuffer.addCompletedHandler { [weak self] _ in
             if let self = self {
@@ -198,7 +194,7 @@ open class Raycaster {
     }
     
     public func intersect(_ object: Object, _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
-        let intersectables = getIntersectables([object], recursive, invisible)
+        let intersectables = _getIntersectables([object], recursive, invisible)
         guard let commandBuffer = _intersect(intersectables) else { return [] }
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
@@ -206,198 +202,96 @@ open class Raycaster {
     }
     
     public func intersect(_ objects: [Object], _ recursive: Bool = true, _ invisible: Bool = false) -> [RaycastResult] {
-        let intersectables = getIntersectables(objects, recursive, invisible)
+        let intersectables = _getIntersectables(objects, recursive, invisible)
         guard let commandBuffer = _intersect(intersectables) else { return [] }
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
         return getResults(intersectables)
     }
     
-    func getIntersectables(_ objects: [Object], _ recursive: Bool = true, _ invisible: Bool = false) -> [Any] {
-        var count = 0
-        var intersectables: [Any] = []
+    private func _getIntersectables(_ objects: [Object], _ recursive: Bool = true, _ invisible: Bool = false) -> [Intersectable] {
+        var results: [Intersectable] = []
         for object in objects {
-            let meshes: [Mesh] = getMeshes(object, recursive, invisible)
-            for mesh in meshes {
-                var times = simd_float2(repeating: -1.0)
-                guard rayBoundsIntersection(ray.origin, ray.direction, transformBounds(mesh.geometry.bounds, mesh.worldMatrix), &times) else { continue }
-                let submeshes = mesh.submeshes
-                count += max(mesh.submeshes.count, 1)
-                if !submeshes.isEmpty {
+            let intersectables: [Intersectable] = getIntersectables(object, recursive, invisible).filter { $0.intersects(ray: ray) }
+            for intersectable in intersectables {
+                if let mesh = intersectable as? Mesh, !mesh.submeshes.isEmpty {
+                    let submeshes = mesh.submeshes.filter { $0.intersectable }
                     for submesh in submeshes {
-                        intersectables.append(submesh)
+                        results.append(submesh)
                     }
                 }
                 else {
-                    intersectables.append(mesh)
+                    results.append(intersectable)
                 }
             }
         }
         
-        if count == 0 {
-            return []
-        }
-        else if count != _count {
-            _count = count
-        }
-        
-        return intersectables
-    }
-    
-    func getResults(_ intersectables: [Any]) -> [RaycastResult] {
-        var results: [RaycastResult] = []
-        for (index, object) in intersectables.enumerated() {
-            if let mesh = object as? Mesh {
-                if let result = calculateResult(mesh, nil, index) {
-                    results.append(result)
-                }
-            }
-            else if let submesh = object as? Submesh, let mesh = submesh.parent {
-                if let result = calculateResult(mesh, submesh, index) {
-                    results.append(result)
-                }
-            }
-        }
-        
-        results.sort {
-            $0.distance < $1.distance
-        }
+        _count = results.count
         return results
     }
     
-    func calculateResult(_ mesh: Mesh,
-                         _ submesh: Submesh?,
-                         _ index: Int) -> RaycastResult?
-    {
-        intersectionBuffer.sync(index)
-        let distance = distanceParam.value
-        if distance >= 0 {
-            let primitiveIndex = indexParam.value
-            let index = Int(primitiveIndex) * 3
-            
-            var i0 = 0
-            var i1 = 0
-            var i2 = 0
-            
-            let geometry = mesh.geometry
-            
-            if let sub = submesh {
-                i0 = Int(sub.indexData[index])
-                i1 = Int(sub.indexData[index + 1])
-                i2 = Int(sub.indexData[index + 2])
-            }
-            else if mesh.geometry.indexData.count > 0 {
-                i0 = Int(geometry.indexData[index])
-                i1 = Int(geometry.indexData[index + 1])
-                i2 = Int(geometry.indexData[index + 2])
-            }
-            else {
-                i0 = index
-                i1 = index + 1
-                i2 = index + 2
-            }
-            
-            let a: Vertex = geometry.vertexData[i0]
-            let b: Vertex = geometry.vertexData[i1]
-            let c: Vertex = geometry.vertexData[i2]
-            
-            let coords = coordinatesParam.value
-            let u: Float = coords.x
-            let v: Float = coords.y
-            let w: Float = 1.0 - u - v
-            
-            let meshWorldMatrix = mesh.worldMatrix
-            
-            let aP = meshWorldMatrix * a.position * u
-            let bP = meshWorldMatrix * b.position * v
-            let cP = meshWorldMatrix * c.position * w
-            
-            let aU = a.uv * u
-            let bU = b.uv * v
-            let cU = c.uv * w
-            
-            let aN = meshWorldMatrix * simd_make_float4(a.normal) * u
-            let bN = meshWorldMatrix * simd_make_float4(b.normal) * v
-            let cN = meshWorldMatrix * simd_make_float4(c.normal) * w
-            
-            let hitP = simd_make_float3(aP + bP + cP)
-            let hitU = simd_make_float2(aU + bU + cU)
-            let hitN = normalize(simd_make_float3(aN + bN + cN))
-
-            return RaycastResult(
-                barycentricCoordinates: simd_make_float3(u, v, w),
-                distance: distance,
-                normal: hitN,
-                position: hitP,
-                uv: hitU,
-                primitiveIndex: primitiveIndex,
-                object: mesh,
-                submesh: submesh
-            )
+    private func _intersect(_ intersectables: [Intersectable]) -> MTLCommandBuffer? {
+        guard let commandBuffer = commandQueue?.makeCommandBuffer() else { return nil }
+        commandBuffer.label = "Raycaster Command Buffer"
+        
+        for (index, intersectable) in intersectables.enumerated() {
+            intersect(commandBuffer, rayBuffer, intersectionBuffer, intersectable, index)
         }
-        return nil
+        
+        return commandBuffer
     }
     
-    func intersect(_ commandBuffer: MTLCommandBuffer,
-                   _ rayBuffer: Buffer,
-                   _ intersectionBuffer: Buffer,
-                   _ mesh: Mesh,
-                   _ submesh: Submesh?,
-                   _ index: Int)
+    private func intersect(_ commandBuffer: MTLCommandBuffer,
+                           _ rayBuffer: Buffer,
+                           _ intersectionBuffer: Buffer,
+                           _ intersectable: Intersectable,
+                           _ index: Int)
     {
-        let meshWorldMatrix = mesh.worldMatrix
-        let meshWorldMatrixInverse = meshWorldMatrix.inverse
+        let worldMatrix = intersectable.worldMatrix
+        let worldMatrixInverse = worldMatrix.inverse
         
-        let origin = meshWorldMatrixInverse * simd_make_float4(ray.origin.x, ray.origin.y, ray.origin.z, 1.0)
-        let direction = meshWorldMatrixInverse * simd_make_float4(ray.direction)
+        let origin = worldMatrixInverse * simd_make_float4(ray.origin, 1.0)
+        let direction = worldMatrixInverse * simd_make_float4(ray.direction)
         
         originParam.value = simd_make_float3(origin)
         directionParam.value = simd_make_float3(direction)
         rayBuffer.update(index)
         
-        let geometry = mesh.geometry
-        let winding: MTLWinding = geometry.windingOrder == .counterClockwise ? .clockwise : .counterClockwise
-        intersector!.frontFacingWinding = winding
-        intersector!.cullMode = mesh.cullMode
-
         var accelerationStructure: MPSAccelerationStructure?
-        
-        if let structure = accelerationStructures[geometry] {
+        if let structure = accelerationStructures[intersectable.id] {
             accelerationStructure = structure
         }
         else if let device = device {
             let newAccelerationStructure = MPSTriangleAccelerationStructure(device: device)
-            newAccelerationStructure.vertexBuffer = mesh.geometry.vertexBuffer!
-            newAccelerationStructure.vertexStride = MemoryLayout<Vertex>.stride
-            newAccelerationStructure.label = mesh.label + " Acceleration Structure"
+            newAccelerationStructure.vertexBuffer = intersectable.vertexBuffer
+            newAccelerationStructure.vertexStride = intersectable.vertexStride
+            newAccelerationStructure.label = intersectable.label + " Acceleration Structure"
             
-            if let sub = submesh, let indexBuffer = sub.indexBuffer {
+            if let indexBuffer = intersectable.indexBuffer {
                 newAccelerationStructure.indexBuffer = indexBuffer
                 newAccelerationStructure.indexType = .uInt32
-                newAccelerationStructure.triangleCount = sub.indexData.count / 3
-            }
-            else if let indexBuffer = geometry.indexBuffer {
-                newAccelerationStructure.indexBuffer = indexBuffer
-                newAccelerationStructure.indexType = .uInt32
-                newAccelerationStructure.triangleCount = geometry.indexData.count / 3
+                newAccelerationStructure.triangleCount = intersectable.indexCount / 3
             }
             else {
-                newAccelerationStructure.triangleCount = mesh.geometry.vertexData.count / 3
+                newAccelerationStructure.triangleCount = intersectable.vertexCount / 3
             }
             
             newAccelerationStructure.rebuild()
             accelerationStructure = newAccelerationStructure
-            accelerationStructures[geometry] = newAccelerationStructure
+            accelerationStructures[intersectable.id] = newAccelerationStructure
             
-            let subscription = geometry.publisher.sink { [unowned self] _ in
-                self.accelerationStructures[geometry] = nil
-                self.subscriptions[geometry]?.cancel()
-                self.subscriptions[geometry] = nil
+            let subscription = intersectable.geometryPublisher.sink { [unowned self] _ in
+                print("recreating acceleration structure for: \(intersectable.label)")
+                self.accelerationStructures[intersectable.id] = nil
+                self.subscriptions[intersectable.id]?.cancel()
+                self.subscriptions[intersectable.id] = nil
             }
-            subscriptions[geometry] = subscription
+            subscriptions[intersectable.id] = subscription
         }
         
-        intersector!.label = mesh.label + " Raycaster Intersector"
+        intersector!.frontFacingWinding = (intersectable.windingOrder == .counterClockwise) ? .clockwise : .counterClockwise
+        intersector!.cullMode = intersectable.cullMode
+        intersector!.label = intersectable.label + " Raycaster Intersector"
         intersector!.encodeIntersection(
             commandBuffer: commandBuffer,
             intersectionType: .nearest,
@@ -408,6 +302,21 @@ open class Raycaster {
             rayCount: 1,
             accelerationStructure: accelerationStructure!
         )
+    }
+    
+    private func getResults(_ intersectables: [Intersectable]) -> [RaycastResult] {
+        var results: [RaycastResult] = []
+        for (index, intersectable) in intersectables.enumerated() {
+            intersectionBuffer.sync(index)
+            
+            if distanceParam.value >= 0, let result = intersectable.getRaycastResult(ray: ray, distance: distanceParam.value, primitiveIndex: primitiveIndexParam.value, barycentricCoordinate: barycentricCoordinatesParam.value) {
+                results.append(result)
+            }
+        }
+        results.sort {
+            $0.distance < $1.distance
+        }
+        return results
     }
     
     public func reset() {

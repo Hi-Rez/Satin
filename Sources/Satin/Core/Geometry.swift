@@ -24,7 +24,6 @@ extension Vertex: VertexType {
     }
 }
 
-
 open class Geometry {
     public var id: String = UUID().uuidString
     

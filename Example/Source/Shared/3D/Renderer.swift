@@ -23,10 +23,15 @@ class Renderer: Forge.Renderer {
         return Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 0), material: BasicDiffuseMaterial(0.7))
     }()
     
+    var intersectionMesh: Mesh = {
+        let mesh = Mesh(geometry: IcoSphereGeometry(radius: 0.01, res: 2), material: BasicColorMaterial([0.0, 1.0, 0.0, 1.0], .disabled))
+        mesh.label = "Intersection Mesh"
+        mesh.visible = false
+        return mesh
+    }()
+    
     lazy var scene: Object = {
-        let scene = Object()
-        scene.add(mesh)
-        return scene
+        Object("Scene", [mesh, intersectionMesh])
     }()
     
     lazy var context: Context = {
@@ -34,11 +39,8 @@ class Renderer: Forge.Renderer {
     }()
     
     lazy var camera: PerspectiveCamera = {
-        let camera = PerspectiveCamera()
+        let camera = PerspectiveCamera(position: .init(0.0, 0.0, 5.0), near: 0.01, far: 100.0)
         camera.fov = 30
-        camera.near = 0.01
-        camera.far = 100.0
-        camera.position = simd_make_float3(0.0, 0.0, 5.0)
         return camera
     }()
     
@@ -60,8 +62,13 @@ class Renderer: Forge.Renderer {
         // Setup things here
     }
     
+//    var frame: Float = 0.0
     override func update() {
+//        let scale = abs(sin(frame))
+//        let scaleMatrix = scaleMatrixf(scale, scale, scale)
+//        mesh.geometry.transform(scaleMatrix)
         cameraController.update()
+//        frame += 0.1
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
@@ -80,10 +87,12 @@ class Renderer: Forge.Renderer {
         let m = event.locationInWindow
         let pt = normalizePoint(m, mtkView.frame.size)
         raycaster.setFromCamera(camera, pt)
-        let results = raycaster.intersect(scene)
+        let results = raycaster.intersect(scene, true)
         for result in results {
             print(result.object.label)
             print(result.position)
+            intersectionMesh.position = result.position
+            intersectionMesh.visible = true
         }
     }
     

@@ -10,17 +10,30 @@ import Foundation
 public func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Mesh] {
     var results: [Mesh] = []
     if invisible || object.visible {
-        if object is Mesh, let mesh = object as? Mesh {
-            let geometry = mesh.geometry
-            if geometry.vertexData.count > 0, mesh.instanceCount > 0 {
-                results.append(object as! Mesh)
-            }
+        if let mesh = object as? Mesh {
+            results.append(mesh)
         }
         
         if recursive {
-            let children = object.children
-            for child in children {
+            for child in object.children {
                 results.append(contentsOf: getMeshes(child, recursive, invisible))
+            }
+        }
+    }
+    return results
+}
+
+
+internal func getIntersectables(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Intersectable] {
+    var results: [Intersectable] = []
+    if invisible || object.visible {
+        if let intersectable = object as? Intersectable, intersectable.intersectable {
+            results.append(intersectable)
+        }
+        
+        if recursive {
+            for child in object.children {
+                results.append(contentsOf: getIntersectables(child, recursive, invisible))
             }
         }
     }

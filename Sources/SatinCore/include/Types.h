@@ -23,6 +23,11 @@ typedef struct {
 } Bounds;
 
 typedef struct {
+    simd_float3 origin;
+    simd_float3 direction;
+} Ray;
+
+typedef struct {
     int count;
     int capacity;
     simd_float2 *data;

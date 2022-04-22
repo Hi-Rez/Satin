@@ -35,7 +35,7 @@ func createSatinVertexDescriptor() -> MTLVertexDescriptor {
 
 public let SatinVertexDescriptor = createSatinVertexDescriptor()
 
-public func createSatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
+func createSatinModelIOVertexDescriptor() -> MDLVertexDescriptor {
     let descriptor = MDLVertexDescriptor()
     
     var offset = 0

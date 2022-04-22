@@ -8,10 +8,8 @@
 
 import Combine
 import Metal
+import MetalPerformanceShaders
 import simd
-
-// consider making a renderable protocol
-// consider making a intersectable protocol
 
 open class Mesh: Object, Renderable {
     let alignedUniformsSize = ((MemoryLayout<VertexUniforms>.size + 255) / 256) * 256
@@ -31,15 +29,22 @@ open class Mesh: Object, Renderable {
     
     public var geometry: Geometry {
         didSet {
-            setupGeometrySubscriber()
-            setupGeometry()
-            _localBounds.clear()
+            if geometry != oldValue {
+                geometryPublisher.send(self)
+                setupGeometrySubscriber()
+                setupGeometry()
+                _localBounds.clear()
+            }
         }
     }
     
+    public let geometryPublisher = PassthroughSubject<Intersectable, Never>()
+    
     public var material: Material? {
         didSet {
-            setupMaterial()
+            if material != oldValue {
+                setupMaterial()
+            }
         }
     }
     
@@ -92,6 +97,7 @@ open class Mesh: Object, Renderable {
     internal func setupGeometrySubscriber() {
         geometrySubscriber?.cancel()
         geometrySubscriber = geometry.publisher.sink { [unowned self] _ in
+            self.geometryPublisher.send(self)
             self._localBounds.clear()
         }
     }
@@ -217,5 +223,95 @@ open class Mesh: Object, Renderable {
             result = mergeBounds(result, child.worldBounds)
         }
         return result
+    }
+}
+
+extension Mesh: Intersectable {
+    public var vertexStride: Int {
+        MemoryLayout<Vertex>.stride
+    }
+    
+    public var windingOrder: MTLWinding {
+        geometry.windingOrder
+    }
+    
+    public var vertexBuffer: MTLBuffer? {
+        geometry.vertexBuffer
+    }
+    
+    public var vertexCount: Int {
+        geometry.vertexData.count
+    }
+    
+    public var indexBuffer: MTLBuffer? {
+        geometry.indexBuffer
+    }
+    
+    public var indexCount: Int {
+        geometry.indexData.count
+    }
+    
+    public var intersectionBounds: Bounds {
+        geometry.bounds
+    }
+    
+    public var intersectable: Bool {
+        geometry.vertexBuffer != nil && instanceCount > 0
+    }
+    
+    public func intersects(ray: Ray) -> Bool {
+        let worldMatrixInverse = worldMatrix.inverse
+        let origin = worldMatrixInverse * simd_make_float4(ray.origin, 1.0)
+        let direction = worldMatrixInverse * simd_make_float4(ray.direction, 0.0)
+        var times: simd_float2 = .zero
+        return rayBoundsIntersection(simd_make_float3(origin), simd_make_float3(direction), intersectionBounds, &times)
+    }
+    
+    public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
+        let index = Int(primitiveIndex) * 3
+            
+        var i0 = 0
+        var i1 = 0
+        var i2 = 0
+
+        if geometry.indexData.count > 0 {
+            i0 = Int(geometry.indexData[index])
+            i1 = Int(geometry.indexData[index + 1])
+            i2 = Int(geometry.indexData[index + 2])
+        }
+        else {
+            i0 = index
+            i1 = index + 1
+            i2 = index + 2
+        }
+        
+        guard i0 < vertexCount, i1 < vertexCount, i2 < vertexCount else { return nil }
+            
+        let a: Vertex = geometry.vertexData[i0]
+        let b: Vertex = geometry.vertexData[i1]
+        let c: Vertex = geometry.vertexData[i2]
+            
+        let u: Float = barycentricCoordinate.x
+        let v: Float = barycentricCoordinate.y
+        let w: Float = 1.0 - u - v
+    
+        let aUv = a.uv * u
+        let bUv = b.uv * v
+        let cUv = c.uv * w
+            
+        let aNormal = (normalMatrix * a.normal) * u
+        let bNormal = (normalMatrix * b.normal) * v
+        let cNormal = (normalMatrix * c.normal) * w
+            
+        return RaycastResult(
+            barycentricCoordinates: simd_make_float3(u, v, w),
+            distance: distance,
+            normal: simd_normalize(simd_make_float3(aNormal + bNormal + cNormal)),
+            position: ray.at(distance),
+            uv: simd_make_float2(aUv + bUv + cUv),
+            primitiveIndex: primitiveIndex,
+            object: self,
+            submesh: nil
+        )
     }
 }
