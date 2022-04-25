@@ -22,8 +22,8 @@ public class StringParameter: GenericParameter<String> {
         case options
     }
 
-    public convenience init(_ label: String, _ value: ValueType = "", _ options: [String], _ controlType: ControlType = .dropdown, _ action: ((ValueType) -> Void)? = nil) {
-        self.init(label, value, controlType, action)
+    public convenience init(_ label: String, _ value: ValueType = "", _ options: [String], _ controlType: ControlType = .dropdown) {
+        self.init(label, value, controlType)
         self.options = options
     }
 }

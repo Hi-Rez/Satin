@@ -281,7 +281,6 @@ open class Raycaster {
             accelerationStructures[intersectable.id] = newAccelerationStructure
             
             let subscription = intersectable.geometryPublisher.sink { [unowned self] _ in
-                print("recreating acceleration structure for: \(intersectable.label)")
                 self.accelerationStructures[intersectable.id] = nil
                 self.subscriptions[intersectable.id]?.cancel()
                 self.subscriptions[intersectable.id] = nil

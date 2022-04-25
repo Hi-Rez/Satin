@@ -17,8 +17,17 @@ public class Int2Parameter: GenericParameterWithMinMax<simd_int2> {
     override public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }
+    
+    public override subscript<T>(index: Int) -> T {
+        get {
+            return value[index] as! T
+        }
+        set {
+            value[index] = newValue as! Int32
+        }
+    }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
-        self.init(label, value, .zero, .one, controlType, action)
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+        self.init(label, value, .zero, .one, controlType)
     }
 }

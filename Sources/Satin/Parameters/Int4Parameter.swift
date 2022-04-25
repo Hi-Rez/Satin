@@ -18,7 +18,7 @@ public class Int4Parameter: GenericParameterWithMinMax<simd_int4> {
         return Int32.self
     }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
-        self.init(label, value, .zero, .one, controlType, action)
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+        self.init(label, value, .zero, .one, controlType)
     }
 }

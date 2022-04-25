@@ -39,6 +39,11 @@ public protocol ValueParameter: Parameter {
     var value: ValueType { get set }
 }
 
+public protocol ValueMinMaxParameter: ValueParameter {
+    var min: ValueType { get set }
+    var max: ValueType { get set }
+}
+
 public enum ControlType: String, Codable {
     case none
     case unknown

@@ -13,7 +13,7 @@ public class DoubleParameter: GenericParameterWithMinMax<Double> {
     override public var string: String { "double" }
     override public var count: Int { 1 }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
-        self.init(label, value, 0.0, 1.0, controlType, action)
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+        self.init(label, value, 0.0, 1.0, controlType)
     }
 }

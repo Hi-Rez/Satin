@@ -13,39 +13,17 @@ import Forge
 import Satin
 
 class Renderer: Forge.Renderer {
-    lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: UvColorMaterial())
-        mesh.label = "Quad"
-        return mesh
-    }()
-    
-    lazy var scene: Object = {
-        let scene = Object()
-        scene.add(mesh)
-        return scene
-    }()
-    
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
+    var context: Context!
     
     #if os(macOS) || os(iOS)
-    lazy var raycaster: Raycaster = {
-        Raycaster(device: device)
-    }()
+    var raycaster: Raycaster!
     #endif
     
-    lazy var camera: OrthographicCamera = {
-        OrthographicCamera()
-    }()
+    var camera = OrthographicCamera()
+    var cameraController: OrthographicCameraController!
     
-    lazy var cameraController: OrthographicCameraController = {
-        OrthographicCameraController(camera: camera, view: mtkView)
-    }()
-    
-    lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context, scene: scene, camera: camera)
-    }()
+    var scene = Object("Scene")
+    var renderer: Satin.Renderer!
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -54,7 +32,37 @@ class Renderer: Forge.Renderer {
     }
     
     override func setup() {
-        // Setup things here
+        setupContext()
+        #if os(macOS) || os(iOS)
+        setupRaycaster()
+        #endif
+        setupCameraController()
+        setupScene()
+        setupRenderer()
+    }
+
+    func setupContext() {
+        context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
+    }
+
+    #if os(macOS) || os(iOS)
+    func setupRaycaster() {
+        raycaster = Raycaster(device: device)
+    }
+    #endif
+    
+    func setupCameraController() {
+        cameraController = OrthographicCameraController(camera: camera, view: mtkView)
+    }
+    
+    func setupScene() {
+        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: UvColorMaterial())
+        mesh.label = "Quad"
+        scene.add(mesh)
+    }
+    
+    func setupRenderer() {
+        renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     }
     
     override func update() {
@@ -83,11 +91,12 @@ class Renderer: Forge.Renderer {
             print(result.position)
         }
     }
+
     #elseif os(iOS)
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let first = touches.first {
-            let point = first.location(in: self.mtkView)
-            let size = self.mtkView.frame.size
+            let point = first.location(in: mtkView)
+            let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
             raycaster.setFromCamera(camera, pt)
             let results = raycaster.intersect(scene, true)

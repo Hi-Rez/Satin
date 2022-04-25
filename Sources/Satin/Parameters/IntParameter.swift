@@ -21,8 +21,8 @@ public class IntParameter: GenericParameterWithMinMax<Int> {
         return Int32.self
     }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
-        self.init(label, value, 0, 1, controlType, action)
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+        self.init(label, value, 0, 1, controlType)
     }
 
     override public func writeData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {

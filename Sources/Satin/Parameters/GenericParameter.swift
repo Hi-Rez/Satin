@@ -34,8 +34,6 @@ public class GenericParameter<T: Codable>: ValueParameter {
         }
     }
 
-    var subscribers = Set<AnyCancellable>()
-
     public subscript<T>(index: Int) -> T {
         get {
             return value as! T
@@ -69,13 +67,10 @@ public class GenericParameter<T: Codable>: ValueParameter {
         try container.encode(value, forKey: .value)
     }
 
-    public init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
+    public init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
         self.label = label
         self.controlType = controlType
         self.value = value
-        if let action = action {
-            $value.sink(receiveValue: action).store(in: &subscribers)
-        }
     }
 
     public func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer {
@@ -110,10 +105,10 @@ public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
         case max
     }
 
-    public init(_ label: String, _ value: ValueType, _ min: ValueType, _ max: ValueType, _ controlType: ControlType = .unknown, _ action: ((ValueType) -> Void)? = nil) {
+    public init(_ label: String, _ value: ValueType, _ min: ValueType, _ max: ValueType, _ controlType: ControlType = .unknown) {
         self.min = min
         self.max = max
-        super.init(label, value, controlType, action)
+        super.init(label, value, controlType)
     }
 
     public required init(from decoder: Decoder) throws {
