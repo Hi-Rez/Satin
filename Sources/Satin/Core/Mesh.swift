@@ -11,11 +11,14 @@ import Metal
 import MetalPerformanceShaders
 import simd
 
-open class Mesh: Object, Renderable {
+open class Mesh: Object, Renderable, Intersectable {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
     
     public var instanceCount: Int = 1
+    open var intersectable: Bool {
+        geometry.vertexBuffer != nil && instanceCount > 0
+    }
     
     var uniforms: VertexUniformBuffer?
     
@@ -194,9 +197,9 @@ open class Mesh: Object, Renderable {
         }
         return result
     }
-}
 
-extension Mesh: Intersectable {
+    // MARK: - Intersectable
+    
     public var vertexStride: Int {
         MemoryLayout<Vertex>.stride
     }
@@ -223,10 +226,6 @@ extension Mesh: Intersectable {
     
     public var intersectionBounds: Bounds {
         geometry.bounds
-    }
-    
-    public var intersectable: Bool {
-        geometry.vertexBuffer != nil && instanceCount > 0
     }
     
     public func intersects(ray: Ray) -> Bool {

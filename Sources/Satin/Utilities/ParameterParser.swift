@@ -228,6 +228,15 @@ func parseParameters(source: String) -> ParameterGroup? {
                                 if vType == "float" {
                                     parameter = FloatParameter(label, fValue, fMin, fMax, .slider)
                                 }
+                                else if vType == "float2" {
+                                    parameter = Float2Parameter(label, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                }
+                                else if vType == "float3" {
+                                    parameter = Float3Parameter(label, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                }
+                                else if vType == "float4" {
+                                    parameter = Float4Parameter(label, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                }
                                 else if vType == "int" {
                                     parameter = IntParameter(label, Int(fValue), Int(fMin), Int(fMax), .slider)
                                 }
@@ -274,6 +283,15 @@ func parseParameters(source: String) -> ParameterGroup? {
                                     if vType == "float" {
                                         parameter = FloatParameter(label.titleCase, fValue, fMin, fMax, .slider)
                                     }
+                                    else if vType == "float2" {
+                                        parameter = Float2Parameter(label.titleCase, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                    }
+                                    else if vType == "float3" {
+                                        parameter = Float3Parameter(label.titleCase, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                    }
+                                    else if vType == "float4" {
+                                        parameter = Float4Parameter(label.titleCase, .init(repeating: fValue), .init(repeating: fMin), .init(repeating: fMax), .multislider)
+                                    }
                                     else if vType == "int" {
                                         parameter = IntParameter(label.titleCase, Int(fValue), Int(fMin), Int(fMax), .slider)
                                     }
@@ -296,6 +314,15 @@ func parseParameters(source: String) -> ParameterGroup? {
                         var parameter: Parameter?
                         if vType == "float" {
                             parameter = FloatParameter(label.titleCase, 0.5, 0.0, 1.0, .slider)
+                        }
+                        else if vType == "float2" {
+                            parameter = Float2Parameter(label.titleCase, .init(repeating: 0.5), .zero, .one, .multislider)
+                        }
+                        else if vType == "float3" {
+                            parameter = Float3Parameter(label.titleCase, .init(repeating: 0.5), .zero, .one, .multislider)
+                        }
+                        else if vType == "float4" {
+                            parameter = Float4Parameter(label.titleCase, .init(repeating: 0.5), .zero, .one, .multislider)
                         }
                         else if vType == "int" {
                             parameter = IntParameter(label.titleCase, 50, 0, 100, .slider)

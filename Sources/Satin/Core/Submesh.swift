@@ -36,7 +36,7 @@ open class Submesh {
         }
     }
 
-    public init(indexData: [UInt32], indexBuffer: MTLBuffer, indexBufferOffset: Int = 0) {
+    public init(indexData: [UInt32], indexBuffer: MTLBuffer? = nil, indexBufferOffset: Int = 0) {
         self.indexData = indexData
         self.indexBuffer = indexBuffer
         self.indexBufferOffset = indexBufferOffset
