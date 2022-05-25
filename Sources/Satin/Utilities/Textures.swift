@@ -18,7 +18,7 @@ import Accelerate
 import CoreGraphics
 import ImageIO
 
-public func makeCubeTexture(_ device: MTLDevice, _ urls: [URL], _ mipmapped: Bool = true) -> MTLTexture? {
+public func makeCubeTexture(_ device: MTLDevice, _ urls: [URL], _ mipmapped: Bool = true, _ pixelFormat: MTLPixelFormat = .rgba8Unorm) -> MTLTexture? {
     assert(urls.count == 6, "Please provide 6 images to create a cube texture")
     
     guard let cgImage = loadImage(url: urls.first!) else { fatalError("Failed to create cgImage") }
@@ -31,7 +31,7 @@ public func makeCubeTexture(_ device: MTLDevice, _ urls: [URL], _ mipmapped: Boo
     let cubeSize = width
     let bytesPerPixel = cgImage.bitsPerPixel / 8
     
-    let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .rgba8Unorm, size: cubeSize, mipmapped: mipmapped)
+    let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: pixelFormat, size: cubeSize, mipmapped: mipmapped)
     guard let cubeTexture = device.makeTexture(descriptor: desc) else { return nil }
     let mipCount = mipmapped ? cubeTexture.mipmapLevelCount : 1
     
