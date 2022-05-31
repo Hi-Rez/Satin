@@ -28,7 +28,7 @@ public class GenericParameter<T: Codable>: ValueParameter {
     public var controlType = ControlType.none
     public var label: String
 
-    @PublishedDidSet public var value: ValueType {
+    @Published public var value: ValueType {
         didSet {
             delegate?.updated(parameter: self)
         }
@@ -94,8 +94,8 @@ public class GenericParameter<T: Codable>: ValueParameter {
 }
 
 public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
-    @PublishedDidSet public var min: ValueType
-    @PublishedDidSet public var max: ValueType
+    @Published public var min: ValueType
+    @Published public var max: ValueType
 
     private enum CodingKeys: String, CodingKey {
         case controlType

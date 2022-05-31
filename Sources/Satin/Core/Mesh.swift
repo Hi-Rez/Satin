@@ -123,7 +123,7 @@ open class Mesh: Object, Renderable, Intersectable {
         super.update()
     }
     
-    open func update(camera: Camera, viewport: simd_float4) {
+    override open func update(camera: Camera, viewport: simd_float4) {
         material?.update(camera: camera)
         uniforms?.update(object: self, camera: camera, viewport: viewport)
     }

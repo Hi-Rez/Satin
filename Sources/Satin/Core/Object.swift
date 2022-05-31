@@ -47,11 +47,11 @@ open class Object: Codable, ObservableObject {
         case children
     }
     
-    @PublishedDidSet open var id: String = UUID().uuidString
+    @Published open var id: String = UUID().uuidString
     
-    @PublishedDidSet open var label: String = "Object"
+    @Published open var label: String = "Object"
     
-    @PublishedDidSet open var visible: Bool = true
+    @Published open var visible: Bool = true
     
     open var context: Context? = nil {
         didSet {
@@ -64,13 +64,13 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @PublishedDidSet open var position = simd_make_float3(0, 0, 0) {
+    @Published open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
         }
     }
     
-    @PublishedDidSet open var orientation = simd_quatf(matrix_identity_float4x4) {
+    @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
             _rotationMatrix.clear()
@@ -78,7 +78,7 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @PublishedDidSet open var scale = simd_make_float3(1, 1, 1) {
+    @Published open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
         }
@@ -134,7 +134,7 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    @PublishedDidSet open var children: [Object] = [] {
+    @Published open var children: [Object] = [] {
         didSet {
             _worldBounds.clear()
         }
@@ -270,17 +270,21 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    open func add(_ child: Object) {
+    open func update(camera: Camera, viewport: simd_float4) {}
+    
+    open func add(_ child: Object, _ setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
-            child.parent = self
+            if setParent {
+                child.parent = self
+            }
             child.context = context
             children.append(child)
         }
     }
     
-    open func add(_ objects: [Object]) {
+    open func add(_ objects: [Object], _ setParent: Bool = true) {
         for obj in objects {
-            add(obj)
+            add(obj, setParent)
         }
     }
     

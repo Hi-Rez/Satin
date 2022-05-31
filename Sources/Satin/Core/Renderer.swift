@@ -239,11 +239,12 @@ open class Renderer
             object.context = context
         }
         
+        object.update(camera: camera, viewport: _viewport)
+        
         renderEncoder.pushDebugGroup(object.label)
         
         if let renderable = object as? Renderable
         {
-            renderable.update(camera: camera, viewport: _viewport)
             renderable.draw(renderEncoder: renderEncoder)
         }
         

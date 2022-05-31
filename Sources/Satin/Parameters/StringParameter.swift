@@ -13,7 +13,7 @@ public class StringParameter: GenericParameter<String> {
     override public var string: String { "string" }
     override public var count: Int { value.count }
 
-    @PublishedDidSet public var options: [String] = []
+    @Published public var options: [String] = []
 
     private enum CodingKeys: String, CodingKey {
         case controlType
