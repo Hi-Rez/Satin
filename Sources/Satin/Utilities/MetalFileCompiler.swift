@@ -101,6 +101,7 @@ open class MetalFileCompiler
     
     deinit
     {
+        onUpdate = nil
         files = []
         watchers = []
     }

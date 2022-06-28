@@ -13,7 +13,7 @@ public protocol ParameterDelegate: AnyObject {
     func updated(parameter: Parameter)
 }
 
-public protocol Parameter: Codable, AnyObject {
+public protocol Parameter: Codable, CustomStringConvertible, AnyObject {
     var type: ParameterType { get }
     var string: String { get }
 
@@ -24,6 +24,7 @@ public protocol Parameter: Codable, AnyObject {
 
     var controlType: ControlType { get set }
     var label: String { get }
+    var description: String { get }
 
     var delegate: ParameterDelegate? { get set }
 

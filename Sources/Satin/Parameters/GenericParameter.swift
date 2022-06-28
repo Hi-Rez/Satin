@@ -27,6 +27,10 @@ public class GenericParameter<T: Codable>: ValueParameter {
     // Setable Properties
     public var controlType = ControlType.none
     public var label: String
+    
+    public var description: String {
+        "Label: \(label) type: \(string) value: \(value)"
+    }
 
     @Published public var value: ValueType {
         didSet {

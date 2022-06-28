@@ -119,7 +119,6 @@ open class SourceShader: Shader {
         clone.pipeline = pipeline
         clone.source = source
 
-        clone.delegate = delegate
         clone.parameters = parameters.clone()
 
         clone.blending = blending

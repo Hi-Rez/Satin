@@ -6,6 +6,7 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Metal
 import simd
 
@@ -46,16 +47,13 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
             }
         }
     }
+
+    private var parametersSubscriber: AnyCancellable?
     
     public var shader: Shader? {
         didSet {
-            if oldValue != shader, let shader = shader {
-                if let oldShader = oldValue, let index = oldShader.delegates.firstIndex(of: self) {
-                    oldShader.delegates.remove(at: index)
-                }
-                
-                shader.delegate = self
-
+            if shader != nil {
+                setupParametersSubscriber()
                 if !isClone {
                     shaderNeedsUpdate = true
                 }
@@ -113,7 +111,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     
     public var uniforms: UniformBuffer?
     
-    public lazy var parameters: ParameterGroup = {
+    public private(set) lazy var parameters: ParameterGroup = {
         let params = ParameterGroup(label)
         params.delegate = self
         return params
@@ -124,14 +122,14 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         }
     }
     
-    var isClone: Bool = false
+    public private(set) var isClone: Bool = false
     public weak var delegate: MaterialDelegate?
     
     public var pipeline: MTLRenderPipelineState? {
         return shader?.pipeline
     }
     
-    public var context: Context? {
+    public weak var context: Context? {
         didSet {
             if context != nil, context != oldValue {
                 setup()
@@ -192,8 +190,6 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     public required init() {}
     
     public init(shader: Shader) {
-        shader.delegate = self
-        
         self.vertexDescriptor = shader.vertexDescriptor
         self.blending = shader.blending
         self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
@@ -205,6 +201,16 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         
         self.label = shader.label
         self.shader = shader
+        
+        setupParametersSubscriber()
+    }
+    
+    func setupParametersSubscriber() {
+        guard let shader = shader else { return }
+        parametersSubscriber?.cancel()
+        parametersSubscriber = shader.parametersPublisher.sink { [weak self] newParameters in
+            self?.updateParameters(newParameters)
+        }
     }
     
     open func setup() {
@@ -476,7 +482,11 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         return parameters.get(name)
     }
     
-    deinit {}
+    deinit {
+        parameters.delegate = nil
+        delegate = nil
+        shader = nil
+    }
     
     public func clone() -> Material {
         let clone: Material = type(of: self).init()
@@ -541,6 +551,13 @@ public extension Material {
 }
 
 public extension Material {
+    func updateParameters(_ newParameters: ParameterGroup) {
+        parameters.setFrom(newParameters)
+        parameters.label = newParameters.label
+        uniformsNeedsUpdate = true
+        delegate?.updated(material: self)
+    }
+    
     func updatedParameters(shader: Shader) {
         parameters.setFrom(shader.parameters)
         parameters.label = shader.parameters.label

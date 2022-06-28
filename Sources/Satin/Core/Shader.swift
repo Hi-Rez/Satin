@@ -7,19 +7,13 @@
 
 import Foundation
 import Metal
+import Combine
 
 public protocol ShaderDelegate: AnyObject {
     func updatedParameters(shader: Shader)
 }
 
 open class Shader {
-    var delegates: [Material?] = []
-    public weak var delegate: ShaderDelegate? {
-        didSet {
-            delegates.append(delegate as? Material)
-        }
-    }
-    
     var pipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
     }
@@ -93,7 +87,7 @@ open class Shader {
         }
     }
     
-    var context: Context? {
+    weak var context: Context? {
         didSet {
             if oldValue != context {
                 setup()
@@ -138,11 +132,11 @@ open class Shader {
         }
     }
     
-    var parameters = ParameterGroup() {
+    public let parametersPublisher = PassthroughSubject<ParameterGroup, Never>()
+    
+    public var parameters = ParameterGroup() {
         didSet {
-            for delegate in delegates {
-                delegate?.updatedParameters(shader: self)
-            }
+            parametersPublisher.send(parameters)
         }
     }
     
@@ -188,9 +182,7 @@ open class Shader {
     deinit {
         pipeline = nil
         library = nil
-        delegate = nil
         pipelineReflection = nil
-        delegates = []
     }
 
     func setupPipeline() {
@@ -233,8 +225,9 @@ open class Shader {
         guard let reflection = pipelineReflection, let fragmentArgs = reflection.fragmentArguments else { return }
         let args = fragmentArgs[FragmentBufferIndex.MaterialUniforms.rawValue]
         if let bufferStruct = args.bufferStructType {
-            parameters = parseParameters(bufferStruct: bufferStruct)
-            parameters.label = label.titleCase + " Uniforms"
+            let newParameters = parseParameters(bufferStruct: bufferStruct)
+            newParameters.label = label.titleCase + " Uniforms"
+            parameters = newParameters
         }
         parametersNeedsUpdate = false
     }
@@ -268,7 +261,6 @@ open class Shader {
         clone.pipeline = pipeline
         clone.pipelineReflection = pipelineReflection
         
-        clone.delegates = delegates
         clone.parameters = parameters.clone()
         
         clone.blending = blending

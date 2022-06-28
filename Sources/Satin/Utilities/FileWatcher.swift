@@ -101,5 +101,7 @@ open class FileWatcher
     deinit
     {
         unwatch()
+        delegate = nil
+        onUpdate = nil
     }
 }

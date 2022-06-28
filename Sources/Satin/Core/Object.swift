@@ -53,7 +53,7 @@ open class Object: Codable, ObservableObject {
     
     @Published open var visible: Bool = true
     
-    open var context: Context? = nil {
+    open weak var context: Context? = nil {
         didSet {
             if context != nil, context != oldValue {
                 setup()

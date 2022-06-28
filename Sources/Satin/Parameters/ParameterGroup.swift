@@ -19,7 +19,15 @@ public protocol ParameterGroupDelegate: AnyObject {
     func cleared(group: ParameterGroup)
 }
 
-open class ParameterGroup: Codable, ParameterDelegate {
+open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate {
+    public var description: String {
+        var dsc = "\(type(of: self)): \(label)\n"
+        for param in params {
+            dsc += param.description + "\n"
+        }
+        return dsc
+    }
+    
     public var label: String = ""
     public private(set) var params: [Parameter] = [] {
         didSet {
