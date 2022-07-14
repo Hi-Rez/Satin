@@ -33,7 +33,12 @@ open class TextureComputeSystem {
     }
 
     public var index: Int {
-        return pong()
+        get {
+            return pong()
+        }
+        set {
+            _index = newValue
+        }
     }
 
     public var count: Int {
