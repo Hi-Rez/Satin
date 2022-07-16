@@ -24,7 +24,7 @@ open class Mesh: Object, Renderable, Intersectable {
     
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var geometry: Geometry {
+    open var geometry: Geometry {
         didSet {
             if geometry != oldValue {
                 geometryPublisher.send(self)
@@ -37,7 +37,7 @@ open class Mesh: Object, Renderable, Intersectable {
     
     public let geometryPublisher = PassthroughSubject<Intersectable, Never>()
     
-    public var material: Material? {
+    open var material: Material? {
         didSet {
             if material != oldValue {
                 setupMaterial()
