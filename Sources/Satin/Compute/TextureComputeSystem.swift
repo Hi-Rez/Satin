@@ -171,6 +171,8 @@ open class TextureComputeSystem {
                 }
             }
         }
+        _index = 0
+        _setupTextures = false
     }
 
     open func reset() {
@@ -184,8 +186,6 @@ open class TextureComputeSystem {
     open func update() {
         if _setupTextures {
             setupTextures()
-            _index = 0
-            _setupTextures = false
         }
     }
 
