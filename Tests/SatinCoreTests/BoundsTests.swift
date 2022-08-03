@@ -42,4 +42,32 @@ class BoundsTests: XCTestCase {
         XCTAssertEqual(computeBoundsFromVertices(&vertices3, 4), Bounds(min: .init(0,0,0), max: .init(1,1,1)))
         
     }
+
+    func testComputeBoundsFromVerticesAndTransform() {
+
+        let xform = translationMatrixf(1, 1, 1)
+
+        var vertices0: [Vertex] = []
+        XCTAssertEqual(computeBoundsFromVerticesAndTransform(&vertices0, 0, xform), Bounds(min: .init(0,0,0), max: .init(0,0,0)))
+
+        var vertices1 = [
+            Vertex(position: .init(0, 0, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0))
+        ]
+        XCTAssertEqual(computeBoundsFromVerticesAndTransform(&vertices1, 1, xform), Bounds(min: .init(1,1,1), max: .init(1,1,1)))
+
+        var vertices2 = [
+            Vertex(position: .init(0, 0, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0)),
+            Vertex(position: .init(1, 0, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0))
+        ]
+        XCTAssertEqual(computeBoundsFromVerticesAndTransform(&vertices2, 2, xform), Bounds(min: .init(1,1,1), max: .init(2,1,1)))
+
+        var vertices3 = [
+            Vertex(position: .init(0, 0, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0)),
+            Vertex(position: .init(1, 0, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0)),
+            Vertex(position: .init(0, 1, 0, 1), normal: .init(0, 0, 0), uv: .init(0, 0)),
+            Vertex(position: .init(0, 0, 1, 1), normal: .init(0, 0, 0), uv: .init(0, 0)),
+        ]
+        XCTAssertEqual(computeBoundsFromVerticesAndTransform(&vertices3, 4, xform), Bounds(min: .init(1,1,1), max: .init(2,2,2)))
+
+    }
 }
