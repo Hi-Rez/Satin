@@ -11,8 +11,8 @@
 
 Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
     if (count > 0) {
-        simd_float3 min = simd_make_float3(INFINITY, INFINITY, INFINITY);
-        simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
+        simd_float3 min = {INFINITY, INFINITY, INFINITY};
+        simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
         for (int i = 0; i < count; i++) {
             const Vertex *vertex = &vertices[i];
             simd_float3 pos = vertex->position.xyz;
@@ -22,14 +22,14 @@ Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
         }
         return (Bounds) { .min = min, .max = max };
     }
-    return (Bounds) { .min = simd_make_float3(0.0, 0.0, 0.0),
-                      .max = simd_make_float3(0.0, 0.0, 0.0) };
+    return (Bounds) { .min = {0.0, 0.0, 0.0},
+                      .max = {0.0, 0.0, 0.0} };
 }
 
 Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, simd_float4x4 transform) {
     if (count > 0) {
-        simd_float3 min = simd_make_float3(INFINITY, INFINITY, INFINITY);
-        simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
+        simd_float3 min = {INFINITY, INFINITY, INFINITY};
+        simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
         for (int i = 0; i < count; i++) {
             const Vertex *vertex = &vertices[i];
             simd_float3 pos = simd_mul(transform, vertex->position).xyz;
@@ -39,8 +39,8 @@ Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, 
         }
         return (Bounds) { .min = min, .max = max };
     }
-    return (Bounds) { .min = simd_make_float3(0.0, 0.0, 0.0),
-                      .max = simd_make_float3(0.0, 0.0, 0.0) };
+    return (Bounds) { .min = {0.0, 0.0, 0.0},
+                      .max = {0.0, 0.0, 0.0} };
 }
 
 Bounds mergeBounds(Bounds a, Bounds b) {
@@ -71,8 +71,8 @@ static simd_float4 corner(Bounds a, int index) {
 
 Bounds transformBounds(Bounds a, simd_float4x4 transform) {
 
-    simd_float3 min = simd_make_float3(INFINITY, INFINITY, INFINITY);
-    simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
+    simd_float3 min = {INFINITY, INFINITY, INFINITY};
+    simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
 
     for(int i=0;i<8;++i) {
         simd_float3 v = simd_mul(transform, corner(a, i)).xyz;
