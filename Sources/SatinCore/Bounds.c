@@ -14,8 +14,7 @@ Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
         simd_float3 min = {INFINITY, INFINITY, INFINITY};
         simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
         for (int i = 0; i < count; i++) {
-            const Vertex *vertex = &vertices[i];
-            simd_float3 pos = vertex->position.xyz;
+            simd_float3 pos = vertices[i].position.xyz;
 
             min = simd_min(pos, min);
             max = simd_max(pos, max);
@@ -31,8 +30,7 @@ Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, 
         simd_float3 min = {INFINITY, INFINITY, INFINITY};
         simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
         for (int i = 0; i < count; i++) {
-            const Vertex *vertex = &vertices[i];
-            simd_float3 pos = simd_mul(transform, vertex->position).xyz;
+            simd_float3 pos = simd_mul(transform, vertices[i].position).xyz;
 
             min = simd_min(pos, min);
             max = simd_max(pos, max);
