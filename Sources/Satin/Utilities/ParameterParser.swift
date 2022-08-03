@@ -90,28 +90,7 @@ func parseStruct(source: String) -> ParameterGroup? {
             }
 
             if let type = vType, let name = vName {
-                switch type {
-                    case "bool":
-                        params.append(BoolParameter(name, false))
-                    case "int":
-                        params.append(IntParameter(name, 0))
-                    case "int2":
-                        params.append(Int2Parameter(name, .zero))
-                    case "int3":
-                        params.append(Int3Parameter(name, .zero))
-                    case "int4":
-                        params.append(Int4Parameter(name, .zero))
-                    case "float":
-                        params.append(FloatParameter(name, .zero))
-                    case "float2":
-                        params.append(Float2Parameter(name, .zero))
-                    case "float3":
-                        params.append(Float3Parameter(name, .zero))
-                    case "float4":
-                        params.append(Float4Parameter(name, .zero))
-                    default:
-                        break
-                }
+                addParameter(group: params, type: type, name: name)
             }
         }
         return params
@@ -142,6 +121,12 @@ func addParameter(group: ParameterGroup, type: String, name: String, control: Co
             group.append(Int4Parameter(name, .zero, control))
         case "bool":
             group.append(BoolParameter(name, false, control))
+        case "float2x2":
+            group.append(Float2x2Parameter(name, simd_float2x2(.zero, .zero), control))
+        case "float3x3":
+            group.append(Float3x3Parameter(name, simd_float3x3(.zero, .zero, .zero), control))
+        case "float4x4":
+            group.append(Float4x4Parameter(name, simd_float4x4(.zero, .zero, .zero, .zero), control))
         default:
             break
     }

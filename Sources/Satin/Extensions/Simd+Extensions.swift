@@ -73,3 +73,22 @@ extension simd_float3x3: Codable {
         case col0, col1, col2
     }
 }
+
+extension simd_float2x2: Codable {
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let c0 = try values.decode(simd_float2.self, forKey: .col0)
+        let c1 = try values.decode(simd_float2.self, forKey: .col1)
+        self.init(c0, c1)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.columns.0, forKey: .col0)
+        try container.encode(self.columns.1, forKey: .col1)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case col0, col1
+    }
+}

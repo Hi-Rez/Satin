@@ -478,6 +478,33 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         }
     }
     
+    public func set(_ name: String, _ value: simd_float2x2) {
+        if let param = parameters.get(name) as? Float2x2Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float2x2Parameter(name, value))
+        }
+    }
+    
+    public func set(_ name: String, _ value: simd_float3x3) {
+        if let param = parameters.get(name) as? Float3x3Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float3x3Parameter(name, value))
+        }
+    }
+    
+    public func set(_ name: String, _ value: simd_float4x4) {
+        if let param = parameters.get(name) as? Float4x4Parameter {
+            param.value = value
+        }
+        else {
+            parameters.append(Float4x4Parameter(name, value))
+        }
+    }
+    
     public func get(_ name: String) -> Parameter? {
         return parameters.get(name)
     }
