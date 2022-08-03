@@ -15,15 +15,10 @@ Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
         simd_float3 max = simd_make_float3(-INFINITY, -INFINITY, -INFINITY);
         for (int i = 0; i < count; i++) {
             const Vertex *vertex = &vertices[i];
-            simd_float4 pos = vertex->position;
+            simd_float3 pos = vertex->position.xyz;
 
-            min.x = simd_min(pos.x, min.x);
-            min.y = simd_min(pos.y, min.y);
-            min.z = simd_min(pos.z, min.z);
-
-            max.x = simd_max(pos.x, max.x);
-            max.y = simd_max(pos.y, max.y);
-            max.z = simd_max(pos.z, max.z);
+            min = simd_min(pos, min);
+            max = simd_max(pos, max);
         }
         return (Bounds) { .min = min, .max = max };
     }
