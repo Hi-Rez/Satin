@@ -70,4 +70,20 @@ class BoundsTests: XCTestCase {
         XCTAssertEqual(computeBoundsFromVerticesAndTransform(&vertices3, 4, xform), Bounds(min: .init(1,1,1), max: .init(2,2,2)))
 
     }
+
+    func testTransformBounds() {
+
+        let xform0 = translationMatrixf(1, 1, 1)
+
+        XCTAssertEqual(transformBounds(Bounds(min: .init(1,1,1), max: .init(2,2,2)), xform0), Bounds(min: .init(2,2,2), max: .init(3,3,3)))
+
+        let xform1 = translationMatrixf(1, 0, 0)
+
+        XCTAssertEqual(transformBounds(Bounds(min: .init(1,1,1), max: .init(2,2,2)), xform1), Bounds(min: .init(2,1,1), max: .init(3,2,2)))
+
+        let xform2 = scaleMatrixf(2, 2, 2)
+
+        XCTAssertEqual(transformBounds(Bounds(min: .init(1,1,1), max: .init(2,2,2)), xform2), Bounds(min: .init(2,2,2), max: .init(4,4,4)))
+
+    }
 }
