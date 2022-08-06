@@ -135,7 +135,8 @@ class Renderer: Forge.Renderer, ARSessionDelegate {
             session.add(anchor: anchor)
             
             let mesh = Mesh(geometry: boxGeometry, material: boxMaterial)
-            mesh.onUpdate = {
+            mesh.onUpdate = { [weak mesh, weak anchor] in
+                guard let mesh = mesh, let anchor = anchor else { return }
                 mesh.localMatrix = anchor.transform
             }
             

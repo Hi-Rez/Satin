@@ -63,7 +63,8 @@ open class MetalFileCompiler
             }
             
             let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
-            watcher.onUpdate = { [unowned self] in
+            watcher.onUpdate = { [weak self] in
+                guard let self = self else { return }
                 self.onUpdate?()
             }
             watchers.append(watcher)

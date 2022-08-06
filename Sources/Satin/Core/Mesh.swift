@@ -83,7 +83,8 @@ open class Mesh: Object, Renderable, Intersectable {
     
     internal func setupGeometrySubscriber() {
         geometrySubscriber?.cancel()
-        geometrySubscriber = geometry.publisher.sink { [unowned self] _ in
+        geometrySubscriber = geometry.publisher.sink { [weak self] _ in
+            guard let self = self else { return }
             self.geometryPublisher.send(self)
             self._localBounds.clear()
         }

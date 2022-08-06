@@ -28,10 +28,7 @@ class Renderer: Forge.Renderer {
         return assetsURL.appendingPathComponent("Shaders.metal")
     }
     
-    lazy var postMaterial: PostMaterial = {
-        let material = PostMaterial(pipelineURL: pipelineURL)
-        return material
-    }()
+    lazy var postMaterial = PostMaterial(pipelineURL: pipelineURL)
     
     var renderTexture: MTLTexture?
     var material = BasicDiffuseMaterial(0.7)

@@ -28,7 +28,8 @@ class Renderer: Forge.Renderer {
         desc.magFilter = .nearest
         mat.sampler = context.device.makeSamplerState(descriptor: desc)
         
-        mat.onUpdate = { [unowned self] in
+        mat.onUpdate = { [weak self, weak mat] in
+            guard let self = self, let mat = mat else { return }
             mat.texture = self.audioInput.texture
         }
         return mat

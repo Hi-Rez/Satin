@@ -1,6 +1,6 @@
 //
 //  LiveTextureComputeSystem.swift
-//  Pods
+//  Satin
 //
 //  Created by Reza Ali on 11/12/21.
 //
@@ -73,7 +73,8 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
 
     open func setupCompiler() {
-        compiler.onUpdate = { [unowned self] in
+        compiler.onUpdate = { [weak self] in
+            guard let self = self else { return }
             self.source = nil
             self.source = self.compileSource()
             self.setupPipelines()

@@ -182,7 +182,7 @@ class LoadedMesh: Object, Renderable {
         super.update()
     }
 
-    func update(camera: Camera, viewport: simd_float4) {
+    override func update(camera: Camera, viewport: simd_float4) {
         material?.update(camera: camera)
         uniforms?.update(object: self, camera: camera, viewport: viewport)
     }

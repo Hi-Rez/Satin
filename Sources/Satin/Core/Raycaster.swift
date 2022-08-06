@@ -280,7 +280,8 @@ open class Raycaster {
             accelerationStructure = newAccelerationStructure
             accelerationStructures[intersectable.id] = newAccelerationStructure
             
-            let subscription = intersectable.geometryPublisher.sink { [unowned self] _ in
+            let subscription = intersectable.geometryPublisher.sink { [weak self] _ in
+                guard let self = self else { return }
                 self.accelerationStructures[intersectable.id] = nil
                 self.subscriptions[intersectable.id]?.cancel()
                 self.subscriptions[intersectable.id] = nil
