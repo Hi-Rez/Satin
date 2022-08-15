@@ -15,6 +15,7 @@ float degToRad(float degrees) { return degrees * M_PI / 180.0; }
 
 float radToDeg(float radians) { return radians * 180.0 / M_PI; }
 
+//deprecated("Use remap() instead.")
 float map(float input, float inMin, float inMax, float outMin, float outMax) {
     return ((input - inMin) / (inMax - inMin) * (outMax - outMin)) + outMin;
 }

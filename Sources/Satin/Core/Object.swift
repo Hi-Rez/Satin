@@ -37,7 +37,7 @@ open class Object: Codable, ObservableObject {
         try container.encode(children, forKey: .children)
     }
     
-    private enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case label
         case position
@@ -219,12 +219,22 @@ open class Object: Codable, ObservableObject {
     
     var _worldMatrix = ValueCache<matrix_float4x4>()
     public var worldMatrix: matrix_float4x4 {
-        _worldMatrix.get {
+        get {
+            _worldMatrix.get {
+                if let parent = parent {
+                    return simd_mul(parent.worldMatrix, localMatrix)
+                }
+                else {
+                    return localMatrix
+                }
+            }
+        }
+        set {
             if let parent = parent {
-                return simd_mul(parent.worldMatrix, localMatrix)
+                localMatrix = parent.worldMatrix.inverse * newValue
             }
             else {
-                return localMatrix
+                localMatrix = newValue
             }
         }
     }
@@ -271,6 +281,16 @@ open class Object: Codable, ObservableObject {
     }
     
     open func update(camera: Camera, viewport: simd_float4) {}
+    
+    open func insert(child: Object, at: Int, setParent: Bool = true) {
+        if !children.contains(where: { $0 === child }) {
+            if setParent {
+                child.parent = self
+            }
+            child.context = context
+            children.insert(child, at: at)
+        }
+    }
     
     open func add(_ child: Object, _ setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
@@ -341,8 +361,12 @@ open class Object: Codable, ObservableObject {
             if child.id == id {
                 return child
             }
-            else if recursive, let found = child.getChildById(id, recursive) {
-                return found
+        }
+        if recursive {
+            for child in children {
+                if let found = child.getChildById(id, recursive) {
+                    return found
+                }
             }
         }
         return nil
