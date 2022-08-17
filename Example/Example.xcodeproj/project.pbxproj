@@ -80,20 +80,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		66E6788C243EC73A0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E6788E243EC73B0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		66E67893243EC73B0070B294 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		66E67894243EC73B0070B294 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
-		66E678A0243EC8FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678A9243EC8FE0070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		66E678B8243EC9FD0070B294 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66E678E5243EE7670070B294 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E105CC36252BDE7F009EE563 /* FXAARenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXAARenderer.swift; sourceTree = "<group>"; };
 		E10CC20327F128ED00E04B2B /* Satin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Satin; path = ..; sourceTree = "<group>"; };
 		E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatinSceneKitRenderer.swift; sourceTree = "<group>"; };
-		E124FB3F243F8E5100380783 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
-		E124FB41243F8F7900380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E124FB43243F8F9600380783 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E129CCB5252009CC009B237A /* ARRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARRenderer.swift; sourceTree = "<group>"; };
 		E129CCDE25200A57009B237A /* ARRenderer+AR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARRenderer+AR.swift"; sourceTree = "<group>"; };
 		E129CE21252011E4009B237A /* ARRenderer+Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARRenderer+Background.swift"; sourceTree = "<group>"; };
@@ -129,7 +118,6 @@
 		E1D714D728A6BADA00B517B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1D714D928A6BADA00B517B6 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		E1D714DB28A6BADA00B517B6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1DED19727B4D7F4008C9F1F /* ShippingShadersRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingShadersRenderer.swift; sourceTree = "<group>"; };
 		E1DED1B227B4DA28008C9F1F /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		E1DED1BA27B50A11008C9F1F /* Helper.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Helper.metal; sourceTree = "<group>"; };
@@ -186,7 +174,6 @@
 			children = (
 				E10CC11327F105CE00E04B2B /* Packages */,
 				E1E767D828A6D808005D75AB /* Assets */,
-				E17955EF243FA80800B0D2F4 /* Source */,
 				E1D714D228A6BADA00B517B6 /* Example */,
 				66E6788A243EC73A0070B294 /* Products */,
 				E10CC11827F1061100E04B2B /* Frameworks */,
@@ -199,39 +186,6 @@
 				E1D714D128A6BAD900B517B6 /* Example.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		66E6788B243EC73A0070B294 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				66E67893243EC73B0070B294 /* Info.plist */,
-				66E6788E243EC73B0070B294 /* Assets.xcassets */,
-				66E6788C243EC73A0070B294 /* AppDelegate.swift */,
-				66E67894243EC73B0070B294 /* Example.entitlements */,
-				E124FB3F243F8E5100380783 /* MainMenu.xib */,
-			);
-			path = macOS;
-			sourceTree = "<group>";
-		};
-		66E6789F243EC8FD0070B294 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				E124FB41243F8F7900380783 /* Info.plist */,
-				66E678A9243EC8FE0070B294 /* Assets.xcassets */,
-				66E678A0243EC8FD0070B294 /* AppDelegate.swift */,
-				E1D95E5B244C0439008F4AB7 /* LaunchScreen.storyboard */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
-		66E678B7243EC9FD0070B294 /* tvOS */ = {
-			isa = PBXGroup;
-			children = (
-				E124FB43243F8F9600380783 /* Info.plist */,
-				66E678E5243EE7670070B294 /* Assets.xcassets */,
-				66E678B8243EC9FD0070B294 /* AppDelegate.swift */,
-			);
-			path = tvOS;
 			sourceTree = "<group>";
 		};
 		66E678CD243EE2190070B294 /* Renderers */ = {
@@ -309,16 +263,6 @@
 				E1891B0D2494461200E6F04E /* PBRRenderer+Compute.swift */,
 			);
 			path = PBR;
-			sourceTree = "<group>";
-		};
-		E17955EF243FA80800B0D2F4 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				66E678B7243EC9FD0070B294 /* tvOS */,
-				66E6788B243EC73A0070B294 /* macOS */,
-				66E6789F243EC8FD0070B294 /* iOS */,
-			);
-			path = Source;
 			sourceTree = "<group>";
 		};
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
