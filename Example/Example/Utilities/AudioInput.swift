@@ -24,18 +24,15 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     
     var cancellables = Set<AnyCancellable>()
     
-    public var info: [StringParameter] = []
-    public var infoMap: [String: StringParameter] = [:]
-    
     public weak var context: Satin.Context?
     public var texture: MTLTexture?
     
-    public var inputs: [String] = []
-    
-    public lazy var input = StringParameter("Input", "", inputs, .dropdown)
-    public var rmsTextureTypes: [String] = ["RMS", "RMS-Smoothed", "Normalized-Level", "Separate-Channel"]
-    public lazy var rmsTextureType = StringParameter("RMS Texture", "rms-smoothed", rmsTextureTypes, .dropdown)
     public var windowTypes: [String] = ["Hanning-N", "Hanning-D", "Hamming", "Blackman", "None"]
+    public var rmsTextureTypes: [String] = ["RMS", "RMS-Smoothed", "Normalized-Level", "Separate-Channel"]
+    
+    public lazy var inputs: [String] = getInputDeviceNames()
+    public lazy var input = StringParameter("Input", inputs.first!, inputs, .dropdown)
+    public lazy var rmsTextureType = StringParameter("RMS Texture", "rms-smoothed", rmsTextureTypes, .dropdown)
     public lazy var window = StringParameter("Spectrum Filter", "Blackman", windowTypes, .dropdown)
     public lazy var fftSmoothing = FloatParameter("Spectrum Smoothing", 0.975, .slider)
     
@@ -86,32 +83,22 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         setup()
     }
     
-    func setInfo(_ label: String, _ value: String) {
-        if let param = infoMap[label] {
-            if param.value != value {
-                param.value = value
-            }
-        }
-        else {
-            let param = StringParameter(label, value, .label)
-            info.append(param)
-            infoMap[label] = param
-        }
-    }
-    
     public func setup() {
+        print("setup audio input")
         setupInputList()
         setupPermissions()
         setWindowType()
         setSmoothing()
         setupObservers()
-        initInfo()
     }
     
     func setupObservers()
     {
         input.$value.sink { [weak self] value in
-            self?.setupCapture()
+            guard let self = self else { return }
+            if self.input.value != value {
+                self.setupCapture()
+            }
         }.store(in: &cancellables)
         
         fftSmoothing.$value.sink { [weak self] value in
@@ -182,14 +169,18 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     func setupPermissions() {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
         case .authorized:
+            print("authorized")
             setupCapture()
         case .notDetermined:
+            print("notDetermined")
             AVCaptureDevice.requestAccess(for: .audio) { [unowned self] granted in
                 if granted {
+                    print("granted & authorized")
                     self.setupCapture()
                 }
             }
         case .denied:
+            print("denied")
             AVCaptureDevice.requestAccess(for: .audio) { [unowned self] granted in
                 if granted {
                     self.setupCapture()
@@ -197,6 +188,7 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             }
             return
         case .restricted: // The user can't grant access due to restrictions.
+            print("restricted")
             return
         default:
             return
@@ -216,6 +208,8 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     }
     
     func setupCapture() {
+        print("setup capture: \(input.value)")
+        
         guard let inputDevice = getInputDevice(input.value) else { return }
         
         var newInputCaptureDevice: AVCaptureDeviceInput? = nil
@@ -228,11 +222,8 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
                 
         guard let newCaptureInput = newInputCaptureDevice else { return }
         
-        
-        if let captureInput = self.captureInput {
-            if captureSession.inputs.contains(captureInput) {
-                captureSession.removeInput(captureInput)
-            }
+        if let captureInput = self.captureInput, captureSession.inputs.contains(captureInput) {
+            captureSession.removeInput(captureInput)
         }
     
         guard captureSession.canAddInput(newCaptureInput) else {
@@ -246,6 +237,7 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         captureInput = newCaptureInput
         if captureSession.isRunning {
             captureSession.commitConfiguration()
+            print("commitConfiguration")
         }
         else {
             captureSessionQueue = DispatchQueue(label: "AudioSessionQueue", attributes: [])
@@ -254,6 +246,7 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             captureSession.addOutput(outputData)
             captureSession.commitConfiguration()
             captureSession.startRunning()
+            print("starting to run")
         }
     }
     
@@ -314,7 +307,6 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             }
             
             DispatchQueue.main.async { [unowned self] in
-                self.setupInfo()
                 for (index, fft) in self.ffts.enumerated() {
                     self.delegate?.updatedSpectrum(microphone: self, spectrum: fft.getSpectrum(), channel: index)
                 }
@@ -398,22 +390,7 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         
         texture = tmp
     }
-        
-    func initInfo() {
-        setInfo("Type", "Microphone")
-        setInfo("Size", "")
-        setInfo("Channels", "1")
-        setInfo("Bit Depth", "32")
-        setInfo("Data Type", "Float")
-    }
-    
-    func setupInfo() {
-        if let texture = self.texture {
-            setInfo("Size", "\(Int(texture.width)) x \(Int(texture.height))")
-            setInfo("Channels", "\(numberOfChannels)")
-        }
-    }
-    
+
     deinit {
         audioBuffers = []
         outputData.setSampleBufferDelegate(nil, queue: nil)

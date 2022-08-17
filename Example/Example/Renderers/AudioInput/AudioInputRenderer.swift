@@ -13,11 +13,7 @@ import Forge
 import Satin
 
 class AudioInputRenderer: Forge.Renderer {
-    lazy var audioInput: AudioInput = {
-        let audioInput = AudioInput(context: context)
-        audioInput.input.value = "Loopback Audio"
-        return audioInput
-    }()
+    lazy var audioInput: AudioInput = AudioInput(context: context)
     
     lazy var audioMaterial: BasicTextureMaterial = {
         let mat = BasicTextureMaterial()
@@ -35,11 +31,7 @@ class AudioInputRenderer: Forge.Renderer {
         return mat
     }()
     
-    lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 700), material: audioMaterial)
-        mesh.label = "Quad"
-        return mesh
-    }()
+    lazy var mesh: Mesh = Mesh(geometry: PlaneGeometry(size: 700), material: audioMaterial)
     
     var camera = OrthographicCamera()
     
