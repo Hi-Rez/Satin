@@ -48,7 +48,14 @@ open class Renderer
             {
                 let width = Double(size.width)
                 let height = Double(size.height)
-                viewport = MTLViewport(originX: 0.0, originY: 0.0, width: width, height: height, znear: 0.0, zfar: 1.0)
+                viewport = MTLViewport(
+                    originX: 0.0,
+                    originY: 0.0,
+                    width: width,
+                    height: height,
+                    znear: invertViewportNearFar ? 1.0 : 0.0,
+                    zfar: invertViewportNearFar ? 0.0 : 1.0
+                )
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true
@@ -57,9 +64,12 @@ open class Renderer
     }
     
     public var clearColor: MTLClearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
+    public var clearDepth: Double = 0.0
+    public var clearStencil: UInt32 = 0
     
     public var updateColorTexture: Bool = true
     public var colorTexture: MTLTexture?
+    
     public var colorLoadAction: MTLLoadAction = .clear
     public var colorStoreAction: MTLStoreAction = .store
     
@@ -68,14 +78,12 @@ open class Renderer
     
     public var depthLoadAction: MTLLoadAction = .clear
     public var depthStoreAction: MTLStoreAction = .dontCare
-    public var clearDepth: Double = 0.0
     
     public var updateStencilTexture: Bool = true
     public var stencilTexture: MTLTexture?
     
     public var stencilLoadAction: MTLLoadAction = .clear
     public var stencilStoreAction: MTLStoreAction = .dontCare
-    public var clearStencil: UInt32 = 0
     
     public var viewport = MTLViewport()
     {
@@ -89,6 +97,8 @@ open class Renderer
             )
         }
     }
+    
+    public var invertViewportNearFar: Bool = false
     
     private var _viewport: simd_float4 = .zero
     

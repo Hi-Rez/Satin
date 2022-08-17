@@ -140,7 +140,6 @@ open class Raycaster {
     }
     
     deinit {
-//        subscriptions.removeAll()
         accelerationStructures = [:]
         intersector = nil
         commandQueue = nil
