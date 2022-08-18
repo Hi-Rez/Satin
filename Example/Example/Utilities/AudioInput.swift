@@ -256,12 +256,16 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             }
             
             let numSamples = CMSampleBufferGetNumSamples(sampleBuffer)
-            if numberOfSamples != numSamples, isPowerOfTwo(numSamples) {
-                numberOfSamples = numSamples
+            if isPowerOfTwo(numSamples) {
+                if numberOfSamples != numSamples {
+                    numberOfSamples = numSamples
+                }
             }
             else {
                 print("Number of samples is not a power of two: \(numSamples)")
             }
+            
+            
             
             guard numberOfSamples > 0 else { return }
             if resizeTexture {
@@ -300,7 +304,8 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
                 }
             }
             
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 for (index, fft) in self.ffts.enumerated() {
                     self.delegate?.updatedSpectrum(microphone: self, spectrum: fft.getSpectrum(), channel: index)
                 }

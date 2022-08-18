@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-public class GenericParameter<T: Codable>: ValueParameter {
+public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
     public typealias ValueType = T
 
     // Delegate

@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class InstancingRenderer: Forge.Renderer, ObservableObject {
+class InstancingRenderer: Forge.Renderer {
     class InstanceMaterial: LiveMaterial {}
     
     // MARK: - Paths
@@ -48,7 +48,7 @@ class InstancingRenderer: Forge.Renderer, ObservableObject {
     lazy var mesh = Mesh(geometry: QuadGeometry(), material: instanceMaterial)
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView)
+    lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView, defaultZoom: 2.0)
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
     override func setupMtkView(_ metalKitView: MTKView) {

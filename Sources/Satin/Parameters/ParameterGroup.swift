@@ -19,7 +19,7 @@ public protocol ParameterGroupDelegate: AnyObject {
     func cleared(group: ParameterGroup)
 }
 
-open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate {
+open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, ObservableObject {
     public var description: String {
         var dsc = "\(type(of: self)): \(label)\n"
         for param in params {
@@ -132,6 +132,9 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate {
             }
             else if let p = param as? BoolParameter {
                 append(BoolParameter(label, p.value, p.controlType))
+            }
+            else if let p = param as? Float2x2Parameter {
+                append(Float2x2Parameter(label, p.value, p.controlType))
             }
             else if let p = param as? Float3x3Parameter {
                 append(Float3x3Parameter(label, p.value, p.controlType))
@@ -597,6 +600,7 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate {
     }
 
     public func updated(parameter: Parameter) {
+        objectWillChange.send()
         _updateData = true
         delegate?.update(parameter: parameter, from: self)
     }

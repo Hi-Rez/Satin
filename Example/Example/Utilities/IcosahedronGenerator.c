@@ -6,7 +6,7 @@
 //  Copyright © 2020 Hi-Rez. All rights reserved.
 //
 
-#include "Icosahedron.h"
+#include "IcosahedronGenerator.h"
 
 #include <malloc/_malloc.h>
 #include <simd/simd.h>

@@ -93,14 +93,14 @@ class Renderer3D: Forge.Renderer {
     #elseif os(iOS)
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let first = touches.first {
-            let point = first.location(in: mtkView)
-            let size = mtkView.frame.size
-            let pt = normalizePoint(point, size)
+            let pt = normalizePoint(first.location(in: mtkView), mtkView.frame.size)
             raycaster.setFromCamera(camera, pt)
             let results = raycaster.intersect(scene, true)
             for result in results {
                 print(result.object.label)
                 print(result.position)
+                intersectionMesh.position = result.position
+                intersectionMesh.visible = true
             }
         }
     }

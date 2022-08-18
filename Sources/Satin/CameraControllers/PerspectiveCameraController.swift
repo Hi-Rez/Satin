@@ -154,9 +154,8 @@ open class PerspectiveCameraController: CameraController {
     
     func setup() {
         guard let camera = camera else { return }
-        target.orientation = defaultOrientation
-        camera.orientation = simd_quatf(matrix_identity_float4x4)
-        camera.position = [0, 0, simd_length(defaultPosition)]
+        camera.orientation = defaultOrientation
+        camera.position = defaultPosition
         enable()
     }
     
@@ -166,6 +165,9 @@ open class PerspectiveCameraController: CameraController {
         halt()
         
         if let camera = camera {
+            target.orientation = camera.orientation
+            camera.position = [0, 0, simd_length(camera.worldPosition - target.worldPosition)]
+            camera.orientation = simd_quatf(matrix_identity_float4x4)
             target.add(camera)
         }
         
@@ -188,7 +190,9 @@ open class PerspectiveCameraController: CameraController {
         halt()
         
         if let camera = camera {
+            let cameraWorldMatrix = camera.worldMatrix
             target.remove(camera)
+            camera.localMatrix = cameraWorldMatrix
         }
         
         #if os(iOS)
@@ -321,7 +325,7 @@ open class PerspectiveCameraController: CameraController {
             reset()
         }
         else {
-            let result = arcballPoint(event.locationInWindow, view.frame.size)
+            let result = arcballPoint(view.convert(event.locationInWindow, from: nil), view.frame.size)
             previouArcballPoint = result.point
             insideArcBall = result.inside
             state = .rotating
@@ -331,7 +335,7 @@ open class PerspectiveCameraController: CameraController {
     override open func mouseDragged(with event: NSEvent) {
         guard let view = view, event.window == view.window else { return }
         if state == .rotating {
-            let result = arcballPoint(event.locationInWindow, view.frame.size)
+            let result = arcballPoint(view.convert(event.locationInWindow, from: nil), view.frame.size)
             let point = result.point
             let inside = result.inside
             
