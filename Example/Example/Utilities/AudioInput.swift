@@ -84,7 +84,6 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     }
     
     public func setup() {
-        print("setup audio input")
         setupInputList()
         setupPermissions()
         setWindowType()
@@ -169,18 +168,14 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     func setupPermissions() {
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
         case .authorized:
-            print("authorized")
             setupCapture()
         case .notDetermined:
-            print("notDetermined")
             AVCaptureDevice.requestAccess(for: .audio) { [unowned self] granted in
                 if granted {
-                    print("granted & authorized")
                     self.setupCapture()
                 }
             }
         case .denied:
-            print("denied")
             AVCaptureDevice.requestAccess(for: .audio) { [unowned self] granted in
                 if granted {
                     self.setupCapture()
@@ -188,7 +183,6 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             }
             return
         case .restricted: // The user can't grant access due to restrictions.
-            print("restricted")
             return
         default:
             return
@@ -208,8 +202,6 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     }
     
     func setupCapture() {
-        print("setup capture: \(input.value)")
-        
         guard let inputDevice = getInputDevice(input.value) else { return }
         
         var newInputCaptureDevice: AVCaptureDeviceInput? = nil
@@ -237,7 +229,6 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         captureInput = newCaptureInput
         if captureSession.isRunning {
             captureSession.commitConfiguration()
-            print("commitConfiguration")
         }
         else {
             captureSessionQueue = DispatchQueue(label: "AudioSessionQueue", attributes: [])
@@ -245,8 +236,9 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             guard captureSession.canAddOutput(outputData) else { return }
             captureSession.addOutput(outputData)
             captureSession.commitConfiguration()
-            captureSession.startRunning()
-            print("starting to run")
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.captureSession.startRunning()
+            }
         }
     }
     
@@ -267,9 +259,11 @@ class AudioInput: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
             if numberOfSamples != numSamples, isPowerOfTwo(numSamples) {
                 numberOfSamples = numSamples
             }
+            else {
+                print("Number of samples is not a power of two: \(numSamples)")
+            }
             
             guard numberOfSamples > 0 else { return }
-                                    
             if resizeTexture {
                 resize()
             }

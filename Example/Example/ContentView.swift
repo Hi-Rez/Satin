@@ -45,13 +45,13 @@ struct ContentView: View {
                     NavigationLink(destination: DepthMaterialRendererView()) {
                         Label("Depth Material", systemImage: "rectangle.stack")
                     }
-                    
-                    NavigationLink(destination: ExportGeometryRendererView()) {
-                        Label("Export Geometry", systemImage: "square.and.arrow.up")
-                    }
                 }
                 
                 Group {
+                    NavigationLink(destination: ExportGeometryRendererView()) {
+                        Label("Export Geometry", systemImage: "square.and.arrow.up")
+                    }
+                    
                     NavigationLink(destination: CustomGeometryRendererView()) {
                         Label("Custom Geometry", systemImage: "network")
                     }
@@ -76,7 +76,9 @@ struct ContentView: View {
                     NavigationLink(destination: CubemapRendererView()) {
                         Label("Cubemap", systemImage: "map")
                     }
-                    
+                }
+                
+                Group {
                     NavigationLink(destination: MatcapRendererView()) {
                         Label("Matcap", systemImage: "graduationcap")
                     }
@@ -92,9 +94,11 @@ struct ContentView: View {
                     NavigationLink(destination: RayMarchingRendererView()) {
                         Label("Ray Marching", systemImage: "camera.metering.multispot")
                     }
-                }
-                
-                Group {
+                    
+                    NavigationLink(destination: InstancingRendererView()) {
+                        Label("Instancing", systemImage: "square.grid.3x3")
+                    }
+                    
                     NavigationLink(destination: LiveCodeRendererView()) {
                         Label("Live Code", systemImage: "doc.text")
                     }
@@ -102,13 +106,15 @@ struct ContentView: View {
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
-                    
+
 #if os(iOS)
                     NavigationLink(destination: SatinSceneKitARRendererView()) {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
 #endif
-                    
+                }
+
+                Group {
                     NavigationLink(destination: FXAARendererView()) {
                         Label("FXAA", systemImage: "squareshape.split.2x2.dotted")
                     }
@@ -125,7 +131,6 @@ struct ContentView: View {
                         Label("Audio Input", systemImage: "mic")
                     }
                 }
-                
             }
             .navigationTitle("Satin Examples")
         }
