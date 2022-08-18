@@ -60,6 +60,10 @@ struct ContentView: View {
                         Label("Buffer Compute", systemImage: "aqi.medium")
                     }
                     
+                    NavigationLink(destination: FlockingRendererView()) {
+                        Label("Flocking Particles", systemImage: "bird")
+                    }
+                    
                     NavigationLink(destination: TextureComputeRendererView()) {
                         Label("Texture Compute", systemImage: "photo.stack")
                     }
@@ -88,13 +92,13 @@ struct ContentView: View {
                     NavigationLink(destination: RayMarchingRendererView()) {
                         Label("Ray Marching", systemImage: "camera.metering.multispot")
                     }
-                    
-                    NavigationLink(destination: LiveCodeRendererView()) {
-                        Label("Live Code", systemImage: "doc.text")
-                    }
                 }
                 
                 Group {
+                    NavigationLink(destination: LiveCodeRendererView()) {
+                        Label("Live Code", systemImage: "doc.text")
+                    }
+                    
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }

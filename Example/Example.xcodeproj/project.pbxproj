@@ -77,6 +77,8 @@
 		E1E7681228A73683005D75AB /* AudioInputRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B058F26BB704100D91376 /* AudioInputRenderer.swift */; };
 		E1E7681328A736BB005D75AB /* AudioInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17D2C1126BBB7DF005A136A /* AudioInput.swift */; };
 		E1E7681528A736D0005D75AB /* Spectra in Frameworks */ = {isa = PBXBuildFile; productRef = E1E7681428A736D0005D75AB /* Spectra */; };
+		E1E7685128ADAF6F005D75AB /* FlockingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */; };
+		E1E7685328ADB23B005D75AB /* FlockingRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,6 +150,8 @@
 		E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexAttributesRendererView.swift; sourceTree = "<group>"; };
 		E1E7680E28A73265005D75AB /* SatinSceneKitARRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatinSceneKitARRendererView.swift; sourceTree = "<group>"; };
 		E1E7681028A73661005D75AB /* AudioInputRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputRendererView.swift; sourceTree = "<group>"; };
+		E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRenderer.swift; sourceTree = "<group>"; };
+		E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRendererView.swift; sourceTree = "<group>"; };
 		E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchingRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32324BAA91F00563923 /* TextRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32724BAA93300563923 /* Renderer3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer3D.swift; sourceTree = "<group>"; };
@@ -191,6 +195,7 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
+				E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E105CC36252BDE7F009EE563 /* FXAARenderer.swift */,
@@ -348,6 +353,7 @@
 				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
 				E1E7680E28A73265005D75AB /* SatinSceneKitARRendererView.swift */,
 				E1E7681028A73661005D75AB /* AudioInputRendererView.swift */,
+				E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -440,7 +446,9 @@
 				E1E767FF28A6FD6A005D75AB /* TextureComputeRenderer.swift in Sources */,
 				E1E767E028A6E7DD005D75AB /* CubemapRendererView.swift in Sources */,
 				E17A55B628A6C44A008F1DDB /* Helper.metal in Sources */,
+				E1E7685328ADB23B005D75AB /* FlockingRendererView.swift in Sources */,
 				E1E767D628A6D7D9005D75AB /* BufferComputeRendererView.swift in Sources */,
+				E1E7685128ADAF6F005D75AB /* FlockingRenderer.swift in Sources */,
 				E1E767EF28A6EC6F005D75AB /* LoadObjRenderer.swift in Sources */,
 				E1E767EB28A6EA0B005D75AB /* MatcapRendererView.swift in Sources */,
 				E1E767D728A6D7F8005D75AB /* BufferComputeRenderer.swift in Sources */,
