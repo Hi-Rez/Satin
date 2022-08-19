@@ -282,7 +282,7 @@ open class Object: Codable, ObservableObject {
     
     open func update(camera: Camera, viewport: simd_float4) {}
     
-    open func insert(child: Object, at: Int, setParent: Bool = true) {
+    open func insert(_ child: Object, at: Int, setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
             if setParent {
                 child.parent = self
