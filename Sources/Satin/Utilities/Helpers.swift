@@ -9,7 +9,7 @@ import Foundation
 
 public func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Mesh] {
     var results: [Mesh] = []
-    if invisible || object.visible {
+    if invisible || object.isVisible() {
         if let mesh = object as? Mesh {
             results.append(mesh)
         }
@@ -25,7 +25,7 @@ public func getMeshes(_ object: Object, _ recursive: Bool, _ invisible: Bool) ->
 
 public func getRenderables(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Renderable] {
     var results: [Renderable] = []
-    if invisible || object.visible {
+    if invisible || object.isVisible() {
         if let renderable = object as? Renderable {
             results.append(renderable)
         }
@@ -41,7 +41,7 @@ public func getRenderables(_ object: Object, _ recursive: Bool, _ invisible: Boo
 
 public func getIntersectables(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Intersectable] {
     var results: [Intersectable] = []
-    if invisible || object.visible {
+    if invisible || object.isVisible() {
         if let intersectable = object as? Intersectable, intersectable.intersectable {
             results.append(intersectable)
         }
