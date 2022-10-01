@@ -586,6 +586,7 @@ public extension Material {
     }
     
     func updatedParameters(shader: Shader) {
+        print(shader.parameters)
         parameters.setFrom(shader.parameters)
         parameters.label = shader.parameters.label
         uniformsNeedsUpdate = true

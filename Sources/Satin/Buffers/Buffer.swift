@@ -9,7 +9,7 @@ import Metal
 
 open class Buffer {
     public var buffer: MTLBuffer!
-    public weak var parameters: ParameterGroup!
+    public var parameters: ParameterGroup!
 
     init() {}
 

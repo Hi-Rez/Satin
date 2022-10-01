@@ -105,27 +105,27 @@ open class Object: Codable, ObservableObject {
     }
     
     public var forwardDirection: simd_float3 {
-        return simd_normalize(orientationMatrix * Satin.worldForwardDirection)
+        return simd_normalize(orientation.act(Satin.worldForwardDirection))
     }
     
     public var upDirection: simd_float3 {
-        return simd_normalize(orientationMatrix * Satin.worldUpDirection)
+        return simd_normalize(orientation.act(Satin.worldUpDirection))
     }
     
     public var rightDirection: simd_float3 {
-        return simd_normalize(orientationMatrix * Satin.worldRightDirection)
+        return simd_normalize(orientation.act(Satin.worldRightDirection))
     }
     
     public var worldForwardDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldForwardDirection)
+        return simd_normalize(worldOrientation.act(Satin.worldForwardDirection))
     }
     
     public var worldUpDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldUpDirection)
+        return simd_normalize(worldOrientation.act(Satin.worldUpDirection))
     }
     
     public var worldRightDirection: simd_float3 {
-        return simd_normalize(simd_matrix3x3(worldOrientation) * Satin.worldRightDirection)
+        return simd_normalize(worldOrientation.act(Satin.worldRightDirection))
     }
     
     open weak var parent: Object? {
@@ -338,6 +338,10 @@ open class Object: Codable, ObservableObject {
                 return
             }
         }
+    }
+    
+    open func removeFromParent() {
+        parent?.remove(self)
     }
     
     open func removeAll() {
