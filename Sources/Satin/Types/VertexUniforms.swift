@@ -13,6 +13,7 @@ public struct VertexUniforms {
     public var viewMatrix: float4x4
     public var modelViewMatrix: float4x4
     public var projectionMatrix: float4x4
+    public var viewProjectionMatrix: float4x4
     public var modelViewProjectionMatrix: float4x4
     public var inverseModelViewProjectionMatrix: float4x4
     public var inverseViewMatrix: float4x4

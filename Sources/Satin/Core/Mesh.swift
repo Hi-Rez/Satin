@@ -133,6 +133,16 @@ open class Mesh: Object, Renderable, Intersectable {
         draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
     
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+        bindDrawingStates(renderEncoder)
+    }
+    
+    open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setFrontFacing(geometry.windingOrder)
+        renderEncoder.setCullMode(cullMode)
+        renderEncoder.setTriangleFillMode(triangleFillMode)
+    }
+
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard instanceCount > 0,
               let vertexBuffer = geometry.vertexBuffer,
@@ -142,11 +152,11 @@ open class Mesh: Object, Renderable, Intersectable {
         else { return }
         
         preDraw?(renderEncoder)
-        
+
         material.bind(renderEncoder)
-        renderEncoder.setFrontFacing(geometry.windingOrder)
-        renderEncoder.setCullMode(cullMode)
-        renderEncoder.setTriangleFillMode(triangleFillMode)
+        
+        self.bind(renderEncoder)
+
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
         

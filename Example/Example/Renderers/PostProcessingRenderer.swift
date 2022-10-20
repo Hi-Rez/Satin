@@ -13,7 +13,7 @@ import simd
 import Forge
 import Satin
 
-class PostProcessingRenderer: Forge.Renderer {
+class PostProcessingRenderer: BaseRenderer {
     var size = simd_int2(repeating: 0)
     
     class PostMaterial: LiveMaterial {}

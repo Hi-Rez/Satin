@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class FXAARenderer: Forge.Renderer {
+class FXAARenderer: BaseRenderer {
     class FxaaMaterial: LiveMaterial {}
     
     var assetsURL: URL {

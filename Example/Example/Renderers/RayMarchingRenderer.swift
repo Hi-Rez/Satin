@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class RayMarchingRenderer: Forge.Renderer {
+class RayMarchingRenderer: BaseRenderer {
     
     class RayMarchedMaterial: LiveMaterial {
         var camera: PerspectiveCamera?

@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class VertexAttributesRenderer: Forge.Renderer {
+class VertexAttributesRenderer: BaseRenderer {
     #if os(macOS) || os(iOS)
     lazy var raycaster = Raycaster(device: device)
     #endif

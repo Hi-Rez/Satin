@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class OctasphereRenderer: Forge.Renderer {
+class OctasphereRenderer: BaseRenderer {
     #if os(macOS) || os(iOS)
     lazy var raycaster: Raycaster = {
         Raycaster(device: device)

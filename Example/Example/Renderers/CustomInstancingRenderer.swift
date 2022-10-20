@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class InstancingRenderer: Forge.Renderer {
+class CustomInstancingRenderer: BaseRenderer {
     class InstanceMaterial: LiveMaterial {}
     
     // MARK: - Paths

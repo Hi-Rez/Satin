@@ -13,13 +13,25 @@ typedef struct {
 } BasicDiffuseUniforms;
 
 vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
-                                            constant VertexUniforms &vertexUniforms
-                                            [[buffer(VertexBufferVertexUniforms)]]) {
-
-    const float3 normal = normalize(vertexUniforms.normalMatrix * in.normal);
-    const float4 screenSpaceNormal = vertexUniforms.viewMatrix * float4(normal, 0.0);
-    DiffuseVertexData out;
+#if INSTANCING
+                                            uint instanceID [[instance_id]],
+                                            constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
+#endif
+                                            constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]) {
+#if INSTANCING
+    const float3x3 normalMatrix = instanceUniforms[instanceID].normalMatrix;
+    const float4x4 modelMatrix = instanceUniforms[instanceID].modelMatrix;
+    
+    const float4 viewPosition = vertexUniforms.viewMatrix * modelMatrix * in.position;
+    const float3 normal = normalMatrix * in.normal;
+#else
     const float4 viewPosition = vertexUniforms.modelViewMatrix * in.position;
+    const float3 normal = vertexUniforms.normalMatrix * in.normal;
+#endif
+    
+    const float4 screenSpaceNormal = vertexUniforms.viewMatrix * float4(normal, 0.0);
+    
+    DiffuseVertexData out;
     out.viewPosition = viewPosition.xyz;
     out.position = vertexUniforms.projectionMatrix * viewPosition;
     out.normal = screenSpaceNormal.xyz;

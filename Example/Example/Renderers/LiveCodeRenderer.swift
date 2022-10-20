@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class LiveCodeRenderer: Forge.Renderer {
+class LiveCodeRenderer: BaseRenderer {
     // Material names must not be the target name, i.e. LiveCodeMaterial won't work
     
     class CustomMaterial: LiveMaterial {}

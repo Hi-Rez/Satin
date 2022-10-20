@@ -18,18 +18,19 @@ typedef enum VertexAttribute {
 typedef enum VertexBufferIndex {
     VertexBufferVertices = 0,
     VertexBufferVertexUniforms = 1,
-    VertexBufferMaterialUniforms = 2,
-    VertexBufferCustom0 = 3,
-    VertexBufferCustom1 = 4,
-    VertexBufferCustom2 = 5,
-    VertexBufferCustom3 = 6,
-    VertexBufferCustom4 = 7,
-    VertexBufferCustom5 = 8,
-    VertexBufferCustom6 = 9,
-    VertexBufferCustom7 = 10,
-    VertexBufferCustom8 = 11,
-    VertexBufferCustom9 = 12,
-    VertexBufferCustom10 = 13
+    VertexBufferInstanceMatrixUniforms = 2,
+    VertexBufferMaterialUniforms = 3,
+    VertexBufferCustom0 = 4,
+    VertexBufferCustom1 = 5,
+    VertexBufferCustom2 = 6,
+    VertexBufferCustom3 = 7,
+    VertexBufferCustom4 = 8,
+    VertexBufferCustom5 = 9,
+    VertexBufferCustom6 = 10,
+    VertexBufferCustom7 = 11,
+    VertexBufferCustom8 = 12,
+    VertexBufferCustom9 = 13,
+    VertexBufferCustom10 = 14
 } VertexBufferIndex;
 
 typedef enum VertexTextureIndex {

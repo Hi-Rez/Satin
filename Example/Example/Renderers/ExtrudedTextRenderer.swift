@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class ExtrudedTextRenderer: Forge.Renderer {
+class ExtrudedTextRenderer: BaseRenderer {
     var scene = Object()
     var mesh: Mesh!
     

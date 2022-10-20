@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class AudioInputRenderer: Forge.Renderer {
+class AudioInputRenderer: BaseRenderer {
     lazy var audioInput: AudioInput = AudioInput(context: context)
     
     lazy var audioMaterial: BasicTextureMaterial = {

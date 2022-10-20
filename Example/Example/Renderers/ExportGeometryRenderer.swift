@@ -13,7 +13,7 @@ import ModelIO
 import Forge
 import Satin
 
-class ExportGeometryRenderer: Forge.Renderer {
+class ExportGeometryRenderer: BaseRenderer {
     lazy var material = BasicDiffuseMaterial(0.9)
     
     lazy var metal: Mesh = {

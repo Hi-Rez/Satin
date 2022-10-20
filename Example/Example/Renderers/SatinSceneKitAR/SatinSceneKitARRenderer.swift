@@ -14,7 +14,7 @@ import MetalKit
 import Forge
 import Satin
 
-class SatinSceneKitARRenderer: Forge.Renderer, ARSessionDelegate {
+class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
     class BackgroundMaterial: LiveMaterial {}
     
     // MARK: - Paths

@@ -15,11 +15,17 @@ typedef struct {
 } DepthUniforms;
 
 vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
-                                   constant VertexUniforms &vertexUniforms
-                                   [[buffer(VertexBufferVertexUniforms)]],
-                                   constant DepthUniforms &uniforms
-                                   [[buffer(VertexBufferMaterialUniforms)]]) {
+#if INSTANCING
+                                   uint instanceID [[instance_id]],
+                                   constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
+#endif
+                                   constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
+                                   constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {
+#if INSTANCING
+    const float4 position = vertexUniforms.viewMatrix * instanceUniforms[instanceID].modelMatrix * v.position;
+#else
     const float4 position = vertexUniforms.modelViewMatrix * v.position;
+#endif
     const float z = position.z;
 
     const float4x4 projection = vertexUniforms.projectionMatrix;
@@ -45,7 +51,7 @@ vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
 fragment float4 depthFragment(DepthVertexData in [[stage_in]], constant DepthUniforms &uniforms
                               [[buffer(FragmentBufferMaterialUniforms)]]) {
     const float depth = uniforms.invert ? 1.0 - in.depth : in.depth;
-    float3 color = uniforms.color ? turbo(depth) : float3(depth);
+    float3 color = mix(float3(depth), turbo(depth), uniforms.color);
     color = dither8x8(in.position.xy, color);
     return float4(color, 1.0);
 }

@@ -13,7 +13,7 @@ import SceneKit
 import Forge
 import Satin
 
-class SatinSceneKitRenderer: Forge.Renderer {
+class SatinSceneKitRenderer: BaseRenderer {
     var assetsURL: URL {
         Bundle.main.resourceURL!.appendingPathComponent("Assets")
     }

@@ -11,7 +11,7 @@ import MetalKit
 import Forge
 import Satin
 
-class MatcapRenderer: Forge.Renderer {
+class MatcapRenderer: BaseRenderer {
     var assetsURL: URL {
         Bundle.main.resourceURL!.appendingPathComponent("Assets")
     }

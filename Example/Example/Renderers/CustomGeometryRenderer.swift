@@ -38,7 +38,7 @@ open class IcosahedronGeometry: Geometry {
     }
 }
 
-class CustomGeometryRenderer: Forge.Renderer {
+class CustomGeometryRenderer: BaseRenderer {
     var assetsURL: URL {
         let resourcesURL = Bundle.main.resourceURL!
         return resourcesURL.appendingPathComponent("Assets")

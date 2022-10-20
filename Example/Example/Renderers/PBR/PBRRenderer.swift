@@ -15,7 +15,7 @@ import MetalKit
 import Forge
 import Satin
 
-class PBRRenderer: Forge.Renderer {
+class PBRRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
     
     var metalFileCompiler = MetalFileCompiler()

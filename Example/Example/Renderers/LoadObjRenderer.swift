@@ -13,7 +13,7 @@ import ModelIO
 import Forge
 import Satin
 
-class LoadObjRenderer: Forge.Renderer {
+class LoadObjRenderer: BaseRenderer {
     var assetsURL: URL {
         Bundle.main.resourceURL!.appendingPathComponent("Assets")
     }

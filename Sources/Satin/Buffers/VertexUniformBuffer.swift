@@ -29,6 +29,7 @@ open class VertexUniformBuffer {
         uniforms[0].viewMatrix = camera.viewMatrix
         uniforms[0].modelViewMatrix = simd_mul(uniforms[0].viewMatrix, uniforms[0].modelMatrix)
         uniforms[0].projectionMatrix = camera.projectionMatrix
+        uniforms[0].viewProjectionMatrix = camera.viewProjectionMatrix
         uniforms[0].modelViewProjectionMatrix = simd_mul(camera.viewProjectionMatrix, uniforms[0].modelMatrix)
         uniforms[0].inverseModelViewProjectionMatrix = simd_inverse(uniforms[0].modelViewProjectionMatrix)
         uniforms[0].inverseViewMatrix = camera.worldMatrix

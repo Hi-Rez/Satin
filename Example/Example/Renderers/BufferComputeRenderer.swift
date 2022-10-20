@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class BufferComputeRenderer: Forge.Renderer {
+class BufferComputeRenderer: BaseRenderer {
     
     class ParticleComputeSystem: LiveBufferComputeSystem {}
     

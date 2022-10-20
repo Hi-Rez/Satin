@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class TextureComputeRenderer: Forge.Renderer {
+class TextureComputeRenderer: BaseRenderer {
     class BasicTextureComputeSystem : LiveTextureComputeSystem {}
         
     var assetsURL: URL {

@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class CameraControllerRenderer: Forge.Renderer {
+class CameraControllerRenderer: BaseRenderer {
     var gridInterval: Float = 1.0
 
     lazy var grid: Object = {

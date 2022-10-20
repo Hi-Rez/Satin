@@ -13,12 +13,19 @@ typedef struct {
 } CustomVertexData;
 
 vertex CustomVertexData basicPointVertex(Vertex in [[stage_in]],
-                                   constant VertexUniforms &vertexUniforms
-                                   [[buffer(VertexBufferVertexUniforms)]],
-                                   constant BasicPointUniforms &uniforms
-                                   [[buffer(VertexBufferMaterialUniforms)]]) {
+#if INSTANCING
+                                         uint instanceID [[instance_id]],
+                                         constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
+#endif
+                                         constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
+                                         constant BasicPointUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {
     CustomVertexData out;
+#if INSTANCING
+    const float4x4 modelMatrix = instanceUniforms[instanceID].modelMatrix;
+    out.position = vertexUniforms.viewProjectionMatrix * modelMatrix * in.position;
+#else
     out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
+#endif
     out.pointSize = uniforms.pointSize;
     return out;
 }

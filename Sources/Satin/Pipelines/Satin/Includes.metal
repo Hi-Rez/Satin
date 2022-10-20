@@ -7,6 +7,7 @@ using namespace metal;
 // inject vertex
 // inject vertex data
 // inject vertex uniforms
+// inject instance matrix uniforms
 // inject structs
 // inject material structs
 // inject vertex shader

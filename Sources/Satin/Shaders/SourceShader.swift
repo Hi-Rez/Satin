@@ -33,6 +33,14 @@ open class SourceShader: Shader {
             }
         }
     }
+    
+    public override var instancing: Bool {
+        didSet {
+            if oldValue != instancing {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
 
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
@@ -114,7 +122,10 @@ open class SourceShader: Shader {
             injectVertex(source: &source, vertexDescriptor: vertexDescriptor)
             injectVertexData(source: &source)
             injectVertexUniforms(source: &source)
-
+            if instancing {
+                injectInstanceMatrixUniforms(source: &source)
+            }
+            
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)

@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class Renderer3D: Forge.Renderer {
+class Renderer3D: BaseRenderer {
     #if os(macOS) || os(iOS)
     lazy var raycaster: Raycaster = {
         Raycaster(device: device)

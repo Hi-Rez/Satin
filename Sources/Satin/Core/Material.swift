@@ -26,7 +26,7 @@ public struct DepthBias {
     }
 }
 
-open class Material: ShaderDelegate, ParameterGroupDelegate {
+open class Material: ParameterGroupDelegate {
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -137,6 +137,14 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         }
     }
     
+    public var instancing: Bool = false {
+        didSet {
+            if oldValue != instancing {
+                shaderInstancingNeedsUpdate = true
+            }
+        }
+    }
+    
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
@@ -165,6 +173,14 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     var uniformsNeedsUpdate = false
     var shaderNeedsUpdate = false
     
+    var shaderInstancingNeedsUpdate = false {
+        didSet {
+            if shaderInstancingNeedsUpdate, isClone {
+                shaderNeedsUpdate = true
+            }
+        }
+    }
+    
     var shaderBlendingNeedsUpdate = false {
         didSet {
             if shaderBlendingNeedsUpdate, isClone {
@@ -190,6 +206,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
     public required init() {}
     
     public init(shader: Shader) {
+        self.instancing = shader.instancing
         self.vertexDescriptor = shader.vertexDescriptor
         self.blending = shader.blending
         self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
@@ -240,6 +257,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         }
             
         if let shader = shader {
+            updateShaderInstancing()
             updateShaderBlending()
             updateShaderVertexDescriptor()
             shader.context = context
@@ -273,6 +291,10 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         
         if shaderVertexDescriptorNeedsUpdate {
             updateShaderVertexDescriptor()
+        }
+        
+        if shaderInstancingNeedsUpdate {
+            updateShaderInstancing()
         }
         
         shader?.update()
@@ -345,6 +367,12 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         case .custom:
             break
         }
+    }
+    
+    func updateShaderInstancing() {
+        guard let shader = shader else { return }
+        shader.instancing = instancing
+        shaderInstancingNeedsUpdate = false
     }
     
     func updateShaderBlending() {
@@ -521,6 +549,7 @@ open class Material: ShaderDelegate, ParameterGroupDelegate {
         
         clone.label = label
         clone.vertexDescriptor = vertexDescriptor
+        clone.instancing = instancing
         
         clone.delegate = delegate
         clone.parameters = parameters.clone()
@@ -581,14 +610,6 @@ public extension Material {
     func updateParameters(_ newParameters: ParameterGroup) {
         parameters.setFrom(newParameters)
         parameters.label = newParameters.label
-        uniformsNeedsUpdate = true
-        delegate?.updated(material: self)
-    }
-    
-    func updatedParameters(shader: Shader) {
-        print(shader.parameters)
-        parameters.setFrom(shader.parameters)
-        parameters.label = shader.parameters.label
         uniformsNeedsUpdate = true
         delegate?.updated(material: self)
     }

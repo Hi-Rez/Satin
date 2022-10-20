@@ -9,16 +9,16 @@
 import SwiftUI
 import Forge
 
-struct InstancingRendererView: View {
+struct CustomInstancingRendererView: View {
     var body: some View {
-        ForgeView(renderer: InstancingRenderer())
+        ForgeView(renderer: CustomInstancingRenderer())
             .ignoresSafeArea()
-            .navigationTitle("Instancing")
+            .navigationTitle("Custom Instancing")
     }
 }
 
-struct InstancingRendererView_Previews: PreviewProvider {
+struct CustomInstancingRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        InstancingRendererView()
+        CustomInstancingRendererView()
     }
 }

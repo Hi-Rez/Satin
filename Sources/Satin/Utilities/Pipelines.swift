@@ -479,6 +479,10 @@ public func injectVertexUniforms(source: inout String) {
     source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: (VertexUniformsSource.get() ?? "\n") + "\n")
 }
 
+public func injectInstanceMatrixUniforms(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject instance matrix uniforms\n", with: (InstanceMatrixUniformsSource.get() ?? "\n") + "\n")
+}
+
 public func injectPassThroughVertex(label: String, source: inout String) {
     let vertexFunctionName = label.camelCase + "Vertex"
     if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
@@ -502,7 +506,7 @@ class PassThroughVertexPipelineSource {
         guard PassThroughVertexPipelineSource.sharedSource == nil else {
             return sharedSource
         }
-        if let vertexURL = getPipelinesCommonUrl("Vertex.metal") {
+        if let vertexURL = getPipelinesCommonUrl("VertexShader.metal") {
             do {
                 sharedSource = try MetalFileCompiler().parse(vertexURL)
             }
@@ -593,3 +597,25 @@ class VertexUniformsSource {
         return sharedSource
     }
 }
+
+class InstanceMatrixUniformsSource {
+    static let shared = InstanceMatrixUniformsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard InstanceMatrixUniformsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("InstanceMatrixUniforms.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+

@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class ShippingShadersRenderer: Forge.Renderer {
+class ShippingShadersRenderer: BaseRenderer {
     #if os(macOS) || os(iOS)
     lazy var raycaster: Raycaster = {
         Raycaster(device: device)

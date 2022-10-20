@@ -13,7 +13,7 @@ import MetalKit
 import Forge
 import Satin
 
-class SuperShapesRenderer: Forge.Renderer {
+class SuperShapesRenderer: BaseRenderer {
     var cancellables = Set<AnyCancellable>()
     
     var updateGeometry = true

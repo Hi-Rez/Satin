@@ -13,7 +13,7 @@ import MetalKit
 import Forge
 import Satin
 
-class FlockingRenderer: Forge.Renderer {
+class FlockingRenderer: BaseRenderer {
     class FlockingComputeSystem: LiveBufferComputeSystem {}
     class InstanceMaterial: LiveMaterial {}
     class SpriteMaterial: LiveMaterial {}

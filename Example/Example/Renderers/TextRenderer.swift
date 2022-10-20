@@ -15,7 +15,7 @@ import MetalKit
 import Forge
 import Satin
 
-class TextRenderer: Forge.Renderer {
+class TextRenderer: BaseRenderer {
     var scene = Object()
     
     lazy var context: Context = {

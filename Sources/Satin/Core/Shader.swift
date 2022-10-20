@@ -9,10 +9,6 @@ import Foundation
 import Metal
 import Combine
 
-public protocol ShaderDelegate: AnyObject {
-    func updatedParameters(shader: Shader)
-}
-
 open class Shader {
     var pipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
@@ -78,6 +74,8 @@ open class Shader {
             }
         }
     }
+    
+    public var instancing: Bool = false
     
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {

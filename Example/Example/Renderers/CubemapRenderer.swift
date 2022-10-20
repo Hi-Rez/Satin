@@ -14,7 +14,7 @@ import MetalKit
 import Forge
 import Satin
 
-class CubemapRenderer: Forge.Renderer {
+class CubemapRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
     
     var assetsURL: URL {

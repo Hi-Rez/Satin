@@ -71,8 +71,12 @@ struct ContentView: View {
                         Label("FXAA", systemImage: "squareshape.split.2x2.dotted")
                     }
                     
-                    NavigationLink(destination: InstancingRendererView()) {
-                        Label("Instancing", systemImage: "square.grid.3x3")
+                    NavigationLink(destination: CustomInstancingRendererView()) {
+                        Label("Custom Instancing", systemImage: "square.grid.3x3")
+                    }
+                    
+                    NavigationLink(destination: InstancedMeshRendererView()) {
+                        Label("Instanced Mesh", systemImage: "circle.grid.2x2.fill")
                     }
                     
                     NavigationLink(destination: LiveCodeRendererView()) {
