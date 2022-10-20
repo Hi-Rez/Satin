@@ -50,7 +50,7 @@ pod 'Satin'
 # Features :clipboard:
 
 - [x] Tons of examples that show how to use the API (2D, 3D, Raycasting, Compute, Exporting, Live Coding, AR, etc). 
-- [x] Object, Mesh, Material, Shader, Geometry and Renderer classes.
+- [x] Object, Mesh, InstancedMesh, Material, Shader, Geometry and Renderer classes.
 - [x] You can live code shaders :fire:.
 - [x] A couple builtin Materials (BasicColor, BasicTexture, BasicDiffuse, Normal, UV Color, Skybox, MatCap, and more).
 - [x] Tons of Geometries (Box, Sphere, IcoSphere, Circle, Cone,  Quad, Plane, Capsule, RoundedRect, Text, and more).
