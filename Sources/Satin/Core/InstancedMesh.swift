@@ -23,15 +23,14 @@ public class InstancedMesh: Mesh {
             }
         }
     }
-    
+
     var instanceMatrices: [InstanceMatrixUniforms]
-    
+
     private var _setupInstanceMatrixBuffer: Bool = true
     private var _updateInstanceMatrixBuffer: Bool = true
     private var instanceMatrixBuffer: InstanceMatrixUniformBuffer?
-    
-    
-    public override var material: Material? {
+
+    override public var material: Material? {
         didSet {
             material?.instancing = true
         }
@@ -57,7 +56,7 @@ public class InstancedMesh: Mesh {
             simd_make_float3(n.columns.0),
             simd_make_float3(n.columns.1),
             simd_make_float3(n.columns.2))
-        
+
         _updateInstanceMatrixBuffer = true
     }
 
@@ -85,24 +84,22 @@ public class InstancedMesh: Mesh {
             setupInstanceBuffer()
             _setupInstanceMatrixBuffer = false
         }
-        
+
         if _updateInstanceMatrixBuffer {
             updateInstanceBuffer()
             _updateInstanceMatrixBuffer = false
         }
-        
+
         super.update()
     }
-    
-    open override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+
+    override open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         super.bind(renderEncoder)
         bindInstanceMatrixBuffer(renderEncoder)
     }
-    
+
     func bindInstanceMatrixBuffer(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let instanceMatrixBuffer = instanceMatrixBuffer else { return }
-        
         renderEncoder.setVertexBuffer(instanceMatrixBuffer.buffer, offset: instanceMatrixBuffer.offset, index: VertexBufferIndex.InstanceMatrixUniforms.rawValue)
     }
-    
 }
