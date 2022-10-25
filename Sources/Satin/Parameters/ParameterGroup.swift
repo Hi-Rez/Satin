@@ -162,32 +162,36 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
         for param in incomingParams.params {
             order.append(param.label)
         }
-
+        
         let incomingKeys = Set(Array(incomingParams.paramsMap.keys))
         let exisitingKeys = Set(Array(self.paramsMap.keys))
+        
         let newKeys = incomingKeys.subtracting(exisitingKeys)
         let commonKeys = exisitingKeys.intersection(incomingKeys)
         let removedKeys = exisitingKeys.subtracting(incomingKeys)
-
+        
         for key in removedKeys {
             if let param = self.paramsMap[key] {
                 remove(param)
             }
         }
+        
         for key in newKeys {
             if let param = incomingParams.paramsMap[key] {
                 append(param)
             }
         }
-
+        
         for key in commonKeys {
             if let inParam = incomingParams.paramsMap[key] {
                 setParameterFrom(param: inParam, setValue: setValues, setOptions: setOptions, append: false)
             }
         }
 
-        let paramsMap: [String: Parameter] = self.paramsMap
+        let paramsMap = self.paramsMap
+        
         clear()
+        
         for key in order {
             if let param = paramsMap[key] {
                 append(param)
@@ -207,16 +211,27 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
     }
 
     private enum CodingKeys: CodingKey {
-        case params, title
+        case label
+        case params
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        do {
+            self.label = try container.decode(String.self, forKey: .label)
+        }
+        catch {
+            print(error.localizedDescription)
+        }
         self.params = try container.decode([AnyParameter].self, forKey: .params).map { $0.base }
+        for param in params {
+            self.paramsMap[param.label] = param
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(label, forKey: .label)
         try container.encode(params.map(AnyParameter.init), forKey: .params)
     }
 

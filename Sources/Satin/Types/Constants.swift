@@ -14,7 +14,7 @@ public let worldForwardDirection = simd_make_float3(0, 0, 1)
 public let worldUpDirection = simd_make_float3(0, 1, 0)
 public let worldRightDirection = simd_make_float3(1, 0, 0)
 
-public enum Blending {
+public enum Blending: Codable {
     case disabled
     case alpha
     case additive

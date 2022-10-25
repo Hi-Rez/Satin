@@ -22,4 +22,8 @@ open class BasicPointMaterial: Material {
         set("Color", [1, 1, 1, 1])
         set("Point Size", 2.0)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 }

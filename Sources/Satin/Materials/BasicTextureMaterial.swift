@@ -14,6 +14,10 @@ open class BasicTextureMaterial: BasicColorMaterial {
     public required init() {
         super.init()
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
         super.init()

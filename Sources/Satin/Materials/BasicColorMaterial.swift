@@ -21,4 +21,8 @@ open class BasicColorMaterial: Material {
         self.blending = .alpha
         set("Color", [1.0, 1.0, 1.0, 1.0])
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 }

@@ -85,6 +85,6 @@ void transformGeometryData(GeometryData *data, simd_float4x4 transform);
 void deindexGeometryData(GeometryData *dest, GeometryData *src);
 void unrollGeometryData(GeometryData *dest, GeometryData *src);
 
-void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap);
+void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap, uint32_t offset);
 
 #endif /* Types_h */

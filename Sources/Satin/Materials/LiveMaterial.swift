@@ -34,4 +34,8 @@ open class LiveMaterial: Material {
     public required init() {
         super.init()
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 }

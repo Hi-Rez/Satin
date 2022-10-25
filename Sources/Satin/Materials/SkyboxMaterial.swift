@@ -12,6 +12,10 @@ open class SkyboxMaterial: BasicTextureMaterial {
         super.init()
         self.depthWriteEnabled = false
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     override public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
         super.init()

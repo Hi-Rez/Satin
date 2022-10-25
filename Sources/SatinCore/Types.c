@@ -90,7 +90,7 @@ void combineGeometryData(GeometryData *dest, GeometryData *src) {
     combineIndexGeometryData(dest, src, destPreCombineVertexCount);
 }
 
-void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap) {
+void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap, uint32_t offset) {
     combineGeometryData(destGeo, srcGeo);
     
     if (srcMap->count > 0) {
@@ -98,9 +98,9 @@ void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *
             int totalCount = srcMap->count + destMap->count;
             destMap->data = realloc(destMap->data, totalCount * sizeof(uint32_t));
             memcpy(destMap->data + destMap->count, srcMap->data, srcMap->count * sizeof(uint32_t));
-            uint32_t lastFaceIndex = destMap->data[destMap->count - 1];
+            uint32_t nextFaceIndex = destMap->data[destMap->count - 1] + 1 + offset;
             for(int i = destMap->count; i < totalCount; i++) {
-                destMap->data[i] += lastFaceIndex + 1;
+                destMap->data[i] += nextFaceIndex;
             }
             destMap->count += srcMap->count;
         } else {

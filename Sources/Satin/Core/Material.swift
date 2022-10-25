@@ -26,7 +26,31 @@ public struct DepthBias {
     }
 }
 
-open class Material: ParameterGroupDelegate {
+open class Material: Codable, ParameterGroupDelegate, ObservableObject {
+    public required init(from decoder: Decoder) throws {
+        try decode(from: decoder)
+    }
+    
+    public func decode(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        label = try values.decode(String.self, forKey: .label)
+        blending = try values.decode(Blending.self, forKey: .blending)
+        parameters = try values.decode(ParameterGroup.self, forKey: .parameters)
+    }
+    
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(label, forKey: .label)
+        try container.encode(blending, forKey: .blending)
+        try container.encode(parameters, forKey: .parameters)
+    }
+    
+    public enum CodingKeys: String, CodingKey {
+        case label
+        case blending
+        case parameters
+    }
+
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -586,28 +610,35 @@ open class Material: ParameterGroupDelegate {
 
 public extension Material {
     func added(parameter: Parameter, from group: ParameterGroup) {
+        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
     
     func removed(parameter: Parameter, from group: ParameterGroup) {
+        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
     
     func loaded(group: ParameterGroup) {
+        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
     
     func saved(group: ParameterGroup) {}
     
     func cleared(group: ParameterGroup) {
+        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
     
-    func update(parameter: Parameter, from group: ParameterGroup) {}
+    func update(parameter: Parameter, from group: ParameterGroup) {
+        objectWillChange.send()
+    }
 }
 
 public extension Material {
     func updateParameters(_ newParameters: ParameterGroup) {
+        objectWillChange.send()
         parameters.setFrom(newParameters)
         parameters.label = newParameters.label
         uniformsNeedsUpdate = true

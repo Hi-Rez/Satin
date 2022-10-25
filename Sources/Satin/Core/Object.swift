@@ -151,6 +151,7 @@ open class Object: Codable, ObservableObject {
                 _normalMatrix.clear()
                 _worldMatrix.clear()
                 _worldOrientation.clear()
+                transformPublisher.send(self)
                 updateMatrix = false
                 for child in children {
                     child.updateMatrix = true
@@ -171,11 +172,11 @@ open class Object: Codable, ObservableObject {
             let sx = newValue.columns.0
             let sy = newValue.columns.1
             let sz = newValue.columns.2
-            scale = simd_make_float3(length(sx), length(sy), length(sz))
-            let rx = simd_make_float3(sx.x, sx.y, sx.z) / scale.x
-            let ry = simd_make_float3(sy.x, sy.y, sy.z) / scale.y
-            let rz = simd_make_float3(sz.x, sz.y, sz.z) / scale.z
-            orientation = simd_quatf(simd_float3x3(columns: (rx, ry, rz)))
+            scale = simd_make_float3(simd_length(sx), simd_length(sy), simd_length(sz))
+            let rx = simd_make_float3(sx) / scale.x
+            let ry = simd_make_float3(sy) / scale.y
+            let rz = simd_make_float3(sz) / scale.z
+            orientation = simd_quatf(simd_float3x3(rx, ry, rz))
         }
     }
 
@@ -269,6 +270,8 @@ open class Object: Codable, ObservableObject {
             return simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
         }
     }
+    
+    public let transformPublisher = PassthroughSubject<Object, Never>()
     
     public init() {}
     
