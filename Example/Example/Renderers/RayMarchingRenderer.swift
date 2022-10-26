@@ -27,6 +27,10 @@ class RayMarchingRenderer: BaseRenderer {
             fatalError("init() has not been implemented")
         }
         
+        required init(from decoder: Decoder) throws {
+            try super.init(from: decoder)
+        }
+        
         override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
             super.bind(renderEncoder)
             if let camera = self.camera {
