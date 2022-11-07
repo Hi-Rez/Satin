@@ -7,7 +7,6 @@
 
 import Combine
 import Metal
-import MetalPerformanceShaders
 
 open class Submesh {
     public var id: String = UUID().uuidString

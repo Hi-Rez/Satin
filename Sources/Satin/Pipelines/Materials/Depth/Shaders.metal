@@ -15,12 +15,10 @@ typedef struct {
 } DepthUniforms;
 
 vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
-#if INSTANCING
-                                   uint instanceID [[instance_id]],
-                                   constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
-                                   constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
-                                   constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {
+// inject instancing args
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
+    constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]])
+{
 #if INSTANCING
     const float4 position = vertexUniforms.viewMatrix * instanceUniforms[instanceID].modelMatrix * v.position;
 #else
@@ -48,8 +46,9 @@ vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
     return out;
 }
 
-fragment float4 depthFragment(DepthVertexData in [[stage_in]], constant DepthUniforms &uniforms
-                              [[buffer(FragmentBufferMaterialUniforms)]]) {
+fragment float4 depthFragment(DepthVertexData in [[stage_in]],
+    constant DepthUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
+{
     const float depth = uniforms.invert ? 1.0 - in.depth : in.depth;
     float3 color = mix(float3(depth), turbo(depth), uniforms.color);
     color = dither8x8(in.position.xy, color);

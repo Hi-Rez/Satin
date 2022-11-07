@@ -11,19 +11,6 @@ import Metal
 import ModelIO
 import simd
 
-public protocol VertexType {
-    var descriptor: MDLVertexDescriptor { get }
-    var position: simd_float4 { get }
-    var normal: simd_float3 { get }
-    var uv: simd_float2 { get }
-}
-
-extension Vertex: VertexType {
-    public var descriptor: MDLVertexDescriptor {
-        SatinModelIOVertexDescriptor
-    }
-}
-
 open class Geometry {
     public var id: String = UUID().uuidString
     

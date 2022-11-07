@@ -8,12 +8,9 @@ typedef struct {
 } SkyVertexData;
 
 vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
-#if INSTANCING
-                                  uint instanceID [[instance_id]],
-                                  constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
-                                  constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]) {
-    
+// inject instancing args
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
+{
 #if INSTANCING
     const float4x4 modelViewProjectionMatrix = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix;
 #else
@@ -28,8 +25,9 @@ vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
 }
 
 fragment float4 skyboxFragment(SkyVertexData in [[stage_in]],
-                               constant SkyboxUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]],
-                               texturecube<half> cubeTex [[texture(FragmentTextureCustom0)]],
-                               sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]]) {
+    constant SkyboxUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]],
+    texturecube<half> cubeTex [[texture(FragmentTextureCustom0)]],
+    sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]])
+{
     return uniforms.color * float4(cubeTex.sample(cubeTexSampler, in.uv));
 }

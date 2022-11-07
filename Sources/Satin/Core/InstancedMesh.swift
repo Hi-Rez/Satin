@@ -1,6 +1,6 @@
 //
 //  InstancedMesh.swift
-//
+//  Satin
 //
 //  Created by Reza Ali on 10/19/22.
 //
@@ -71,6 +71,7 @@ public class InstancedMesh: Mesh {
     }
 
     func updateInstanceBuffer() {
+        instanceMatrixBuffer?.update()
         instanceMatrixBuffer?.update(data: &instanceMatrices)
     }
 

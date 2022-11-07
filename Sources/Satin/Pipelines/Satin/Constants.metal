@@ -2,35 +2,39 @@ typedef enum VertexAttribute {
     VertexAttributePosition = 0,
     VertexAttributeNormal = 1,
     VertexAttributeTexcoord = 2,
-    VertexAttributeCustom0 = 3,
-    VertexAttributeCustom1 = 4,
-    VertexAttributeCustom2 = 5,
-    VertexAttributeCustom3 = 6,
-    VertexAttributeCustom4 = 7,
-    VertexAttributeCustom5 = 8,
-    VertexAttributeCustom6 = 9,
-    VertexAttributeCustom7 = 10,
-    VertexAttributeCustom8 = 11,
-    VertexAttributeCustom9 = 12,
-    VertexAttributeCustom10 = 13
+    VertexAttributeTangent = 3,
+    VertexAttributeBitangent = 4,
+    VertexAttributeCustom0 = 5,
+    VertexAttributeCustom1 = 6,
+    VertexAttributeCustom2 = 7,
+    VertexAttributeCustom3 = 8,
+    VertexAttributeCustom4 = 9,
+    VertexAttributeCustom5 = 10,
+    VertexAttributeCustom6 = 11,
+    VertexAttributeCustom7 = 12,
+    VertexAttributeCustom8 = 13,
+    VertexAttributeCustom9 = 14,
+    VertexAttributeCustom10 = 15,
+    VertexAttributeCustom11 = 16
 } VertexAttribute;
 
 typedef enum VertexBufferIndex {
     VertexBufferVertices = 0,
-    VertexBufferVertexUniforms = 1,
-    VertexBufferInstanceMatrixUniforms = 2,
-    VertexBufferMaterialUniforms = 3,
-    VertexBufferCustom0 = 4,
-    VertexBufferCustom1 = 5,
-    VertexBufferCustom2 = 6,
-    VertexBufferCustom3 = 7,
-    VertexBufferCustom4 = 8,
-    VertexBufferCustom5 = 9,
-    VertexBufferCustom6 = 10,
-    VertexBufferCustom7 = 11,
-    VertexBufferCustom8 = 12,
-    VertexBufferCustom9 = 13,
-    VertexBufferCustom10 = 14
+    VertexBufferGenerics = 1,
+    VertexBufferVertexUniforms = 2,
+    VertexBufferInstanceMatrixUniforms = 3,
+    VertexBufferMaterialUniforms = 4,
+    VertexBufferCustom0 = 5,
+    VertexBufferCustom1 = 6,
+    VertexBufferCustom2 = 7,
+    VertexBufferCustom3 = 8,
+    VertexBufferCustom4 = 9,
+    VertexBufferCustom5 = 10,
+    VertexBufferCustom6 = 11,
+    VertexBufferCustom7 = 12,
+    VertexBufferCustom8 = 13,
+    VertexBufferCustom9 = 14,
+    VertexBufferCustom10 = 15
 } VertexBufferIndex;
 
 typedef enum VertexTextureIndex {
@@ -49,17 +53,18 @@ typedef enum VertexTextureIndex {
 
 typedef enum FragmentBufferIndex {
     FragmentBufferMaterialUniforms = 0,
-    FragmentBufferCustom0 = 1,
-    FragmentBufferCustom1 = 2,
-    FragmentBufferCustom2 = 3,
-    FragmentBufferCustom3 = 4,
-    FragmentBufferCustom4 = 5,
-    FragmentBufferCustom5 = 6,
-    FragmentBufferCustom6 = 7,
-    FragmentBufferCustom7 = 8,
-    FragmentBufferCustom8 = 9,
-    FragmentBufferCustom9 = 10,
-    FragmentBufferCustom10 = 11
+    FragmentBufferLighting = 1,
+    FragmentBufferCustom0 = 2,
+    FragmentBufferCustom1 = 3,
+    FragmentBufferCustom2 = 4,
+    FragmentBufferCustom3 = 5,
+    FragmentBufferCustom4 = 6,
+    FragmentBufferCustom5 = 7,
+    FragmentBufferCustom6 = 8,
+    FragmentBufferCustom7 = 9,
+    FragmentBufferCustom8 = 10,
+    FragmentBufferCustom9 = 11,
+    FragmentBufferCustom10 = 12
 } FragmentBufferIndex;
 
 typedef enum FragmentTextureIndex {
@@ -75,6 +80,26 @@ typedef enum FragmentTextureIndex {
     FragmentTextureCustom9 = 9,
     FragmentTextureCustom10 = 10
 } FragmentTextureIndex;
+
+typedef enum PBRTextureIndex {
+    PBRTextureBaseColor = 0,
+    PBRTextureMetallic = 1,
+    PBRTextureRoughness = 2,
+    PBRTextureNormal = 3,
+    PBRTextureEmissive = 4,
+    PBRTextureSpecular = 5,
+    PBRTextureSheen = 6,
+    PBRTextureSpecularHighlight = 7,
+    PBRTextureAnisotropy = 8,
+    PBRTextureAnisotropyAngle = 9,
+    PBRTextureBump = 10,
+    PBRTextureDisplacement = 11,
+    PBRTextureAlpha = 12,
+    PBRTextureAmbient = 13,
+    PBRTextureAmbientOcculsion = 14,
+    PBRTextureReflection = 15,
+    PBRTextureIrradiance = 16
+} PBRTextureIndex;
 
 typedef enum FragmentSamplerIndex {
     FragmentSamplerCustom0 = 0,

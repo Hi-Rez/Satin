@@ -13,12 +13,9 @@ typedef struct {
 } CustomVertexData;
 
 vertex CustomVertexData basicPointVertex(Vertex in [[stage_in]],
-#if INSTANCING
-                                         uint instanceID [[instance_id]],
-                                         constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
-                                         constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
-                                         constant BasicPointUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {
+// inject instancing args
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
+    constant BasicPointUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]) {
     CustomVertexData out;
 #if INSTANCING
     const float4x4 modelMatrix = instanceUniforms[instanceID].modelMatrix;

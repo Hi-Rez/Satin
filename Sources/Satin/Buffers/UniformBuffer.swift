@@ -1,5 +1,5 @@
 //
-//  BufferMaker.swift
+//  UniformBuffer.swift
 //  Satin
 //
 //  Created by Reza Ali on 11/3/19.
@@ -23,7 +23,7 @@ open class UniformBuffer: Buffer {
     }
     
     override func setupBuffer(device: MTLDevice, count: Int, options: MTLResourceOptions) {
-        guard alignedSize > 0, let buffer = device.makeBuffer(length: alignedSize * count, options: options) else { fatalError("Unable to create UniformBuffer") }
+        guard alignedSize > 0, let buffer = device.makeBuffer(length: alignedSize * count, options: options) else { fatalError("Unable to create Uniform Buffer") }
         buffer.label = parameters.label
         self.buffer = buffer
     }

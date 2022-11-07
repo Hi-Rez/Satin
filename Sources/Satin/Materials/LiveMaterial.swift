@@ -9,6 +9,12 @@
 import Metal
 
 open class LiveMaterial: Material {
+    public enum CodingKeys: String, CodingKey {
+        case pipelineURL
+    }
+    
+    public var pipelineURL: URL
+    
     public var source: String? {
         if let live = shader as? LiveShader {
             return live.source
@@ -17,25 +23,39 @@ open class LiveMaterial: Material {
     }
 
     public init(pipelineURL: URL) {
+        self.pipelineURL = pipelineURL
         super.init()
-        _init(pipelineURL: pipelineURL)
     }
 
     public init(pipelinesURL: URL) {
+        pipelineURL = pipelinesURL
         super.init()
-        self.vertexDescriptor = vertexDescriptor
-        _init(pipelineURL: pipelinesURL.appendingPathComponent(label).appendingPathComponent("Shaders.metal"))
+        if pipelinesURL.pathExtension != "metal" {
+            pipelineURL = pipelinesURL
+                .appendingPathComponent(label)
+                .appendingPathComponent("Shaders.metal")
+        }
     }
 
-    func _init(pipelineURL: URL) {
-        shader = LiveShader(label, pipelineURL)
-    }
-
-    public required init() {
-        super.init()
+    open override func createShader() -> Shader {
+        return LiveShader(label, pipelineURL)
     }
     
-    public required init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws
+    {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        pipelineURL = try values.decode(URL.self, forKey: .pipelineURL)
         try super.init(from: decoder)
+    }
+    
+    override open func encode(to encoder: Encoder) throws
+    {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(pipelineURL, forKey: .pipelineURL)
+    }
+    
+    public required init() {
+        fatalError("Please specify a pipeline url to use LiveShader")
     }
 }

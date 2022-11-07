@@ -13,12 +13,12 @@ open class Shader {
     var pipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
     }
-
+    
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var library: MTLLibrary?
     var libraryURL: URL?
-
+    
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
@@ -34,7 +34,7 @@ open class Shader {
             }
         }
     }
-
+    
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceAlphaBlendFactor {
@@ -42,7 +42,7 @@ open class Shader {
             }
         }
     }
-
+    
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationRGBBlendFactor {
@@ -50,7 +50,7 @@ open class Shader {
             }
         }
     }
-
+    
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationAlphaBlendFactor {
@@ -58,7 +58,7 @@ open class Shader {
             }
         }
     }
-
+    
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != rgbBlendOperation {
@@ -66,7 +66,7 @@ open class Shader {
             }
         }
     }
-
+    
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != alphaBlendOperation {
@@ -76,6 +76,10 @@ open class Shader {
     }
     
     public var instancing: Bool = false
+    
+    public var lighting: Bool = false
+    
+    public var maxLights: Int = -1
     
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
@@ -92,7 +96,7 @@ open class Shader {
             }
         }
     }
-   
+    
     var label: String = "Shader"
     
     var libraryNeedsUpdate: Bool = true {
@@ -184,31 +188,31 @@ open class Shader {
     }
 
     func setupPipeline() {
-        guard let context = context, let library = library else { return }
+        guard let context = context, let library = library, let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
+        
+        
+        let device = library.device
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.label = label
+        pipelineStateDescriptor.vertexFunction = vertexProgram
+        pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
+        
+        if blending != .disabled, let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
+            colorAttachment.isBlendingEnabled = true
+            colorAttachment.sourceRGBBlendFactor = sourceRGBBlendFactor
+            colorAttachment.sourceAlphaBlendFactor = sourceAlphaBlendFactor
+            colorAttachment.destinationRGBBlendFactor = destinationRGBBlendFactor
+            colorAttachment.destinationAlphaBlendFactor = destinationAlphaBlendFactor
+            colorAttachment.rgbBlendOperation = rgbBlendOperation
+            colorAttachment.alphaBlendOperation = alphaBlendOperation
+        }
+        
         do {
-            guard let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
-            
-            let device = library.device
-            let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-            pipelineStateDescriptor.label = label
-            pipelineStateDescriptor.vertexFunction = vertexProgram
-            pipelineStateDescriptor.fragmentFunction = fragmentProgram
-            pipelineStateDescriptor.sampleCount = context.sampleCount
-            pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
-            pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
-            pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
-            pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
-            
-            if blending != .disabled, let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
-                colorAttachment.isBlendingEnabled = true
-                colorAttachment.sourceRGBBlendFactor = sourceRGBBlendFactor
-                colorAttachment.sourceAlphaBlendFactor = sourceAlphaBlendFactor
-                colorAttachment.destinationRGBBlendFactor = destinationRGBBlendFactor
-                colorAttachment.destinationAlphaBlendFactor = destinationAlphaBlendFactor
-                colorAttachment.rgbBlendOperation = rgbBlendOperation
-                colorAttachment.alphaBlendOperation = alphaBlendOperation
-            }
-            
             pipeline = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
             
             blendingNeedsUpdate = false
@@ -251,6 +255,8 @@ open class Shader {
     }
     
     public func clone() -> Shader {
+        print("CLONING SHADER")
+        
         let clone: Shader = type(of: self).init()
         
         clone.label = label
@@ -269,7 +275,12 @@ open class Shader {
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
         
-        clone.context = context
+        clone.instancing = instancing
+        clone.lighting = lighting
+        clone.vertexDescriptor = vertexDescriptor
+        
+        clone.vertexFunctionName = vertexFunctionName
+        clone.fragmentFunctionName = fragmentFunctionName
         
         return clone
     }

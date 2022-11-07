@@ -1,4 +1,5 @@
 #include "Library/Pbr.metal"
+#include "Library/Gamma.metal"
 
 typedef struct {
 	float4 position [[position]];
@@ -49,6 +50,7 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 
 	const float3 albedo = float3( 1.0, 1.0, 1.0 );
 	const float roughness = in.roughness;
+    const float alpha = roughness * roughness;
 	const float metallic = in.metallic;
 	const float ao = 1.0;
 
@@ -81,18 +83,18 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 		const float3 radiance = lightColors[i] * attenuation;
 
 		// scale light by NdotL
-		const float NdotL = max( dot( normal, light ), 0.0001 );
-		const float HdotV = max( dot( halfway, view ), 0.0001 );
-		const float NdotH = max( dot( normal, halfway ), 0.0001 );
+		const float NdotL = max( dot( normal, light ), 0.00001 );
+		const float HdotV = max( dot( halfway, view ), 0.00001 );
+		const float NdotH = max( dot( normal, halfway ), 0.00001 );
 
 		// Cook-Torrance BRDF
-		const float N = distributionGGX( NdotH, roughness );
-		const float G = geometrySmith( NdotV, NdotL, roughness );
+		const float D = distributionGGX( NdotH, alpha );
+		const float G = geometrySmith( NdotV, NdotL, alpha );
 		const float3 F = fresnelSchlick( HdotV, f0 );
 
-		const float3 nominator = N * G * F;
+		const float3 numerator = D * G * F;
 		const float denominator = 4.0 * NdotV * NdotL;
-		const float3 specular = nominator / max( denominator, 0.00001 ); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
+		const float3 specular = numerator / max( denominator, 0.00001 ); // prevent divide by zero for NdotV=0.0 or NdotL=0.0
 
 		// kS is equal to Fresnel
 		const float3 kS = F;
@@ -129,10 +131,11 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 	const float3 ambient = ( kD * diffuse + specular ) * ao;
 	float3 color = ambient + Lo;
 
-	// // HDR tonemapping
+	// HDR tonemapping
 	color = color / ( color + float3( 1.0 ) );
-	// // gamma correct
-	color = pow( color, float3( 1.0 / 2.2 ) );
+    
+	// Gamma Correction
+    color = gamma(color);
 
 	return float4( color, 1.0 );
 }

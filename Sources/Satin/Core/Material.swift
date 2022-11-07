@@ -50,7 +50,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         case blending
         case parameters
     }
-
+    
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -59,10 +59,8 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         result = result.replacingOccurrences(of: ".", with: "")
         return result
     }
-        
-    public lazy var label: String = {
-        prefix
-    }()
+    
+    public lazy var label: String = prefix
     
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
@@ -71,7 +69,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     private var parametersSubscriber: AnyCancellable?
     
     public var shader: Shader? {
@@ -92,7 +90,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceAlphaBlendFactor {
@@ -100,7 +98,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationRGBBlendFactor {
@@ -108,7 +106,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationAlphaBlendFactor {
@@ -116,7 +114,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != rgbBlendOperation {
@@ -124,7 +122,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             }
         }
     }
-
+    
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != alphaBlendOperation {
@@ -146,7 +144,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         }
     }
     
-    public private(set) var isClone: Bool = false
+    public internal(set) var isClone: Bool = false
     public weak var delegate: MaterialDelegate?
     
     public var pipeline: MTLRenderPipelineState? {
@@ -164,7 +162,23 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     public var instancing: Bool = false {
         didSet {
             if oldValue != instancing {
-                shaderInstancingNeedsUpdate = true
+                shaderDefinesNeedsUpdate = true
+            }
+        }
+    }
+    
+    public var lighting: Bool = false {
+        didSet {
+            if oldValue != lighting {
+                shaderDefinesNeedsUpdate = true
+            }
+        }
+    }
+    
+    public var maxLights: Int = -1 {
+        didSet {
+            if oldValue != maxLights {
+                shaderDefinesNeedsUpdate = true
             }
         }
     }
@@ -197,9 +211,9 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     var uniformsNeedsUpdate = false
     var shaderNeedsUpdate = false
     
-    var shaderInstancingNeedsUpdate = false {
+    var shaderDefinesNeedsUpdate = false {
         didSet {
-            if shaderInstancingNeedsUpdate, isClone {
+            if shaderDefinesNeedsUpdate {
                 shaderNeedsUpdate = true
             }
         }
@@ -207,7 +221,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     
     var shaderBlendingNeedsUpdate = false {
         didSet {
-            if shaderBlendingNeedsUpdate, isClone {
+            if shaderBlendingNeedsUpdate {
                 shaderNeedsUpdate = true
             }
         }
@@ -215,7 +229,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     
     var shaderVertexDescriptorNeedsUpdate = false {
         didSet {
-            if shaderVertexDescriptorNeedsUpdate, isClone {
+            if shaderVertexDescriptorNeedsUpdate {
                 shaderNeedsUpdate = true
             }
         }
@@ -231,6 +245,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     
     public init(shader: Shader) {
         self.instancing = shader.instancing
+        self.lighting = shader.lighting
         self.vertexDescriptor = shader.vertexDescriptor
         self.blending = shader.blending
         self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
@@ -269,21 +284,28 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         depthNeedsUpdate = false
     }
     
+    open func createShader() -> Shader {
+        return SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+    }
+    
+    open func cloneShader(_ shader: Shader) -> Shader {
+        return shader.clone()
+    }
+    
     open func setupShader() {
-        guard let context = context else { return }
         if shader == nil {
-            shader = SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+            shader = createShader()
             isClone = false
         }
-        else if let shader = shader, isClone, shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate {
-            self.shader = shader.clone()
+        else if let shader = shader, isClone, shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate || shaderDefinesNeedsUpdate {
+            self.shader = cloneShader(shader)
             isClone = false
         }
             
         if let shader = shader {
-            updateShaderInstancing()
             updateShaderBlending()
             updateShaderVertexDescriptor()
+            updateShaderDefines()
             shader.context = context
         }
         shaderNeedsUpdate = false
@@ -317,8 +339,8 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
             updateShaderVertexDescriptor()
         }
         
-        if shaderInstancingNeedsUpdate {
-            updateShaderInstancing()
+        if shaderDefinesNeedsUpdate {
+            updateShaderDefines()
         }
         
         shader?.update()
@@ -393,12 +415,6 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         }
     }
     
-    func updateShaderInstancing() {
-        guard let shader = shader else { return }
-        shader.instancing = instancing
-        shaderInstancingNeedsUpdate = false
-    }
-    
     func updateShaderBlending() {
         guard let shader = shader else { return }
         shader.blending = blending
@@ -415,6 +431,13 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         guard let shader = shader else { return }
         shader.vertexDescriptor = vertexDescriptor
         shaderVertexDescriptorNeedsUpdate = false
+    }
+    
+    open func updateShaderDefines() {
+        guard let shader = shader else { return }
+        shader.instancing = instancing
+        shader.lighting = lighting
+        shader.maxLights = maxLights
     }
     
     public func set(_ name: String, _ value: [Float]) {
@@ -574,6 +597,8 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         clone.label = label
         clone.vertexDescriptor = vertexDescriptor
         clone.instancing = instancing
+        clone.lighting = lighting
+        clone.maxLights = maxLights
         
         clone.delegate = delegate
         clone.parameters = parameters.clone()
@@ -589,6 +614,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
         
+        clone.shaderDefinesNeedsUpdate = false
         clone.shaderVertexDescriptorNeedsUpdate = false
         clone.shaderBlendingNeedsUpdate = false
         
@@ -596,13 +622,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         clone.depthCompareFunction = depthCompareFunction
         clone.depthWriteEnabled = depthWriteEnabled
        
-        if let shader = shader {
-            clone.shader = shader
-        }
-        
-        if let context = context {
-            clone.context = context
-        }
+        clone.shader = shader
         
         return clone
     }

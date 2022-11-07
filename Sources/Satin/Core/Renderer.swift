@@ -33,10 +33,13 @@ open class Renderer
     {
         didSet
         {
-            scene.context = context
-            updateColorTexture = true
-            updateDepthTexture = true
-            updateStencilTexture = true
+            if oldValue != context
+            {
+                scene.context = context
+                updateColorTexture = true
+                updateDepthTexture = true
+                updateStencilTexture = true
+            }
         }
     }
     
@@ -102,12 +105,31 @@ open class Renderer
     
     private var _viewport: simd_float4 = .zero
     
+    private var lightBuffer: StructBuffer<LightData>?
+    
     public init(context: Context, scene: Object, camera: Camera)
     {
         self.scene = scene
         self.camera = camera
         self.context = context
-        self.scene.context = context
+        setup()
+    }
+    
+    func setup()
+    {
+        let lights = getLights(scene, true, true)
+        if !lights.isEmpty
+        {
+            setupLightBuffer(lights: lights)
+            let renderables = getRenderables(scene, true, true)
+            for renderable in renderables
+            {
+                if let material = renderable.material, material.lighting {
+                    material.maxLights = lights.count
+                }
+            }
+        }
+        scene.context = context
     }
     
     public func setClearColor(_ color: simd_float4)
@@ -137,7 +159,10 @@ open class Renderer
     {
         onUpdate?()
         
+        updateLightBuffer(lights: getLights(scene, true, true))
+        
         camera.update()
+        
         scene.update()
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
@@ -251,10 +276,17 @@ open class Renderer
         
         object.update(camera: camera, viewport: _viewport)
         
+        guard !getRenderables(object, true, false).isEmpty else { return }
+        
         renderEncoder.pushDebugGroup(object.label)
         
         if let renderable = object as? Renderable
         {
+            if let material = renderable.material, material.lighting, let lightBuffer = lightBuffer
+            {
+                material.maxLights = lightBuffer.count
+                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
+            }
             renderable.draw(renderEncoder: renderEncoder)
         }
         
@@ -274,9 +306,12 @@ open class Renderer
         self.size = size
     }
     
+    // MARK: - Textures
+    
     public func setupDepthTexture()
     {
         guard updateDepthTexture else { return }
+        
         let sampleCount = context.sampleCount
         let depthPixelFormat = context.depthPixelFormat
         if depthPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -303,6 +338,7 @@ open class Renderer
     public func setupStencilTexture()
     {
         guard updateStencilTexture else { return }
+        
         let sampleCount = context.sampleCount
         let stencilPixelFormat = context.stencilPixelFormat
         if stencilPixelFormat != .invalid, size.width > 1, size.height > 1
@@ -329,6 +365,7 @@ open class Renderer
     public func setupColorTexture()
     {
         guard updateColorTexture else { return }
+        
         let sampleCount = context.sampleCount
         let colorPixelFormat = context.colorPixelFormat
         if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1
@@ -349,6 +386,29 @@ open class Renderer
         else
         {
             colorTexture = nil
+        }
+    }
+    
+    // MARK: - Lights
+    
+    func setupLightBuffer(lights: [Light])
+    {
+        guard !lights.isEmpty else { return }
+        lightBuffer = StructBuffer<LightData>.init(device: context.device, count: lights.count, label: "Light Buffer")
+    }
+    
+    func updateLightBuffer(lights: [Light])
+    {
+        guard !lights.isEmpty else { return }
+        
+        if let lightBuffer = lightBuffer, lights.count != lightBuffer.count
+        {
+            setupLightBuffer(lights: lights)
+        }
+        
+        if let lightBuffer = lightBuffer
+        {
+            lightBuffer.update(data: lights.map { $0.getLightData() })
         }
     }
 }

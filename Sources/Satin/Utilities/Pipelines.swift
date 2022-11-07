@@ -323,6 +323,12 @@ public func injectConstants(source: inout String) {
     source = source.replacingOccurrences(of: "// inject constants\n", with: (ConstantsSource.get() ?? "\n") + "\n")
 }
 
+public func injectDefines(source: inout String, defines: [String: String]) {
+    var injection = ""
+    for define in defines { injection += "#define \(define.key) \(define.value)\n" }
+    source = source.replacingOccurrences(of: "// inject defines\n", with: injection.isEmpty ? "\n" : injection + "\n")
+}
+
 public func injectVertex(source: inout String) {
     source = source.replacingOccurrences(of: "// inject vertex\n", with: (VertexSource.get() ?? "\n") + "\n")
 }
@@ -463,7 +469,7 @@ public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescri
         if !structMembers.isEmpty {
             var generatedVertexSource = "typedef struct {\n"
             generatedVertexSource += structMembers.joined(separator: "\n")
-            generatedVertexSource += "\n} Vertex;"
+            generatedVertexSource += "\n} Vertex;\n"
             vertexSource = generatedVertexSource
         }
     }
@@ -476,11 +482,15 @@ public func injectVertexData(source: inout String) {
 }
 
 public func injectVertexUniforms(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: (VertexUniformsSource.get() ?? "\n") + "\n")
+    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "\n")
 }
 
-public func injectInstanceMatrixUniforms(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject instance matrix uniforms\n", with: (InstanceMatrixUniformsSource.get() ?? "\n") + "\n")
+public func injectLighting(source: inout String, lighting: Bool) {
+    source = source.replacingOccurrences(of: "// inject lighting\n", with: lighting ? (LightingSource.get() ?? "\n") : "\n")
+}
+
+public func injectInstanceMatrixUniforms(source: inout String, instancing: Bool) {
+    source = source.replacingOccurrences(of: "// inject instance matrix uniforms\n", with: instancing ? (InstanceMatrixUniformsSource.get() ?? "\n") : "\n")
 }
 
 public func injectPassThroughVertex(label: String, source: inout String) {
@@ -496,6 +506,20 @@ public func injectPassThroughVertex(label: String, source: inout String) {
 
 public func injectPassThroughVertex(source: inout String) {
     source = source.replacingOccurrences(of: "// inject vertex shader\n", with: (PassThroughVertexPipelineSource.get() ?? "\n") + "\n")
+}
+
+public func injectInstancingArgs(source: inout String, instancing: Bool) {
+    let injection =
+    """
+    \tuint instanceID [[instance_id]],
+    \tconstant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],\n
+    """
+    source = source.replacingOccurrences(of: "// inject instancing args\n", with: instancing ? injection : "")
+}
+
+public func injectLightingArgs(source: inout String, lighting: Bool) {
+    let injection = "\tconstant Light *lights [[buffer(FragmentBufferLighting)]],\n"
+    source = source.replacingOccurrences(of: "// inject lighting args\n", with: lighting ? injection : "")
 }
 
 class PassThroughVertexPipelineSource {
@@ -618,4 +642,70 @@ class InstanceMatrixUniformsSource {
     }
 }
 
+class LightingSource {
+    static let shared = LightingSource()
+    private static var sharedSource: String?
 
+    class func get() -> String? {
+        guard LightingSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("Light.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class InstancingArgsSource {
+    static let shared = InstancingArgsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard InstancingArgsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("InstancingArgs.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+        return sharedSource
+    }
+}
+
+public func injectTexturesArgs(source: inout String, maps: Set<PBRTexture>) {
+    var injection: String = ""
+    for map in maps {
+        injection += "\t\(map.textureType)<float> \(map.textureName) [[texture(\(map.textureIndex))]],\n"
+    }
+    source = source.replacingOccurrences(of: "// inject texture args\n", with: injection)
+}
+
+class TextureArgsSource {
+    static let shared = TextureArgsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard TextureArgsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("TextureArgs.metal") {
+            do {
+                sharedSource = try MetalFileCompiler().parse(url)
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+        return sharedSource
+    }
+}

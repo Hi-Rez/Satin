@@ -864,9 +864,10 @@ GeometryData generateTorusGeometryData(float minorRadius, float majorRadius, int
             const simd_float3 tangent = simd_make_float3(-sinSlice, cosSlice, 0.0);
             const simd_float3 stangent =
                 simd_make_float3(cosSlice * (-sinAngle), sinSlice * (-sinAngle), cosAngle);
-
+            const simd_float3 normal = simd_cross(tangent, stangent);
+            
             vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, z, y, 1.0),
-                                            .normal = simd_normalize(simd_cross(tangent, stangent)),
+                                            .normal = simd_normalize(simd_make_float3(normal.x, normal.z, normal.y)),
                                             .uv = simd_make_float2(af / angularf, sf / slicesf) };
 
             if (s != slices && a != angular) {

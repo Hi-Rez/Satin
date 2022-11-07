@@ -39,6 +39,22 @@ public func getRenderables(_ object: Object, _ recursive: Bool, _ invisible: Boo
     return results
 }
 
+public func getLights(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Light] {
+    var results: [Light] = []
+    if invisible || object.isVisible() {
+        if let light = object as? Light {
+            results.append(light)
+        }
+
+        if recursive {
+            for child in object.children {
+                results.append(contentsOf: getLights(child, recursive, invisible))
+            }
+        }
+    }
+    return results
+}
+
 public func getIntersectables(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Intersectable] {
     var results: [Intersectable] = []
     if invisible || object.isVisible() {

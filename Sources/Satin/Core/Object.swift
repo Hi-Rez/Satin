@@ -264,10 +264,7 @@ open class Object: Codable, ObservableObject {
     public var normalMatrix: matrix_float3x3 {
         _normalMatrix.get {
             let n = worldMatrix.inverse.transpose
-            let c0 = n.columns.0
-            let c1 = n.columns.1
-            let c2 = n.columns.2
-            return simd_matrix(simd_make_float3(c0.x, c0.y, c0.z), simd_make_float3(c1.x, c1.y, c1.z), simd_make_float3(c2.x, c2.y, c2.z))
+            return simd_matrix(simd_make_float3(n.columns.0), simd_make_float3(n.columns.1), simd_make_float3(n.columns.2))
         }
     }
     

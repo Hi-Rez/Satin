@@ -9,11 +9,9 @@ typedef struct {
 } MatCapUniforms;
 
 vertex MatCapVertexData matCapVertex(Vertex in [[stage_in]],
-#if INSTANCING
-                                     uint instanceID [[instance_id]],
-                                     constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
-                                     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]) {
+// inject instancing args
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
+{
 #if INSTANCING
     const float4x4 modelViewMatrix = vertexUniforms.viewMatrix * instanceUniforms[instanceID].modelMatrix;
 #else

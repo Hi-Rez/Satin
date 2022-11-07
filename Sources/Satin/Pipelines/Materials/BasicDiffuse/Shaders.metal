@@ -13,11 +13,9 @@ typedef struct {
 } BasicDiffuseUniforms;
 
 vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
-#if INSTANCING
-                                            uint instanceID [[instance_id]],
-                                            constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
-                                            constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]) {
+// inject instancing args
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
+{
 #if INSTANCING
     const float3x3 normalMatrix = instanceUniforms[instanceID].normalMatrix;
     const float4x4 modelMatrix = instanceUniforms[instanceID].modelMatrix;
@@ -39,8 +37,8 @@ vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
 }
 
 fragment float4 basicDiffuseFragment(DiffuseVertexData in [[stage_in]],
-                                     constant BasicDiffuseUniforms &uniforms
-                                     [[buffer(FragmentBufferMaterialUniforms)]]) {
+    constant BasicDiffuseUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
+{
     const float3 pos = in.viewPosition;
     const float3 dx = normalize(dfdx(pos));
     const float3 dy = normalize(dfdy(pos));

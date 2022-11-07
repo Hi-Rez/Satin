@@ -6,83 +6,82 @@
 
 // Normal Distribution Functions (NDF)
 
-float distributionBlinnPhong(float NdotH, float roughness) {
-    const float a = roughness * roughness;
-    const float a2 = a * a;
-    const float nom = pow(NdotH, (2.0 / a2) - 2.0);
-    const float denom = PI * a2;
-    return nom / denom;
+float distributionBlinnPhong(float NoH, float alpha)
+{
+    const float alpha2 = alpha * alpha;
+    const float numerator = pow(NoH, (2.0 / alpha2) - 2.0);
+    const float denominator = PI * alpha2;
+    return numerator / max(denominator, 0.00001);
 }
 
-float distributionBeckmann(float NdotH, float roughness) {
-    const float a = roughness * roughness;
-    const float a2 = a * a;
-    const float NdotH2 = NdotH * NdotH;
-    const float nom = exp((NdotH2)-1.0) / (a2 * NdotH2);
-    const float denom = PI * a2 * NdotH2 * NdotH2;
-    return nom / denom;
+float distributionBeckmann(float NoH, float alpha)
+{
+    const float alpha2 = alpha * alpha;
+    const float NoH2 = NoH * NoH;
+    const float numerator = exp((NoH2)-1.0) / (alpha2 * NoH2);
+    const float denominator = PI * alpha2 * NoH2 * NoH2;
+    return numerator / max(denominator, 0.00001);
 }
 
-float distributionGGX(float NdotH, float roughness) {
-    const float a = roughness * roughness;
-    const float a2 = a * a;
-    const float NdotH2 = NdotH * NdotH;
-    const float nom = a2;
-    float denom = NdotH2 * (a2 - 1.0) + 1.0;
-    denom = PI * denom * denom;
-    return nom / denom;
+float distributionGGX(float NoH, float alpha)
+{
+    const float alpha2 = alpha * alpha;
+    const float NoH2 = NoH * NoH;
+    const float numerator = alpha2;
+    float denominator = NoH2 * (alpha2 - 1.0) + 1.0;
+    denominator = PI * denominator * denominator;
+    return numerator / max(denominator, 0.00001);
 }
 
 // Geometric Shadowing
 
-float geometryImplicit(float NdotV, float NdotL) { return NdotL * NdotV; }
+float geometryImplicit(float NoV, float NoL) { return NoL * NoV; }
 
-float geometryNeumann(float NdotV, float NdotL) {
-    const float nom = NdotL * NdotV;
-    const float denom = max(NdotL, NdotV);
-    return nom / denom;
+float geometryNeumann(float NoV, float NoL)
+{
+    const float numerator = NoL * NoV;
+    const float denominator = max(NoL, NoV);
+    return numerator / max(denominator, 0.00001);
 }
 
-//float geometryCookTorrance(float NdotV, float NdotL, float NdotH, float VdotH) {
-//    const float g0 = (2.0 * NdotH * NdotV) / VdotH;
-//    const float g1 = (2.0 * NdotH * NdotL) / VdotH;
-//    return min(1.0, min(g0, g1));
-//}
+// float geometryCookTorrance(float NdotV, float NdotL, float NdotH, float VdotH) {
+//     const float g0 = (2.0 * NdotH * NdotV) / VdotH;
+//     const float g1 = (2.0 * NdotH * NdotL) / VdotH;
+//     return min(1.0, min(g0, g1));
+// }
 
-float geometryKelemen(float NdotV, float NdotL, float VdotH) {
-    return (NdotL * NdotV) / (VdotH * VdotH);
+float geometryKelemen(float NoV, float NoL, float VoH)
+{
+    const float numerator = NoL * NoV;
+    const float denominator = VoH * VoH;
+    return numerator / max(denominator, 0.00001);
 }
 
-float geometrySchlickGGX(float NdotV, float roughness) {
-//    const float a = roughness * roughness;
-//    const float k = a / 2.0;
-//    return NdotV / (NdotV * (1.0 - k) + k);
-    
-    const float r = (roughness + 1.0);
-    const float k = (r*r) / 8.0;
-
-    const float nom   = NdotV;
-    const float denom = NdotV * (1.0 - k) + k;
-    
-    return nom / denom;
+float geometrySchlickGGX(float NoX, float alpha)
+{
+    const float k = alpha / 2.0;
+    const float numerator = NoX;
+    float denominator = NoX * (1.0 - k) + k;
+    return numerator / max(denominator, 0.00001);
 }
 
-float geometrySmith(float NdotV, float NdotL, float roughness) {
-    float ggx2 = geometrySchlickGGX(NdotV, roughness);
-    float ggx1 = geometrySchlickGGX(NdotL, roughness);
-    return ggx1 * ggx2;
+float geometrySmith(float NoV, float NoL, float alpha)
+{
+    return geometrySchlickGGX(NoV, alpha) * geometrySchlickGGX(NoL, alpha);
 }
 
-float3 fresnelSchlick(float cosTheta, float3 f0) {
-    return f0 + (1.0 - f0) * pow(1.0 - cosTheta, 5.0);
+float3 fresnelSchlick(float HoV, float3 f0)
+{
+    return f0 + (1.0 - f0) * pow(1.0 - HoV, 5.0);
 }
 
-float3 fresnelSchlickRoughness(float cosTheta, float3 f0, float roughness) {
+float3 fresnelSchlickRoughness(float cosTheta, float3 f0, float roughness)
+{
     return f0 + (max(float3(1.0 - roughness), f0) - f0) * pow(1.0 - cosTheta, 5.0);
 }
 
-float3 getNormalFromMap(texture2d<float> normalTex, sampler s, float2 uv, float3 normal,
-                        float3 worldPos) {
+float3 getNormalFromMap(texture2d<float> normalTex, sampler s, float2 uv, float3 normal, float3 worldPos)
+{
     float3 tangentNormal = normalTex.sample(s, uv).xyz * 2.0 - 1.0;
 
     float3 Q1 = dfdx(worldPos);
@@ -99,7 +98,8 @@ float3 getNormalFromMap(texture2d<float> normalTex, sampler s, float2 uv, float3
 }
 
 // GGX NDF via importance sampling
-float3 importanceSampleGGX(float2 Xi, const float3 N, float roughness ) {
+float3 importanceSampleGGX(float2 Xi, const float3 N, float roughness)
+{
     float alpha = roughness * roughness;
     float alpha2 = alpha * alpha;
 

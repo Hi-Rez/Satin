@@ -1,0 +1,18 @@
+# This is intended to conform to the Cocoa coding style (http://cocoa.apple.com/Cocoa%20Coding%20Style.html)
+BasedOnStyle: WebKit
+SortIncludes: false
+BreakBeforeBraces: Linux
+Standard: Cpp11
+IndentCaseLabels: true
+DerivePointerAlignment: false
+PointerAlignment: Right
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands: true
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+BreakBeforeBinaryOperators: None
+BreakConstructorInitializersBeforeComma: false
+NamespaceIndentation: All
+IndentWidth: 4
