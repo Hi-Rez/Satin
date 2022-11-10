@@ -143,6 +143,10 @@ public func getPipelinesMaterialsUrl() -> URL? {
     return getPipelinesUrl("Materials")
 }
 
+public func getPipelinesComputeUrl() -> URL? {
+    return getPipelinesUrl("Compute")
+}
+
 public func getPipelinesMaterialsUrl(_ path: String) -> URL? {
     return getPipelinesMaterialsUrl()?.appendingPathComponent(path)
 }

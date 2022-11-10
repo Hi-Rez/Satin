@@ -38,7 +38,7 @@ kernel void diffuseCompute(uint2 gid [[thread_position_in_grid]],
                 // spherical to cartesian (in tangent space)
                 const float sinTheta = sin( theta );
                 const float cosTheta = cos( theta );
-                const float3 tangentSample = float3( sinTheta * cosPhi, sinTheta * sinPhi, cos( theta ) );
+                const float3 tangentSample = float3( sinTheta * cosPhi, sinTheta * sinPhi, cosTheta );
                 // tangent space to world
                 const float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * dir;
                 irradiance += ref.sample( s, sampleVec ).rgb * cosTheta * sinTheta;

@@ -6,12 +6,16 @@
 //
 
 import Foundation
+import Combine
 import simd
 
 public protocol Light {
     var type: LightType { get }
-    var color: simd_float4 { get set } // color
+
+    var data: LightData { get }
+        
+    var color: simd_float3 { get set } // color
     var intensity: Float { get set }
     
-    func getLightData() -> LightData
+    var publisher: PassthroughSubject<Light, Never> { get }
 }

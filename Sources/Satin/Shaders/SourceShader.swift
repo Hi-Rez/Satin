@@ -34,7 +34,7 @@ open class SourceShader: Shader {
         }
     }
     
-    public override var instancing: Bool {
+    override public var instancing: Bool {
         didSet {
             if oldValue != instancing {
                 sourceNeedsUpdate = true
@@ -42,7 +42,7 @@ open class SourceShader: Shader {
         }
     }
     
-    public override var lighting: Bool {
+    override public var lighting: Bool {
         didSet {
             if oldValue != lighting {
                 sourceNeedsUpdate = true
@@ -50,7 +50,7 @@ open class SourceShader: Shader {
         }
     }
     
-    public override var maxLights: Int {
+    override public var maxLights: Int {
         didSet {
             if oldValue != maxLights {
                 sourceNeedsUpdate = true
@@ -60,6 +60,16 @@ open class SourceShader: Shader {
     
     open var defines: [String: String] {
         var results = [String: String]()
+
+        for attribute in VertexAttribute.allCases {
+            switch vertexDescriptor.attributes[attribute.rawValue].format {
+            case .invalid:
+                continue;
+            default:
+                results[attribute.shaderDefine] = "true"
+            }
+        }
+        
         if instancing {
             results["INSTANCING"] = "true"
         }
@@ -122,7 +132,7 @@ open class SourceShader: Shader {
     }
 
     open func setupShaderSource() -> String? {
-        var result: String? = nil
+        var result: String?
         
         if let pipelineURL = pipelineURL {
             do {
@@ -172,7 +182,7 @@ open class SourceShader: Shader {
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)
-            self.shaderSource = compiledShaderSource
+            shaderSource = compiledShaderSource
             self.source = source
             
             sourceNeedsUpdate = false

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Metal
 import simd
 
@@ -21,10 +22,7 @@ open class Renderer
     {
         didSet
         {
-            if scene.context != context
-            {
-                scene.context = context
-            }
+            setup()
         }
     }
     
@@ -105,7 +103,9 @@ open class Renderer
     
     private var _viewport: simd_float4 = .zero
     
+    private var updateLightBuffer: Bool = false
     private var lightBuffer: StructBuffer<LightData>?
+    private var lightSubscriptions = Set<AnyCancellable>()
     
     public init(context: Context, scene: Object, camera: Camera)
     {
@@ -117,19 +117,22 @@ open class Renderer
     
     func setup()
     {
+        setupLights()
+        scene.context = context
+    }
+    
+    func setupLights()
+    {
         let lights = getLights(scene, true, true)
-        if !lights.isEmpty
+        setupLightBuffer(lights: lights)
+        let renderables = getRenderables(scene, true, true)
+        for renderable in renderables
         {
-            setupLightBuffer(lights: lights)
-            let renderables = getRenderables(scene, true, true)
-            for renderable in renderables
+            if let material = renderable.material, material.lighting
             {
-                if let material = renderable.material, material.lighting {
-                    material.maxLights = lights.count
-                }
+                material.maxLights = lights.count
             }
         }
-        scene.context = context
     }
     
     public func setClearColor(_ color: simd_float4)
@@ -282,10 +285,17 @@ open class Renderer
         
         if let renderable = object as? Renderable
         {
-            if let material = renderable.material, material.lighting, let lightBuffer = lightBuffer
+            if let material = renderable.material, material.lighting
             {
-                material.maxLights = lightBuffer.count
-                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
+                if let lightBuffer = lightBuffer
+                {
+                    material.maxLights = lightBuffer.count
+                    renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
+                }
+                else
+                {
+                    material.maxLights = 0
+                }
             }
             renderable.draw(renderEncoder: renderEncoder)
         }
@@ -393,22 +403,41 @@ open class Renderer
     
     func setupLightBuffer(lights: [Light])
     {
-        guard !lights.isEmpty else { return }
-        lightBuffer = StructBuffer<LightData>.init(device: context.device, count: lights.count, label: "Light Buffer")
+        lightSubscriptions.removeAll()
+        
+        for light in lights
+        {
+            light.publisher.sink
+            { [weak self] _ in
+                self?.updateLightBuffer = true
+            }.store(in: &lightSubscriptions)
+        }
+        
+        if lights.isEmpty
+        {
+            lightBuffer = nil
+        }
+        else
+        {
+            lightBuffer = StructBuffer<LightData>.init(device: context.device, count: lights.count, label: "Light Buffer")
+            updateLightBuffer = true
+        }
     }
     
     func updateLightBuffer(lights: [Light])
     {
-        guard !lights.isEmpty else { return }
-        
         if let lightBuffer = lightBuffer, lights.count != lightBuffer.count
         {
             setupLightBuffer(lights: lights)
         }
         
-        if let lightBuffer = lightBuffer
+        if let lightBuffer = lightBuffer, updateLightBuffer
         {
-            lightBuffer.update(data: lights.map { $0.getLightData() })
+            lightBuffer.update(data: lights.map { $0.data })
+        }
+        else
+        {
+            updateLightBuffer = false
         }
     }
 }

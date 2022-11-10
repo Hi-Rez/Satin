@@ -12,6 +12,7 @@ static constant float4 rotations[6] = {
     float4( 0.0, 1.0, 0.0, PI )
 };
 
+#define SAMPLE_COUNT 1024u
 #define worldUp float3( 0.0, 1.0, 0.0 )
 
 #include "Skybox.metal"

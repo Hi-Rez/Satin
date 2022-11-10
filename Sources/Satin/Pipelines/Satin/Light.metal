@@ -1,15 +1,13 @@
 typedef enum LightType {
-    LightTypeAmbient = 0,
-    LightTypeDirectional = 1,
-    LightTypePoint = 2,
-    LightTypeSpot = 3
+    LightTypeDirectional = 0,
+    LightTypePoint = 1,
+    LightTypeSpot = 2
 } LightType;
 
 typedef struct {
-    float4 color;
-    float3 position;
-    float3 direction;
-    float intensity;
-    int type;
+    float4 color;       // (rgb, intensity)
+    float4 position;    // (xyz, type)
+    float4 direction;   // (xyz, inverse radius)
+    float4 spotInfo;    // (spotScale, spotOffset, cosInner, cosOuter)
 } Light;
 

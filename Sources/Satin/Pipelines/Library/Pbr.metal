@@ -6,16 +6,18 @@
 
 // Normal Distribution Functions (NDF)
 
-float distributionBlinnPhong(float NoH, float alpha)
+float distributionBlinnPhong(float NoH, float roughness)
 {
+    const float alpha = roughness * roughness;
     const float alpha2 = alpha * alpha;
     const float numerator = pow(NoH, (2.0 / alpha2) - 2.0);
     const float denominator = PI * alpha2;
     return numerator / max(denominator, 0.00001);
 }
 
-float distributionBeckmann(float NoH, float alpha)
+float distributionBeckmann(float NoH, float roughness)
 {
+    const float alpha = roughness * roughness;
     const float alpha2 = alpha * alpha;
     const float NoH2 = NoH * NoH;
     const float numerator = exp((NoH2)-1.0) / (alpha2 * NoH2);
@@ -23,8 +25,9 @@ float distributionBeckmann(float NoH, float alpha)
     return numerator / max(denominator, 0.00001);
 }
 
-float distributionGGX(float NoH, float alpha)
+float distributionGGX(float NoH, float roughness)
 {
+    const float alpha = roughness * roughness;
     const float alpha2 = alpha * alpha;
     const float NoH2 = NoH * NoH;
     const float numerator = alpha2;
@@ -57,17 +60,18 @@ float geometryKelemen(float NoV, float NoL, float VoH)
     return numerator / max(denominator, 0.00001);
 }
 
-float geometrySchlickGGX(float NoX, float alpha)
+float geometrySchlickGGX(float NoX, float roughness)
 {
+    const float alpha = roughness * roughness;
     const float k = alpha / 2.0;
     const float numerator = NoX;
     float denominator = NoX * (1.0 - k) + k;
     return numerator / max(denominator, 0.00001);
 }
 
-float geometrySmith(float NoV, float NoL, float alpha)
+float geometrySmith(float NoV, float NoL, float roughness)
 {
-    return geometrySchlickGGX(NoV, alpha) * geometrySchlickGGX(NoL, alpha);
+    return geometrySchlickGGX(NoV, roughness) * geometrySchlickGGX(NoL, roughness);
 }
 
 float3 fresnelSchlick(float HoV, float3 f0)
@@ -80,44 +84,24 @@ float3 fresnelSchlickRoughness(float cosTheta, float3 f0, float roughness)
     return f0 + (max(float3(1.0 - roughness), f0) - f0) * pow(1.0 - cosTheta, 5.0);
 }
 
-float3 getNormalFromMap(texture2d<float> normalTex, sampler s, float2 uv, float3 normal, float3 worldPos)
-{
-    float3 tangentNormal = normalTex.sample(s, uv).xyz * 2.0 - 1.0;
-
-    float3 Q1 = dfdx(worldPos);
-    float3 Q2 = dfdy(worldPos);
-    float2 st1 = dfdx(uv);
-    float2 st2 = dfdy(uv);
-
-    float3 N = normalize(normal);
-    float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
-    float3 B = -normalize(cross(N, T));
-    float3x3 TBN = float3x3(T, B, N);
-
-    return normalize(TBN * tangentNormal);
-}
-
+// Based on Karis 2014
 // GGX NDF via importance sampling
-float3 importanceSampleGGX(float2 Xi, const float3 N, float roughness)
+float3 importanceSampleGGX(float2 Xi, float3 N, float roughness)
 {
-    float alpha = roughness * roughness;
-    float alpha2 = alpha * alpha;
+    const float alpha = roughness * roughness;
+    const float alpha2 = alpha * alpha;
 
-    float phi = 2.0 * PI * Xi.x;
-    float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (alpha2 - 1.0) * Xi.y));
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+    const float phi = TWO_PI * Xi.x;
+    const float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (alpha2 - 1.0) * Xi.y));
+    const float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
 
     // from spherical coordinates to cartesian coordinates
-    float3 H;
-    H.x = cos(phi) * sinTheta;
-    H.y = sin(phi) * sinTheta;
-    H.z = cosTheta;
+    const float3 H = float3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
 
     // from tangent-space vector to world-space sample vector
-    float3 up = abs(N.z) < 0.999 ? float3(0.0, 0.0, 1.0) : float3(1.0, 0.0, 0.0);
-    float3 tangent = normalize(cross(up, N));
-    float3 bitangent = cross(N, tangent);
+    const float3 up = abs(N.z) < 0.999 ? float3(0.0, 0.0, 1.0) : float3(1.0, 0.0, 0.0);
+    const float3 tangent = normalize(cross(up, N));
+    const float3 bitangent = cross(N, tangent);
 
-    float3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
-    return normalize(sampleVec);
+    return tangent * H.x + bitangent * H.y + N * H.z;
 }

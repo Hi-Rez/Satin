@@ -29,10 +29,11 @@ open class FileWatcher
     public var onUpdate: (() -> ())?
     public weak var delegate: FileWatcherDelegate?
 
-    public init(filePath: String, timeInterval: TimeInterval = 1.0)
+    public init(filePath: String, timeInterval: TimeInterval = 1.0, onUpdate: (() -> ())? = nil)
     {
         self.filePath = filePath
         self.timeInterval = timeInterval
+        self.onUpdate = onUpdate
         if FileManager.default.fileExists(atPath: self.filePath)
         {
             do

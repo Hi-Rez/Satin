@@ -8,9 +8,8 @@
 import Foundation
 
 public struct LightData {
-    var color: simd_float4
-    var position: simd_float3
-    var direction: simd_float3
-    var intensity: Float
-    var type: Int
+    var color: simd_float4       // (rgb, intensity)
+    var position: simd_float4    // (xyz, type)
+    var direction: simd_float4   // (xyz, inverse radius)
+    var spotInfo: simd_float4    // (spotScale, spotOffset, cosInner, cosOuter)
 }

@@ -54,7 +54,17 @@ open class Geometry {
         return _bounds
     }
     
-    public var vertexBuffer: MTLBuffer?
+    public private(set) var vertexBuffers: [VertexBufferIndex: MTLBuffer] = [:]
+    public var vertexBuffer: MTLBuffer? {
+        didSet {
+            if let vertexBuffer = vertexBuffer {
+                vertexBuffers[VertexBufferIndex.Vertices] = vertexBuffer
+            }
+            else {
+                vertexBuffers.removeValue(forKey: VertexBufferIndex.Vertices)
+            }
+        }
+    }
     public var indexBuffer: MTLBuffer?
     
     public init() {}
@@ -161,6 +171,10 @@ open class Geometry {
         unrollGeometryData(&unrolled, &data)
         setFrom(&unrolled)
         freeGeometryData(&unrolled)
+    }
+    
+    public func setBuffer(_ buffer: MTLBuffer?, type: VertexBufferIndex) {
+        vertexBuffers[type] = buffer
     }
     
     public func transform(_ matrix: simd_float4x4) {

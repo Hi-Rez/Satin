@@ -46,15 +46,27 @@ open class MetalFileCompiler
             }
             catch
             {
-                if fileURLResolved.path.contains("Satin"), let satinFileURL = getPipelinesSatinUrl(fileURLResolved.lastPathComponent)
+                let pathComponents = fileURLResolved.pathComponents
+                
+                if let index = pathComponents.lastIndex(of: "Satin"), var frameworkFileURL = getPipelinesSatinUrl()
                 {
-                    content = try String(contentsOf: satinFileURL, encoding: .utf8)
-                    fileURLResolved = satinFileURL
+                    for i in (index + 1)..<pathComponents.count
+                    {
+                        frameworkFileURL.appendPathComponent(pathComponents[i])
+                    }
+                    
+                    content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
+                    fileURLResolved = frameworkFileURL
                 }
-                else if fileURLResolved.path.contains("Library"), let libraryFileURL = getPipelinesLibraryUrl(fileURLResolved.lastPathComponent)
+                else if let index = pathComponents.lastIndex(of: "Library"), var frameworkFileURL = getPipelinesLibraryUrl()
                 {
-                    content = try String(contentsOf: libraryFileURL, encoding: .utf8)
-                    fileURLResolved = libraryFileURL
+                    for i in (index + 1)..<pathComponents.count
+                    {
+                        frameworkFileURL.appendPathComponent(pathComponents[i])
+                    }
+                    
+                    content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
+                    fileURLResolved = frameworkFileURL
                 }
                 else
                 {
@@ -62,8 +74,7 @@ open class MetalFileCompiler
                 }
             }
             
-            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
-            watcher.onUpdate = { [weak self] in
+            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25) { [weak self] in
                 guard let self = self else { return }
                 self.onUpdate?()
             }

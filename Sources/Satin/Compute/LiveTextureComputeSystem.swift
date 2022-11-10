@@ -12,7 +12,6 @@ import simd
 open class LiveTextureComputeSystem: TextureComputeSystem {
     public var compiler = MetalFileCompiler()
     public var source: String?
-    public var instance: String = ""
     public var pipelineURL: URL
     
     public var uniforms: UniformBuffer?
@@ -37,26 +36,24 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelineURL: URL,
-                instance: String = "",
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelineURL
-        self.instance = instance
         
         super.init(device: device, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
         
+        self.label = prefixLabel
         self.source = compileSource()
+        
         setup()
     }
     
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelinesURL: URL,
-                instance: String = "",
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelinesURL
-        self.instance = instance
         
         super.init(device: device, textureDescriptors: textureDescriptors, updatePipeline: nil, resetPipeline: nil, feedback: feedback)
         
@@ -116,7 +113,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                 source += shaderSource
                                                 
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase.replacingOccurrences(of: " ", with: ""))Uniforms") {
-                    params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
+                    params.label = prefixLabel.titleCase
                     if let parameters = parameters {
                         parameters.setFrom(params)
                     }
@@ -131,7 +128,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                 return source
             }
             catch {
-                print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
+                print("\(prefixLabel) TextureComputeError: Failed to compile source - \(error.localizedDescription)")
             }
             return nil
         }
@@ -142,7 +139,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
             return try device.makeLibrary(source: source, options: .none)
         }
         catch {
-            print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
+            print("\(prefixLabel) TextureComputeError: Failed to setup MTLLibrary - \(error.localizedDescription)")
         }
         return nil
     }
@@ -154,7 +151,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
             reset()
         }
         catch {
-            print("\(prefixLabel) TextureComputeError: \(error.localizedDescription)")
+            print("\(prefixLabel) TextureComputeError: Failed to setup Pipelines - \(error.localizedDescription)")
         }
     }
     

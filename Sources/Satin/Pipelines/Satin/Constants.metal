@@ -89,16 +89,16 @@ typedef enum PBRTextureIndex {
     PBRTextureEmissive = 4,
     PBRTextureSpecular = 5,
     PBRTextureSheen = 6,
-    PBRTextureSpecularHighlight = 7,
-    PBRTextureAnisotropy = 8,
-    PBRTextureAnisotropyAngle = 9,
-    PBRTextureBump = 10,
-    PBRTextureDisplacement = 11,
-    PBRTextureAlpha = 12,
-    PBRTextureAmbient = 13,
-    PBRTextureAmbientOcculsion = 14,
-    PBRTextureReflection = 15,
-    PBRTextureIrradiance = 16
+    PBRTextureAnisotropy = 7,
+    PBRTextureAnisotropyAngle = 8,
+    PBRTextureBump = 9,
+    PBRTextureDisplacement = 10,
+    PBRTextureAlpha = 11,
+    PBRTextureAmbient = 12,
+    PBRTextureAmbientOcculsion = 13,
+    PBRTextureReflection = 14,
+    PBRTextureIrradiance = 15,
+    PBRTextureBRDF = 16
 } PBRTextureIndex;
 
 typedef enum FragmentSamplerIndex {

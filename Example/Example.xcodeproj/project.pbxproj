@@ -71,8 +71,6 @@
 		E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7680028A70000005D75AB /* TextureComputeRendererView.swift */; };
 		E1E7680328A72E50005D75AB /* PBRRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7680228A72E50005D75AB /* PBRRendererView.swift */; };
 		E1E7680428A72E66005D75AB /* PBRRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E168FC76248ECCA2004B8407 /* PBRRenderer.swift */; };
-		E1E7680528A72E66005D75AB /* PBRRenderer+Compute.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1891B0D2494461200E6F04E /* PBRRenderer+Compute.swift */; };
-		E1E7680628A72E66005D75AB /* PBRRenderer+LiveCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1891B0F2494468800E6F04E /* PBRRenderer+LiveCode.swift */; };
 		E1E7680728A7302F005D75AB /* VertexAttributesRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */; };
 		E1E7680828A73032005D75AB /* LoadedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E144281D28120C1B006D9CD1 /* LoadedMesh.swift */; };
 		E1E7680A28A73086005D75AB /* VertexAttributesRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */; };
@@ -115,8 +113,6 @@
 		E17D2C1126BBB7DF005A136A /* AudioInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
 		E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctasphereRenderer.swift; sourceTree = "<group>"; };
 		E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtrudedTextRenderer.swift; sourceTree = "<group>"; };
-		E1891B0D2494461200E6F04E /* PBRRenderer+Compute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PBRRenderer+Compute.swift"; sourceTree = "<group>"; };
-		E1891B0F2494468800E6F04E /* PBRRenderer+LiveCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PBRRenderer+LiveCode.swift"; sourceTree = "<group>"; };
 		E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubemapRenderer.swift; sourceTree = "<group>"; };
 		E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCodeRenderer.swift; sourceTree = "<group>"; };
 		E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcapRenderer.swift; sourceTree = "<group>"; };
@@ -282,8 +278,6 @@
 			isa = PBXGroup;
 			children = (
 				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
-				E1891B0F2494468800E6F04E /* PBRRenderer+LiveCode.swift */,
-				E1891B0D2494461200E6F04E /* PBRRenderer+Compute.swift */,
 			);
 			path = PBR;
 			sourceTree = "<group>";
@@ -485,7 +479,6 @@
 				E17A55BC28A6C9C3008F1DDB /* CustomGeometryRenderer.swift in Sources */,
 				E1E767E228A6E84A005D75AB /* TorusKnotGenerator.c in Sources */,
 				E17A55BB28A6C928008F1DDB /* ExportGeometryRenderer.swift in Sources */,
-				E1E7680628A72E66005D75AB /* PBRRenderer+LiveCode.swift in Sources */,
 				E136872A2900BEEC00FFF43F /* InstancedMeshRendererView.swift in Sources */,
 				E17A55B428A6C44A008F1DDB /* ShippingShadersRenderer.swift in Sources */,
 				E1E7680328A72E50005D75AB /* PBRRendererView.swift in Sources */,
@@ -506,7 +499,6 @@
 				E1E7680A28A73086005D75AB /* VertexAttributesRendererView.swift in Sources */,
 				E1E767C228A6D341005D75AB /* Renderer2DView.swift in Sources */,
 				E1E767F528A6F805005D75AB /* RayMarchingRendererView.swift in Sources */,
-				E1E7680528A72E66005D75AB /* PBRRenderer+Compute.swift in Sources */,
 				E1E767CE28A6D41B005D75AB /* DepthRendererView.swift in Sources */,
 				E17A55B128A6C2B2008F1DDB /* TextRenderer.swift in Sources */,
 				E1E767EC28A6EA5C005D75AB /* MatcapRenderer.swift in Sources */,

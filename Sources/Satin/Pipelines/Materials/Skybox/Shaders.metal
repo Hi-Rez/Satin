@@ -1,5 +1,10 @@
+#include "Library/Tonemapping/Aces.metal"
+#include "Library/Gamma.metal"
+
 typedef struct {
     float4 color; // color
+    bool toneMapped;     // toggle,false
+    bool gammaCorrected; // toggle,false
 } SkyboxUniforms;
 
 typedef struct {
@@ -20,14 +25,22 @@ vertex SkyVertexData skyboxVertex(Vertex v [[stage_in]],
     const float4 position = v.position;
     SkyVertexData out;
     out.position = modelViewProjectionMatrix * position;
-    out.uv = float3(position.xy, -position.z);
+    out.uv = position.xyz;
     return out;
 }
 
 fragment float4 skyboxFragment(SkyVertexData in [[stage_in]],
     constant SkyboxUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]],
-    texturecube<half> cubeTex [[texture(FragmentTextureCustom0)]],
+    texturecube<float> cubeTex [[texture(FragmentTextureCustom0)]],
     sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]])
 {
-    return uniforms.color * float4(cubeTex.sample(cubeTexSampler, in.uv));
+    float4 color = cubeTex.sample(cubeTexSampler, in.uv);
+    
+    // HDR Tonemapping
+    color.rgb = uniforms.toneMapped ? aces(color.rgb) : color.rgb;
+
+    // Gamma Correction
+    color.rgb = uniforms.gammaCorrected ? gamma(color.rgb) : color.rgb;
+    
+    return uniforms.color * color;
 }

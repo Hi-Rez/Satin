@@ -11,8 +11,8 @@ kernel void cubemapCompute(
     if( gid.x >= tex0.get_width() || gid.y >= tex0.get_height() ) {
         return;
     }
+    
     constexpr sampler s( mag_filter::linear, min_filter::linear );
-
     const texture2d<float, access::write> tex[6] = { tex0, tex1, tex2, tex3, tex4, tex5 };
     const float2 size = float2( tex0.get_width(), tex0.get_height() ) - 1.0;
     const float2 uv = float2( gid ) / size;
@@ -33,6 +33,7 @@ kernel void cubemapCompute(
         const float2 suv = float2( fract( theta + 0.5 ), 1.0 - ( phi + HALF_PI ) / PI );
 
         float3 color = ref.sample( s, suv ).rgb;
+        
         // // HDR tonemapping
         // color = color / ( color + float3( 1.0 ) );
         // // gamma correct

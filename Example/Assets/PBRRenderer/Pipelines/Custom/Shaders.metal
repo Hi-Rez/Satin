@@ -48,9 +48,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 
 	const float NdotV = max( dot( normal, view ), 0.00001 );
 
-	const float3 albedo = float3( 1.0, 1.0, 1.0 );
+	const float3 albedo = float3( 1.0, 0.0, 0.0 );
 	const float roughness = in.roughness;
-    const float alpha = roughness * roughness;
 	const float metallic = in.metallic;
 	const float ao = 1.0;
 
@@ -88,8 +87,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 		const float NdotH = max( dot( normal, halfway ), 0.00001 );
 
 		// Cook-Torrance BRDF
-		const float D = distributionGGX( NdotH, alpha );
-		const float G = geometrySmith( NdotV, NdotL, alpha );
+		const float D = distributionGGX( NdotH, roughness );
+		const float G = geometrySmith( NdotV, NdotL, roughness );
 		const float3 F = fresnelSchlick( HdotV, f0 );
 
 		const float3 numerator = D * G * F;
@@ -123,7 +122,7 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 	const float levels = float( specularTex.get_num_mip_levels() - 1 );
 
 	constexpr sampler ss( mag_filter::linear, min_filter::linear, mip_filter::linear, mip_filter::linear );
-	const float3 prefilteredColor = specularTex.sample( ss, float3( reflection.xy, -reflection.z ), level( levels * roughness ) ).rgb;
+	const float3 prefilteredColor = specularTex.sample( ss, reflection, level( levels * roughness ) ).rgb;
 
 	const float2 brdf = integrationTex.sample( s, float2( NdotV, roughness ) ).rg;
 	const float3 specular = prefilteredColor * ( F * brdf.x + brdf.y );

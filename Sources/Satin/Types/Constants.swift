@@ -23,13 +23,12 @@ public enum Blending: Codable {
 }
 
 public enum LightType: Int  {
-    case ambient = 0
-    case directional = 1
-    case point = 2
-    case spot = 3
+    case directional = 0
+    case point = 1
+    case spot = 2
 }
 
-public enum VertexAttribute: Int {
+public enum VertexAttribute: Int, CaseIterable {
     case Position = 0
     case Normal = 1
     case Texcoord = 2
@@ -88,6 +87,45 @@ public enum VertexAttribute: Int {
             return "custom10"
         case .Custom11:
             return "custom11"
+        }
+    }
+    
+    public var shaderDefine: String {
+        switch self {
+        case .Position:
+            return "HAS_POSITION"
+        case .Normal:
+            return "HAS_NORMAL"
+        case .Texcoord:
+            return "HAS_UV"
+        case .Tangent:
+            return "HAS_TANGENT"
+        case .Bitangent:
+            return "HAS_BITANGENT"
+        case .Custom0:
+            return "HAS_CUSTOM0"
+        case .Custom1:
+            return "HAS_CUSTOM1"
+        case .Custom2:
+            return "HAS_CUSTOM2"
+        case .Custom3:
+            return "HAS_CUSTOM3"
+        case .Custom4:
+            return "HAS_CUSTOM4"
+        case .Custom5:
+            return "HAS_CUSTOM5"
+        case .Custom6:
+            return "HAS_CUSTOM6"
+        case .Custom7:
+            return "HAS_CUSTOM7"
+        case .Custom8:
+            return "HAS_CUSTOM8"
+        case .Custom9:
+            return "HAS_CUSTOM9"
+        case .Custom10:
+            return "HAS_CUSTOM10"
+        case .Custom11:
+            return "HAS_CUSTOM11"
         }
     }
 }
@@ -167,16 +205,16 @@ public enum PBRTexture: Int {
     case emissive = 4
     case specular = 5
     case sheen = 6
-    case specularHighlight = 7
-    case anisotropy = 8
-    case anisotropyAngle = 9
-    case bump = 10
-    case displacement = 11
-    case alpha = 12
-    case ambient = 13
-    case ambientOcculsion = 14
-    case reflection = 15
-    case irradiance = 16
+    case anisotropy = 7
+    case anisotropyAngle = 8
+    case bump = 9
+    case displacement = 10
+    case alpha = 11
+    case ambient = 12
+    case ambientOcculsion = 13
+    case reflection = 14
+    case irradiance = 15
+    case brdf = 16
     
     public var shaderDefine: String {
         switch self {
@@ -194,8 +232,6 @@ public enum PBRTexture: Int {
             return "SPECULAR_MAP"
         case .sheen:
             return "SHEEN_MAP"
-        case .specularHighlight:
-            return "SPECULAR_HIGHLIGHT_MAP"
         case .anisotropy:
             return "ANISOTROPY_MAP"
         case .anisotropyAngle:
@@ -214,12 +250,14 @@ public enum PBRTexture: Int {
             return "REFLECTION_MAP"
         case .irradiance:
             return "IRRADIANCE_MAP"
+        case .brdf:
+            return "BRDF_MAP"
         }
     }
     
     public var textureType: String {
         switch self {
-        case .irradiance:
+        case .irradiance, .reflection:
             return "texturecube"
         default:
             return "texture2d"
@@ -242,8 +280,6 @@ public enum PBRTexture: Int {
             return "specularMap"
         case .sheen:
             return "sheenMap"
-        case .specularHighlight:
-            return "specularHighlightMap"
         case .anisotropy:
             return "anisotropyMap"
         case .anisotropyAngle:
@@ -262,9 +298,10 @@ public enum PBRTexture: Int {
             return "reflectionMap"
         case .irradiance:
             return "irradianceMap"
+        case .brdf:
+            return "brdfMap"
         }
     }
-    
     
     public var textureIndex: String {
         switch self {
@@ -282,8 +319,6 @@ public enum PBRTexture: Int {
             return "PBRTextureSpecular"
         case .sheen:
             return "PBRTextureSheen"
-        case .specularHighlight:
-            return "PBRTextureSpecularHighlight"
         case .anisotropy:
             return "PBRTextureAnisotropy"
         case .anisotropyAngle:
@@ -302,6 +337,8 @@ public enum PBRTexture: Int {
             return "PBRTextureReflection"
         case .irradiance:
             return "PBRTextureIrradiance"
+        case .brdf:
+            return "PBRTextureBRDF"
         }
     }
 }

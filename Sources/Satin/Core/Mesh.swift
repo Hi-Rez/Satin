@@ -145,7 +145,7 @@ open class Mesh: Object, Renderable, Intersectable {
 
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard instanceCount > 0,
-              let vertexBuffer = geometry.vertexBuffer,
+              !geometry.vertexBuffers.isEmpty,
               let uniforms = uniforms,
               let material = material,
               material.pipeline != nil
@@ -157,7 +157,10 @@ open class Mesh: Object, Renderable, Intersectable {
         
         self.bind(renderEncoder)
 
-        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
+        for (index, buffer) in geometry.vertexBuffers {
+            renderEncoder.setVertexBuffer(buffer, offset: 0, index: index.rawValue)
+        }
+        
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
         
         if !submeshes.isEmpty {
