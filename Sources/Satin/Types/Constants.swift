@@ -34,18 +34,19 @@ public enum VertexAttribute: Int, CaseIterable {
     case Texcoord = 2
     case Tangent = 3
     case Bitangent = 4
-    case Custom0 = 5
-    case Custom1 = 6
-    case Custom2 = 7
-    case Custom3 = 8
-    case Custom4 = 9
-    case Custom5 = 10
-    case Custom6 = 11
-    case Custom7 = 12
-    case Custom8 = 13
-    case Custom9 = 14
-    case Custom10 = 15
-    case Custom11 = 16
+    case Color = 5
+    case Custom0 = 6
+    case Custom1 = 7
+    case Custom2 = 8
+    case Custom3 = 9
+    case Custom4 = 10
+    case Custom5 = 11
+    case Custom6 = 12
+    case Custom7 = 13
+    case Custom8 = 14
+    case Custom9 = 15
+    case Custom10 = 16
+    case Custom11 = 17
 
     public var description: String {
         return String(describing: self)
@@ -63,6 +64,8 @@ public enum VertexAttribute: Int, CaseIterable {
             return "tangent"
         case .Bitangent:
             return "bitangent"
+        case .Color:
+            return "color"
         case .Custom0:
             return "custom0"
         case .Custom1:
@@ -102,6 +105,8 @@ public enum VertexAttribute: Int, CaseIterable {
             return "HAS_TANGENT"
         case .Bitangent:
             return "HAS_BITANGENT"
+        case .Color:
+            return "HAS_COLOR"
         case .Custom0:
             return "HAS_CUSTOM0"
         case .Custom1:

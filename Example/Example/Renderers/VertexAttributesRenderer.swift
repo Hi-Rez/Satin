@@ -26,22 +26,10 @@ class VertexAttributesRenderer: BaseRenderer {
     
     class CustomMaterial: LiveMaterial {}
     
-    
-    var assetsURL: URL {
-        return Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-    
-    var modelsURL: URL {
-        rendererAssetsURL.appendingPathComponent("Models")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
+    var modelsURL: URL { rendererAssetsURL.appendingPathComponent("Models") }
     
 
     var camera = PerspectiveCamera(position: [0.0, 0.0, 4.0], near: 0.001, far: 100.0)
@@ -62,9 +50,7 @@ class VertexAttributesRenderer: BaseRenderer {
     var loadedMesh: LoadedMesh!
     
     override func setup() {
-        let material = CustomMaterial(pipelinesURL: pipelinesURL)
-        material.vertexDescriptor = CustomVertexDescriptor()
-        loadedMesh = LoadedMesh(url: modelsURL.appendingPathComponent("suzanne.obj"), material: material)
+        loadedMesh = LoadedMesh(url: modelsURL.appendingPathComponent("monkey.obj"), material: CustomMaterial(pipelinesURL: pipelinesURL))
         scene.add(loadedMesh)
         
         raycaster.setFromCamera(camera)

@@ -13,86 +13,62 @@ import simd
 
 import Satin
 
-struct CustomVertex {
-    var position: simd_float4
-    var normal: simd_float3
-    var uv: simd_float2
+struct VertexGenerics {
     var tangent: simd_float3
+    var bitangent: simd_float3
+    var color: simd_float3
 }
 
 func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
     let descriptor = MDLVertexDescriptor()
     
     var offset = 0
-    descriptor.attributes[0] = MDLVertexAttribute(
+    descriptor.attributes[VertexAttribute.Position.rawValue] = MDLVertexAttribute(
         name: MDLVertexAttributePosition,
         format: .float4,
         offset: offset,
-        bufferIndex: 0
+        bufferIndex: VertexBufferIndex.Vertices.rawValue
     )
     offset += MemoryLayout<Float>.size * 4
     
-    descriptor.attributes[1] = MDLVertexAttribute(
+    descriptor.attributes[VertexAttribute.Normal.rawValue] = MDLVertexAttribute(
         name: MDLVertexAttributeNormal,
         format: .float3,
         offset: offset,
-        bufferIndex: 0
+        bufferIndex: VertexBufferIndex.Vertices.rawValue
     )
     offset += MemoryLayout<Float>.size * 4
     
-    descriptor.attributes[2] = MDLVertexAttribute(
+    descriptor.attributes[VertexAttribute.Texcoord.rawValue] = MDLVertexAttribute(
         name: MDLVertexAttributeTextureCoordinate,
         format: .float2,
         offset: offset,
-        bufferIndex: 0
+        bufferIndex: VertexBufferIndex.Vertices.rawValue
     )
-    offset += MemoryLayout<Float>.size * 2
     
-    descriptor.attributes[3] = MDLVertexAttribute(
+    descriptor.layouts[VertexBufferIndex.Vertices.rawValue] = MDLVertexBufferLayout(stride: MemoryLayout<Vertex>.stride)
+    
+    offset = 0
+    
+    descriptor.attributes[VertexAttribute.Tangent.rawValue] = MDLVertexAttribute(
         name: MDLVertexAttributeTangent,
         format: .float3,
         offset: offset,
-        bufferIndex: 0
+        bufferIndex: VertexBufferIndex.Generics.rawValue
     )
     
-    descriptor.layouts[0] = MDLVertexBufferLayout(stride: MemoryLayout<CustomVertex>.stride)
+    offset += MemoryLayout<Float>.size * 4
+    
+    descriptor.attributes[VertexAttribute.Bitangent.rawValue] = MDLVertexAttribute(
+        name: MDLVertexAttributeBitangent,
+        format: .float3,
+        offset: offset,
+        bufferIndex: VertexBufferIndex.Generics.rawValue
+    )
+    
+    descriptor.layouts[VertexBufferIndex.Generics.rawValue] = MDLVertexBufferLayout(stride: MemoryLayout<VertexGenerics>.stride)
     
     return descriptor
-}
-
-func CustomVertexDescriptor() -> MTLVertexDescriptor {
-    // position
-    let vertexDescriptor = MTLVertexDescriptor()
-    var offset = 0
-    
-    vertexDescriptor.attributes[0].format = MTLVertexFormat.float4
-    vertexDescriptor.attributes[0].offset = offset
-    vertexDescriptor.attributes[0].bufferIndex = 0
-    offset += MemoryLayout<Float>.size * 4
-    
-    // normal
-    vertexDescriptor.attributes[1].format = MTLVertexFormat.float3
-    vertexDescriptor.attributes[1].offset = offset
-    vertexDescriptor.attributes[1].bufferIndex = 0
-    offset += MemoryLayout<Float>.size * 4
-    
-    // uv
-    vertexDescriptor.attributes[2].format = MTLVertexFormat.float2
-    vertexDescriptor.attributes[2].offset = offset
-    vertexDescriptor.attributes[2].bufferIndex = 0
-    offset += MemoryLayout<Float>.size * 2
-    
-    // tangent
-    vertexDescriptor.attributes[3].format = MTLVertexFormat.float3
-    vertexDescriptor.attributes[3].offset = offset
-    vertexDescriptor.attributes[3].bufferIndex = 0
-    offset += MemoryLayout<Float>.size * 4
-    
-    vertexDescriptor.layouts[0].stride = MemoryLayout<CustomVertex>.stride
-    vertexDescriptor.layouts[0].stepRate = 1
-    vertexDescriptor.layouts[0].stepFunction = .perVertex
-    
-    return vertexDescriptor
 }
 
 class LoadedMesh: Object, Renderable {
@@ -121,12 +97,22 @@ class LoadedMesh: Object, Renderable {
             geometryPublisher.send(self)
         }
     }
+    
+    var genericsBuffer: MTLBuffer? {
+        didSet {
+            geometryPublisher.send(self)
+        }
+    }
 
     var vertexCount: Int = 0
     
     init(url: URL, material: Material) {
         self.url = url
         self.material = material
+        if let vertexDescriptor = MTKMetalVertexDescriptorFromModelIO(CustomModelIOVertexDescriptor()) {
+            material.vertexDescriptor = vertexDescriptor
+        }
+        
         super.init("LoadedMesh")
     }
     
@@ -145,15 +131,27 @@ class LoadedMesh: Object, Renderable {
         let object0 = asset.object(at: 0)
         if let objMesh = object0 as? MDLMesh {
             objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
-            objMesh.addTangentBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, normalAttributeNamed: MDLVertexAttributeNormal, tangentAttributeNamed: MDLVertexAttributeTangent)
-            
-            if let meshBuffer = objMesh.vertexBuffers.first as? MTKMeshBuffer {
-                vertexBuffer = meshBuffer.buffer
+
+            objMesh.addTangentBasis(
+                forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate,
+                tangentAttributeNamed: MDLVertexAttributeTangent,
+                bitangentAttributeNamed: MDLVertexAttributeBitangent
+            )
+
+            if let firstBuffer = objMesh.vertexBuffers.first as? MTKMeshBuffer {
+                vertexBuffer = firstBuffer.buffer
+                vertexBuffer?.label = "Vertices"
                 vertexCount = objMesh.vertexCount
+            }
+            
+            if let secondBuffer = objMesh.vertexBuffers[1] as? MTKMeshBuffer {
+                genericsBuffer = secondBuffer.buffer
+                genericsBuffer?.label = "Generics"
             }
             
             if let submeshes = objMesh.submeshes, let first = submeshes.firstObject, let sub: MDLSubmesh = first as? MDLSubmesh {
                 indexBuffer = (sub.indexBuffer as! MTKMeshBuffer).buffer
+                indexBuffer?.label = "Indices"
                 indexBitDepth = sub.indexType
                 indexCount = sub.indexCount
             }
@@ -206,6 +204,7 @@ class LoadedMesh: Object, Renderable {
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
+        renderEncoder.setVertexBuffer(genericsBuffer, offset: 0, index: VertexBufferIndex.Generics.rawValue)
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
         
         if let indexBuffer = indexBuffer {
@@ -240,7 +239,7 @@ class LoadedMesh: Object, Renderable {
     func computeGeometryBounds() -> Bounds {
         var bounds = Bounds(min: .init(repeating: .infinity), max: .init(repeating: -.infinity))
         guard let vertexBuffer = vertexBuffer else { return bounds }
-        var vertexPtr = vertexBuffer.contents().bindMemory(to: CustomVertex.self, capacity: vertexCount)
+        var vertexPtr = vertexBuffer.contents().bindMemory(to: Vertex.self, capacity: vertexCount)
         for _ in 0 ..< vertexCount {
             bounds = expandBounds(bounds, simd_make_float3(vertexPtr.pointee.position))
             vertexPtr += 1
@@ -259,7 +258,7 @@ extension LoadedMesh: Intersectable {
     }
     
     var vertexStride: Int {
-        MemoryLayout<CustomVertex>.stride
+        MemoryLayout<Vertex>.stride
     }
     
     func intersects(ray: Ray) -> Bool {
@@ -290,11 +289,11 @@ extension LoadedMesh: Intersectable {
         
         guard i0 < vertexCount, i1 < vertexCount, i2 < vertexCount else { return nil }
         
-        let vertexPtr = vertexBuffer!.contents().bindMemory(to: CustomVertex.self, capacity: vertexCount).advanced(by: i0)
+        let vertexPtr = vertexBuffer!.contents().bindMemory(to: Vertex.self, capacity: vertexCount).advanced(by: i0)
         
-        let a: CustomVertex = (vertexPtr + i0).pointee
-        let b: CustomVertex = (vertexPtr + i1).pointee
-        let c: CustomVertex = (vertexPtr + i2).pointee
+        let a: Vertex = (vertexPtr + i0).pointee
+        let b: Vertex = (vertexPtr + i1).pointee
+        let c: Vertex = (vertexPtr + i2).pointee
             
         let u: Float = barycentricCoordinate.x
         let v: Float = barycentricCoordinate.y
