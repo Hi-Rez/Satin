@@ -1,6 +1,7 @@
 #include "Noise3D.metal"
 
-float3 snoisefloat3(float3 x) {
+float3 snoisefloat3(float3 x)
+{
     float s = snoise(float3(x));
     float s1 = snoise(float3(x.y - 19.1, x.z + 33.4, x.x + 47.2));
     float s2 = snoise(float3(x.z + 74.2, x.x - 124.5, x.y + 99.4));
@@ -8,7 +9,8 @@ float3 snoisefloat3(float3 x) {
     return c;
 }
 
-float3 curlNoise(float3 p) {
+float3 curlNoise(float3 p)
+{
     const float e = .1;
     float3 dx = float3(e, 0.0, 0.0);
     float3 dy = float3(0.0, e, 0.0);

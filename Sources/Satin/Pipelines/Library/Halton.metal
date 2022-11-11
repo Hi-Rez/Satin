@@ -1,5 +1,5 @@
 constant unsigned int primes[] = {
-    2,   3,  5,  7,
+    2, 3, 5, 7,
     11, 13, 17, 19,
     23, 29, 31, 37,
     41, 43, 47, 53,
@@ -14,7 +14,8 @@ constant unsigned int primes[] = {
 // value used to render the image should use a different independent dimension 'd',
 // and each sample (frame) should use a different index 'i'. To decorrelate each
 // pixel, a random offset can be applied to 'i'.
-float halton(unsigned int i, unsigned int d) {
+float halton(unsigned int i, unsigned int d)
+{
     unsigned int b = primes[d];
 
     float f = 1.0f;

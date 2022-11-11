@@ -16,7 +16,8 @@ float4 n2mod289(float4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 
 float3 permute(float3 x) { return n2mod289(((x * 34.0) + 1.0) * x); }
 
-float snoise(float2 v) {
+float snoise(float2 v)
+{
     const float4 C = float4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
                             0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
                             -0.577350269189626, // -1.0 + 2.0 * C.x

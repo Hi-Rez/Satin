@@ -1,9 +1,9 @@
 vertex VertexData satinVertex(Vertex in [[stage_in]],
 #if INSTANCING
-                              uint instanceID [[instance_id]],
-                              constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
+                              uint instanceID [[instance_id]], constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
 #endif
-                              constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]) {
+                              constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
+{
     VertexData out;
 #if INSTANCING
     out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;

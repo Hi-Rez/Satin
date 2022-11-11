@@ -15,11 +15,14 @@ public enum MetalFileCompilerError: Error
 
 open class MetalFileCompiler
 {
+    var watch: Bool
     var files: [URL] = []
     var watchers: [FileWatcher] = []
     public var onUpdate: (() -> ())?
     
-    public init() {}
+    public init(watch: Bool = true) {
+        self.watch = watch
+    }
     
     public func touch()
     {
@@ -74,11 +77,13 @@ open class MetalFileCompiler
                 }
             }
             
-            let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25) { [weak self] in
-                guard let self = self else { return }
-                self.onUpdate?()
+            if watch {
+                let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25) { [weak self] in
+                    guard let self = self else { return }
+                    self.onUpdate?()
+                }
+                watchers.append(watcher)
             }
-            watchers.append(watcher)
             files.append(fileURLResolved)
             
             let pattern = #"^#include\s+\"(.*)\"\n"#

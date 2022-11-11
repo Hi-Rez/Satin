@@ -25,7 +25,8 @@ float taylorInvSqrt(float r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
 bool4 lessThan(float4 a, float4 b) { return bool4(a < b); }
 
-float4 grad4(float j, float4 ip) {
+float4 grad4(float j, float4 ip)
+{
     const float4 ones = float4(1.0, 1.0, 1.0, -1.0);
     float4 p, s;
 
@@ -40,7 +41,8 @@ float4 grad4(float j, float4 ip) {
 // (sqrt(5) - 1)/4 = F4, used once below
 #define F4 0.309016994374947451
 
-float4 snoise(float4 v) {
+float4 snoise(float4 v)
+{
     const float4 C = float4(0.138196601125011,   // (5 - sqrt(5))/20  G4
                             0.276393202250021,   // 2 * G4
                             0.414589803375032,   // 3 * G4
@@ -83,10 +85,7 @@ float4 snoise(float4 v) {
     // Permutations
     i = mod289(i);
     float j0 = permute(permute(permute(permute(i.w) + i.z) + i.y) + i.x);
-    float4 j1 = permute(permute(permute(permute(i.w + float4(i1.w, i2.w, i3.w, 1.0)) + i.z +
-                                        float4(i1.z, i2.z, i3.z, 1.0)) +
-                                i.y + float4(i1.y, i2.y, i3.y, 1.0)) +
-                        i.x + float4(i1.x, i2.x, i3.x, 1.0));
+    float4 j1 = permute(permute(permute(permute(i.w + float4(i1.w, i2.w, i3.w, 1.0)) + i.z + float4(i1.z, i2.z, i3.z, 1.0)) + i.y + float4(i1.y, i2.y, i3.y, 1.0)) + i.x + float4(i1.x, i2.x, i3.x, 1.0));
 
     // Gradients: 7x7x6 points over a cube, mapped onto a 4-cross polytope
     // 7*7*6 = 294, which is close to the ring size 17*17 = 289.

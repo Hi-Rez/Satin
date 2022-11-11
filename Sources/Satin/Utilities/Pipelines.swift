@@ -532,7 +532,7 @@ class PassThroughVertexPipelineSource {
         }
         if let vertexURL = getPipelinesCommonUrl("VertexShader.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(vertexURL)
+                sharedSource = try MetalFileCompiler(watch: false).parse(vertexURL)
             }
             catch {
                 print(error)
@@ -552,7 +552,7 @@ class ConstantsSource {
         }
         if let url = getPipelinesSatinUrl("Constants.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -572,7 +572,7 @@ class VertexSource {
         }
         if let url = getPipelinesSatinUrl("Vertex.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -592,7 +592,7 @@ class VertexDataSource {
         }
         if let url = getPipelinesSatinUrl("VertexData.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -612,7 +612,7 @@ class VertexUniformsSource {
         }
         if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -632,7 +632,7 @@ class InstanceMatrixUniformsSource {
         }
         if let url = getPipelinesSatinUrl("InstanceMatrixUniforms.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -652,7 +652,7 @@ class LightingSource {
         }
         if let url = getPipelinesSatinUrl("Light.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error)
@@ -672,7 +672,7 @@ class InstancingArgsSource {
         }
         if let url = getPipelinesSatinUrl("InstancingArgs.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error.localizedDescription)
@@ -700,7 +700,7 @@ class TextureArgsSource {
         }
         if let url = getPipelinesSatinUrl("TextureArgs.metal") {
             do {
-                sharedSource = try MetalFileCompiler().parse(url)
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
             }
             catch {
                 print(error.localizedDescription)

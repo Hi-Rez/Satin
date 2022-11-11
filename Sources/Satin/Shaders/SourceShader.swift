@@ -61,6 +61,10 @@ open class SourceShader: Shader {
     open var defines: [String: String] {
         var results = [String: String]()
 
+        #if os(iOS)
+        results["MOBILE"] = "true"
+        #endif
+        
         for attribute in VertexAttribute.allCases {
             switch vertexDescriptor.attributes[attribute.rawValue].format {
             case .invalid:
@@ -136,7 +140,7 @@ open class SourceShader: Shader {
         
         if let pipelineURL = pipelineURL {
             do {
-                result = try MetalFileCompiler().parse(pipelineURL)
+                result = try MetalFileCompiler(watch: false).parse(pipelineURL)
             }
             catch {
                 print("\(label) Shader: \(error.localizedDescription)")
@@ -163,8 +167,7 @@ open class SourceShader: Shader {
         let includesURL = satinURL.appendingPathComponent("Includes.metal")
         do {
             // create boilerplate shader code
-            let compiler = MetalFileCompiler()
-            var source = try compiler.parse(includesURL)
+            var source = try MetalFileCompiler(watch: false).parse(includesURL)
 
             injectDefines(source: &source, defines: defines)
             injectConstants(source: &source)

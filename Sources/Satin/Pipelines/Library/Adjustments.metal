@@ -2,14 +2,16 @@
 
 float3 brightness(float3 color, float brightness) { return color.rgb + brightness; }
 
-float3 contrast(float3 color, float contrast) {
+float3 contrast(float3 color, float contrast)
+{
     const float t = 0.5 - contrast * 0.5;
     return color.rgb * contrast + t;
 }
 
 float3 gamma(float3 color, float gamma) { return pow(abs(color), gamma); }
 
-float3 saturation(float3 color, float saturation) {
+float3 saturation(float3 color, float saturation)
+{
     const float3 luminance = float3(0.3086, 0.6094, 0.0820);
     float oneMinusSat = 1.0 - saturation;
     float3 red = float3(luminance.x * oneMinusSat);
@@ -25,7 +27,8 @@ int modi(int x, int y) { return x - y * (x / y); }
 
 float modf(float x, float y) { return x - y * floor(x / y); }
 
-int andf(int a, int b) {
+int andf(int a, int b)
+{
     int result = 0;
     int n = 1;
     const int BIT_COUNT = 32;
@@ -42,7 +45,8 @@ int andf(int a, int b) {
     return result;
 }
 
-float3 vibrance(float3 color, float vibrance) {
+float3 vibrance(float3 color, float vibrance)
+{
     float3 outCol;
     if (vibrance <= 1.0) {
         float avg = dot(color.rgb, float3(0.3, 0.6, 0.1));
@@ -127,7 +131,8 @@ float3 vibrance(float3 color, float vibrance) {
 }
 
 // remixed from mAlk's https://www.shadertoy.com/view/MsjXRt
-float3 hue(float3 col, float hue) {
+float3 hue(float3 col, float hue)
+{
     const float3 P = float3(0.55735) * dot(float3(0.55735), col);
     const float3 U = col - P;
     const float3 V = cross(float3(0.55735), U);
@@ -136,14 +141,16 @@ float3 hue(float3 col, float hue) {
 
 half3 brightnessHalf(half3 color, half brightness) { return color.rgb + brightness; }
 
-half3 contrastHalf(half3 color, half contrast) {
+half3 contrastHalf(half3 color, half contrast)
+{
     const half t = 0.5h - contrast * 0.5h;
     return color.rgb * contrast + t;
 }
 
 half3 gammaHalf(half3 color, half gamma) { return pow(abs(color), gamma); }
 
-half3 saturationHalf(half3 color, half saturation) {
+half3 saturationHalf(half3 color, half saturation)
+{
     const half3 luminance = half3(0.3086, 0.6094, 0.0820);
     half oneMinusSat = 1.0 - saturation;
     half3 red = half3(luminance.x * oneMinusSat);

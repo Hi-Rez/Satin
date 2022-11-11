@@ -19,7 +19,8 @@ float4 permute(float4 x) { return n3mod289(((x * 34.0) + 1.0) * x); }
 
 float4 taylorInvSqrt(float4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
-float snoise(float3 v) {
+float snoise(float3 v)
+{
     const float2 C = float2(1.0 / 6.0, 1.0 / 3.0);
     const float4 D = float4(0.0, 0.5, 1.0, 2.0);
 

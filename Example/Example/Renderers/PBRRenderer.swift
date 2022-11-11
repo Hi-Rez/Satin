@@ -30,15 +30,19 @@ class PBRRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer: Satin.Renderer = .init(context: context, scene: scene, camera: camera)
     
-    lazy var customMaterial = CustomMaterial(pipelinesURL: pipelinesURL)
+    lazy var customMaterial: CustomMaterial = {
+        let mat = CustomMaterial(pipelinesURL: pipelinesURL)
+        mat.lighting = true
+        return mat
+    }()
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 4), material: customMaterial)
         mesh.label = "Sphere"
         mesh.instanceCount = 49
         mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
-            renderEncoder.setFragmentTexture(self.diffuseIBLTexture, index: FragmentTextureIndex.Custom0.rawValue)
-            renderEncoder.setFragmentTexture(self.specularIBLTexture, index: FragmentTextureIndex.Custom1.rawValue)
-            renderEncoder.setFragmentTexture(self.brdfTexture, index: FragmentTextureIndex.Custom2.rawValue)
+            renderEncoder.setFragmentTexture(self.diffuseIBLTexture, index: PBRTexture.irradiance.rawValue)
+            renderEncoder.setFragmentTexture(self.specularIBLTexture, index: PBRTexture.reflection.rawValue)
+            renderEncoder.setFragmentTexture(self.brdfTexture, index: PBRTexture.brdf.rawValue)
         }
         return mesh
     }()

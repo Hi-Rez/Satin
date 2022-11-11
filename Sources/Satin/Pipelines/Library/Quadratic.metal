@@ -1,4 +1,5 @@
-float3 quadratic(float a, float b, float c) {
+float3 quadratic(float a, float b, float c)
+{
     float3 solution = float3(0.0, 0.0, -1.0); // x1, x2, solved
     if (b == 0) {
         // Handle special case where the the two vector ray.dir and V are perpendicular

@@ -1,5 +1,5 @@
-#include "../../Library/Pi.metal"
-#include "../../Library/Rotate.metal"
+#include "Library/Pi.metal"
+#include "Library/Rotate.metal"
 
 static constant float4 rotations[6] = {
     float4(0.0, 1.0, 0.0, HALF_PI),

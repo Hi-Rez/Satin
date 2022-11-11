@@ -1,15 +1,15 @@
 #include "Poisson.metal"
 #include "Random.metal"
 
-float calculateShadow(float4 shadowPosition, float4 position, depth2d<float> shadowTexture) {
+float calculateShadow(float4 shadowPosition, float4 position, depth2d<float> shadowTexture)
+{
     float2 xy = shadowPosition.xy;
     xy = xy * 0.5 + 0.5;
     xy.y = 1.0 - xy.y;
 
     float lightFactor = 1.0;
     float bias = 0.006;
-    constexpr sampler s(coord::normalized, filter::linear, address::clamp_to_edge,
-                        compare_func::less);
+    constexpr sampler s(coord::normalized, filter::linear, address::clamp_to_edge, compare_func::less);
     const float current_sample = (shadowPosition.z - bias) / shadowPosition.w;
     const float2 shadowTextureSize =
         float2(shadowTexture.get_width(), shadowTexture.get_height()) * 1.0;

@@ -1,5 +1,4 @@
-#include "../../Library/Pi.metal"
-#include "../../Library/Pbr.metal"
+#include "Library/Pbr/ImportanceSampling.metal"
 
 #define SAMPLE_COUNT 1024u
 
@@ -51,11 +50,10 @@ float2 integrate(float NoV, float roughness)
     return 4.0 * float2(A, B) / float(SAMPLE_COUNT);
 }
 
-kernel void brdfUpdate(uint2 gid [[thread_position_in_grid]],
-    texture2d<float, access::write> tex [[texture(ComputeTextureCustom0)]])
+kernel void brdfUpdate(uint2 gid [[thread_position_in_grid]], texture2d<float, access::write> tex [[texture(ComputeTextureCustom0)]])
 {
     if (gid.x >= tex.get_width() || gid.y >= tex.get_height()) { return; }
-    const float2 size = float2(tex.get_width(), tex.get_height());
-    const float2 uv = float2(gid + 1) / size;
+    const float2 size = float2(tex.get_width(), tex.get_height()) - 1.0;
+    const float2 uv = float2(gid) / size;
     tex.write(float4(integrate(uv.x, uv.y), 0.0, 1.0), gid);
 }

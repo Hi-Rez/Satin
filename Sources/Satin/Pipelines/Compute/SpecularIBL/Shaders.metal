@@ -1,6 +1,6 @@
-#include "../../Library/Pi.metal"
-#include "../../Library/Pbr.metal"
-#include "../../Library/Rotate.metal"
+#include "Library/Pbr/ImportanceSampling.metal"
+#include "Library/Pbr/Distribution/DistributionGGX.metal"
+#include "Library/Rotate.metal"
 
 static constant float4 rotations[6] = {
     float4(0.0, 1.0, 0.0, HALF_PI),
@@ -36,8 +36,8 @@ kernel void specularIBLUpdate(
     }
 
     const texture2d<float, access::write> tex[6] = { tex0, tex1, tex2, tex3, tex4, tex5 };
-    const float2 size = float2(tex0.get_width(), tex0.get_height()) - 1.0;
-    const float2 uv = float2(gid) / size;
+    const float2 size = float2(tex0.get_width(), tex0.get_height());
+    const float2 uv = (float2(gid) + 0.5) / size;
 
     float2 ruv = 2.0 * uv - 1.0;
     ruv.y *= -1.0;

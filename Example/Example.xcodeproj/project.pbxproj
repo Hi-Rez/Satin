@@ -228,9 +228,9 @@
 				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
+				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
 				E129CBDE2520090E009B237A /* AR */,
 				E19B057D26BB6FF000D91376 /* AudioInput */,
-				E168FC5E248ECC4D004B8407 /* PBR */,
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 			);
@@ -270,14 +270,6 @@
 				E1653F192684F4F60012C97F /* SatinSceneKitARRenderer+Background.swift */,
 			);
 			path = SatinSceneKitAR;
-			sourceTree = "<group>";
-		};
-		E168FC5E248ECC4D004B8407 /* PBR */ = {
-			isa = PBXGroup;
-			children = (
-				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
-			);
-			path = PBR;
 			sourceTree = "<group>";
 		};
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {

@@ -8,7 +8,8 @@ float3 cellularPermute(float3 x) { return fmod((34.0 * x + 1.0) * x, 289.0); }
 
 // Cellular noise, returning F1 and F2 in a float2.
 // Standard 3x3 search window for good F1 and F2 values
-float2 cellular(float2 P) {
+float2 cellular(float2 P)
+{
 #define Kc 0.142857142857 // 1/7
 #define Ko 0.428571428571 // 3/7
 #define jitter 1.0        // Less gives more regular pattern
@@ -57,7 +58,8 @@ float2 cellular(float2 P) {
 // modern GPU. In any case, it beats any software
 // implementation of Worley noise hands down.
 
-float2 cellular(float3 P) {
+float2 cellular(float3 P)
+{
 #define Kc 0.142857142857    // 1/7
 #define Ko 0.428571428571    // 1/2-K/2
 #define K2 0.020408163265306 // 1/(7*7)

@@ -1,7 +1,6 @@
 #include "../Types.metal"
 
-#include "Satin/Includes.metal"
-#include "Library/Hammersley.metal"
+#include "Library/Pbr/Hammersley.metal"
 #include "Library/Random.metal"
 
 typedef struct {

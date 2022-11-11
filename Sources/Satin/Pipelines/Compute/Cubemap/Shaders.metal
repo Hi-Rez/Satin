@@ -1,6 +1,7 @@
-#include "../../Library/Pi.metal"
-#include "../../Library/Rotate.metal"
+#include "Library/Pi.metal"
+#include "Library/Rotate.metal"
 #include "Library/Tonemapping/Aces.metal"
+#include "Library/Gamma.metal"
 
 static constant float4 rotations[6] = {
     float4(0.0, 1.0, 0.0, HALF_PI),
@@ -41,7 +42,7 @@ kernel void cubemapUpdate(
 
     for (int face = 0; face < 6; face++) {
         const float4 rotation = rotations[face];
-        const float3 dir = normalize(float3(ruv, 1.0) * rotateAxisAngle(rotation.xyz, rotation.w));
+        const float3 dir = normalize(float3(ruv, 1.0)) * rotateAxisAngle(rotation.xyz, rotation.w);
 
         float theta = atan2(dir.x, dir.z);
         theta = (theta > 0 ? theta : (TWO_PI + theta)) / TWO_PI;
@@ -55,7 +56,7 @@ kernel void cubemapUpdate(
         color = uniforms.toneMapped ? aces(color) : color;
 
         // Gamma Correction
-        color = uniforms.gammaCorrected ? (pow(color, float3(1.0 / 2.2))) : color;
+        color = uniforms.gammaCorrected ? gamma(color) : color;
 
         tex[face].write(float4(color, 1.0), gid);
     }
