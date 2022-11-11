@@ -19,21 +19,11 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
     
     // MARK: - Paths
     
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-    
-    var modelsURL: URL {
-        rendererAssetsURL.appendingPathComponent("Models")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
+    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
     
     // MARK: SceneKit
         
@@ -136,7 +126,7 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
     
     func setupScene() {
         do {
-            let scene = try SCNScene(url: modelsURL.appendingPathComponent("ship.scn"), options: nil)
+            let scene = try SCNScene(url: modelsURL.appendingPathComponent("Ship").appendingPathComponent("Ship.scn"), options: nil)
             scnScene = scene
             scnScene.rootNode.childNodes.first?.simdScale = simd_float3(repeating: 0.01)
         }

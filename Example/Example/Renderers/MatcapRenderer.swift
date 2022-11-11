@@ -12,25 +12,12 @@ import Forge
 import Satin
 
 class MatcapRenderer: BaseRenderer {
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-    
-    var texturesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Textures")
-    }
-    
-    var modelsURL: URL {
-        rendererAssetsURL.appendingPathComponent("Models")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
+    var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
+    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
     
     var scene = Object("Scene")
     
@@ -73,7 +60,7 @@ class MatcapRenderer: BaseRenderer {
     }
     
     func loadModel() {
-        let asset = MDLAsset(url: modelsURL.appendingPathComponent("suzanne_high.obj"), vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"), vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         
         // MatCapMaterial inspired by @TheSpite
         // https://www.clicktorelease.com/code/spherical-normal-mapping/

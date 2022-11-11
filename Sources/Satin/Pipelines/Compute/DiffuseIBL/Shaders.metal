@@ -23,51 +23,45 @@ constexpr sampler cubeSampler(mag_filter::linear, min_filter::linear);
 
 kernel void diffuseIBLUpdate(
     uint2 gid [[thread_position_in_grid]],
-    texture2d<float, access::write> tex0 [[texture(ComputeTextureCustom0)]],
-    texture2d<float, access::write> tex1 [[texture(ComputeTextureCustom1)]],
-    texture2d<float, access::write> tex2 [[texture(ComputeTextureCustom2)]],
-    texture2d<float, access::write> tex3 [[texture(ComputeTextureCustom3)]],
-    texture2d<float, access::write> tex4 [[texture(ComputeTextureCustom4)]],
-    texture2d<float, access::write> tex5 [[texture(ComputeTextureCustom5)]],
-    texturecube<float, access::sample> ref [[texture(ComputeTextureCustom6)]],
-    constant DiffuseIBLUniforms &uniforms [[buffer(ComputeBufferUniforms)]])
+    texture2d<float, access::write> tex [[texture(ComputeTextureCustom0)]],
+    texturecube<float, access::sample> ref [[texture(ComputeTextureCustom1)]],
+    constant DiffuseIBLUniforms &uniforms [[buffer(ComputeBufferUniforms)]],
+    constant uint &face [[buffer(ComputeBufferCustom0)]])
 {
-    if (gid.x >= tex0.get_width() || gid.y >= tex0.get_height()) { return; }
+    if (gid.x >= tex.get_width() || gid.y >= tex.get_height()) { return; }
 
-    const texture2d<float, access::write> tex[6] = { tex0, tex1, tex2, tex3, tex4, tex5 };
-    const float2 size = float2(tex0.get_width(), tex0.get_height()) - 1.0;
+    const float2 size = float2(tex.get_width(), tex.get_height()) - 1.0;
     const float2 uv = float2(gid) / size;
 
     float2 ruv = 2.0 * uv - 1.0;
     ruv.y *= -1.0;
+    
+    float3 irradiance = 0.0;
 
-    for (int face = 0; face < 6; face++) {
-        float3 irradiance = 0.0;
+    const float4 rotation = rotations[face];
+    const float3 N = normalize(float3(ruv, 1.0) * rotateAxisAngle(rotation.xyz, rotation.w));
+    float3 UP = abs(N.z) < 0.999 ? WORLD_FORWARD : WORLD_UP;
+    const float3 RIGHT = normalize(cross(UP, N));
+    UP = cross(N, RIGHT);
 
-        const float4 rotation = rotations[face];
-        float3 N = normalize(float3(ruv, 1.0) * rotateAxisAngle(rotation.xyz, rotation.w));
-        float3 UP = abs(N.z) < 0.999 ? WORLD_FORWARD : WORLD_UP;
-        const float3 RIGHT = normalize(cross(UP, N));
-        UP = cross(N, RIGHT);
+    uint sampleCount = 0u;
 
-        uint sampleCount = 0u;
+    for (float phi = 0.0; phi < TWO_PI; phi += DELTA_PHI) {
+        const float sinPhi = sin(phi);
+        const float cosPhi = cos(phi);
+        for (float theta = 0.0; theta < HALF_PI; theta += DELTA_THETA) {
+            // spherical to cartesian (in tangent space)
+            const float sinTheta = sin(theta);
+            const float cosTheta = cos(theta);
 
-        for (float phi = 0.0; phi < TWO_PI; phi += DELTA_PHI) {
-            const float sinPhi = sin(phi);
-            const float cosPhi = cos(phi);
-            for (float theta = 0.0; theta < HALF_PI; theta += DELTA_THETA) {
-                // spherical to cartesian (in tangent space)
-                const float sinTheta = sin(theta);
-                const float cosTheta = cos(theta);
+            const float3 tempVec = cosPhi * RIGHT + sinPhi * UP;
+            const float3 sampleVector = cosTheta * N + sinTheta * tempVec;
 
-                const float3 tempVec = cosPhi * RIGHT + sinPhi * UP;
-                const float3 sampleVector = cosTheta * N + sinTheta * tempVec;
-
-                irradiance += ref.sample(cubeSampler, sampleVector).rgb * cosTheta * sinTheta;
-                sampleCount++;
-            }
+            irradiance += ref.sample(cubeSampler, sampleVector).rgb * cosTheta * sinTheta;
+            sampleCount++;
         }
-        irradiance = PI * irradiance / float(sampleCount);
-        tex[face].write(float4(irradiance, 1.0), gid);
     }
+    
+    irradiance = PI * irradiance / float(sampleCount);
+    tex.write(float4(irradiance, 1.0), gid);
 }

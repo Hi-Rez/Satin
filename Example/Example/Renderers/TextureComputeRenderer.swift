@@ -15,17 +15,9 @@ import Satin
 class TextureComputeRenderer: BaseRenderer {
     class BasicTextureComputeSystem : LiveTextureComputeSystem {}
         
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     
     lazy var textureCompute: BasicTextureComputeSystem = {
         let textureDescriptor = MTLTextureDescriptor()

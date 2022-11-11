@@ -98,7 +98,7 @@ struct ContentView: View {
                     }
                     
                     NavigationLink(destination: PBRRendererView()) {
-                        Label("Physically Based Rendering", systemImage: "eye")
+                        Label("PBR", systemImage: "eye")
                     }
                     
                     NavigationLink(destination: PostProcessingRendererView()) {
@@ -117,6 +117,10 @@ struct ContentView: View {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
 #endif
+                    NavigationLink(destination: StandardMaterialRendererView()) {
+                        Label("Standard PBR Material", systemImage: "flame")
+                    }
+                    
                     NavigationLink(destination: ShippingShadersRendererView()) {
                         Label("Shipping Shaders", systemImage: "shippingbox")
                     }

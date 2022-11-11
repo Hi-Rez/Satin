@@ -19,17 +19,9 @@ class BufferComputeRenderer: BaseRenderer {
     class SpriteMaterial: LiveMaterial {}
     class ChromaMaterial: LiveMaterial {}
 
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     
     lazy var particleSystem = ParticleComputeSystem(device: device, pipelinesURL: pipelinesURL, count: 8192)
     

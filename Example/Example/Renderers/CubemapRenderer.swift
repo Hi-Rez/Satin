@@ -17,21 +17,10 @@ import Satin
 class CubemapRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
     
-    var assetsURL: URL {
-        return Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var pipelinesURL: URL {
-        return rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-    
-    var texturesURL: URL {
-        return rendererAssetsURL.appendingPathComponent("Textures")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
+    var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
     
     var camera = PerspectiveCamera(position: [0.0, 0.0, 6.0], near: 0.001, far: 200.0, fov: 45.0)
     

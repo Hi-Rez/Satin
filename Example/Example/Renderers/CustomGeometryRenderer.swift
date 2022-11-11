@@ -39,18 +39,9 @@ open class IcosahedronGeometry: Geometry {
 }
 
 class CustomGeometryRenderer: BaseRenderer {
-    var assetsURL: URL {
-        let resourcesURL = Bundle.main.resourceURL!
-        return resourcesURL.appendingPathComponent("Assets")
-    }
-    
-    var texturesURL: URL {
-        return assetsURL.appendingPathComponent("Textures")
-    }
-    
-    var modelsURL: URL {
-        return assetsURL.appendingPathComponent("Models")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var texturesURL: URL { assetsURL.appendingPathComponent("Textures") }
+    var modelsURL: URL { assetsURL.appendingPathComponent("Models") }
     
     var scene = Object("Scene")
     

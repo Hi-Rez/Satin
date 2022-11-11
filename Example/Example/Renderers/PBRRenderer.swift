@@ -19,10 +19,10 @@ class PBRRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
     
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
-    var modelsURL: URL { rendererAssetsURL.appendingPathComponent("Models") }
+    var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     
     lazy var scene = Object("Scene", [mesh, skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -35,6 +35,7 @@ class PBRRenderer: BaseRenderer {
         mat.lighting = true
         return mat
     }()
+
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 4), material: customMaterial)
         mesh.label = "Sphere"
@@ -65,20 +66,46 @@ class PBRRenderer: BaseRenderer {
     }
     
     override func setup() {
-        loadHdri()
-        setupCubemap()
-        setupDiffuseIBL()
-        setupSpecularIBL()
-        setupBRDF()
+        setupLights()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.loadHdri()
+            self.setupCubemap()
+            self.setupDiffuseIBL()
+            self.setupSpecularIBL()
+            self.setupBRDF()
+        }
+    }
+    
+    func setupLights() {
+        let dist: Float = 10.0
+        let positions = [
+            simd_make_float3(dist, dist, dist),
+            simd_make_float3(-dist, dist, dist),
+            simd_make_float3(dist, -dist, dist),
+            simd_make_float3(-dist, -dist, dist)
+        ]
+        
+        let sphereLightGeo = mesh.geometry
+        let sphereLightMat = BasicColorMaterial(.one, .disabled)
+        for (index, position) in positions.enumerated() {
+            let light = PointLight(color: .one, intensity: 200, radius: 50.0)
+            light.position = position
+            let lightMesh = Mesh(geometry: sphereLightGeo, material: sphereLightMat)
+            lightMesh.scale = .init(repeating: 0.25)
+            lightMesh.label = "Light Mesh \(index)"
+            light.add(lightMesh)
+            
+            scene.add(light)
+        }
     }
     
     func loadHdri() {
-        let filename = "venice_sunset_2k.hdr"
+        let filename = "brown_photostudio_02_2k.hdr"
         hdriTexture = loadHDR(device, texturesURL.appendingPathComponent(filename))
     }
     
     func setupCubemap() {
-        if let hdriTexture = hdriTexture, let commandBuffer = commandQueue.makeCommandBuffer(), let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: false) {
+        if let hdriTexture = hdriTexture, let commandBuffer = commandQueue.makeCommandBuffer(), let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true) {
             CubemapGenerator(device: device)
                 .encode(commandBuffer: commandBuffer, sourceTexture: hdriTexture, destinationTexture: texture)
             commandBuffer.commit()

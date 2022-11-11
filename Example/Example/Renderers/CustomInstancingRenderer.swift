@@ -17,21 +17,10 @@ class CustomInstancingRenderer: BaseRenderer {
     
     // MARK: - Paths
     
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var dataURL: URL {
-        rendererAssetsURL.appendingPathComponent("Data")
-    }
-    
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var dataURL: URL { rendererAssetsURL.appendingPathComponent("Data") }
+    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     
     var dataBuffer: MTLBuffer?
     

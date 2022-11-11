@@ -14,26 +14,16 @@ import Forge
 import Satin
 
 class LoadObjRenderer: BaseRenderer {
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-        
-    var modelsURL: URL {
-        rendererAssetsURL.appendingPathComponent("Models")
-    }
-    
-    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    
-    var camera = PerspectiveCamera(position: [0.0, 0.0, 9.0], near: 0.001, far: 100.0)
-    
-    lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
     
     var scene = Object("Scene")
+    var camera = PerspectiveCamera(position: [0.0, 0.0, 9.0], near: 0.001, far: 100.0)
     
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
+    lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
     #if os(macOS) || os(iOS)
@@ -47,19 +37,18 @@ class LoadObjRenderer: BaseRenderer {
     }
     
     override func setup() {
-        loadOBJ(url: modelsURL.appendingPathComponent("suzanne.obj"))
-//        loadUSD(url: modelsURL.appendingPathComponent("flower_tulip.usdz"))
+        loadOBJ(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"))
     }
     
     func loadOBJ(url: URL) {
         let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
-        let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.9))
+        let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.0))
         mesh.label = "Suzanne"
         
         let geo = mesh.geometry
         let object0 = asset.object(at: 0)
         if let objMesh = object0 as? MDLMesh {
-            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 1)
+            objMesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
             let vertexData = objMesh.vertexBuffers[0].map().bytes.bindMemory(to: Vertex.self, capacity: objMesh.vertexCount)
             geo.vertexData = Array(UnsafeBufferPointer(start: vertexData, count: objMesh.vertexCount))
             geo.vertexBuffer = (objMesh.vertexBuffers[0] as! MTKMeshBuffer).buffer

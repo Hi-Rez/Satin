@@ -14,17 +14,10 @@ import Forge
 import Satin
 
 class SatinSceneKitRenderer: BaseRenderer {
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-    
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-    
-    var modelsURL: URL {
-        rendererAssetsURL.appendingPathComponent("Models")
-    }
+    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
+    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
+    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
+    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
     
     lazy var cameraNode: SCNNode = {
         let node = SCNNode()
@@ -79,7 +72,10 @@ class SatinSceneKitRenderer: BaseRenderer {
     
     func setupScene() {
         do {
-            let scene = try SCNScene(url: modelsURL.appendingPathComponent("ship.scn"), options: nil)
+            let scene = try SCNScene(
+                url: modelsURL.appendingPathComponent("Ship").appendingPathComponent("Ship.scn"),
+                options: nil
+            )
             scnScene = scene
         }
         catch {

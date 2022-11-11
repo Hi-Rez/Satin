@@ -43,13 +43,13 @@ void pbrDirectLighting(thread Material &mat, constant Light *lights)
         // H = Half-way Vector of Light (L) and View Vector (V)
         const float3 H = normalize(mat.V + L);
         const float NoH = max(dot(mat.N, H), 0.00001);
-        const float HoV = max(dot(H, mat.V), 0.00001);
+        const float HoL = max(dot(H, L), 0.00001);
         const float NoL = max(dot(mat.N, L), 0.00001);
 
         // Cook-Torrance BRDF
         const float D = distributionGGX(NoH, mat.roughness);
+        const float3 F = fresnelSchlick(HoL, mat.F0);
         const float G = geometrySmith(mat.NoV, NoL, mat.roughness);
-        const float3 F = fresnelSchlick(HoV, mat.F0);
 
         const float3 cookTorranceNumerator = D * G * F;
         const float3 cookTorranceDenominator = max(4.0 * mat.NoV * NoL, 0.00001);

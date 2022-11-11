@@ -34,8 +34,8 @@ vertex CustomVertexData customVertex(
 		.worldPos = worldPosition.xyz,
 		.cameraPos = worldCameraPosition,
 		.normal = v.normal,
-		.roughness = (float)( iid % 7 ) / 6.0,
-		.metallic = (float)( iid / 7 ) / 6.0
+		.roughness = (float)( iid % 7 ) / 7.0,
+		.metallic = (float)( iid / 7 ) / 7.0
 	};
 }
 

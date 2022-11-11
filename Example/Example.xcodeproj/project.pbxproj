@@ -28,6 +28,8 @@
 		E17A55BB28A6C928008F1DDB /* ExportGeometryRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FABFFC2527E698008569F7 /* ExportGeometryRenderer.swift */; };
 		E17A55BC28A6C9C3008F1DDB /* CustomGeometryRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */; };
 		E17A55BD28A6C9C6008F1DDB /* IcosahedronGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CC099F2489797300B92285 /* IcosahedronGenerator.c */; };
+		E18A1ED9291EF89800A71453 /* StandardMaterialRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */; };
+		E18A1EDB291EFB1D00A71453 /* StandardMaterialRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */; };
 		E1D714D428A6BADA00B517B6 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D714D328A6BADA00B517B6 /* ExampleApp.swift */; };
 		E1D714D628A6BADA00B517B6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D714D528A6BADA00B517B6 /* ContentView.swift */; };
 		E1D714D828A6BADA00B517B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1D714D728A6BADA00B517B6 /* Assets.xcassets */; };
@@ -112,6 +114,8 @@
 		E17D2C1126BBB7DF005A136A /* AudioInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
 		E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctasphereRenderer.swift; sourceTree = "<group>"; };
 		E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtrudedTextRenderer.swift; sourceTree = "<group>"; };
+		E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardMaterialRenderer.swift; sourceTree = "<group>"; };
+		E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardMaterialRendererView.swift; sourceTree = "<group>"; };
 		E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubemapRenderer.swift; sourceTree = "<group>"; };
 		E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCodeRenderer.swift; sourceTree = "<group>"; };
 		E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcapRenderer.swift; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
+				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
 				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
 				E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */,
@@ -230,9 +235,9 @@
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
 				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
 				E129CBDE2520090E009B237A /* AR */,
-				E19B057D26BB6FF000D91376 /* AudioInput */,
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
+				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -285,14 +290,6 @@
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		E19B057D26BB6FF000D91376 /* AudioInput */ = {
-			isa = PBXGroup;
-			children = (
-				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
-			);
-			path = AudioInput;
 			sourceTree = "<group>";
 		};
 		E1D714D228A6BADA00B517B6 /* Example */ = {
@@ -360,6 +357,7 @@
 				E1E7680028A70000005D75AB /* TextureComputeRendererView.swift */,
 				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
 				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
+				E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -471,6 +469,7 @@
 				E17A55B428A6C44A008F1DDB /* ShippingShadersRenderer.swift in Sources */,
 				E1E7680328A72E50005D75AB /* PBRRendererView.swift in Sources */,
 				E17A55A828A6C11E008F1DDB /* Renderer2D.swift in Sources */,
+				E18A1EDB291EFB1D00A71453 /* StandardMaterialRendererView.swift in Sources */,
 				E1E767EE28A6EC44005D75AB /* LoadObjRendererView.swift in Sources */,
 				E1E767F228A6F43C005D75AB /* PostProcessingRendererView.swift in Sources */,
 				E1E7680D28A73258005D75AB /* SatinSceneKitARRenderer.swift in Sources */,
@@ -498,6 +497,7 @@
 				E17A55B528A6C44A008F1DDB /* Shaders.metal in Sources */,
 				E1E7681228A73683005D75AB /* AudioInputRenderer.swift in Sources */,
 				E11325CD28AEADAA0049CACC /* SuperShapesRenderer.swift in Sources */,
+				E18A1ED9291EF89800A71453 /* StandardMaterialRenderer.swift in Sources */,
 				E1E767D028A6D41B005D75AB /* TextRendererView.swift in Sources */,
 				E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */,
 				E1E767FC28A6FCA9005D75AB /* FXAARenderer.swift in Sources */,
