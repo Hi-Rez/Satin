@@ -27,7 +27,7 @@ open class LiveShader: SourceShader {
     func setupCompiler() {
         compiler.onUpdate = { [weak self] in
             guard let self = self else { return }
-            self.setup()
+            self.sourceNeedsUpdate = true
         }
     }
 
@@ -37,10 +37,10 @@ open class LiveShader: SourceShader {
             return try compiler.parse(pipelineURL)
         }
         catch {
+            self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
         }
-        
-        
+
         return nil
     }
 }

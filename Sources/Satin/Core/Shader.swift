@@ -5,9 +5,9 @@
 //  Created by Reza Ali on 1/26/22.
 //
 
+import Combine
 import Foundation
 import Metal
-import Combine
 
 open class Shader {
     var pipelineOptions: MTLPipelineOption {
@@ -17,12 +17,13 @@ open class Shader {
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var library: MTLLibrary?
+    public internal(set) var error: Error?
     var libraryURL: URL?
     
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -30,7 +31,7 @@ open class Shader {
     public var sourceRGBBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceRGBBlendFactor {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -38,7 +39,7 @@ open class Shader {
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceAlphaBlendFactor {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -46,7 +47,7 @@ open class Shader {
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationRGBBlendFactor {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -54,7 +55,7 @@ open class Shader {
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationAlphaBlendFactor {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -62,7 +63,7 @@ open class Shader {
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != rgbBlendOperation {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -70,7 +71,7 @@ open class Shader {
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != alphaBlendOperation {
-                blendingNeedsUpdate = true
+                pipelineNeedsUpdate = true
             }
         }
     }
@@ -115,7 +116,6 @@ open class Shader {
         }
     }
     
-    var blendingNeedsUpdate: Bool = true
     var parametersNeedsUpdate: Bool = true
     
     public var vertexFunctionName: String = "shaderVertex" {
@@ -170,7 +170,7 @@ open class Shader {
     }
     
     func updatePipeline() {
-        if pipelineNeedsUpdate || blendingNeedsUpdate {
+        if pipelineNeedsUpdate {
             setupPipeline()
         }
     }
@@ -189,7 +189,6 @@ open class Shader {
 
     func setupPipeline() {
         guard let context = context, let library = library, let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
-        
         
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
@@ -214,13 +213,15 @@ open class Shader {
         
         do {
             pipeline = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
-            
-            blendingNeedsUpdate = false
-            pipelineNeedsUpdate = false
+            error = nil
         }
         catch {
+            self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
+            pipeline = nil
         }
+        
+        pipelineNeedsUpdate = false
     }
     
     func setupParameters() {
@@ -246,12 +247,15 @@ open class Shader {
             }
             
             self.library = library
-            
-            libraryNeedsUpdate = false
+            error = nil
         }
         catch {
+            self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
+            library = nil
+            pipeline = nil
         }
+        libraryNeedsUpdate = false
     }
     
     public func clone() -> Shader {

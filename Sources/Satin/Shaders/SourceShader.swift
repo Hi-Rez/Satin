@@ -33,7 +33,7 @@ open class SourceShader: Shader {
             }
         }
     }
-    
+
     override public var instancing: Bool {
         didSet {
             if oldValue != instancing {
@@ -41,7 +41,7 @@ open class SourceShader: Shader {
             }
         }
     }
-    
+
     override public var lighting: Bool {
         didSet {
             if oldValue != lighting {
@@ -49,7 +49,7 @@ open class SourceShader: Shader {
             }
         }
     }
-    
+
     override public var maxLights: Int {
         didSet {
             if oldValue != maxLights {
@@ -57,23 +57,23 @@ open class SourceShader: Shader {
             }
         }
     }
-    
+
     open var defines: [String: String] {
         var results = [String: String]()
 
         #if os(iOS)
         results["MOBILE"] = "true"
         #endif
-        
+
         for attribute in VertexAttribute.allCases {
             switch vertexDescriptor.attributes[attribute.rawValue].format {
             case .invalid:
-                continue;
+                continue
             default:
                 results[attribute.shaderDefine] = "true"
             }
         }
-        
+
         if instancing {
             results["INSTANCING"] = "true"
         }
@@ -85,7 +85,7 @@ open class SourceShader: Shader {
         }
         return results
     }
-    
+
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
         super.init(label, vertexFunctionName, fragmentFunctionName, nil)
@@ -128,35 +128,44 @@ open class SourceShader: Shader {
         guard let context = context, let source = source else { return }
         do {
             library = try context.device.makeLibrary(source: source, options: nil)
-            libraryNeedsUpdate = false
+            error = nil
         }
         catch {
+            self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
+            library = nil
+            pipeline = nil
         }
+
+        libraryNeedsUpdate = false
     }
 
     open func setupShaderSource() -> String? {
         var result: String?
-        
+
         if let pipelineURL = pipelineURL {
             do {
                 result = try MetalFileCompiler(watch: false).parse(pipelineURL)
+                error = nil
             }
             catch {
+                self.error = error
                 print("\(label) Shader: \(error.localizedDescription)")
             }
         }
         else if let shaderSource = shaderSource {
             do {
                 result = try compileMetalSource(shaderSource)
+                error = nil
             }
             catch {
+                self.error = error
                 print("\(label) Shader: \(error.localizedDescription)")
             }
         }
         return result
     }
-    
+
     open func modifyShaderSource(source: inout String) {
         injectInstancingArgs(source: &source, instancing: instancing)
         injectLightingArgs(source: &source, lighting: lighting)
@@ -175,26 +184,29 @@ open class SourceShader: Shader {
             injectVertex(source: &source, vertexDescriptor: vertexDescriptor)
             injectVertexData(source: &source)
             injectVertexUniforms(source: &source)
-            
+
             injectLighting(source: &source, lighting: lighting)
             injectInstanceMatrixUniforms(source: &source, instancing: instancing)
-            
+
             // modify shader if needed, instancing, etc
             modifyShaderSource(source: &compiledShaderSource)
-            
+
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)
             shaderSource = compiledShaderSource
             self.source = source
-            
-            sourceNeedsUpdate = false
+
+            error = nil
         }
         catch {
+            self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
         }
+
+        sourceNeedsUpdate = false
     }
-    
+
     override public func clone() -> Shader {
         var clone: SourceShader!
 
@@ -222,7 +234,7 @@ open class SourceShader: Shader {
         clone.source = source
 
         clone.parameters = parameters.clone()
-        
+
         clone.blending = blending
         clone.sourceRGBBlendFactor = sourceRGBBlendFactor
         clone.sourceAlphaBlendFactor = sourceAlphaBlendFactor
@@ -230,14 +242,14 @@ open class SourceShader: Shader {
         clone.destinationAlphaBlendFactor = destinationAlphaBlendFactor
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
-        
+
         clone.instancing = instancing
         clone.lighting = lighting
         clone.vertexDescriptor = vertexDescriptor
-        
+
         clone.vertexFunctionName = vertexFunctionName
         clone.fragmentFunctionName = fragmentFunctionName
-        
+
         return clone
     }
 }
