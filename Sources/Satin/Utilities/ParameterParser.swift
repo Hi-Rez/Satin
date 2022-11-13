@@ -635,6 +635,101 @@ func parseParameters(source: String) -> ParameterGroup? {
                     label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
                     params.append(Float4Parameter(label.titleCase, simd_make_float4(1.0, 1.0, 1.0, 1.0), .colorpalette))
                 }
+                else if uiType == "color", vType == "float3" {
+                    var success = false
+                    var subPattern = #" *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *(.*)"#
+                    var subRegex = NSRegularExpression()
+
+                    do {
+                        subRegex = try NSRegularExpression(pattern: subPattern, options: [])
+                    }
+                    catch {
+                        print(error)
+                    }
+
+                    var subRange = NSRange(uiDetails.startIndex..<uiDetails.endIndex, in: uiDetails)
+                    var subMatches = subRegex.matches(in: uiDetails, options: [], range: subRange)
+
+                    if let subMatch = subMatches.first {
+                        var red: String?
+                        var green: String?
+                        var blue: String?
+                        var label: String?
+
+                        if let r1 = Range(subMatch.range(at: 1), in: uiDetails) {
+                            red = String(uiDetails[r1])
+                        }
+
+                        if let r2 = Range(subMatch.range(at: 2), in: uiDetails) {
+                            green = String(uiDetails[r2])
+                        }
+
+                        if let r3 = Range(subMatch.range(at: 3), in: uiDetails) {
+                            blue = String(uiDetails[r3])
+                        }
+
+                        if let r5 = Range(subMatch.range(at: 4), in: uiDetails) {
+                            label = String(uiDetails[r5])
+                        }
+
+                        if let red = red, let green = green, let blue = blue, let label = label {
+                            if let fRed = Float(red), let fGreen = Float(green), let fBlue = Float(blue) {
+                                params.append(Float3Parameter(label, simd_make_float3(fRed, fGreen, fBlue), .colorpicker))
+                                success = true
+                            }
+                        }
+                    }
+
+                    if !success {
+                        subPattern = #" *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?) *?, *?(-?\d*?\.?\d*?)$"#
+                        do {
+                            subRegex = try NSRegularExpression(pattern: subPattern, options: [])
+                        }
+                        catch {
+                            print(error)
+                        }
+
+                        subRange = NSRange(uiDetails.startIndex..<uiDetails.endIndex, in: uiDetails)
+                        subMatches = subRegex.matches(in: uiDetails, options: [], range: subRange)
+
+                        if let subMatch = subMatches.first {
+                            var red: String?
+                            var green: String?
+                            var blue: String?
+
+                            if let r1 = Range(subMatch.range(at: 1), in: uiDetails) {
+                                red = String(uiDetails[r1])
+                            }
+
+                            if let r2 = Range(subMatch.range(at: 2), in: uiDetails) {
+                                green = String(uiDetails[r2])
+                            }
+
+                            if let r3 = Range(subMatch.range(at: 3), in: uiDetails) {
+                                blue = String(uiDetails[r3])
+                            }
+
+                            if let red = red, let green = green, let blue = blue, let label = vName {
+                                if let fRed = Float(red), let fGreen = Float(green), let fBlue = Float(blue) {
+                                    params.append(Float3Parameter(label.titleCase, simd_make_float3(fRed, fGreen, fBlue), .colorpicker))
+                                    success = true
+                                }
+                            }
+                        }
+                    }
+
+                    if !success, let name = vName {
+                        var label = uiDetails.count > 0 ? uiDetails : name
+                        label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
+                        params.append(Float3Parameter(label.titleCase, simd_make_float3(1.0, 1.0, 1.0), .colorpicker))
+                        success = true
+                    }
+                }
+                else if uiType == "colorpalette", vType == "float3", let name = vName {
+                    var label = uiDetails.count > 0 ? uiDetails : name
+                    label = label.replacingOccurrences(of: ",", with: "", options: .literal, range: nil)
+                    params.append(Float3Parameter(label.titleCase, simd_make_float3(1.0, 1.0, 1.0), .colorpalette))
+                }
             }
         }
         return params
