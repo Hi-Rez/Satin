@@ -4,12 +4,12 @@
 #include "Library/Gamma.metal"
 
 static constant float4 rotations[6] = {
-    float4(0.0, 1.0, 0.0, HALF_PI),
-    float4(0.0, 1.0, 0.0, -HALF_PI),
-    float4(1.0, 0.0, 0.0, -HALF_PI),
-    float4(1.0, 0.0, 0.0, HALF_PI),
-    float4(0.0, 0.0, 1.0, 0.0),
-    float4(0.0, 1.0, 0.0, PI)
+    float4(0.0, 1.0, 0.0, HALF_PI),         // 0 - X+
+    float4(0.0, 1.0, 0.0, -HALF_PI),        // 1 - X-
+    float4(1.0, 0.0, 0.0, -HALF_PI),        // 2 - Y+
+    float4(1.0, 0.0, 0.0, HALF_PI),         // 3 - Y-
+    float4(0.0, 0.0, 1.0, 0.0),             // 4 - Z+
+    float4(0.0, 1.0, 0.0, PI)               // 5 - Z-
 };
 
 typedef struct {
@@ -18,7 +18,7 @@ typedef struct {
     bool gammaCorrected; // toggle,false
 } CubemapUniforms;
 
-constexpr sampler cubeSampler(mag_filter::linear, min_filter::linear);
+constexpr sampler cubeSampler(mag_filter::linear, min_filter::linear, address::repeat);
 
 kernel void cubemapUpdate(
     uint2 gid [[thread_position_in_grid]],
@@ -37,14 +37,9 @@ kernel void cubemapUpdate(
     
     const float4 rotation = rotations[face];
     const float3 dir = normalize(float3(ruv, 1.0)) * rotateAxisAngle(rotation.xyz, rotation.w);
-
-    float theta = atan2(dir.x, dir.z);
-    theta = (theta > 0 ? theta : (TWO_PI + theta)) / TWO_PI;
-    const float phi = asin(dir.y);
-
-    const float2 suv = float2(fract(theta + 0.5), 1.0 - (phi + HALF_PI) / PI);
+    const float2 tuv = float2((atan2(dir.z, dir.x) / TWO_PI) + 0.5, acos(dir.y) / PI);
     
-    float3 color = ref.sample(cubeSampler, suv).rgb;
+    float3 color = ref.sample(cubeSampler, tuv).rgb;
 
     // HDR Tonemapping
     color = uniforms.toneMapped ? aces(color) : color;

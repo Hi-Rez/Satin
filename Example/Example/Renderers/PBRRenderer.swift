@@ -49,7 +49,7 @@ class PBRRenderer: BaseRenderer {
     }()
     
     lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
-    lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 150), material: skyboxMaterial)
+    lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
     
     // Textures
     var hdriTexture: MTLTexture?

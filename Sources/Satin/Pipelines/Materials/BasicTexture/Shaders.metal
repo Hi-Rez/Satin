@@ -1,5 +1,6 @@
 typedef struct {
     float4 color; // color
+    bool flipped;
 } BasicTextureUniforms;
 
 fragment float4 basicTextureFragment(VertexData in [[stage_in]],
@@ -7,5 +8,7 @@ fragment float4 basicTextureFragment(VertexData in [[stage_in]],
     texture2d<float> tex [[texture(FragmentTextureCustom0)]],
     sampler texSampler [[sampler(FragmentSamplerCustom0)]])
 {
-    return uniforms.color * tex.sample(texSampler, in.uv);
+    float2 uv = in.uv;
+    uv.y = mix(uv.y, 1.0 - uv.y, uniforms.flipped);
+    return uniforms.color * tex.sample(texSampler, uv);
 }

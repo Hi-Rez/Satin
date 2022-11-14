@@ -10,13 +10,19 @@ import Metal
 open class BasicTextureMaterial: BasicColorMaterial {
     public var texture: MTLTexture?
     public var sampler: MTLSamplerState?
-
+    public var flipped: Bool = false {
+        didSet {
+            set("Flipped", flipped)
+        }
+    }
+    
     public required init() {
         super.init()
     }
     
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
+        set("Flipped", flipped)
     }
 
     public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
@@ -26,6 +32,7 @@ open class BasicTextureMaterial: BasicColorMaterial {
         }
         self.texture = texture
         self.sampler = sampler
+        set("Flipped", flipped)
     }
 
     public init(texture: MTLTexture, sampler: MTLSamplerState? = nil) {
@@ -35,6 +42,7 @@ open class BasicTextureMaterial: BasicColorMaterial {
         }
         self.texture = texture
         self.sampler = sampler
+        set("Flipped", flipped)
     }
 
     override open func setup() {
