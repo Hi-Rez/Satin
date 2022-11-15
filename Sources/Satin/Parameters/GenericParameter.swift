@@ -34,6 +34,7 @@ public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
 
     @Published public var value: ValueType {
         didSet {
+            objectWillChange.send()
             delegate?.updated(parameter: self)
         }
     }

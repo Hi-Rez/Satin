@@ -49,6 +49,7 @@ typedef struct {
     uint32_t *data;
 } TriangleFaceMap;
 
+TriangleFaceMap createTriangleFaceMap(void);
 void freeTriangleFaceMap(TriangleFaceMap *map);
 
 typedef struct {
@@ -59,7 +60,6 @@ typedef struct {
 } GeometryData;
 
 GeometryData createGeometryData(void);
-
 void freeGeometryData(GeometryData *data);
 
 void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int end);

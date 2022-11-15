@@ -11,10 +11,15 @@
 #include "Geometry.h"
 #include "Types.h"
 
+TriangleFaceMap createTriangleFaceMap() {
+    return (TriangleFaceMap) { .count = 0, .data = NULL };
+}
+
 void freeTriangleFaceMap(TriangleFaceMap *map) {
-    if (map->count <= 0 && map->data == NULL) { return; }
-    free(map->data);
-    map->count = 0;
+    if (map->count > 0 && map->data != NULL) {
+        free(map->data);
+        map->count = 0;
+    }
 }
 
 GeometryData createGeometryData() {
@@ -22,13 +27,15 @@ GeometryData createGeometryData() {
 }
 
 void freeGeometryData(GeometryData *data) {
-    if (data->vertexCount <= 0 && data->vertexData == NULL) { return; }
-    free(data->vertexData);
-    data->vertexCount = 0;
+    if (data->vertexCount > 0 && data->vertexData != NULL) {
+        free(data->vertexData);
+        data->vertexCount = 0;
+    }
 
-    if (data->indexCount <= 0 && data->indexData == NULL) { return; }
-    free(data->indexData);
-    data->indexCount = 0;
+    if (data->indexCount > 0 && data->indexData != NULL) {
+        free(data->indexData);
+        data->indexCount = 0;
+    }
 }
 
 void combineIndexGeometryData(GeometryData *dest, GeometryData *src,
