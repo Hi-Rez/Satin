@@ -12,6 +12,10 @@ open class SquircleGeometry: Geometry {
         super.init()
         self.setupData(size: size, p: p, res: res)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(size: Float, p: Float, res: (angular: Int, radial: Int)) {
         var geometryData = generateSquircleGeometryData(size, p, Int32(res.angular), Int32(res.radial))

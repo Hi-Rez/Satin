@@ -11,6 +11,10 @@ open class SkyboxGeometry: Geometry {
         super.init()
         self.setupData(size: size)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(size: Float) {
         var geometryData = generateSkyboxGeometryData(size)

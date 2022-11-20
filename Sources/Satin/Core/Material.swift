@@ -14,7 +14,7 @@ public protocol MaterialDelegate: AnyObject {
     func updated(material: Material)
 }
 
-public struct DepthBias {
+public struct DepthBias: Codable {
     var bias: Float
     var slope: Float
     var clamp: Float
@@ -27,30 +27,6 @@ public struct DepthBias {
 }
 
 open class Material: Codable, ParameterGroupDelegate, ObservableObject {
-    public required init(from decoder: Decoder) throws {
-        try decode(from: decoder)
-    }
-    
-    public func decode(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        label = try values.decode(String.self, forKey: .label)
-        blending = try values.decode(Blending.self, forKey: .blending)
-        parameters = try values.decode(ParameterGroup.self, forKey: .parameters)
-    }
-    
-    open func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(label, forKey: .label)
-        try container.encode(blending, forKey: .blending)
-        try container.encode(parameters, forKey: .parameters)
-    }
-    
-    public enum CodingKeys: String, CodingKey {
-        case label
-        case blending
-        case parameters
-    }
-    
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -248,6 +224,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         self.lighting = shader.lighting
         self.vertexDescriptor = shader.vertexDescriptor
         self.blending = shader.blending
+        
         self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
         self.sourceAlphaBlendFactor = shader.sourceAlphaBlendFactor
         self.destinationRGBBlendFactor = shader.destinationRGBBlendFactor
@@ -259,6 +236,63 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
         self.shader = shader
         
         setupParametersSubscriber()
+    }
+    
+    // MARK: - CodingKeys
+    
+    public enum CodingKeys: String, CodingKey {
+        case label
+        case blending
+        case sourceRGBBlendFactor
+        case sourceAlphaBlendFactor
+        case destinationRGBBlendFactor
+        case destinationAlphaBlendFactor
+        case rgbBlendOperation
+        case alphaBlendOperation
+        case depthWriteEnabled
+        case depthCompareFunction
+        case depthBias
+        case parameters
+    }
+    
+    // MARK: - Decode
+    
+    public required init(from decoder: Decoder) throws {
+        try decode(from: decoder)
+    }
+    
+    public func decode(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        label = try values.decode(String.self, forKey: .label)
+        blending = try values.decode(Blending.self, forKey: .blending)
+        sourceRGBBlendFactor = try values.decode(MTLBlendFactor.self, forKey: .sourceRGBBlendFactor)
+        sourceAlphaBlendFactor = try values.decode(MTLBlendFactor.self, forKey: .sourceAlphaBlendFactor)
+        destinationRGBBlendFactor = try values.decode(MTLBlendFactor.self, forKey: .destinationRGBBlendFactor)
+        destinationAlphaBlendFactor = try values.decode(MTLBlendFactor.self, forKey: .destinationAlphaBlendFactor)
+        rgbBlendOperation = try values.decode(MTLBlendOperation.self, forKey: .rgbBlendOperation)
+        alphaBlendOperation = try values.decode(MTLBlendOperation.self, forKey: .alphaBlendOperation)
+        depthWriteEnabled = try values.decode(Bool.self, forKey: .depthWriteEnabled)
+        depthCompareFunction = try values.decode(MTLCompareFunction.self, forKey: .depthCompareFunction)
+        depthBias = try values.decode(DepthBias?.self, forKey: .depthBias)
+        parameters = try values.decode(ParameterGroup.self, forKey: .parameters)
+    }
+    
+    // MARK: - Encode
+    
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(label, forKey: .label)
+        try container.encode(blending, forKey: .blending)
+        try container.encode(sourceRGBBlendFactor, forKey: .sourceRGBBlendFactor)
+        try container.encode(sourceAlphaBlendFactor, forKey: .sourceAlphaBlendFactor)
+        try container.encode(destinationRGBBlendFactor, forKey: .destinationRGBBlendFactor)
+        try container.encode(destinationAlphaBlendFactor, forKey: .destinationAlphaBlendFactor)
+        try container.encode(rgbBlendOperation, forKey: .rgbBlendOperation)
+        try container.encode(alphaBlendOperation, forKey: .alphaBlendOperation)
+        try container.encode(depthWriteEnabled, forKey: .depthWriteEnabled)
+        try container.encode(depthCompareFunction, forKey: .depthCompareFunction)
+        try container.encode(depthBias, forKey: .depthBias)
+        try container.encode(parameters, forKey: .parameters)
     }
     
     func setupParametersSubscriber() {

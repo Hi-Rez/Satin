@@ -11,7 +11,7 @@ import Metal
 import ModelIO
 import simd
 
-open class Geometry {
+open class Geometry: Codable {
     public var id: String = UUID().uuidString
     
     public var primitiveType: MTLPrimitiveType = .triangle
@@ -77,6 +77,37 @@ open class Geometry {
         self.primitiveType = primitiveType
         self.windingOrder = windingOrder
         self.indexType = indexType
+    }
+    
+    // MARK: - Codable
+    
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case primitiveType
+        case windingOrder
+        case indexType
+        case vertexData
+        case indexData
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        primitiveType = try values.decode(MTLPrimitiveType.self, forKey: .primitiveType)
+        windingOrder = try values.decode(MTLWinding.self, forKey: .windingOrder)
+        indexType = try values.decode(MTLIndexType.self, forKey: .indexType)
+        vertexData = try values.decode([Vertex].self, forKey: .vertexData)
+        indexData = try values.decode([UInt32].self, forKey: .indexData)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(primitiveType, forKey: .primitiveType)
+        try container.encode(windingOrder, forKey: .windingOrder)
+        try container.encode(indexType, forKey: .indexType)
+        try container.encode(vertexData, forKey: .vertexData)
+        try container.encode(indexData, forKey: .indexData)
     }
     
     func setup() {

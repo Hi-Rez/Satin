@@ -14,6 +14,10 @@ open class TriangleGeometry: Geometry {
         self.setupData(size: size)
     }
 
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(size: Float) {
         var geometryData = generateTriangleGeometryData(size)
         setFrom(&geometryData)

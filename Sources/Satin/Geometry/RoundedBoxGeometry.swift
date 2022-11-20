@@ -22,6 +22,10 @@ open class RoundedBoxGeometry: Geometry {
         super.init()
         setupData(width: size.width, height: size.height, depth: size.depth, radius: radius, res: res)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(width: Float, height: Float, depth: Float, radius: Float, res: Int) {
         var geometryData = generateRoundedBoxGeometryData(width, height, depth, radius, Int32(res))

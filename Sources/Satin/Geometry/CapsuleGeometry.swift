@@ -24,6 +24,10 @@ open class CapsuleGeometry: Geometry {
         super.init()
         self.setupData(size: size, res: res, axis: axis)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(size: (radius: Float, height: Float), res: (angular: Int, radial: Int, vertical: Int), axis: Axis) {
         var geometryData = generateCapsuleGeometryData(size.radius, size.height, Int32(res.angular), Int32(res.radial), Int32(res.vertical), axis.rawValue)

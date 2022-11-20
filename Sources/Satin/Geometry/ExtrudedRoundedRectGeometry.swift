@@ -23,6 +23,10 @@ open class ExtrudedRoundedRectGeometry: Geometry {
         let edgeZ = res.depth
         self.setupData(size: (size, size, depth), radius: radius, res: (2 * res.angular / 3, edgeX, edgeY, edgeZ, res.radial))
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(size: (width: Float, height: Float, depth: Float), radius: Float, res: (corner: Int, edgeX: Int, edgeY: Int, edgeZ: Int, radial: Int)) {
         self.primitiveType = .triangle

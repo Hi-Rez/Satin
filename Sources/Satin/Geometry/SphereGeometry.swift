@@ -27,6 +27,10 @@ open class SphereGeometry: Geometry {
         self.setupData(radius: radius, res: res)
     }
     
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(radius: Float, res: (angular: Int, vertical: Int)) {
         var geometryData = generateSphereGeometryData(radius, Int32(res.angular), Int32(res.vertical))
         setFrom(&geometryData)

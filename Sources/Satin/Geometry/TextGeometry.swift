@@ -9,11 +9,13 @@ import CoreText
 import Foundation
 import simd
 
+extension CTTextAlignment: Codable {}
+
 open class TextGeometry: Geometry {
-    public enum VerticalAlignment {
-        case top
-        case center
-        case bottom
+    public enum VerticalAlignment: Int, Codable {
+        case top = 0
+        case center = 1
+        case bottom = 2
     }
     
     public var verticalAlignment: VerticalAlignment = .center {
@@ -280,15 +282,55 @@ open class TextGeometry: Geometry {
         self.text = text
         self.fontName = fontName
         self.fontSize = fontSize
-        self.textBounds = bounds
+        textBounds = bounds
         self.pivot = pivot
         self.textAlignment = textAlignment
         self.verticalAlignment = verticalAlignment
         self.kern = kern
         self.lineSpacing = lineSpacing
-        self.ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
+        ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
         super.init()
         update()
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        verticalAlignment = try values.decode(VerticalAlignment.self, forKey: .verticalAlignment)
+        textAlignment = try values.decode(CTTextAlignment.self, forKey: .textAlignment)
+        text = try values.decode(String.self, forKey: .text)
+        pivot = try values.decode(simd_float2.self, forKey: .pivot)
+        textBounds = try values.decode(CGSize.self, forKey: .textBounds)
+        lineSpacing = try values.decode(Float.self, forKey: .lineSpacing)
+        fontName = try values.decode(String.self, forKey: .fontName)
+        fontSize = try values.decode(Float.self, forKey: .fontSize)
+        ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
+        try super.init(from: decoder)
+    }
+    
+    override open func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(verticalAlignment, forKey: .verticalAlignment)
+        try container.encode(textAlignment, forKey: .textAlignment)
+        try container.encode(text, forKey: .text)
+        try container.encode(pivot, forKey: .pivot)
+        try container.encode(textBounds, forKey: .textBounds)
+        try container.encode(kern, forKey: .kern)
+        try container.encode(lineSpacing, forKey: .lineSpacing)
+        try container.encode(fontName, forKey: .fontName)
+        try container.encode(fontSize, forKey: .fontSize)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case verticalAlignment
+        case textAlignment
+        case text
+        case pivot
+        case textBounds
+        case kern
+        case lineSpacing
+        case fontName
+        case fontSize
     }
     
     override public func update() {
@@ -309,7 +351,7 @@ open class TextGeometry: Geometry {
             needsClear = false
         }
         
-        var charOffset: Int = 0
+        var charOffset = 0
         for (lineIndex, line) in lines.enumerated() {
             let origin = origins[lineIndex]
             let runs: [CTRun] = CTLineGetGlyphRuns(line) as! [CTRun]

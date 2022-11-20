@@ -39,6 +39,10 @@ open class BoxGeometry: Geometry {
         super.init()
         self.setupData(bounds, res)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(_ bounds: Bounds, _ res: (width: Int, height: Int, depth: Int)) {
         let size = bounds.size

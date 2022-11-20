@@ -17,6 +17,10 @@ open class IcoSphereGeometry: Geometry {
         setupData(radius: radius, res: res)
     }
 
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(radius: Float, res: Int) {
         var geometryData = generateIcoSphereGeometryData(radius, Int32(res))
         setFrom(&geometryData)

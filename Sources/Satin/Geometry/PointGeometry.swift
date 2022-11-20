@@ -12,6 +12,10 @@ open class PointGeometry: Geometry {
         super.init()
         self.setupData()
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData() {
         primitiveType = .point

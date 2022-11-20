@@ -18,6 +18,10 @@ open class TorusGeometry: Geometry {
         super.init()
         self.setupData(radius: radius, res: res)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(radius: (minor: Float, major: Float), res: (minor: Int, major: Int)) {
         var geometryData = generateTorusGeometryData(radius.minor, radius.major, Int32(res.minor), Int32(res.major))

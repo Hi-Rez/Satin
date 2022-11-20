@@ -27,6 +27,10 @@ open class CircleGeometry: Geometry {
         self.setupData(radius: radius, res: res)
     }
     
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(radius: Float, res: (angular: Int, radial: Int)) {
         var geometryData = generateCircleGeometryData(radius, Int32(res.angular), Int32(res.radial))
         setFrom(&geometryData)

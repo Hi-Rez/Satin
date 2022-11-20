@@ -13,7 +13,11 @@ open class ArcGeometry: Geometry {
         super.init()
         self.setupData(radius: radius, angle: angle, res: res)
     }
-
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(radius: (inner: Float, outer: Float), angle: (start: Float, end: Float), res: (angular: Int, radial: Int)) {
         var geometryData = generateArcGeometryData(radius.inner, radius.outer, angle.start, angle.end, Int32(res.angular), Int32(res.radial))
         setFrom(&geometryData)

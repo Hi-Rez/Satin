@@ -25,7 +25,23 @@ open class ExtrudedTextGeometry: TextGeometry {
         self.distance = distance
         super.init(text: text, fontName: fontName, fontSize: fontSize, bounds: bounds, pivot: pivot, textAlignment: textAlignment, verticalAlignment: verticalAlignment, kern: kern, lineSpacing: lineSpacing)
     }
-
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        distance = try values.decode(Float.self, forKey: .distance)
+        try super.init(from: decoder)
+    }
+    
+    override open func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(distance, forKey: .distance)
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case distance
+    }
+    
     override func addGlyphGeometryData(_ gData: inout GeometryData, _ charOffset: Int, _ glyph: CGGlyph, _ glyphPosition: CGPoint, _ origin: CGPoint) {
         guard let framePivot = framePivot, let verticalOffset = verticalOffset else { return }
         

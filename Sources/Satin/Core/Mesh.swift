@@ -56,22 +56,43 @@ open class Mesh: Object, Renderable, Intersectable {
         setupGeometrySubscriber()
     }
     
+    // MARK: - CodingKeys
+    
+    public enum CodingKeys: String, CodingKey {
+        case triangleFillMode
+        case cullMode
+        case instanceCount
+        case geometry
+        case material
+    }
+    
+    // MARK: - Decode
+    
     public required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        triangleFillMode = try values.decode(MTLTriangleFillMode.self, forKey: .triangleFillMode)
+        cullMode = try values.decode(MTLCullMode.self, forKey: .cullMode)
+        instanceCount = try values.decode(Int.self, forKey: .instanceCount)
+        geometry = try values.decode(Geometry.self, forKey: .geometry)
+        material = try values.decode(AnyMaterial?.self, forKey: .material)?.material
+        try super.init(from: decoder)
+    }
+    
+    // MARK: - Encode
+    
+    open override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(triangleFillMode, forKey: .triangleFillMode)
+        try container.encode(cullMode, forKey: .cullMode)
+        try container.encode(instanceCount, forKey: .instanceCount)
+        try container.encode(geometry, forKey: .geometry)
+        if let material = material {
+            try container.encode(AnyMaterial(material), forKey: .material)
+        }
     }
     
     deinit {
         cleanupGeometrySubscriber()
-    }
-    
-    override open func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode("Mesh", forKey: .type)
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case type
     }
 
     override open func setup() {

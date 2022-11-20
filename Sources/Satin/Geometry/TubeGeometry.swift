@@ -17,6 +17,10 @@ open class TubeGeometry: Geometry {
         super.init()
         self.setupData(size: size, angles: angles, res: res)
     }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
 
     func setupData(size: (radius: Float, height: Float), angles: (start: Float, end: Float), res: (angular: Int, vertical: Int)) {
         var geometryData = generateTubeGeometryData(size.radius, size.height, angles.start, angles.end, Int32(res.angular), Int32(res.vertical))

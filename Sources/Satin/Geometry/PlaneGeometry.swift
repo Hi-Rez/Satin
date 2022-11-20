@@ -93,6 +93,10 @@ open class PlaneGeometry: Geometry {
         self.setupData(width: size.width, height: size.height, resU: res.u, resV: res.v, plane: plane, centered: centered)
     }
     
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(width: Float, height: Float, resU: Int, resV: Int, plane: PlaneOrientation = .xy, centered: Bool = true) {
         var geometryData = generatePlaneGeometryData(width, height, Int32(resU), Int32(resV), plane.rawValue, centered)
         setFrom(&geometryData)

@@ -13,12 +13,35 @@ import ModelIO
 import simd
 
 open class StandardMaterial: Material {
-    public var baseColor: simd_float4 = .one
-    public var ambientColor: simd_float4 = .zero
-    public var emissiveColor: simd_float4 = .zero
-    public var baseReflectivity = simd_make_float4(0.04, 0.04, 0.04, 1.0)
-    public var metallic: Float = 0.0
-    public var roughness: Float = 0.25
+    public var baseColor: simd_float4 = .one {
+        didSet {
+            set("Base Color", baseColor)
+        }
+    }
+
+    public var emissiveColor: simd_float4 = .zero {
+        didSet {
+            set("Emissive Color", baseColor)
+        }
+    }
+
+    public var baseReflectivity = simd_make_float4(0.04, 0.04, 0.04, 1.0) {
+        didSet {
+            set("Base Reflectivity", baseColor)
+        }
+    }
+
+    public var metallic: Float = 0.0 {
+        didSet {
+            set("Metallic", baseColor)
+        }
+    }
+
+    public var roughness: Float = 0.25 {
+        didSet {
+            set("Roughness", baseColor)
+        }
+    }
 
     private var maps: [PBRTexture: MTLTexture?] = [:] {
         didSet {
@@ -46,7 +69,6 @@ open class StandardMaterial: Material {
 
     func initalizeParameters() {
         set("Base Color", baseColor)
-        set("Ambient Color", ambientColor)
         set("Emissive Color", emissiveColor)
         set("Base Reflectivity", baseReflectivity)
         set("Metallic", metallic)

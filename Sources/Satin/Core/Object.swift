@@ -11,42 +11,6 @@ import Foundation
 import simd
 
 open class Object: Codable, ObservableObject {
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decode(String.self, forKey: .id)
-        label = try values.decode(String.self, forKey: .label)
-        position = try values.decode(simd_float3.self, forKey: .position)
-        scale = try values.decode(simd_float3.self, forKey: .scale)
-        orientation = try values.decode(simd_quatf.self, forKey: .orientation)
-        visible = try values.decode(Bool.self, forKey: .visible)
-        children = try values.decode([Object].self, forKey: .children)
-        for child in children {
-            child.parent = self
-            child.context = context
-        }
-    }
-    
-    open func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(label, forKey: .label)
-        try container.encode(position, forKey: .position)
-        try container.encode(orientation, forKey: .orientation)
-        try container.encode(scale, forKey: .scale)
-        try container.encode(visible, forKey: .visible)
-        try container.encode(children, forKey: .children)
-    }
-    
-    public enum CodingKeys: String, CodingKey {
-        case id
-        case label
-        case position
-        case orientation
-        case scale
-        case visible
-        case children
-    }
-    
     @Published open var id: String = UUID().uuidString
     
     @Published open var label: String = "Object"
@@ -277,6 +241,58 @@ open class Object: Codable, ObservableObject {
         for child in children {
             add(child)
         }
+    }
+    
+    // MARK: - CodingKeys
+
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case label
+        case position
+        case orientation
+        case scale
+        case visible
+        case children
+    }
+
+    // MARK: - Decode
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        label = try values.decode(String.self, forKey: .label)
+        position = try values.decode(simd_float3.self, forKey: .position)
+        scale = try values.decode(simd_float3.self, forKey: .scale)
+        orientation = try values.decode(simd_quatf.self, forKey: .orientation)
+        visible = try values.decode(Bool.self, forKey: .visible)
+        try decodeChildren(from: decoder)
+    }
+    
+    open func decodeChildren(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        children = try values.decode([Object].self, forKey: .children)
+        for child in children {
+            child.parent = self
+            child.context = context
+        }
+    }
+    
+    // MARK: - Encode
+    
+    open func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(label, forKey: .label)
+        try container.encode(position, forKey: .position)
+        try container.encode(orientation, forKey: .orientation)
+        try container.encode(scale, forKey: .scale)
+        try container.encode(visible, forKey: .visible)
+        try encodeChildren(to: encoder)
+    }
+    
+    open func encodeChildren(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(children, forKey: .children)
     }
     
     open func setup() {}

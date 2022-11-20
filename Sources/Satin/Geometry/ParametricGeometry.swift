@@ -14,6 +14,10 @@ open class ParametricGeometry: Geometry {
         self.setupData(u: u, v: v, res: res, generator: generator)
     }
 
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
         let ru = res.u
         let rv = res.v
