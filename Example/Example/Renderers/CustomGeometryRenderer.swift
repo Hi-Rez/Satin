@@ -19,7 +19,11 @@ open class IcosahedronGeometry: Geometry {
         super.init()
         setupData(size: size, res: res)
     }
-
+    
+    required public init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+    
     func setupData(size: Float, res: Int) {
         primitiveType = .triangle
         var geo = generateIcosahedronGeometryData(size, Int32(res))
