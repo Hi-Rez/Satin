@@ -5,8 +5,8 @@
 //  Created by Reza Ali on 6/4/20.
 //
 
-#ifndef Vertex_h
-#define Vertex_h
+#ifndef SatinTypes_h
+#define SatinTypes_h
 
 #include <stdbool.h>
 #include <simd/simd.h>
@@ -59,6 +59,20 @@ typedef struct {
     TriangleIndices *indexData;
 } GeometryData;
 
+typedef struct {
+    Bounds aabb;
+    uint leftFirst;
+    uint triCount;
+} BVHNode;
+
+typedef struct {
+    GeometryData geometry;
+    BVHNode *nodes;
+    simd_float3 *centroids;
+    uint *triIDs;
+    uint nodesUsed;
+} BVH;
+
 GeometryData createGeometryData(void);
 void freeGeometryData(GeometryData *data);
 
@@ -85,6 +99,8 @@ void transformGeometryData(GeometryData *data, simd_float4x4 transform);
 void deindexGeometryData(GeometryData *dest, GeometryData *src);
 void unrollGeometryData(GeometryData *dest, GeometryData *src);
 
-void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo, TriangleFaceMap *destMap, TriangleFaceMap *srcMap, uint32_t offset);
+void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo,
+                                           TriangleFaceMap *destMap, TriangleFaceMap *srcMap,
+                                           uint32_t offset);
 
 #endif /* Types_h */

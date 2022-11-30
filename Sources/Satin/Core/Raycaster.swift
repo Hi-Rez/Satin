@@ -12,28 +12,6 @@ import Metal
 import MetalPerformanceShaders
 import simd
 
-public struct RaycastResult {
-    public let barycentricCoordinates: simd_float3
-    public let distance: Float
-    public let normal: simd_float3
-    public let position: simd_float3
-    public let uv: simd_float2
-    public let primitiveIndex: UInt32
-    public let object: Object
-    public let submesh: Submesh?
-    
-    public init(barycentricCoordinates: simd_float3, distance: Float, normal: simd_float3, position: simd_float3, uv: simd_float2, primitiveIndex: UInt32, object: Object, submesh: Submesh?) {
-        self.barycentricCoordinates = barycentricCoordinates
-        self.distance = distance
-        self.normal = normal
-        self.position = position
-        self.uv = uv
-        self.primitiveIndex = primitiveIndex
-        self.object = object
-        self.submesh = submesh
-    }
-}
-
 open class Raycaster {
     public var ray = Ray() {
         didSet {
@@ -54,21 +32,13 @@ open class Raycaster {
         }
     }
 
-    internal lazy var originParam: PackedFloat3Parameter = {
-        PackedFloat3Parameter("origin", ray.origin)
-    }()
+    internal lazy var originParam: PackedFloat3Parameter = .init("origin", ray.origin)
     
-    internal lazy var nearParam: FloatParameter = {
-        FloatParameter("near", near)
-    }()
+    internal lazy var nearParam: FloatParameter = .init("near", near)
     
-    internal lazy var directionParam: PackedFloat3Parameter = {
-        PackedFloat3Parameter("direction", ray.direction)
-    }()
+    internal lazy var directionParam: PackedFloat3Parameter = .init("direction", ray.direction)
     
-    internal lazy var farParam: FloatParameter = {
-        FloatParameter("far", far)
-    }()
+    internal lazy var farParam: FloatParameter = .init("far", far)
     
     internal lazy var rayParams: ParameterGroup = {
         let params = ParameterGroup("Ray")
@@ -115,15 +85,15 @@ open class Raycaster {
         setup()
     }
     
-    public init(device: MTLDevice, _ origin: simd_float3, _ direction: simd_float3, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+    public init(device: MTLDevice, origin: simd_float3, direction: simd_float3, near: Float = 0.0, far: Float = Float.infinity) {
         self.device = device
-        ray = Ray(origin, direction)
+        self.ray = Ray(origin: origin, direction: direction)
         self.near = near
         self.far = far
         setup()
     }
     
-    public init(device: MTLDevice, _ ray: Ray, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+    public init(device: MTLDevice, ray: Ray, near: Float = 0.0, far: Float = Float.infinity) {
         self.device = device
         self.ray = ray
         self.near = near
@@ -131,9 +101,9 @@ open class Raycaster {
         setup()
     }
     
-    public init(device: MTLDevice, _ camera: Camera, _ coordinate: simd_float2, _ near: Float = 0.0, _ far: Float = Float.infinity) {
+    public init(device: MTLDevice, camera: Camera, coordinate: simd_float2, near: Float = 0.0, far: Float = Float.infinity) {
         self.device = device
-        setFromCamera(camera, coordinate)
+        self.ray = Ray(camera: camera, coordinate: coordinate)
         self.near = near
         self.far = far
         setup()
@@ -167,8 +137,8 @@ open class Raycaster {
     }
     
     // expects a normalize point from -1 to 1 in both x & y directions
-    public func setFromCamera(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
-        ray = Ray(camera, coordinate)
+    public func setFromCamera(_ camera: Camera, coordinate: simd_float2 = .zero) {
+        ray = Ray(camera: camera, coordinate: coordinate)
     }
     
     private func setupRayBuffers() {

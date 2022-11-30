@@ -42,17 +42,34 @@ bool intersects(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d);
 
 bool rayRayIntersection2(simd_float2 as, simd_float2 ad, simd_float2 bs, simd_float2 bd,
                          simd_float2 *intersection);
+
 bool rayPlaneIntersection(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal,
                           simd_float3 planeOrigin, simd_float3 *intersection);
+
 bool rayPlaneIntersectionTime(simd_float3 origin, simd_float3 direction, simd_float3 planeNormal,
                               simd_float3 planeOrigin, float *time);
+
 bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds,
                            simd_float2 *times);
+
+bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bounds,
+                           simd_float2 *times);
+
+bool rayBoundsIntersect(Ray ray, Bounds bounds);
+
 bool raySphereIntersection(simd_float3 origin, simd_float3 direction, simd_float3 center,
                            float radius, simd_float2 *times);
+
 bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_float3 v0,
                              simd_float3 v1, simd_float3 v2, float *time, simd_float3 *intersection,
                              simd_float3 *normal);
+
+bool rayTriangleIntersectionTime(Ray ray, simd_float3 p0, simd_float3 p1, simd_float3 p2,
+                                 float *time);
+
+bool rayTriangleIntersect(simd_float3 origin, simd_float3 direction, simd_float3 v0, simd_float3 v1,
+                          simd_float3 v2, float *time, simd_float3 *intersection,
+                          simd_float3 *normal, simd_float3 *bc);
 
 simd_float3 projectPointOnPlane(simd_float3 origin, simd_float3 normal, simd_float3 point);
 simd_float2 projectedPointOnLine2(simd_float2 start, simd_float2 end, simd_float2 point);
@@ -62,5 +79,7 @@ float pointLineDistance3(simd_float3 start, simd_float3 end, simd_float3 point);
 
 float angle2(simd_float2 a);
 float angle(float x, float y);
+
+simd_float3 getBarycentricCoordinates(simd_float3 p, simd_float3 a, simd_float3 b, simd_float3 c);
 
 #endif /* Geometry_h */

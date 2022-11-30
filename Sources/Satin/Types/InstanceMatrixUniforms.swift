@@ -1,8 +1,9 @@
 //
 //  InstanceMatrixUniforms.swift
-//  
+//  Satin
 //
 //  Created by Reza Ali on 10/19/22.
+//  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
 import Foundation

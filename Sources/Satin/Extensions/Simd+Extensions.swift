@@ -53,6 +53,14 @@ extension simd_float4x4: Codable {
     }
 }
 
+public extension simd_float4x4 {
+    func act(_ ray: Ray) -> Ray {
+        let transformedOrigin = simd_make_float3(self * simd_make_float4(ray.origin, 1.0))
+        let transformedDirection = simd_make_float3(self * simd_make_float4(ray.direction))
+        return Ray(origin: transformedOrigin, direction: simd_normalize(transformedDirection))
+    }
+}
+
 extension simd_float3x3: Codable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

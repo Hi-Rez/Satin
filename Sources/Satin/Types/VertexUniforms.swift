@@ -3,7 +3,7 @@
 //  Satin
 //
 //  Created by Reza Ali on 7/23/19.
-//  Copyright © 2019 Reza Ali. All rights reserved.
+//  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
 import simd

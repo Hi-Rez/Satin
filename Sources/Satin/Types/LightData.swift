@@ -1,8 +1,9 @@
 //
 //  LightData.swift
-//  
+//  Satin
 //
 //  Created by Reza Ali on 11/1/22.
+//  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
 import Foundation

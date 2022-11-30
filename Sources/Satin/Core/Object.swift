@@ -3,7 +3,7 @@
 //  Satin
 //
 //  Created by Reza Ali on 7/23/19.
-//  Copyright © 2019 Reza Ali. All rights reserved.
+//  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
 import Combine
@@ -50,7 +50,7 @@ open class Object: Codable, ObservableObject {
     
     var _localBounds = ValueCache<Bounds>()
     public var localBounds: Bounds { _localBounds.get(computeLocalBounds) }
-
+    
     var _worldBounds = ValueCache<Bounds>()
     public var worldBounds: Bounds { _worldBounds.get(computeWorldBounds) }
     
@@ -62,7 +62,7 @@ open class Object: Codable, ObservableObject {
     public var rotationMatrix: matrix_float4x4 {
         _rotationMatrix.get { matrix_float4x4(orientation) }
     }
-
+    
     var _orientationMatrix = ValueCache<matrix_float3x3>()
     public var orientationMatrix: matrix_float3x3 {
         _orientationMatrix.get { matrix_float3x3(orientation) }
@@ -143,7 +143,7 @@ open class Object: Codable, ObservableObject {
             orientation = simd_quatf(simd_float3x3(rx, ry, rz))
         }
     }
-
+    
     public var worldPosition: simd_float3 {
         get {
             let wp = worldMatrix.columns.3
@@ -243,8 +243,12 @@ open class Object: Codable, ObservableObject {
         }
     }
     
+    deinit {
+        removeAll()
+    }
+    
     // MARK: - CodingKeys
-
+    
     public enum CodingKeys: String, CodingKey {
         case id
         case label
@@ -254,7 +258,7 @@ open class Object: Codable, ObservableObject {
         case visible
         case children
     }
-
+    
     // MARK: - Decode
     
     public required init(from decoder: Decoder) throws {
@@ -297,6 +301,8 @@ open class Object: Codable, ObservableObject {
     
     open func setup() {}
     
+    // MARK: - Compute Bounds
+    
     open func computeLocalBounds() -> Bounds {
         return Bounds(min: position, max: position)
     }
@@ -317,6 +323,8 @@ open class Object: Codable, ObservableObject {
     }
     
     open func update(camera: Camera, viewport: simd_float4) {}
+    
+    // MARK: - Inserting, Adding & Removing
     
     open func insert(_ child: Object, at: Int, setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
@@ -364,6 +372,8 @@ open class Object: Codable, ObservableObject {
         children = []
     }
     
+    // MARK: - Recursive Functions
+    
     public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
         fn(self)
         if recursive {
@@ -372,6 +382,8 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
+    
+    // MARK: - Children
     
     public func getChildren(_ recursive: Bool = true) -> [Object] {
         var results: [Object] = []
@@ -429,6 +441,8 @@ open class Object: Codable, ObservableObject {
         }
     }
     
+    // MARK: - isVisible
+    
     public func isVisible() -> Bool {
         if let parent = parent {
             return (parent.isVisible() && visible)
@@ -446,6 +460,19 @@ open class Object: Codable, ObservableObject {
     
     public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
         localMatrix = lookAtMatrix3f(position, center, up)
+    }
+    
+    // MARK: - Intersections
+    
+    open func intersects(ray: Ray) -> Bool {
+        return rayBoundsIntersect(ray, worldBounds)
+    }
+    
+    open func intersect(ray: Ray, intersections: inout [RaycastResult], recursive: Bool = true, invisible: Bool = false) {
+        guard visible || invisible, intersects(ray: ray), recursive else { return }
+        for child in children {
+            child.intersect(ray: ray, intersections: &intersections, recursive: recursive, invisible: invisible)
+        }
     }
 }
 

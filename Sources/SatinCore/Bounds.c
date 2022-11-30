@@ -1,6 +1,6 @@
 //
 //  Bounds.c
-//  Pods
+//  Satin
 //
 //  Created by Reza Ali on 11/30/20.
 //
@@ -9,10 +9,15 @@
 
 #include "Bounds.h"
 
+Bounds createBounds(void) {
+    return (Bounds) { .min = { INFINITY, INFINITY, INFINITY },
+                      .max = { -INFINITY, -INFINITY, -INFINITY } };
+}
+
 Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
     if (count > 0) {
-        simd_float3 min = {INFINITY, INFINITY, INFINITY};
-        simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
+        simd_float3 min = { INFINITY, INFINITY, INFINITY };
+        simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
         for (int i = 0; i < count; i++) {
             simd_float3 pos = vertices[i].position.xyz;
 
@@ -21,14 +26,14 @@ Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
         }
         return (Bounds) { .min = min, .max = max };
     }
-    return (Bounds) { .min = {0.0, 0.0, 0.0},
-                      .max = {0.0, 0.0, 0.0} };
+    return (Bounds) { .min = { 0.0, 0.0, 0.0 }, .max = { 0.0, 0.0, 0.0 } };
 }
 
-Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, simd_float4x4 transform) {
+Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count,
+                                             simd_float4x4 transform) {
     if (count > 0) {
-        simd_float3 min = {INFINITY, INFINITY, INFINITY};
-        simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
+        simd_float3 min = { INFINITY, INFINITY, INFINITY };
+        simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
         for (int i = 0; i < count; i++) {
             simd_float3 pos = simd_mul(transform, vertices[i].position).xyz;
 
@@ -37,8 +42,7 @@ Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count, 
         }
         return (Bounds) { .min = min, .max = max };
     }
-    return (Bounds) { .min = {0.0, 0.0, 0.0},
-                      .max = {0.0, 0.0, 0.0} };
+    return (Bounds) { .min = { 0.0, 0.0, 0.0 }, .max = { 0.0, 0.0, 0.0 } };
 }
 
 Bounds mergeBounds(Bounds a, Bounds b) {
@@ -61,18 +65,16 @@ Bounds expandBounds(Bounds bounds, simd_float3 pt) {
 }
 
 static simd_float4 corner(Bounds a, int index) {
-    return simd_make_float4(index & 1 ? a.min.x : a.max.x,
-                            index & 2 ? a.min.y : a.max.y,
-                            index & 4 ? a.min.z : a.max.z,
-                            1.0);
+    return simd_make_float4(index & 1 ? a.min.x : a.max.x, index & 2 ? a.min.y : a.max.y,
+                            index & 4 ? a.min.z : a.max.z, 1.0);
 }
 
 Bounds transformBounds(Bounds a, simd_float4x4 transform) {
 
-    simd_float3 min = {INFINITY, INFINITY, INFINITY};
-    simd_float3 max = {-INFINITY, -INFINITY, -INFINITY};
+    simd_float3 min = { INFINITY, INFINITY, INFINITY };
+    simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
 
-    for(int i=0;i<8;++i) {
+    for (int i = 0; i < 8; ++i) {
         simd_float3 v = simd_mul(transform, corner(a, i)).xyz;
         min = simd_min(min, v);
         max = simd_max(max, v);

@@ -158,7 +158,7 @@ class DepthMaterialRenderer: BaseRenderer {
     override func mouseDown(with event: NSEvent) {
         let m = event.locationInWindow
         let pt = normalizePoint(m, mtkView.frame.size)
-        raycaster.setFromCamera(camera, pt)
+        raycaster.setFromCamera(camera, coordinate: pt)
         let results = raycaster.intersect(scene, true)
         for result in results {
             print(result.object.label)

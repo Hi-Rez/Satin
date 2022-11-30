@@ -10,11 +10,22 @@ import Combine
 import Metal
 import ModelIO
 import simd
+import SatinCore
 
 open class Geometry: Codable {
     public var id: String = UUID().uuidString
     
-    public var primitiveType: MTLPrimitiveType = .triangle
+    public var primitiveType: MTLPrimitiveType = .triangle {
+        didSet {
+            if primitiveType != oldValue, primitiveType != .triangle {
+                if let bvh = self._bvh {
+                    print("changing primitive type from geometry")
+                    freeBVH(bvh)
+                }
+                self._bvh = nil
+            }
+        }
+    }
     public var windingOrder: MTLWinding = .counterClockwise
     public var indexType: MTLIndexType = .uint32
     
@@ -24,7 +35,6 @@ open class Geometry: Codable {
         didSet {
             publisher.send(self)
             _updateVertexBuffer = true
-            _updateBounds = true
         }
     }
     
@@ -35,16 +45,46 @@ open class Geometry: Codable {
         }
     }
     
+    public var bvh: BVH? {
+        if _updateBVH, primitiveType == .triangle {
+            setupBVH()
+        }
+        return _bvh
+    }
+    
     public var context: Context? {
         didSet {
             setup()
         }
     }
     
-    var _updateVertexBuffer = true
-    var _updateIndexBuffer = true
-    var _updateBounds: Bool = true
-    var _bounds = Bounds(min: simd_float3(repeating: 0.0), max: simd_float3(repeating: 0.0))
+    var _updateVertexBuffer = true {
+        didSet {
+            if _updateVertexBuffer {
+                _updateBounds = true
+            }
+        }
+    }
+    
+    var _updateIndexBuffer = true {
+        didSet {
+            if _updateIndexBuffer {
+                _updateBounds = true
+            }
+        }
+    }
+    
+    var _updateBVH: Bool = true
+    var _bvh: BVH?
+    
+    var _updateBounds: Bool = true {
+        didSet {
+            if _updateBounds {
+                _updateBVH = true
+            }
+        }
+    }
+    var _bounds = createBounds()
     
     public var bounds: Bounds {
         if _updateBounds {
@@ -73,7 +113,7 @@ open class Geometry: Codable {
         setFrom(&geometryData)
     }
     
-    public init(primitiveType: MTLPrimitiveType, windingOrder: MTLWinding, indexType: MTLIndexType) {
+    public init(primitiveType: MTLPrimitiveType, windingOrder: MTLWinding = .counterClockwise, indexType: MTLIndexType = .uint32) {
         self.primitiveType = primitiveType
         self.windingOrder = windingOrder
         self.indexType = indexType
@@ -113,6 +153,7 @@ open class Geometry: Codable {
     func setup() {
         setupVertexBuffer()
         setupIndexBuffer()
+        setupBVH()
     }
     
     public func update() {
@@ -156,6 +197,11 @@ open class Geometry: Codable {
             indexBuffer = nil
         }
         _updateIndexBuffer = false
+    }
+    
+    func setupBVH() {
+        _bvh = createBVH(getGeometryData())
+        _updateBVH = false
     }
     
     public func setFrom(_ geometryData: inout GeometryData) {
@@ -212,7 +258,20 @@ open class Geometry: Codable {
         transformVertices(&vertexData, Int32(vertexData.count), matrix)
     }
     
+    public func intersects(ray: Ray) -> Bool {
+        return rayBoundsIntersect(ray, bounds)
+    }
+    
+    public func intersect(ray: Ray, intersections: inout [IntersectionResult]) {
+        if let bvh = self.bvh {
+            bvh.intersect(ray: ray, intersections: &intersections)
+        }
+    }
+    
     func computeBounds() -> Bounds {
+        if let bvh = self.bvh, let node = bvh.getNode(index: 0) {
+            return node.aabb
+        }
         return computeBoundsFromVertices(&vertexData, Int32(vertexData.count))
     }
     
@@ -221,6 +280,11 @@ open class Geometry: Codable {
         vertexData = []
         vertexBuffer = nil
         indexBuffer = nil
+        if let bvh = _bvh {
+            freeBVH(bvh)
+            self._bvh = nil
+        }
+        vertexBuffers.removeAll()
     }
 }
 

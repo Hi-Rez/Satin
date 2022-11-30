@@ -134,7 +134,7 @@ class LoadObjRenderer: BaseRenderer {
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
-        raycaster.setFromCamera(camera, pt)
+        raycaster.setFromCamera(camera, coordinate: pt)
         let results = raycaster.intersect(scene)
         for result in results {
             print(result.object.label)

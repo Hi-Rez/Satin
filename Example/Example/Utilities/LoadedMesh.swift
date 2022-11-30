@@ -261,11 +261,6 @@ extension LoadedMesh: Intersectable {
         MemoryLayout<Vertex>.stride
     }
     
-    func intersects(ray: Ray) -> Bool {
-        var times: simd_float2 = .zero
-        return rayBoundsIntersection(ray.origin, ray.direction, intersectionBounds, &times)
-    }
-    
     public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
         let index = Int(primitiveIndex) * 3
             

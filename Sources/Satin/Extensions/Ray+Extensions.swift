@@ -12,7 +12,7 @@ public extension Ray {
         self = Ray(origin: simd_make_float3(0.0, 0.0, 0.0), direction: simd_make_float3(0.0, 0.0, 1.0))
     }
     
-    init(_ camera: Camera, _ coordinate: simd_float2 = .zero) {
+    init(camera: Camera, coordinate: simd_float2) {
         var _origin: simd_float3 = .zero
         var _direction: simd_float3 = .zero
         
@@ -25,12 +25,8 @@ public extension Ray {
             _origin = camera.unProject(coordinate)
             _direction = normalize(simd_make_float3(camera.worldMatrix * simd_float4(0.0, 0.0, -1.0, 0.0)))
         }
-        
-        self = Ray(origin: _origin, direction: _direction)
-    }
     
-    init(_ origin: simd_float3, _ direction: simd_float3) {
-        self = Ray(origin: origin, direction: direction)
+        self = Ray(origin: _origin, direction: _direction)
     }
     
     func at(_ t: Float) -> simd_float3 {

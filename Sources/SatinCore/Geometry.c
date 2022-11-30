@@ -180,6 +180,11 @@ bool rayBoundsIntersection(simd_float3 origin, simd_float3 direction, Bounds bou
     return true;
 }
 
+bool rayBoundsIntersect(Ray ray, Bounds bounds) {
+    simd_float2 times;
+    return rayBoundsIntersection(ray.origin, ray.direction, bounds, &times);
+}
+
 bool raySphereIntersection(simd_float3 origin, simd_float3 direction, simd_float3 center,
                            float radius, simd_float2 *times) {
     const simd_float3 l = center - origin;
@@ -234,6 +239,25 @@ bool rayTriangleIntersection(simd_float3 origin, simd_float3 direction, simd_flo
     return false;
 }
 
+bool rayTriangleIntersectionTime(Ray ray, simd_float3 p0, simd_float3 p1, simd_float3 p2,
+                                 float *time) {
+    const simd_float3 edge1 = p1 - p0;
+    const simd_float3 edge2 = p2 - p0;
+    const simd_float3 h = simd_cross(ray.direction, edge2);
+    const float a = simd_dot(edge1, h);
+    if (a > -FLT_EPSILON && a < FLT_EPSILON) return false; // ray parallel to triangle
+    const float f = 1 / a;
+    const simd_float3 s = ray.origin - p0;
+    const float u = f * simd_dot(s, h);
+    if (u < 0 || u > 1) return false;
+    const simd_float3 q = simd_cross(s, edge1);
+    const float v = f * simd_dot(ray.direction, q);
+    if (v < 0 || u + v > 1) return false;
+    const float t = f * simd_dot(edge2, q);
+    if (t > FLT_EPSILON) { *time = t; }
+    return true;
+}
+
 simd_float3 projectPointOnPlane(simd_float3 origin, simd_float3 normal, simd_float3 point) {
     simd_float3 v = point - origin;
     float pn = simd_dot(v, normal);
@@ -276,4 +300,20 @@ float angle(float x, float y) {
     float theta = atan2f(y, x);
     if (theta < 0) { theta += M_PI * 2.0; }
     return theta;
+}
+
+simd_float3 getBarycentricCoordinates(simd_float3 p, simd_float3 a, simd_float3 b, simd_float3 c) {
+    const simd_float3 v0 = b - a;
+    const simd_float3 v1 = c - a;
+    const simd_float3 v2 = p - a;
+    const float d00 = simd_dot(v0, v0);
+    const float d01 = simd_dot(v0, v1);
+    const float d11 = simd_dot(v1, v1);
+    const float d20 = simd_dot(v2, v0);
+    const float d21 = simd_dot(v2, v1);
+    const float denom = d00 * d11 - d01 * d01;
+    const float v = (d11 * d20 - d01 * d21) / denom;
+    const float w = (d00 * d21 - d01 * d20) / denom;
+    const float u = 1.0 - v - w;
+    return simd_make_float3(u, v, w);
 }

@@ -80,7 +80,7 @@ open class Mesh: Object, Renderable, Intersectable {
     
     // MARK: - Encode
     
-    open override func encode(to encoder: Encoder) throws {
+    override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(triangleFillMode, forKey: .triangleFillMode)
         try container.encode(cullMode, forKey: .cullMode)
@@ -176,7 +176,7 @@ open class Mesh: Object, Renderable, Intersectable {
 
         material.bind(renderEncoder)
         
-        self.bind(renderEncoder)
+        bind(renderEncoder)
 
         for (index, buffer) in geometry.vertexBuffers {
             renderEncoder.setVertexBuffer(buffer, offset: 0, index: index.rawValue)
@@ -221,16 +221,53 @@ open class Mesh: Object, Renderable, Intersectable {
         submeshes.append(submesh)
     }
     
+    // MARK: - Comoute Bounds
+
     override open func computeLocalBounds() -> Bounds {
         return transformBounds(geometry.bounds, localMatrix)
     }
     
     override open func computeWorldBounds() -> Bounds {
         var result = transformBounds(geometry.bounds, worldMatrix)
-        children.forEach { child in
+        for child in children {
             result = mergeBounds(result, child.worldBounds)
         }
         return result
+    }
+    
+    // MARK: - Intersect
+    
+    override open func intersect(ray: Ray, intersections: inout [RaycastResult], recursive: Bool = true, invisible: Bool = false) {
+        guard visible || invisible, intersects(ray: ray) else { return }
+
+        var geometryIntersections = [IntersectionResult]()
+        geometry.intersect(
+            ray: worldMatrix.inverse.act(ray),
+            intersections: &geometryIntersections
+        )
+
+        intersections.append(contentsOf:
+            geometryIntersections.map {
+                RaycastResult(
+                    barycentricCoordinates: $0.barycentricCoordinates,
+                    distance: $0.distance,
+                    normal: $0.normal,
+                    position: simd_make_float3(worldMatrix * simd_make_float4($0.position, 1.0)),
+                    uv: $0.uv,
+                    primitiveIndex: $0.primitiveIndex,
+                    object: self,
+                    submesh: nil
+                )
+            }
+        )
+
+        if recursive {
+            for child in children {
+                child.intersect(ray: ray, intersections: &intersections, recursive: recursive, invisible: invisible)
+            }
+        }
+        
+        intersections.sort { $0.distance < $1.distance }
     }
 
     // MARK: - Intersectable
@@ -262,15 +299,7 @@ open class Mesh: Object, Renderable, Intersectable {
     public var intersectionBounds: Bounds {
         geometry.bounds
     }
-    
-    public func intersects(ray: Ray) -> Bool {
-        let worldMatrixInverse = worldMatrix.inverse
-        let origin = worldMatrixInverse * simd_make_float4(ray.origin, 1.0)
-        let direction = worldMatrixInverse * simd_make_float4(ray.direction, 0.0)
-        var times: simd_float2 = .zero
-        return rayBoundsIntersection(simd_make_float3(origin), simd_make_float3(direction), intersectionBounds, &times)
-    }
-    
+  
     public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
         let index = Int(primitiveIndex) * 3
             
