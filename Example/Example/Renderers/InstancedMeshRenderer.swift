@@ -27,6 +27,7 @@ class InstancedMeshRenderer: BaseRenderer {
     var camera = PerspectiveCamera(position: [10.0, 10.0, 10.0], near: 0.001, far: 100.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     var scene = Object("Scene")
+    var container = Object("Container")
     var instancedMesh: InstancedMesh!
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
@@ -51,7 +52,8 @@ class InstancedMeshRenderer: BaseRenderer {
         guard let geo = loadOBJ(url: modelsURL.appendingPathComponent("spot_triangulated.obj")) else { return }
         instancedMesh = InstancedMesh(geometry: geo, material: BasicDiffuseMaterial(0.1), count: dim * dim * dim)
         instancedMesh.label = "Spot"
-        scene.add(instancedMesh)
+        container.add(instancedMesh)
+        scene.add(container)
         updateInstances(getTime())
     }
     
@@ -85,6 +87,9 @@ class InstancedMeshRenderer: BaseRenderer {
     override func update() {
         cameraController.update()
         updateInstances(getTime())
+        container.position = [2.0 * sin(getTime()), 0.0, 0.0]
+        container.scale = .init(repeating: 1.0 + abs(cos(getTime())))
+        container.orientation = .init(angle: cos(getTime()) * .pi, axis: simd_normalize(.one))
     }
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

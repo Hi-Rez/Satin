@@ -141,6 +141,7 @@ public class InstancedMesh: Mesh {
         }
 
         _updateInstanceMatricesUniforms = false
+        _updateInstanceMatrixBuffer = true
     }
 
     // MARK: - Intersections
