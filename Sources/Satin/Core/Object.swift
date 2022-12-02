@@ -58,7 +58,13 @@ open class Object: Codable, ObservableObject {
         return _localBounds
     }
     
-    private var _updateWorldBounds: Bool = true
+    private var _updateWorldBounds: Bool = true {
+        didSet {
+            if _updateWorldBounds {
+                parent?._updateWorldBounds = true
+            }
+        }
+    }
     private var _worldBounds = createBounds()
     public var worldBounds: Bounds {
         if _updateWorldBounds {
@@ -123,14 +129,18 @@ open class Object: Codable, ObservableObject {
     var updateMatrix: Bool = true {
         didSet {
             if updateMatrix {
-                _localMatrix.clear()
                 _updateLocalBounds = true
                 _updateWorldBounds = true
+                                
+                _localMatrix.clear()
                 _normalMatrix.clear()
                 _worldMatrix.clear()
                 _worldOrientation.clear()
+                
                 transformPublisher.send(self)
+                
                 updateMatrix = false
+                
                 for child in children {
                     child.updateMatrix = true
                 }
