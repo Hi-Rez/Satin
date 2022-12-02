@@ -48,11 +48,25 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    var _localBounds = ValueCache<Bounds>()
-    public var localBounds: Bounds { _localBounds.get(computeLocalBounds) }
+    var _updateLocalBounds: Bool = true
+    var _localBounds = createBounds()
+    public var localBounds: Bounds {
+        if _updateLocalBounds {
+            _localBounds = computeLocalBounds()
+            _updateLocalBounds = false
+        }
+        return _localBounds
+    }
     
-    var _worldBounds = ValueCache<Bounds>()
-    public var worldBounds: Bounds { _worldBounds.get(computeWorldBounds) }
+    private var _updateWorldBounds: Bool = true
+    private var _worldBounds = createBounds()
+    public var worldBounds: Bounds {
+        if _updateWorldBounds {
+            _worldBounds = computeWorldBounds()
+            _updateWorldBounds = false
+        }
+        return _worldBounds
+    }
     
     public var translationMatrix: matrix_float4x4 { translationMatrix3f(position) }
     
@@ -100,7 +114,7 @@ open class Object: Codable, ObservableObject {
     
     @Published open var children: [Object] = [] {
         didSet {
-            _worldBounds.clear()
+            _updateWorldBounds = true
         }
     }
     
@@ -110,8 +124,8 @@ open class Object: Codable, ObservableObject {
         didSet {
             if updateMatrix {
                 _localMatrix.clear()
-                _localBounds.clear()
-                _worldBounds.clear()
+                _updateLocalBounds = true
+                _updateWorldBounds = true
                 _normalMatrix.clear()
                 _worldMatrix.clear()
                 _worldOrientation.clear()

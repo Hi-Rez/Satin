@@ -86,7 +86,6 @@ open class Geometry: Codable {
         }
     }
     var _bounds = createBounds()
-    
     public var bounds: Bounds {
         if _updateBounds {
             _bounds = computeBounds()

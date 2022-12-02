@@ -30,7 +30,7 @@ open class Mesh: Object, Renderable, Intersectable {
                 geometryPublisher.send(self)
                 setupGeometrySubscriber()
                 setupGeometry()
-                _localBounds.clear()
+                _updateLocalBounds = true
             }
         }
     }
@@ -107,7 +107,7 @@ open class Mesh: Object, Renderable, Intersectable {
         geometrySubscriber = geometry.publisher.sink { [weak self] _ in
             guard let self = self else { return }
             self.geometryPublisher.send(self)
-            self._localBounds.clear()
+            self._updateLocalBounds = true
         }
     }
         

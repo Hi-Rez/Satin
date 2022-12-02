@@ -1,12 +1,12 @@
 //
 //  ObjectTests.swift
-//  
+//
 //
 //  Created by Taylor Holliday on 3/23/22.
 //
 
-import XCTest
 import Satin
+import XCTest
 
 extension Bounds: Equatable {
     public static func == (lhs: Bounds, rhs: Bounds) -> Bool {
@@ -15,7 +15,6 @@ extension Bounds: Equatable {
 }
 
 class ObjectTests: XCTestCase {
-
     func testObjectLocalTransforms() throws {
         let object = Object()
 
@@ -26,14 +25,12 @@ class ObjectTests: XCTestCase {
         XCTAssertTrue(simd_equal(object.localMatrix, translationMatrix3f(object.position)))
         object.position = .zero
 
-        object.scale = .init(1,2,3)
+        object.scale = .init(1, 2, 3)
         XCTAssertTrue(simd_equal(object.localMatrix, scaleMatrix3f(object.scale)))
-        object.scale = .init(1,1,1)
-
+        object.scale = .init(1, 1, 1)
     }
 
     func testObjectWorldTransforms() throws {
-
         let object = Object()
         let child = Object()
         object.add(child)
@@ -41,7 +38,6 @@ class ObjectTests: XCTestCase {
 
         XCTAssert(simd_equal(child.localMatrix, matrix_identity_float4x4))
         XCTAssert(simd_equal(child.worldMatrix, translationMatrix3f(object.position)))
-
     }
 
     func testAddRemoveChild() {
@@ -58,7 +54,6 @@ class ObjectTests: XCTestCase {
     func testLocalBounds() {
         let sphere = SphereGeometry(radius: 1)
         let mesh = Mesh(geometry: sphere, material: nil)
-        XCTAssertEqual(mesh.localBounds, Bounds(min: .init(-1, -1, -1), max: .init(1,1,1)))
+        XCTAssertEqual(mesh.localBounds, Bounds(min: .init(-1, -1, -1), max: .init(1, 1, 1)))
     }
-
 }

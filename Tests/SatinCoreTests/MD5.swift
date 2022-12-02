@@ -1,12 +1,12 @@
 //
 //  MD5.swift
-//  
+//
 //
 //  Created by Taylor Holliday on 3/26/22.
 //
 
-import Foundation
 import CryptoKit
+import Foundation
 
 func MD5(data: Data) -> String {
     let digest = Insecure.MD5.hash(data: data)
