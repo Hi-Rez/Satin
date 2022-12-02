@@ -13,5 +13,6 @@
 #import "Generators.h"
 #import "Bezier.h"
 #import "Bounds.h"
+#import "Rectangle.h"
 #import "Triangulator.h"
 #import "Bvh.h"

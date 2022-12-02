@@ -50,15 +50,10 @@ Bounds expandBounds(Bounds bounds, simd_float3 pt) {
     return (Bounds) { .min = simd_min(bounds.min, pt), .max = simd_max(bounds.max, pt) };
 }
 
-static simd_float4 corner(Bounds a, int index) {
-    return simd_make_float4(index & 1 ? a.min.x : a.max.x, index & 2 ? a.min.y : a.max.y,
-                            index & 4 ? a.min.z : a.max.z, 1.0);
-}
-
 Bounds transformBounds(Bounds a, simd_float4x4 transform) {
     Bounds result = createBounds();
     for (int i = 0; i < 8; ++i) {
-        result = expandBounds(result, simd_mul(transform, corner(a, i)).xyz);
+        result = expandBounds(result, simd_mul(transform, boundsCorner(a, i)).xyz);
     }
     return result;
 }

@@ -1,4 +1,3 @@
-
 //
 //  Geometry.c
 //  Satin

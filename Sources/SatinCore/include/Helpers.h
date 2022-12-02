@@ -1,6 +1,6 @@
 //
 //  Math.h
-//  Pods
+//  Satin
 //
 //  Created by Reza Ali on 1/13/22.
 //

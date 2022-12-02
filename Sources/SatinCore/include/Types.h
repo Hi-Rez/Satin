@@ -23,6 +23,11 @@ typedef struct {
 } Bounds;
 
 typedef struct {
+    simd_float2 min;
+    simd_float2 max;
+} Rectangle;
+
+typedef struct {
     simd_float3 origin;
     simd_float3 direction;
 } Ray;

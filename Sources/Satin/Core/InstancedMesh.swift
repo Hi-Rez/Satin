@@ -14,15 +14,13 @@ public class InstancedMesh: Mesh {
     override public var instanceCount: Int {
         didSet {
             if instanceCount != oldValue {
-                _setupInstanceMatrixBuffer = true
-                if instanceCount != instanceMatrices.count {
-                    instanceMatrices.reserveCapacity(instanceCount)
-                    instanceMatricesUniforms.reserveCapacity(instanceCount)
-                    while instanceMatrices.count < instanceCount {
-                        instanceMatrices.append(matrix_identity_float4x4)
-                        instanceMatricesUniforms.append(InstanceMatrixUniforms(modelMatrix: matrix_identity_float4x4, normalMatrix: matrix_identity_float3x3))
-                    }
+                instanceMatrices.reserveCapacity(instanceCount)
+                instanceMatricesUniforms.reserveCapacity(instanceCount)
+                while instanceMatrices.count < instanceCount {
+                    instanceMatrices.append(matrix_identity_float4x4)
+                    instanceMatricesUniforms.append(InstanceMatrixUniforms(modelMatrix: matrix_identity_float4x4, normalMatrix: matrix_identity_float3x3))
                 }
+                _setupInstanceMatrixBuffer = true
             }
         }
     }
@@ -97,6 +95,10 @@ public class InstancedMesh: Mesh {
         if _updateInstanceMatricesUniforms {
             updateInstanceMatricesUniforms()
         }
+        
+        if _setupInstanceMatrixBuffer {
+            setupInstanceBuffer()
+        }
 
         if _updateInstanceMatrixBuffer {
             updateInstanceBuffer()
@@ -118,7 +120,7 @@ public class InstancedMesh: Mesh {
     // MARK: - Private Instancing
 
     func setupInstanceBuffer() {
-        guard let context = context else { return }
+        guard let context = context, instanceCount > 0 else { return }
         instanceMatrixBuffer = InstanceMatrixUniformBuffer(device: context.device, count: instanceCount)
         _setupInstanceMatrixBuffer = false
     }
@@ -142,6 +144,11 @@ public class InstancedMesh: Mesh {
 
         _updateInstanceMatricesUniforms = false
         _updateInstanceMatrixBuffer = true
+    }
+    
+    public override func draw(renderEncoder: MTLRenderCommandEncoder) {
+        guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count == instanceCount else { return }
+        super.draw(renderEncoder: renderEncoder)
     }
 
     // MARK: - Intersections

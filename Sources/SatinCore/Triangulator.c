@@ -1,5 +1,3 @@
-
-
 //
 //  Triangulator.c
 //  Satin
