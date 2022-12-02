@@ -11,6 +11,7 @@ import Metal
 import ModelIO
 import simd
 import SatinCore
+import QuartzCore
 
 open class Geometry: Codable {
     public var id: String = UUID().uuidString
@@ -153,7 +154,6 @@ open class Geometry: Codable {
     func setup() {
         setupVertexBuffer()
         setupIndexBuffer()
-        setupBVH()
     }
     
     public func update() {
@@ -200,7 +200,7 @@ open class Geometry: Codable {
     }
     
     func setupBVH() {
-        _bvh = createBVH(getGeometryData())
+        _bvh = createBVH(getGeometryData(), false)
         _updateBVH = false
     }
     

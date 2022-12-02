@@ -60,9 +60,7 @@ class CameraControllerRenderer: BaseRenderer {
         return scene
     }()
     
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
+    lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
     lazy var camera: PerspectiveCamera = {
         let pos = simd_make_float3(5.0, 5.0, 5.0)
@@ -80,13 +78,9 @@ class CameraControllerRenderer: BaseRenderer {
         return camera
     }()
     
-    lazy var cameraController: PerspectiveCameraController = {
-        PerspectiveCameraController(camera: camera, view: mtkView)
-    }()
+    lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
     
-    lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context, scene: scene, camera: camera)
-    }()
+    lazy var renderer: Satin.Renderer = .init(context: context, scene: scene, camera: camera)
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 4

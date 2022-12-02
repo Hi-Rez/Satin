@@ -11,6 +11,7 @@
 #include "Types.h"
 
 Bounds createBounds(void);
+Bounds createZeroBounds(void);
 
 Bounds computeBoundsFromVertices(const Vertex *vertices, int count);
 Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count,
@@ -19,5 +20,8 @@ Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count,
 Bounds expandBounds(Bounds bounds, simd_float3 pt);
 Bounds mergeBounds(Bounds a, Bounds b);
 Bounds transformBounds(Bounds a, simd_float4x4 transform);
+
+void mergeBoundsInPlace(Bounds *a, const Bounds *b);
+void expandBoundsInPlace(Bounds *bounds, const simd_float3 *pt);
 
 #endif /* Bounds_h */

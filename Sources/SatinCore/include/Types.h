@@ -69,8 +69,11 @@ typedef struct {
     GeometryData geometry;
     BVHNode *nodes;
     simd_float3 *centroids;
+    simd_float3 *positions;
+    TriangleIndices *triangles;
     uint *triIDs;
     uint nodesUsed;
+    bool useSAH;
 } BVH;
 
 GeometryData createGeometryData(void);

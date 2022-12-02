@@ -20,8 +20,8 @@ void freePolyline2D(Polyline2D *line) {
 
 void addPointToPolyline2D(simd_float2 p, Polyline2D *line) {
 
-    if (line->count+1 >= line->capacity) {
-        line->capacity = (line->capacity+1) * 2;
+    if (line->count + 1 >= line->capacity) {
+        line->capacity = (line->capacity + 1) * 2;
         line->data = (simd_float2 *)realloc(line->data, line->capacity * sizeof(simd_float2));
     }
 
@@ -43,14 +43,12 @@ void removeFirstPointInPolyline2D(Polyline2D *line) {
 void removeLastPointInPolyline2D(Polyline2D *line) {
     if (line->count > 0 || line->data != NULL) {
         line->count--;
-        if (line->count == 0) {
-            freePolyline2D(line);
-        }
+        if (line->count == 0) { freePolyline2D(line); }
     }
 }
 
 void appendPolyline2D(Polyline2D *dst, Polyline2D *src) {
-    for(int i=0;i<src->count;++i) {
+    for (int i = 0; i < src->count; ++i) {
         addPointToPolyline2D(src->data[i], dst);
     }
 }
@@ -110,8 +108,8 @@ Polyline2D getQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, 
 }
 
 void _adaptiveQuadraticBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 aVel,
-                                   simd_float2 bVel, simd_float2 cVel, float angleLimit, int depth,
-                                   Polyline2D* line) {
+                                    simd_float2 bVel, simd_float2 cVel, float angleLimit, int depth,
+                                    Polyline2D *line) {
     if (depth > 8) { return; }
 
     const float startMiddleAngle = acos(simd_dot(aVel, bVel));
@@ -152,8 +150,7 @@ Polyline2D getAdaptiveQuadraticBezierPath2(simd_float2 a, simd_float2 b, simd_fl
     return line;
 }
 
-float cubicBezier1(float a, float b, float c, float d, float t)
-{
+float cubicBezier1(float a, float b, float c, float d, float t) {
     float oneMinusT = 1.0 - t;
     float oneMinusT2 = oneMinusT * oneMinusT;
     float oneMinusT3 = oneMinusT2 * oneMinusT;
@@ -197,8 +194,8 @@ Polyline2D getCubicBezierPath2(simd_float2 a, simd_float2 b, simd_float2 c, simd
 }
 
 void _adaptiveCubicBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, simd_float2 d,
-                               simd_float2 aVel, simd_float2 bVel, simd_float2 cVel,
-                               float angleLimit, int depth, Polyline2D* line) {
+                                simd_float2 aVel, simd_float2 bVel, simd_float2 cVel,
+                                float angleLimit, int depth, Polyline2D *line) {
     if (depth > 8) { return; }
 
     const float startMiddleAngle = acos(simd_dot(aVel, bVel));
@@ -219,14 +216,12 @@ void _adaptiveCubicBezierCurve2(simd_float2 a, simd_float2 b, simd_float2 c, sim
 
         simd_float2 sVel = simd_normalize(cubicBezierVelocity2(a, ab, abc, abcd, 0.5));
 
-        _adaptiveCubicBezierCurve2(a, ab, abc, abcd, aVel, sVel, bVel, angleLimit,
-                                   depth + 1, line);
+        _adaptiveCubicBezierCurve2(a, ab, abc, abcd, aVel, sVel, bVel, angleLimit, depth + 1, line);
 
         addPointToPolyline2D(abcd, line);
 
         simd_float2 eVel = simd_normalize(cubicBezierVelocity2(abcd, bcd, cd, d, 0.5));
-        _adaptiveCubicBezierCurve2(abcd, bcd, cd, d, bVel, eVel, cVel, angleLimit, depth + 1,
-                                   line);
+        _adaptiveCubicBezierCurve2(abcd, bcd, cd, d, bVel, eVel, cVel, angleLimit, depth + 1, line);
     }
 }
 
@@ -255,25 +250,22 @@ simd_float3 quadraticBezier3(simd_float3 a, simd_float3 b, simd_float3 c, float 
     return oneMinusT * oneMinusT * a + 2.0 * oneMinusT * t * b + t * t * c;
 }
 
-void freePolyline3D(Polyline3D *line)
-{
+void freePolyline3D(Polyline3D *line) {
     if (line->count <= 0 && line->data == NULL) { return; }
     free(line->data);
     line->data = NULL;
     line->count = 0;
 }
 
-Polyline3D convertPolyline2DToPolyline3D(Polyline2D *line)
-{
+Polyline3D convertPolyline2DToPolyline3D(Polyline2D *line) {
     const int count = line->count;
 
     Polyline3D result;
     result.count = count;
     result.data = (simd_float3 *)malloc(count * sizeof(simd_float3));
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         result.data[i] = simd_make_float3(line->data[i], 0.0);
     }
-    
+
     return result;
 }
-

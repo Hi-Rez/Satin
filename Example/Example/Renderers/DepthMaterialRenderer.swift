@@ -13,10 +13,6 @@ import Forge
 import Satin
 
 class DepthMaterialRenderer: BaseRenderer {
-    #if os(macOS) || os(iOS)
-    lazy var raycaster = Raycaster(device: device)
-    #endif
-    
     lazy var depthMaterial: DepthMaterial = {
         let material = DepthMaterial()
         // Options to play with
@@ -111,7 +107,7 @@ class DepthMaterialRenderer: BaseRenderer {
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 13.0], near: 0.001, far: 20.0)
-        lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
+    lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
@@ -152,14 +148,12 @@ class DepthMaterialRenderer: BaseRenderer {
         camera.aspect = size.width / size.height
         renderer.resize(size)
     }
-    
-    #if !targetEnvironment(simulator)
+
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let m = event.locationInWindow
         let pt = normalizePoint(m, mtkView.frame.size)
-        raycaster.setFromCamera(camera, coordinate: pt)
-        let results = raycaster.intersect(scene, true)
+        let results = raycast(camera: camera, coordinate: pt, object: scene)
         for result in results {
             print(result.object.label)
             print(result.position)
@@ -172,15 +166,13 @@ class DepthMaterialRenderer: BaseRenderer {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
+            let results = raycast(camera: camera, coordinate: pt, object: scene)
             for result in results {
                 print(result.object.label)
                 print(result.position)
             }
         }
     }
-    #endif
     #endif
 
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {

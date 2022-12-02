@@ -13,7 +13,6 @@ import Forge
 import Satin
 
 class BufferComputeRenderer: BaseRenderer {
-    
     class ParticleComputeSystem: LiveBufferComputeSystem {}
     
     class SpriteMaterial: LiveMaterial {}
@@ -45,7 +44,7 @@ class BufferComputeRenderer: BaseRenderer {
     
     var camera = PerspectiveCamera(position: [0.0, 0.0, 100.0], near: 0.001, far: 1000.0)
     
-    lazy var scene: Object = Object("Scene", [mesh])
+    lazy var scene: Object = .init("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, .invalid, .invalid)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
@@ -61,7 +60,7 @@ class BufferComputeRenderer: BaseRenderer {
     
     lazy var chromaticProcessor: PostProcessor = {
         let pp = PostProcessor(context: Context(context.device, context.sampleCount, context.colorPixelFormat, .invalid, .invalid), material: chromaMaterial)
-        pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) -> Void in
+        pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
             renderEncoder.setFragmentTexture(self.renderTexture, index: FragmentTextureIndex.Custom0.rawValue)
         }
         pp.label = "Chroma Processor"

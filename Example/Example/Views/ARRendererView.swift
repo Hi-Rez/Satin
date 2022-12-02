@@ -8,8 +8,8 @@
 
 #if os(iOS)
 
-import SwiftUI
 import Forge
+import SwiftUI
 
 struct ARRendererView: View {
     var body: some View {

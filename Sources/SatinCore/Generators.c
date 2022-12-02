@@ -865,10 +865,11 @@ GeometryData generateTorusGeometryData(float minorRadius, float majorRadius, int
             const simd_float3 stangent =
                 simd_make_float3(cosSlice * (-sinAngle), sinSlice * (-sinAngle), cosAngle);
             const simd_float3 normal = simd_cross(tangent, stangent);
-            
-            vtx[vertexIndex++] = (Vertex) { .position = simd_make_float4(x, z, y, 1.0),
-                                            .normal = simd_normalize(simd_make_float3(normal.x, normal.z, normal.y)),
-                                            .uv = simd_make_float2(af / angularf, sf / slicesf) };
+
+            vtx[vertexIndex++] =
+                (Vertex) { .position = simd_make_float4(x, z, y, 1.0),
+                           .normal = simd_normalize(simd_make_float3(normal.x, normal.z, normal.y)),
+                           .uv = simd_make_float2(af / angularf, sf / slicesf) };
 
             if (s != slices && a != angular) {
                 const uint32_t index = a + s * perLoop;
@@ -1787,14 +1788,13 @@ GeometryData generateExtrudedRoundedRectGeometryData(float width, float height, 
 }
 
 GeometryData generateTubeGeometryData(float radius, float height, float startAngle, float endAngle,
-                                      int angularResolution, int verticalResolution)
-{
+                                      int angularResolution, int verticalResolution) {
     const int vertical = verticalResolution > 0 ? verticalResolution : 1;
     const int angular = angularResolution > 1 ? angularResolution : 2;
 
     const float start = simd_min(startAngle, endAngle);
     const float end = simd_max(startAngle, endAngle);
-    
+
     const float verticalf = (float)vertical;
     const float angularf = (float)angular;
 
@@ -1818,7 +1818,7 @@ GeometryData generateTubeGeometryData(float radius, float height, float startAng
 
         for (int a = 0; a <= angular; a++) {
             const float af = (float)a;
-            const float angle = map(af/angularf, 0.0, 1.0, start, end);
+            const float angle = map(af / angularf, 0.0, 1.0, start, end);
             const float x = cos(angle);
             const float z = sin(angle);
 
@@ -1852,7 +1852,8 @@ enum PatchEdge {
     PatchEdgeBottom = 2,
 };
 
-void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int secondPatchIndex, enum PatchEdge firstPatchEdge, enum PatchEdge secondPatchEdge ) {
+void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int secondPatchIndex,
+                       enum PatchEdge firstPatchEdge, enum PatchEdge secondPatchEdge) {
     const int verticesPerPatch = n * (n + 1) / 2;
     const int nMinusOne = n - 1;
     const int tubeTriangles = nMinusOne * 2;
@@ -1860,10 +1861,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
     int tubeIndex = 0;
     int firstOffset = firstPatchIndex * verticesPerPatch;
     int secondOffset = secondPatchIndex * verticesPerPatch;
-    if(firstPatchEdge == PatchEdgeLeft && secondPatchEdge == PatchEdgeRight) {
+    if (firstPatchEdge == PatchEdgeLeft && secondPatchEdge == PatchEdgeRight) {
         int i0 = firstOffset;
         int i3 = secondOffset + nMinusOne;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + perRow;
             const int i2 = i3 + perRow - 1;
@@ -1872,11 +1873,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeLeft) {
+    } else if (firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeLeft) {
         int i0 = firstOffset + nMinusOne;
         int i3 = secondOffset;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + perRow - 1;
             const int i2 = i3 + perRow;
@@ -1885,11 +1885,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeRight) {
+    } else if (firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeRight) {
         int i0 = firstOffset + nMinusOne;
         int i3 = secondOffset + verticesPerPatch - 1;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int perRowInverse = n - perRow;
             const int i1 = i0 + perRow - 1;
@@ -1899,11 +1898,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeBottom) {
+    } else if (firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeBottom) {
         int i0 = firstOffset;
         int i3 = secondOffset + nMinusOne;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int i1 = i0 + 1;
             const int i2 = i3 - 1;
             tubeTris[tubeIndex++] = (TriangleIndices) { .i0 = i0, .i1 = i2, .i2 = i1 };
@@ -1911,11 +1909,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeRight) {
+    } else if (firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeRight) {
         int i0 = firstOffset;
         int i3 = secondOffset + nMinusOne;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + 1;
             const int i2 = i3 + perRow - 1;
@@ -1924,11 +1921,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeBottom) {
+    } else if (firstPatchEdge == PatchEdgeRight && secondPatchEdge == PatchEdgeBottom) {
         int i0 = firstOffset + nMinusOne;
         int i3 = secondOffset + nMinusOne;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + perRow - 1;
             const int i2 = i3 - 1;
@@ -1937,11 +1933,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeLeft) {
+    } else if (firstPatchEdge == PatchEdgeBottom && secondPatchEdge == PatchEdgeLeft) {
         int i0 = firstOffset;
         int i3 = secondOffset;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + 1;
             const int i2 = i3 + perRow;
@@ -1950,11 +1945,10 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
             i0 = i1;
             i3 = i2;
         }
-    }
-    else if(firstPatchEdge == PatchEdgeLeft && secondPatchEdge == PatchEdgeBottom) {
+    } else if (firstPatchEdge == PatchEdgeLeft && secondPatchEdge == PatchEdgeBottom) {
         int i0 = firstOffset;
         int i3 = secondOffset;
-        for(int row = 0; row < nMinusOne; row++) {
+        for (int row = 0; row < nMinusOne; row++) {
             const int perRow = n - row;
             const int i1 = i0 + perRow;
             const int i2 = i3 + 1;
@@ -1968,7 +1962,6 @@ void connectPatchEdges(GeometryData *dst, int n, int firstPatchIndex, int second
     free(tubeTris);
 }
 
-
 enum PatchCorner {
     PatchCornerTop = 0,
     PatchCornerRight = 1,
@@ -1977,30 +1970,26 @@ enum PatchCorner {
 
 int getPatchCornerOffset(int n, enum PatchCorner corner) {
     switch (corner) {
-        case PatchCornerLeft:
-            return 0;
-            break;
-        case PatchCornerRight:
-            return (n - 1);
-            break;
-        case PatchCornerTop:
-            return ( n * (n + 1) / 2 ) - 1;
-            break;
-        default:
-            break;
+        case PatchCornerLeft: return 0; break;
+        case PatchCornerRight: return (n - 1); break;
+        case PatchCornerTop: return (n * (n + 1) / 2) - 1; break;
+        default: break;
     }
     return -1;
 }
 
-void connectPatchCorners(GeometryData *dst, int n, int firstPatchIndex, int secondPatchIndex, int thirdPatchIndex, int fourthPatchIndex, enum PatchCorner firstPatchCorner, enum PatchCorner secondPatchCorner, enum PatchCorner thirdPatchCorner, enum PatchCorner fourthPatchCorner ){
+void connectPatchCorners(GeometryData *dst, int n, int firstPatchIndex, int secondPatchIndex,
+                         int thirdPatchIndex, int fourthPatchIndex,
+                         enum PatchCorner firstPatchCorner, enum PatchCorner secondPatchCorner,
+                         enum PatchCorner thirdPatchCorner, enum PatchCorner fourthPatchCorner) {
     const int verticesPerPatch = n * (n + 1) / 2;
     const int triangles = 2;
-    
+
     const int i0 = firstPatchIndex * verticesPerPatch + getPatchCornerOffset(n, firstPatchCorner);
     const int i1 = secondPatchIndex * verticesPerPatch + getPatchCornerOffset(n, secondPatchCorner);
     const int i2 = thirdPatchIndex * verticesPerPatch + getPatchCornerOffset(n, thirdPatchCorner);
     const int i3 = fourthPatchIndex * verticesPerPatch + getPatchCornerOffset(n, fourthPatchCorner);
-    
+
     TriangleIndices *tris = (TriangleIndices *)malloc(triangles * sizeof(TriangleIndices));
     tris[0] = (TriangleIndices) { .i0 = i0, .i1 = i1, .i2 = i2 };
     tris[1] = (TriangleIndices) { .i0 = i0, .i1 = i2, .i2 = i3 };
@@ -2008,17 +1997,18 @@ void connectPatchCorners(GeometryData *dst, int n, int firstPatchIndex, int seco
     free(tris);
 }
 
-GeometryData generateRoundedBoxGeometryData(float width, float height, float depth, float radius, int res) {
-    if(radius == 0) {
+GeometryData generateRoundedBoxGeometryData(float width, float height, float depth, float radius,
+                                            int res) {
+    if (radius == 0) {
         return generateBoxGeometryData(width, height, depth, 0.0, 0.0, 0.0, 1, 1, 1);
     }
-    
+
     const int n = (1 << res) + 1;
     const float nf = (float)n;
     const float w = width;
     const float h = height;
     const float d = depth;
-    
+
     float r = radius;
     float r2 = radius * 2;
 
@@ -2105,18 +2095,18 @@ GeometryData generateRoundedBoxGeometryData(float width, float height, float dep
         ind[triangleIndex++] = (TriangleIndices) { .i0 = j0 + row, .i1 = j1 + row, .i2 = j2 + row };
         j0 = j2;
     }
-    
+
     GeometryData corner = (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
-    
+
     const float wp = w - r2;
     const float hp = h - r2;
     const float dp = d - r2;
     const float wph = wp * 0.5;
     const float hph = hp * 0.5;
     const float dph = dp * 0.5;
-    
+
     GeometryData geoData = createGeometryData();
 
     {
@@ -2128,7 +2118,7 @@ GeometryData generateRoundedBoxGeometryData(float width, float height, float dep
             combineGeometryData(&geoData, &copy);
             freeGeometryData(&copy);
         }
-    
+
         // Patch: 1 - Front Top Left Corner
         {
             GeometryData copy;
@@ -2217,45 +2207,51 @@ GeometryData generateRoundedBoxGeometryData(float width, float height, float dep
 
         freeGeometryData(&corner);
     }
-    
-    //Front
+
+    // Front
     connectPatchEdges(&geoData, n, 0, 1, PatchEdgeLeft, PatchEdgeRight);
     connectPatchEdges(&geoData, n, 1, 2, PatchEdgeBottom, PatchEdgeBottom);
     connectPatchEdges(&geoData, n, 2, 3, PatchEdgeLeft, PatchEdgeBottom);
     connectPatchEdges(&geoData, n, 3, 0, PatchEdgeLeft, PatchEdgeBottom);
 
-    //Back
+    // Back
     connectPatchEdges(&geoData, n, 4, 5, PatchEdgeRight, PatchEdgeLeft);
     connectPatchEdges(&geoData, n, 5, 6, PatchEdgeBottom, PatchEdgeLeft);
     connectPatchEdges(&geoData, n, 6, 7, PatchEdgeBottom, PatchEdgeBottom);
     connectPatchEdges(&geoData, n, 7, 4, PatchEdgeRight, PatchEdgeBottom);
 
-    //Top
+    // Top
     connectPatchEdges(&geoData, n, 0, 4, PatchEdgeRight, PatchEdgeLeft);
     connectPatchEdges(&geoData, n, 5, 1, PatchEdgeRight, PatchEdgeLeft);
 
-    //Bottom
+    // Bottom
     connectPatchEdges(&geoData, n, 3, 7, PatchEdgeRight, PatchEdgeLeft);
     connectPatchEdges(&geoData, n, 6, 2, PatchEdgeRight, PatchEdgeRight);
-    
+
     // Front
-    connectPatchCorners(&geoData, n, 0, 1, 2, 3, PatchCornerLeft, PatchCornerRight, PatchCornerLeft, PatchCornerLeft );
-    
+    connectPatchCorners(&geoData, n, 0, 1, 2, 3, PatchCornerLeft, PatchCornerRight, PatchCornerLeft,
+                        PatchCornerLeft);
+
     // Top
-    connectPatchCorners(&geoData, n, 4, 5, 1, 0, PatchCornerTop, PatchCornerTop, PatchCornerTop, PatchCornerTop );
-    
+    connectPatchCorners(&geoData, n, 4, 5, 1, 0, PatchCornerTop, PatchCornerTop, PatchCornerTop,
+                        PatchCornerTop);
+
     // Back
-    connectPatchCorners(&geoData, n, 5, 4, 7, 6, PatchCornerLeft, PatchCornerRight, PatchCornerRight, PatchCornerLeft );
+    connectPatchCorners(&geoData, n, 5, 4, 7, 6, PatchCornerLeft, PatchCornerRight,
+                        PatchCornerRight, PatchCornerLeft);
 
     // Bottom
-    connectPatchCorners(&geoData, n, 6, 7, 3, 2, PatchCornerRight, PatchCornerLeft, PatchCornerRight, PatchCornerTop );
+    connectPatchCorners(&geoData, n, 6, 7, 3, 2, PatchCornerRight, PatchCornerLeft,
+                        PatchCornerRight, PatchCornerTop);
 
     // Right
-    connectPatchCorners(&geoData, n, 4, 0, 3, 7, PatchCornerLeft, PatchCornerRight, PatchCornerTop, PatchCornerTop );
+    connectPatchCorners(&geoData, n, 4, 0, 3, 7, PatchCornerLeft, PatchCornerRight, PatchCornerTop,
+                        PatchCornerTop);
 
     // Left
-    connectPatchCorners(&geoData, n, 1, 5, 6, 2, PatchCornerLeft, PatchCornerRight, PatchCornerTop, PatchCornerRight );
-    
+    connectPatchCorners(&geoData, n, 1, 5, 6, 2, PatchCornerLeft, PatchCornerRight, PatchCornerTop,
+                        PatchCornerRight);
+
     computeNormalsOfGeometryData(&geoData);
     return geoData;
 }

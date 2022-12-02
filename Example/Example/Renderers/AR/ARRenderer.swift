@@ -49,11 +49,9 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
     
     var scene = Object()
     
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
+    lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
-    var camera = PerspectiveCamera(position: .zero, near: 0.001, far: 100.0)    
+    var camera = PerspectiveCamera(position: .zero, near: 0.001, far: 100.0)
     
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
@@ -79,13 +77,11 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
         return Mesh(geometry: QuadGeometry(), material: material)
     }()
     
-    lazy var backgroundRenderer: Satin.Renderer = {
-        Satin.Renderer(
-            context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
-            scene: backgroundMesh,
-            camera: OrthographicCamera()
-        )
-    }()
+    lazy var backgroundRenderer: Satin.Renderer = .init(
+        context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
+        scene: backgroundMesh,
+        camera: OrthographicCamera()
+    )
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -98,7 +94,7 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
         session.pause()
     }
     
-    override func setup() {        
+    override func setup() {
         setupARSession()
         setupBackgroundTextureCache()
         NotificationCenter.default.addObserver(self, selector: #selector(ARRenderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)

@@ -13,12 +13,6 @@ import Forge
 import Satin
 
 class OctasphereRenderer: BaseRenderer {
-    #if os(macOS) || os(iOS)
-    lazy var raycaster: Raycaster = {
-        Raycaster(device: device)
-    }()
-    #endif
-    
     lazy var mesh: Mesh = {
         let geo = OctaSphereGeometry(radius: 1, res: 3)
         return Mesh(geometry: geo, material: BasicDiffuseMaterial(0.75))
@@ -30,9 +24,7 @@ class OctasphereRenderer: BaseRenderer {
         return scene
     }()
     
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
+    lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera(position: simd_make_float3(0.0, 0.0, 5.0), near: 0.01, far: 100.0)
@@ -40,13 +32,9 @@ class OctasphereRenderer: BaseRenderer {
         return camera
     }()
     
-    lazy var cameraController: PerspectiveCameraController = {
-        PerspectiveCameraController(camera: camera, view: mtkView)
-    }()
+    lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
     
-    lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context, scene: scene, camera: camera)
-    }()
+    lazy var renderer: Satin.Renderer = .init(context: context, scene: scene, camera: camera)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -72,12 +60,10 @@ class OctasphereRenderer: BaseRenderer {
         renderer.resize(size)
     }
     
-    #if !targetEnvironment(simulator)
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
-        raycaster.setFromCamera(camera, coordinate: pt)
-        let results = raycaster.intersect(scene)
+        let results = raycast(camera: camera, coordinate: pt, object: scene)
         for result in results {
             print(result.object.label)
             print(result.position)
@@ -90,15 +76,13 @@ class OctasphereRenderer: BaseRenderer {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
+            let results = raycast(camera: camera, coordinate: pt, object: scene)
             for result in results {
                 print(result.object.label)
                 print(result.position)
             }
         }
     }
-    #endif
     #endif
     
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {

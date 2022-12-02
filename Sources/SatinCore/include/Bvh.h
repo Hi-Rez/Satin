@@ -10,7 +10,7 @@
 
 #include "Types.h"
 
-BVH createBVH(GeometryData data);
+BVH createBVH(GeometryData geometry, bool useSAH);
 void freeBVH(BVH bvh);
 
 #endif /* Bvh_h */

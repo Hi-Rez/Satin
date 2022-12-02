@@ -13,13 +13,7 @@ import Forge
 import Satin
 
 class ShippingShadersRenderer: BaseRenderer {
-    #if os(macOS) || os(iOS)
-    lazy var raycaster: Raycaster = {
-        Raycaster(device: device)
-    }()
-    #endif
-    
-    var shippingMaterial: Material = Material(shader: Shader("Test", "normalColorVertex", "normalColorFragment"))
+    var shippingMaterial: Material = .init(shader: Shader("Test", "normalColorVertex", "normalColorFragment"))
     
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 0), material: shippingMaterial)
@@ -27,30 +21,11 @@ class ShippingShadersRenderer: BaseRenderer {
         return mesh
     }()
     
-    lazy var scene: Object = {
-        Object("Scene", [mesh])
-    }()
-    
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
-    
-    lazy var camera: PerspectiveCamera = {
-        let camera = PerspectiveCamera()
-        camera.fov = 30
-        camera.near = 0.01
-        camera.far = 100.0
-        camera.position = simd_make_float3(0.0, 0.0, 5.0)
-        return camera
-    }()
-    
-    lazy var cameraController: PerspectiveCameraController = {
-        PerspectiveCameraController(camera: camera, view: mtkView)
-    }()
-    
-    lazy var renderer: Satin.Renderer = {
-        Satin.Renderer(context: context, scene: scene, camera: camera)
-    }()
+    lazy var scene = Object("Scene", [mesh])
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
+    lazy var camera = PerspectiveCamera(position: simd_make_float3(0.0, 0.0, 5.0), near: 0.01, far: 100.0, fov: 30)
+    lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
+    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -79,12 +54,10 @@ class ShippingShadersRenderer: BaseRenderer {
         renderer.resize(size)
     }
     
-    #if !targetEnvironment(simulator)
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
-        raycaster.setFromCamera(camera, coordinate: pt)
-        let results = raycaster.intersect(scene)
+        let results = raycast(camera: camera, coordinate: pt, object: scene)
         for result in results {
             print(result.object.label)
             print(result.position)
@@ -97,15 +70,13 @@ class ShippingShadersRenderer: BaseRenderer {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
+            let results = raycast(camera: camera, coordinate: pt, object: scene)
             for result in results {
                 print(result.object.label)
                 print(result.position)
             }
         }
     }
-    #endif
     #endif
     
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
@@ -116,4 +87,3 @@ class ShippingShadersRenderer: BaseRenderer {
         #endif
     }
 }
-

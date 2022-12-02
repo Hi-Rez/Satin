@@ -15,14 +15,13 @@ public class InstancedMesh: Mesh {
         didSet {
             if instanceCount != oldValue {
                 _setupInstanceMatrixBuffer = true
-                if instanceCount > oldValue {
-                    instanceMatricesUniforms.reserveCapacity(instanceCount)
+                if instanceCount != instanceMatrices.count {
                     instanceMatrices.reserveCapacity(instanceCount)
-                }
-                else if instanceCount < oldValue, oldValue > 0 {
-                    let delta = oldValue - instanceCount
-                    instanceMatricesUniforms.removeLast(delta)
-                    instanceMatrices.removeLast(delta)
+                    instanceMatricesUniforms.reserveCapacity(instanceCount)
+                    while instanceMatrices.count < instanceCount {
+                        instanceMatrices.append(matrix_identity_float4x4)
+                        instanceMatricesUniforms.append(InstanceMatrixUniforms(modelMatrix: matrix_identity_float4x4, normalMatrix: matrix_identity_float3x3))
+                    }
                 }
             }
         }
@@ -97,10 +96,6 @@ public class InstancedMesh: Mesh {
     override public func update() {
         if _updateInstanceMatricesUniforms {
             updateInstanceMatricesUniforms()
-        }
-
-        if _setupInstanceMatrixBuffer {
-            setupInstanceBuffer()
         }
 
         if _updateInstanceMatrixBuffer {

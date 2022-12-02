@@ -16,52 +16,38 @@ Bounds createBounds(void) {
 
 Bounds computeBoundsFromVertices(const Vertex *vertices, int count) {
     if (count > 0) {
-        simd_float3 min = { INFINITY, INFINITY, INFINITY };
-        simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
+        Bounds result = createBounds();
         for (int i = 0; i < count; i++) {
-            simd_float3 pos = vertices[i].position.xyz;
-
-            min = simd_min(pos, min);
-            max = simd_max(pos, max);
+            result = expandBounds(result, vertices[i].position.xyz);
         }
-        return (Bounds) { .min = min, .max = max };
+        return result;
     }
-    return (Bounds) { .min = { 0.0, 0.0, 0.0 }, .max = { 0.0, 0.0, 0.0 } };
+    return createBounds();
 }
 
 Bounds computeBoundsFromVerticesAndTransform(const Vertex *vertices, int count,
                                              simd_float4x4 transform) {
     if (count > 0) {
-        simd_float3 min = { INFINITY, INFINITY, INFINITY };
-        simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
+        Bounds result = createBounds();
         for (int i = 0; i < count; i++) {
-            simd_float3 pos = simd_mul(transform, vertices[i].position).xyz;
-
-            min = simd_min(pos, min);
-            max = simd_max(pos, max);
+            result = expandBounds(result, simd_mul(transform, vertices[i].position).xyz);
         }
-        return (Bounds) { .min = min, .max = max };
+        return result;
     }
-    return (Bounds) { .min = { 0.0, 0.0, 0.0 }, .max = { 0.0, 0.0, 0.0 } };
+    return createBounds();
 }
 
 Bounds mergeBounds(Bounds a, Bounds b) {
-    simd_float3 amin = simd_min(a.min, a.max);
-    simd_float3 amax = simd_max(a.min, a.max);
-
-    simd_float3 bmin = simd_min(b.min, b.max);
-    simd_float3 bmax = simd_max(b.min, b.max);
-
-    simd_float3 min = simd_min(amin, bmin);
-    simd_float3 max = simd_max(amax, bmax);
-
+    simd_float3 min = a.min, max = a.max;
+    for (int i = 0; i < 3; i++) {
+        if (b.min[i] != INFINITY) { min[i] = simd_min(a.min[i], b.min[i]); }
+        if (b.max[i] != -INFINITY) { max[i] = simd_max(a.max[i], b.max[i]); }
+    }
     return (Bounds) { .min = min, .max = max };
 }
 
 Bounds expandBounds(Bounds bounds, simd_float3 pt) {
-    bounds.min = simd_min(bounds.min, pt);
-    bounds.max = simd_max(bounds.max, pt);
-    return bounds;
+    return (Bounds) { .min = simd_min(bounds.min, pt), .max = simd_max(bounds.max, pt) };
 }
 
 static simd_float4 corner(Bounds a, int index) {
@@ -70,15 +56,21 @@ static simd_float4 corner(Bounds a, int index) {
 }
 
 Bounds transformBounds(Bounds a, simd_float4x4 transform) {
-
-    simd_float3 min = { INFINITY, INFINITY, INFINITY };
-    simd_float3 max = { -INFINITY, -INFINITY, -INFINITY };
-
+    Bounds result = createBounds();
     for (int i = 0; i < 8; ++i) {
-        simd_float3 v = simd_mul(transform, corner(a, i)).xyz;
-        min = simd_min(min, v);
-        max = simd_max(max, v);
+        result = expandBounds(result, simd_mul(transform, corner(a, i)).xyz);
     }
+    return result;
+}
 
-    return (Bounds) { .min = min, .max = max };
+void mergeBoundsInPlace(Bounds *a, const Bounds *b) {
+    for (int i = 0; i < 3; i++) {
+        if (b->min[i] != INFINITY) { a->min[i] = simd_min(a->min[i], b->min[i]); }
+        if (b->max[i] != -INFINITY) { a->max[i] = simd_max(a->max[i], b->max[i]); }
+    }
+}
+
+void expandBoundsInPlace(Bounds *bounds, const simd_float3 *pt) {
+    bounds->min = simd_min(bounds->min, *pt);
+    bounds->max = simd_max(bounds->max, *pt);
 }

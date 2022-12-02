@@ -26,10 +26,6 @@ class LoadObjRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
-    #if os(macOS) || os(iOS)
-    lazy var raycaster = Raycaster(device: device)
-    #endif
-
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
@@ -89,7 +85,7 @@ class LoadObjRenderer: BaseRenderer {
                 
                 if let mdlSubMeshes = mdlMesh.submeshes {
                     let mdlSubMeshesCount = mdlSubMeshes.count
-                    for index in 0..<mdlSubMeshesCount {
+                    for index in 0 ..< mdlSubMeshesCount {
                         let mdlSubmesh = mdlSubMeshes[index] as! MDLSubmesh
                         if mdlSubmesh.geometryType == .triangles {
                             let indexCount = mdlSubmesh.indexCount
@@ -134,8 +130,7 @@ class LoadObjRenderer: BaseRenderer {
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
-        raycaster.setFromCamera(camera, coordinate: pt)
-        let results = raycaster.intersect(scene)
+        let results = raycast(camera: camera, coordinate: pt, object: scene)
         for result in results {
             print(result.object.label)
             print(result.position)
@@ -148,8 +143,7 @@ class LoadObjRenderer: BaseRenderer {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
+            let results = raycast(camera: camera, coordinate: pt, object: scene)
             for result in results {
                 print(result.object.label)
                 print(result.position)

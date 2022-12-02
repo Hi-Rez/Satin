@@ -18,9 +18,7 @@ import Satin
 class TextRenderer: BaseRenderer {
     var scene = Object()
     
-    lazy var context: Context = {
-        Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }()
+    lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera()
@@ -30,9 +28,7 @@ class TextRenderer: BaseRenderer {
         return camera
     }()
     
-    lazy var cameraController: PerspectiveCameraController = {
-        PerspectiveCameraController(camera: camera, view: mtkView)
-    }()
+    lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
     
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)

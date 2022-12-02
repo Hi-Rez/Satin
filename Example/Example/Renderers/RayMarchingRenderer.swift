@@ -13,7 +13,6 @@ import Forge
 import Satin
 
 class RayMarchingRenderer: BaseRenderer {
-    
     class RayMarchedMaterial: LiveMaterial {
         var camera: PerspectiveCamera?
         
@@ -33,7 +32,7 @@ class RayMarchingRenderer: BaseRenderer {
         
         override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
             super.bind(renderEncoder)
-            if let camera = self.camera {
+            if let camera = camera {
                 var view = camera.viewMatrix
                 renderEncoder.setFragmentBytes(&view, length: MemoryLayout<float4x4>.size, index: FragmentBufferIndex.Custom0.rawValue)
             }
@@ -86,8 +85,7 @@ class RayMarchingRenderer: BaseRenderer {
     func openEditor() {
         if let editorURL = UserDefaults.standard.url(forKey: "Editor") {
             openEditor(at: editorURL)
-        }
-        else {
+        } else {
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.allowsMultipleSelection = false
@@ -106,7 +104,7 @@ class RayMarchingRenderer: BaseRenderer {
 
     func openEditor(at editorURL: URL) {
         do {
-            try NSWorkspace.shared.open([self.assetsURL], withApplicationAt: editorURL, options: [], configuration: [:])
+            try NSWorkspace.shared.open([assetsURL], withApplicationAt: editorURL, options: [], configuration: [:])
         } catch {
             print(error)
         }

@@ -6,8 +6,8 @@
 //  Copyright © 2022 Hi-Rez. All rights reserved.
 //
 
-import SwiftUI
 import Forge
+import SwiftUI
 
 struct Renderer3DView: View {
     var body: some View {

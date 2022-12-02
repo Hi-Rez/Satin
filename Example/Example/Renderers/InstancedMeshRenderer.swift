@@ -15,6 +15,7 @@ import Satin
 
 class InstancedMeshRenderer: BaseRenderer {
     // MARK: - Paths
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
@@ -30,6 +31,7 @@ class InstancedMeshRenderer: BaseRenderer {
     lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
     
     // MARK: - Properties
+
     lazy var startTime: CFAbsoluteTime = CFAbsoluteTimeGetCurrent()
     let dim: Int = 7
     
@@ -53,13 +55,12 @@ class InstancedMeshRenderer: BaseRenderer {
         updateInstances(getTime())
     }
     
-    func setupCamera()
-    {
+    func setupCamera() {
         cameraController.target.lookAt([5.0, 5.0, 5.0])
     }
     
     func updateInstances(_ time: Float) {
-        let halfDim: Int = dim/2
+        let halfDim: Int = dim / 2
         let object = Object()
         object.scale = .init(repeating: 0.66)
         var index = 0

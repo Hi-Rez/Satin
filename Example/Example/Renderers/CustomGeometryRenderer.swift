@@ -20,7 +20,7 @@ open class IcosahedronGeometry: Geometry {
         setupData(size: size, res: res)
     }
     
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
     
@@ -32,7 +32,7 @@ open class IcosahedronGeometry: Geometry {
             vertexData = Array(UnsafeBufferPointer(start: data, count: vCount))
         }
 
-        let indexCount = Int(geo.indexCount)*3
+        let indexCount = Int(geo.indexCount) * 3
         if indexCount > 0, let data = geo.indexData {
             data.withMemoryRebound(to: UInt32.self, capacity: indexCount) { ptr in
                 indexData = Array(UnsafeBufferPointer(start: ptr, count: indexCount))

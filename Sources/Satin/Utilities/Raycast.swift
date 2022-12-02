@@ -85,4 +85,3 @@ public func raycast(camera: Camera, coordinate: simd_float2, object: Object, rec
     intersections.sort { $0.distance < $1.distance }
     return intersections
 }
-

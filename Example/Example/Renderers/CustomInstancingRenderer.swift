@@ -99,4 +99,3 @@ class CustomInstancingRenderer: BaseRenderer {
         instanceMaterial.set("Resolution", [size.width, size.height, size.width/size.height])
     }
 }
-

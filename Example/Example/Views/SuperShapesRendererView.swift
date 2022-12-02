@@ -18,7 +18,7 @@ struct SuperShapesRendererView: View {
     init() {
         self.parameters = renderer.parameters
     }
-    
+
     var body: some View {
         ZStack {
             ForgeView(renderer: renderer)

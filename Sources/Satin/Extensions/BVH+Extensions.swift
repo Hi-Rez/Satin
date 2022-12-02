@@ -30,8 +30,20 @@ public extension BVH {
         return nodes.advanced(by: Int(index)).pointee
     }
     
-    func getTriangle(index: UInt32) -> UInt32 {
+    func getTriangleID(index: UInt32) -> UInt32 {
         return triIDs.advanced(by: Int(index)).pointee
+    }
+    
+    func getPosition(index: UInt32) -> simd_float3 {
+        return positions.advanced(by: Int(index)).pointee
+    }
+    
+    func getVertex(index: UInt32) -> Vertex {
+        return geometry.vertexData[Int(index)]
+    }
+    
+    func getTriangle(index: UInt32) -> TriangleIndices {
+        return triangles.advanced(by: Int(index)).pointee
     }
     
     func intersects(ray: Ray, index: UInt32) -> Bool {
@@ -43,39 +55,41 @@ public extension BVH {
         return intersects(ray: ray, index: 0)
     }
     
+    func intersectTriangles(ray: Ray, node: BVHNode, intersections: inout [IntersectionResult]) {
+        var time: Float = 0.0
+        for i in 0 ..< node.triCount {
+            let primitiveIndex = getTriangleID(index: node.leftFirst + i)
+            let triangle = getTriangle(index: primitiveIndex)
+            
+            let a = getPosition(index: triangle.i0)
+            let b = getPosition(index: triangle.i1)
+            let c = getPosition(index: triangle.i2)
+            
+            if rayTriangleIntersectionTime(ray, a, b, c, &time) {
+                let intersection = ray.at(time)
+                let bc = getBarycentricCoordinates(intersection, a, b, c)
+                let v0 = getVertex(index: triangle.i0)
+                let v1 = getVertex(index: triangle.i1)
+                let v2 = getVertex(index: triangle.i2)
+            
+                intersections.append(
+                    IntersectionResult(
+                        barycentricCoordinates: bc,
+                        distance: simd_length(intersection - ray.origin),
+                        normal: simd_normalize(simd_cross(b - a, c - a)),
+                        position: intersection,
+                        uv: v0.uv * bc.x + v1.uv * bc.y + v2.uv * bc.z,
+                        primitiveIndex: primitiveIndex
+                    )
+                )
+            }
+        }
+    }
+    
     func intersect(ray: Ray, intersections: inout [IntersectionResult], index: UInt32 = 0) {
         guard let node = getNode(index: index), node.intersects(ray: ray) else { return }
         if node.isLeaf {
-            let hasTriangles = geometry.indexCount > 0
-            var time: Float = 0.0
-            for i in 0 ..< node.triCount {
-                let primitiveIndex = getTriangle(index: node.leftFirst + i)
-                let triangle = hasTriangles ? geometry.indexData[Int(primitiveIndex)] : TriangleIndices(i0: primitiveIndex * 3, i1: primitiveIndex * 3 + 1, i2: primitiveIndex * 3 + 2)
-                
-                let v0 = geometry.vertexData[Int(triangle.i0)]
-                let v1 = geometry.vertexData[Int(triangle.i1)]
-                let v2 = geometry.vertexData[Int(triangle.i2)]
-                
-                let a = simd_make_float3(v0.position)
-                let b = simd_make_float3(v1.position)
-                let c = simd_make_float3(v2.position)
-                
-                if rayTriangleIntersectionTime(ray, a, b, c, &time) {
-                    let intersection = ray.at(time)
-                    let bc = getBarycentricCoordinates(intersection, a, b, c)
-                
-                    intersections.append(
-                        IntersectionResult(
-                            barycentricCoordinates: bc,
-                            distance: simd_length(intersection - ray.origin),
-                            normal: simd_normalize(simd_cross(b - a, c - a)),
-                            position: intersection,
-                            uv: v0.uv * bc.x + v1.uv * bc.y + v2.uv * bc.z,
-                            primitiveIndex: primitiveIndex
-                        )
-                    )
-                }
-            }
+            intersectTriangles(ray: ray, node: node, intersections: &intersections)
         }
         else {
             intersect(ray: ray, intersections: &intersections, index: node.leftFirst)

@@ -13,7 +13,7 @@ import Forge
 import Satin
 
 class AudioInputRenderer: BaseRenderer {
-    lazy var audioInput: AudioInput = AudioInput(context: context)
+    lazy var audioInput: AudioInput = .init(context: context)
     
     lazy var audioMaterial: BasicTextureMaterial = {
         let mat = BasicTextureMaterial()
@@ -31,7 +31,7 @@ class AudioInputRenderer: BaseRenderer {
         return mat
     }()
     
-    lazy var mesh: Mesh = Mesh(geometry: PlaneGeometry(size: 700), material: audioMaterial)
+    lazy var mesh: Mesh = .init(geometry: PlaneGeometry(size: 700), material: audioMaterial)
     
     var camera = OrthographicCamera()
     
@@ -64,4 +64,3 @@ class AudioInputRenderer: BaseRenderer {
         renderer.resize(size)
     }
 }
-

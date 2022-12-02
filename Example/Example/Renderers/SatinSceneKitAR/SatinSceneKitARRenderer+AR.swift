@@ -34,7 +34,7 @@ extension SatinSceneKitARRenderer {
         }
         
         camera.viewMatrix = frame.camera.viewMatrix(for: orientation)
-        camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.01, zFar: 100)        
+        camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.01, zFar: 100)
     }
     
     // MARK: - ARSessionDelegate

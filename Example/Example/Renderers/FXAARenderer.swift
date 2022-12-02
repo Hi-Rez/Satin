@@ -28,7 +28,7 @@ class FXAARenderer: BaseRenderer {
     
     lazy var fxaaProcessor: PostProcessor = {
         let pp = PostProcessor(context: Context(context.device, context.sampleCount, context.colorPixelFormat, .invalid, .invalid), material: fxaaMaterial)
-        pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) -> Void in
+        pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
             renderEncoder.setFragmentTexture(self.renderTexture, index: FragmentTextureIndex.Custom0.rawValue)
         }
         pp.label = "FXAA Post Processor"
@@ -84,7 +84,7 @@ class FXAARenderer: BaseRenderer {
         renderer.resize(size)
         fxaaProcessor.resize(size)
         updateRenderTexture = true
-        fxaaMaterial.set("Inverse Resolution", 1.0/simd_make_float2(size.width, size.height))
+        fxaaMaterial.set("Inverse Resolution", 1.0 / simd_make_float2(size.width, size.height))
     }
     
     func createTexture(_ label: String, _ pixelFormat: MTLPixelFormat) -> MTLTexture? {

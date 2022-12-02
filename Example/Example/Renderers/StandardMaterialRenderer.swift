@@ -230,7 +230,7 @@ class StandardMaterialRenderer: BaseRenderer {
         }
     }
     
-    func setupBRDF(_  commandBuffer: MTLCommandBuffer) {
+    func setupBRDF(_ commandBuffer: MTLCommandBuffer) {
         brdfTexture = BrdfGenerator(device: device, size: 512)
             .encode(commandBuffer: commandBuffer)
 

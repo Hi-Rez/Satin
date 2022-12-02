@@ -257,12 +257,12 @@ void copyGeometryData(GeometryData *dest, GeometryData *src) {
 }
 
 void computeNormalsOfGeometryData(GeometryData *data) {
-    
+
     const simd_float3 zero = simd_make_float3(0.0);
     for (int i = 0; i < data->vertexCount; i++) {
         data->vertexData[i].normal = zero;
     }
-    
+
     if (data->indexCount > 0) {
         int count = data->indexCount;
         for (int i = 0; i < count; i++) {

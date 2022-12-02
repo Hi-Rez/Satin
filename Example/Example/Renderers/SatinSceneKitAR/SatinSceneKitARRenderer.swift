@@ -97,13 +97,11 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
         return Mesh(geometry: QuadGeometry(), material: material)
     }()
     
-    lazy var backgroundRenderer: Satin.Renderer = {
-        Satin.Renderer(
-            context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
-            scene: backgroundMesh,
-            camera: OrthographicCamera()
-        )
-    }()
+    lazy var backgroundRenderer: Satin.Renderer = .init(
+        context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
+        scene: backgroundMesh,
+        camera: OrthographicCamera()
+    )
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.colorPixelFormat = .bgra8Unorm_srgb

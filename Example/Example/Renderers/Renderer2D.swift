@@ -21,10 +21,6 @@ class BaseRenderer: Forge.Renderer {
 class Renderer2D: BaseRenderer {
     var context: Context!
     
-    #if os(macOS) || os(iOS)
-    var raycaster: Raycaster!
-    #endif
-    
     var camera = OrthographicCamera()
     var cameraController: OrthographicCameraController!
     
@@ -39,9 +35,6 @@ class Renderer2D: BaseRenderer {
     
     override func setup() {
         setupContext()
-        #if os(macOS) || os(iOS)
-        setupRaycaster()
-        #endif
         setupCameraController()
         setupScene()
         setupRenderer()
@@ -51,12 +44,6 @@ class Renderer2D: BaseRenderer {
         context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     }
 
-    #if os(macOS) || os(iOS)
-    func setupRaycaster() {
-        raycaster = Raycaster(device: device)
-    }
-    #endif
-    
     func setupCameraController() {
         cameraController = OrthographicCameraController(camera: camera, view: mtkView)
     }
@@ -85,16 +72,10 @@ class Renderer2D: BaseRenderer {
         renderer.resize(size)
     }
         
-    #if !targetEnvironment(simulator)
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
-        raycaster.setFromCamera(camera, coordinate: pt)
-        let results = raycaster.intersect(scene, true)
-        for result in results {
-            print(result.object.label)
-            print(result.position)
-        }
+        intersect(coordinate: pt)
     }
 
     #elseif os(iOS)
@@ -103,16 +84,18 @@ class Renderer2D: BaseRenderer {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
             let pt = normalizePoint(point, size)
-            raycaster.setFromCamera(camera, pt)
-            let results = raycaster.intersect(scene, true)
-            for result in results {
-                print(result.object.label)
-                print(result.position)
-            }
+            intersect(coordinate: pt)
         }
     }
     #endif
-    #endif
+    
+    func intersect(coordinate: simd_float2) {
+        let results = raycast(camera: camera, coordinate: coordinate, object: scene)
+        if let result = results.first {
+            print(result.object.label)
+            print(result.position)
+        }
+    }
     
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
         #if os(macOS)
