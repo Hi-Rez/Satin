@@ -48,7 +48,13 @@ open class Object: Codable, ObservableObject {
         }
     }
     
-    var _updateLocalBounds: Bool = true
+    var _updateLocalBounds: Bool = true {
+        didSet {
+            if _updateLocalBounds {
+                _updateWorldBounds = true
+            }
+        }
+    }
     var _localBounds = createBounds()
     public var localBounds: Bounds {
         if _updateLocalBounds {
@@ -58,14 +64,14 @@ open class Object: Codable, ObservableObject {
         return _localBounds
     }
     
-    private var _updateWorldBounds: Bool = true {
+    var _updateWorldBounds: Bool = true {
         didSet {
             if _updateWorldBounds {
                 parent?._updateWorldBounds = true
             }
         }
     }
-    private var _worldBounds = createBounds()
+    var _worldBounds = createBounds()
     public var worldBounds: Bounds {
         if _updateWorldBounds {
             _worldBounds = computeWorldBounds()
@@ -130,7 +136,6 @@ open class Object: Codable, ObservableObject {
         didSet {
             if updateMatrix {
                 _updateLocalBounds = true
-                _updateWorldBounds = true
                                 
                 _localMatrix.clear()
                 _normalMatrix.clear()
