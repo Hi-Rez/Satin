@@ -123,6 +123,7 @@ public class InstancedMesh: Mesh {
         guard let context = context, instanceCount > 0 else { return }
         instanceMatrixBuffer = InstanceMatrixUniformBuffer(device: context.device, count: instanceCount)
         _setupInstanceMatrixBuffer = false
+        _updateInstanceMatrixBuffer = true
     }
 
     func updateInstanceBuffer() {
@@ -147,7 +148,7 @@ public class InstancedMesh: Mesh {
     }
     
     public override func draw(renderEncoder: MTLRenderCommandEncoder) {
-        guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count == instanceCount else { return }
+        guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count >= instanceCount else { return }
         super.draw(renderEncoder: renderEncoder)
     }
 

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <simd/simd.h>
 
+#include "Geometry.h"
 #include "Rectangle.h"
 #include "Bounds.h"
 
@@ -53,13 +54,9 @@ bool rectangleContainsRectangle(Rectangle a, Rectangle b) {
 }
 
 bool rectangleIntersectsRectangle(Rectangle a, Rectangle b) {
-    for (int i = 0; i < 4; i++) {
-        if (rectangleContainsPoint(a, rectangleCorner(&b, i)) ||
-            rectangleContainsPoint(b, rectangleCorner(&a, i))) {
-            return true;
-        }
-    }
-    return false;
+    if(a.max.x < b.min.x || b.max.x < a.min.x) { return false; }
+    if(a.min.y > b.max.y || b.min.y > a.max.y) { return false; }
+    return true;
 }
 
 Rectangle projectBoundsToRectangle(Bounds a, simd_float4x4 transform) {

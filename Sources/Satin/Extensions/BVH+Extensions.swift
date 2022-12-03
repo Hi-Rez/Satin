@@ -34,6 +34,10 @@ public extension BVH {
         return triIDs.advanced(by: Int(index)).pointee
     }
     
+    func getCentroid(index: UInt32) -> simd_float3 {
+        return centroids.advanced(by: Int(index)).pointee
+    }
+    
     func getPosition(index: UInt32) -> simd_float3 {
         return positions.advanced(by: Int(index)).pointee
     }
