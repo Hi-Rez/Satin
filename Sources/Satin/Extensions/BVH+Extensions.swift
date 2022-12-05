@@ -60,7 +60,6 @@ public extension BVH {
     }
     
     func intersectTriangles(ray: Ray, node: BVHNode, intersections: inout [IntersectionResult]) {
-        var time: Float = 0.0
         for i in 0 ..< node.triCount {
             let primitiveIndex = getTriangleID(index: node.leftFirst + i)
             let triangle = getTriangle(index: primitiveIndex)
@@ -69,7 +68,9 @@ public extension BVH {
             let b = getPosition(index: triangle.i1)
             let c = getPosition(index: triangle.i2)
             
-            if rayTriangleIntersectionTime(ray, a, b, c, &time) {
+            var time: Float = 0.0
+            
+            if rayTriangleIntersectionTime(ray, a, b, c, &time), time > .leastNonzeroMagnitude {
                 let intersection = ray.at(time)
                 let bc = getBarycentricCoordinates(intersection, a, b, c)
                 let v0 = getVertex(index: triangle.i0)
