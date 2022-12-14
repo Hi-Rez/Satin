@@ -2,6 +2,8 @@
 #include "Material.metal"
 #include "Distribution/DistributionGGX.metal"
 #include "Geometry/GeometrySmith.metal"
+#include "Visibility/VisibilityKelemen.metal"
+#include "Visibility/VisibilitySmithGGXCorrelated.metal"
 #include "Fresnel/FresnelSchlick.metal"
 #include "Fresnel/FresnelSchlickRoughness.metal"
 #include "../Tonemapping/Aces.metal"
@@ -18,50 +20,108 @@ constexpr sampler pbrLinearSampler(mip_filter::linear, mag_filter::linear, min_f
 constexpr sampler pbrMipSampler(min_filter::linear, mag_filter::linear, mip_filter::linear);
 #endif
 
-void pbrInit(thread Material &mat, float3 worldPos, float3 cameraPos, float3 baseReflectivity)
+void pbrInit(thread Material &material, float3 worldPos, float3 cameraPos)
 {
-    mat.worldPos = worldPos;
-    mat.cameraPos = cameraPos;
-    mat.V = normalize(cameraPos - worldPos);
-    mat.NoV = max(dot(mat.N, mat.V), 0.00001);
-    mat.F0 = mix(baseReflectivity, mat.baseColor, mat.metallic);
-    mat.Lo = mat.emissiveColor;
+    material.worldPos = worldPos;
+    material.cameraPos = cameraPos;
+
+    material.V = normalize(cameraPos - worldPos);
+    material.NoV = max(dot(material.N, material.V), 0.00001);
+    
+    material.diffuseColor = (1.0 - material.metallic) * material.baseColor.rgb;
+
+    material.f0 = 0.16 * material.reflectance * material.reflectance;
+    material.f0 = mix(material.f0, material.baseColor, material.metallic);
+    material.f90 = 1.0;
+
+    material.roughness = material.roughness * material.roughness; //UE5 preceptualRoughness to alpha?
+    material.roughness = clamp(material.roughness, 0.045, 1.0);
+
+#if defined(HAS_CLEAR_COAT)
+    const float3 sqrtf0 = sqrt(material.f0);
+    const float3 nom = 1.0 - 5.0 * sqrtf0;
+    const float3 den = 5.0 - sqrtf0;
+    const float3 f0Base = (nom * nom) / (den * den);
+
+    material.f0 = mix(material.f0, f0Base, material.clearCoat);
+
+    material.clearCoatf0 = 0.04;
+    material.clearCoatf90 = 1.0;
+    material.clearCoatRoughness = material.clearCoatRoughness * material.clearCoatRoughness; //UE5 preceptualRoughness to alpha?
+    material.clearCoatRoughness = clamp(material.clearCoatRoughness, 0.045, 1.0);
+#endif
+
+    material.Lo = material.emissiveColor;
+}
+
+float Fd_Lambert()
+{
+    return M_1_PI_F;
+}
+
+float3 Fd_Burley(float NoV, float NoL, float LoH, float roughness)
+{
+    float f90 = 0.5 + 2.0 * roughness * LoH * LoH;
+    float3 lightScatter = fresnelSchlick(NoL, 1.0, f90);
+    float3 viewScatter = fresnelSchlick(NoV, 1.0, f90);
+    return lightScatter * viewScatter * M_1_PI_F;
+}
+
+float3 brdf(thread Material &material, float3 L, float NoL)
+{
+    const float3 V = material.V;       // View Vector
+    const float3 N = material.N;       // Normal Vector
+    const float3 H = normalize(V + L); // H = Half-way Vector of Light (L) and View Vector (V)
+    const float NoV = material.NoV;
+    const float NoH = max(dot(N, H), 0.00001);
+    const float LoH = max(dot(L, H), 0.00001);
+
+    // Cook-Torrance BRDF
+    const float D = distributionGGX(NoH, material.roughness);
+    const float Vis = visibilitySmithGGXCorrelated(NoV, NoL, material.roughness); // Note: Vis = G / (4 * NdotL * NdotV)
+    const float3 F = fresnelSchlick(LoH, material.f0, material.f90);
+
+    // Energy Conservation (Ks + Kd = 1.0)
+    const float3 Ks = F;                                      // Specular Energy Contribution
+    const float3 Kd = (1.0 - Ks) * (1.0 - material.metallic); // Diffuse Energy Contribution
+
+    const float3 Fs = D * Vis * F;                            // Specular BRDF Component
+    const float3 Fd = Kd * material.diffuseColor * Fd_Lambert(); // Diffuse BRDF Component
+
+    float3 brdf = Fs + Fd;
+
+#if defined(HAS_CLEAR_COAT)
+    const float Dcc = distributionGGX(NoH, material.clearCoatRoughness);
+    const float3 Fcc = fresnelSchlick(LoH, material.clearCoatf0, material.clearCoatf90);
+    const float Vcc = visibilityKelemen(LoH);
+
+    const float3 Fscc = Dcc * Vcc * Fcc;
+
+    brdf = brdf * (1.0 - material.clearCoat * Fcc) + material.clearCoat * Fscc;
+#endif
+
+    return brdf;
 }
 
 #if defined(LIGHTING) && defined(MAX_LIGHTS)
-void pbrDirectLighting(thread Material &mat, constant Light *lights)
+void pbrDirectLighting(thread Material &material, constant Light *lights)
 {
-    const float3 diffuseLambert = mat.baseColor / PI;
-
     for (int i = 0; i < MAX_LIGHTS; i++) {
-        const Light light = lights[i];
-
-        float3 L = 0.0; // L = Vector from Fragment to Light
-        float3 R = 0.0; // R = Light Radiance
-        getLightInfo(light, mat.worldPos, L, R);
-
-        // H = Half-way Vector of Light (L) and View Vector (V)
-        const float3 H = normalize(mat.V + L);
-        const float NoH = max(dot(mat.N, H), 0.00001);
-        const float HoL = max(dot(H, L), 0.00001);
-        const float NoL = max(dot(mat.N, L), 0.00001);
-
-        // Cook-Torrance BRDF
-        const float D = distributionGGX(NoH, mat.roughness);
-        const float3 F = fresnelSchlick(HoL, mat.F0);
-        const float G = geometrySmith(mat.NoV, NoL, mat.roughness);
-
-        const float3 cookTorranceNumerator = D * G * F;
-        const float3 cookTorranceDenominator = max(4.0 * mat.NoV * NoL, 0.00001);
-        const float3 specularCookTorrance = cookTorranceNumerator / cookTorranceDenominator;
-
-        const float3 Ks = F;
-        const float3 Kd = (1.0 - Ks) * (1.0 - mat.metallic);
-
-        const float3 BRDF = Kd * diffuseLambert + specularCookTorrance;
-
-        mat.Lo += BRDF * R * NoL;
+        float3 L;
+        const float3 lightRadiance = getLightInfo(lights[i], material.worldPos, L);
+        const float NoL = max(dot(material.N, L), 0.00001);
+        material.Lo += brdf(material, L, NoL) * lightRadiance * NoL * material.ao;
     }
+}
+#endif
+
+#if defined(REFLECTION_MAP) && defined(BRDF_MAP)
+float3 getIBLRadiance(texturecube<float> reflectionMap, float3 reflectDir, float3 N, float roughness)
+{
+    const float levels = float(reflectionMap.get_num_mip_levels() - 1);
+    const float mipLevel = roughness * levels;
+    reflectDir = normalize(mix(reflectDir, N, roughness * roughness));
+    return reflectionMap.sample(pbrMipSampler, reflectDir, level(mipLevel)).rgb;
 }
 #endif
 
@@ -75,38 +135,48 @@ void pbrIndirectLighting(
 #if defined(BRDF_MAP)
     texture2d<float> brdfMap,
 #endif
-    thread Material &mat)
+    thread Material &material)
 {
 #if defined(IRRADIANCE_MAP) || defined(REFLECTION_MAP)
-    const float3 F = fresnelSchlickRoughness(mat.NoV, mat.F0, mat.roughness);
+    const float3 F = fresnelSchlick(material.NoV, material.f0, material.f90);
+//    const float3 F = fresnelSchlickRoughness(material.NoV, material.f0, material.roughness);
     const float3 Ks = F;
-    const float3 Kd = (1.0 - Ks) * (1.0 - mat.metallic);
+    const float3 Kd = (1.0 - Ks) * (1.0 - material.metallic);
+
 #endif
 
 #if defined(IRRADIANCE_MAP)
-    const float3 irradiance = irradianceMap.sample(pbrLinearSampler, mat.N).rgb;
-    const float3 diffuse = Kd * irradiance * mat.baseColor;
+    const float3 irradiance = irradianceMap.sample(pbrLinearSampler, material.N).rgb;
+    const float3 Fd = Kd * irradiance * material.diffuseColor; // Diffuse IBL
 #else
-    const float3 diffuse = 0.0;
+    const float3 Fd = 0.0;
 #endif
 
+    // Specular IBL: samples both the pre-filter map and the BRDF lut
+    // Combines them together as per the Split-Sum approximation to get the IBL specular part
+    
 #if defined(REFLECTION_MAP) && defined(BRDF_MAP)
-    // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
-    const float levels = float(reflectionMap.get_num_mip_levels() - 1);
-    const float mipLevel = mat.roughness * levels;
-    const float3 prefilteredColor = reflectionMap.sample(pbrMipSampler, reflect(-mat.V, mat.N), level(mipLevel)).rgb;
-
-    const float2 brdf = brdfMap.sample(pbrLinearSampler, float2(mat.NoV, mat.roughness)).rg;
-    const float3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+    const float3 reflectDir = normalize(reflect(-material.V, material.N));
+    const float3 prefilteredRadiance = getIBLRadiance(reflectionMap, reflectDir, material.N, material.roughness);
+    const float2 brdf = brdfMap.sample(pbrLinearSampler, float2(material.NoV, material.roughness)).rg;
+    const float3 Fs = prefilteredRadiance * (F * brdf.x + brdf.y);
+    
+#if defined(HAS_CLEAR_COAT)
+    const float3 prefilteredRadianceClearCoat = getIBLRadiance(reflectionMap, reflectDir, material.N, material.clearCoatRoughness);
+    const float3 Fc = fresnelSchlick(material.NoV, material.clearCoatf0, material.clearCoatf90);
+    const float2 brdfClearCoat = brdfMap.sample(pbrLinearSampler, float2(material.NoV, material.clearCoatRoughness)).rg;
+    const float3 Fsc = prefilteredRadianceClearCoat * (Fc * brdfClearCoat.x + brdfClearCoat.y);
+    material.Lo += ((Fd + Fs) * (1.0 - material.clearCoat * Fc) + material.clearCoat * Fsc) * material.ao;
 #else
-    const float3 specular = 0.0;
+    material.Lo += (Fd + Fs) * material.ao;
 #endif
 
-    mat.Lo += (diffuse + specular) * mat.ao;
+#else
+    material.Lo += Fd * material.ao;
+#endif
 }
 
-float3 pbrTonemap(thread Material &mat)
+float3 pbrTonemap(thread Material &material)
 {
-    // HDR Tonemapping & Gamma Correction
-    return gamma(aces(mat.Lo));
+    return gamma(aces(material.Lo)); // HDR Tonemapping & Gamma Correction
 }

@@ -6,37 +6,42 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-    float4 color; // color
+    float4 baseColor; // color
+    float4 emissiveColor; // color
 } CustomUniforms;
 
 typedef struct {
 	float4 position [[position]];
     float3 worldPos;
+    float3 normal;
     float3 cameraPos;
-	float3 normal;
 	float roughness [[flat]];
 	float metallic [[flat]];
 } CustomVertexData;
 
-vertex CustomVertexData customVertex(
-	Vertex v [[stage_in]],
-	uint iid [[instance_id]],
-	constant VertexUniforms &uniforms [[buffer( VertexBufferVertexUniforms )]] )
+vertex CustomVertexData customVertex(Vertex in [[stage_in]],
+#if INSTANCING
+    uint instanceID [[instance_id]],
+    constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
+#endif
+    constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
 {
-	float4 position = v.position;
-	position.x += ( iid % 7 - 3.0 ) * 2.5;
-	position.y += ( iid / 7 - 3.0 ) * 2.5;
-	const float4 worldPosition = uniforms.modelMatrix * position;
-	const float3 worldCameraPosition = uniforms.worldCameraPosition;
+    CustomVertexData out;
+#if INSTANCING
+    out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;
+    out.worldPos = (instanceUniforms[instanceID].modelMatrix * in.position).xyz;
+    out.normal = instanceUniforms[instanceID].normalMatrix * in.normal;
+#else
+    out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
+    out.worldPos = (vertexUniforms.modelMatrix * in.position).xyz;
+    out.normal = vertexUniforms.normalMatrix * in.normal;
+#endif
 
-	return {
-		.position = uniforms.viewProjectionMatrix * worldPosition,
-		.worldPos = worldPosition.xyz,
-		.cameraPos = worldCameraPosition,
-		.normal = v.normal,
-		.roughness = (float)( iid % 7 ) / 7.0,
-		.metallic = (float)( iid / 7 ) / 7.0
-	};
+    out.cameraPos = vertexUniforms.worldCameraPosition;
+    out.roughness = (float) ( (int)instanceID % 10 ) / 10.0;
+    out.metallic = (float) ( (int)instanceID / 10 ) / 10.0;
+    
+    return out;
 }
 
 fragment float4 customFragment( CustomVertexData in [[stage_in]],
@@ -46,20 +51,21 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     texture2d<float> brdfMap [[texture( PBRTextureBRDF )]],
     constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
-    Material mat;
+    Material material;
 
-    mat.roughness = in.roughness;
-    mat.metallic = in.metallic;
-    mat.baseColor = uniforms.color.rgb;
-    mat.ao = 1.0;
-    mat.emissiveColor = 0.0;
-    mat.alpha = uniforms.color.a;
-    mat.N = normalize(in.normal);
+    material.roughness = in.roughness;
+    material.metallic = in.metallic;
+    material.reflectance = 0.5;
+    material.baseColor = uniforms.baseColor.rgb;
+    material.ao = 1.0;
+    material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
+    material.alpha = uniforms.baseColor.a;
+    material.N = normalize(in.normal);
     
-    pbrInit(mat, in.worldPos, in.cameraPos, 0.04);
+    pbrInit(material, in.worldPos, in.cameraPos);
 
 #if defined(MAX_LIGHTS)
-    pbrDirectLighting(mat, lights);
+    pbrDirectLighting(material, lights);
 #endif
 
     pbrIndirectLighting(
@@ -72,7 +78,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 #if defined(BRDF_MAP)
         brdfMap,
 #endif
-        mat);
+        material
+    );
 
-    return float4(pbrTonemap(mat), mat.alpha);
+    return float4(pbrTonemap(material), material.alpha);
 }

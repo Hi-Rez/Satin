@@ -14,6 +14,12 @@ import simd
 open class Mesh: Object, Renderable, Intersectable {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
+    public var drawable: Bool {
+        if instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil, material?.pipeline != nil {
+            return true
+        }
+        return false
+    }
     
     public var instanceCount: Int = 1
     open var intersectable: Bool {
@@ -116,24 +122,24 @@ open class Mesh: Object, Renderable, Intersectable {
         geometrySubscriber = nil
     }
     
-    internal func setupGeometry() {
+    open func setupGeometry() {
         guard let context = context else { return }
         geometry.context = context
     }
     
-    internal func setupSubmeshes() {
+    open func setupSubmeshes() {
         guard let context = context else { return }
         for submesh in submeshes {
             submesh.context = context
         }
     }
 
-    internal func setupMaterial() {
+    open func setupMaterial() {
         guard let context = context, let material = material else { return }
         material.context = context
     }
     
-    internal func setupUniforms() {
+    open func setupUniforms() {
         guard let context = context else { return }
         uniforms = VertexUniformBuffer(device: context.device)
     }
@@ -156,6 +162,24 @@ open class Mesh: Object, Renderable, Intersectable {
     
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         bindDrawingStates(renderEncoder)
+        bindMaterial(renderEncoder)
+        bindGeometry(renderEncoder)
+        bindUniforms(renderEncoder)
+    }
+    
+    open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
+        guard let uniforms = uniforms else { return }
+        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
+    }
+    
+    open func bindGeometry(_ renderEncoder: MTLRenderCommandEncoder) {
+        for (index, buffer) in geometry.vertexBuffers {
+            renderEncoder.setVertexBuffer(buffer, offset: 0, index: index.rawValue)
+        }
+    }
+    
+    open func bindMaterial(_ renderEncoder: MTLRenderCommandEncoder) {
+        material?.bind(renderEncoder)
     }
     
     open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder) {
@@ -165,25 +189,12 @@ open class Mesh: Object, Renderable, Intersectable {
     }
 
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard instanceCount > 0,
-              !geometry.vertexBuffers.isEmpty,
-              let uniforms = uniforms,
-              let material = material,
-              material.pipeline != nil
-        else { return }
+        guard drawable else { return }
         
         preDraw?(renderEncoder)
-
-        material.bind(renderEncoder)
         
         bind(renderEncoder)
 
-        for (index, buffer) in geometry.vertexBuffers {
-            renderEncoder.setVertexBuffer(buffer, offset: 0, index: index.rawValue)
-        }
-        
-        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
-        
         if !submeshes.isEmpty {
             for submesh in submeshes {
                 if submesh.visible, let indexBuffer = submesh.indexBuffer {

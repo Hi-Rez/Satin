@@ -1,12 +1,14 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-    float4 baseColor;           // color,1,1,1,1
+    float4 baseColor;           // color
     float4 emissiveColor;       // color,0,0,0,1
     float metallic;             // slider,0.0,1.0,1.0
     float roughness;            // slider,0.0,1.0,1.0
     float reflectance;          // slider,0.0,1.0,0.5
-} StandardUniforms;
+    float clearCoat;            // slider,0.0,1.0,1.0
+    float clearCoatRoughness;   // slider,0.0,1.0,0.8
+} PhysicalUniforms;
 
 typedef struct {
     float4 position [[position]];
@@ -16,7 +18,7 @@ typedef struct {
     float3 cameraPos;
 } CustomVertexData;
 
-vertex CustomVertexData standardVertex(
+vertex CustomVertexData physicalVertex(
     Vertex in [[stage_in]],
     // inject instancing args
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
@@ -39,11 +41,11 @@ vertex CustomVertexData standardVertex(
     return out;
 }
 
-fragment float4 standardFragment(
+fragment float4 physicalFragment(
     CustomVertexData in [[stage_in]],
     // inject lighting args
     // inject texture args
-    constant StandardUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
+    constant PhysicalUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
     Material material;
 
@@ -51,20 +53,20 @@ fragment float4 standardFragment(
 #if defined(BASE_COLOR_MAP)
     material.baseColor *= baseColorMap.sample(pbrLinearSampler, in.texcoords).rgb;
 #endif
-
+    
     material.emissiveColor = uniforms.emissiveColor.rgb;
 #if defined(EMISSIVE_MAP)
     material.emissiveColor *= emissiveMap.sample(pbrLinearSampler, in.texcoords).rgb;
 #endif
-    
-    material.metallic = uniforms.metallic;
-#if defined(METALLIC_MAP)
-    material.metallic *= metallicMap.sample(pbrLinearSampler, in.texcoords).r;
-#endif
-    
+
     material.roughness = uniforms.roughness;
 #if defined(ROUGHNESS_MAP)
     material.roughness *= roughnessMap.sample(pbrLinearSampler, in.texcoords).r;
+#endif
+
+    material.metallic = uniforms.metallic;
+#if defined(METALLIC_MAP)
+    material.metallic *= metallicMap.sample(pbrLinearSampler, in.texcoords).r;
 #endif
 
     material.reflectance = uniforms.reflectance;
@@ -73,7 +75,7 @@ fragment float4 standardFragment(
 #if defined(AMBIENT_OCCULSION_MAP)
     material.ao *= ambientOcclusionMap.sample(pbrLinearSampler, in.texcoords).r;
 #endif
-    
+
     material.alpha = uniforms.baseColor.a;
 #if defined(ALPHA_MAP)
     material.alpha *= alphaMap.sample(pbrLinearSampler, in.texcoords).r;
@@ -105,6 +107,11 @@ fragment float4 standardFragment(
     material.N = normalize(in.normal);
 #endif
 
+#if defined(HAS_CLEAR_COAT)
+    material.clearCoat = uniforms.clearCoat;
+    material.clearCoatRoughness = uniforms.clearCoatRoughness;
+#endif
+    
     pbrInit(material, in.worldPos, in.cameraPos);
 
 #if defined(MAX_LIGHTS)

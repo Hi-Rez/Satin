@@ -32,18 +32,27 @@ class PBRRenderer: BaseRenderer {
     
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
+        mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
+        mat.set("Emissive Color", [1.0, 1.0, 1.0, 0.0])
         mat.lighting = true
-        return mat
-    }()
-
-    lazy var mesh: Mesh = {
-        let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.0, res: 4), material: customMaterial)
-        mesh.label = "Sphere"
-        mesh.instanceCount = 49
-        mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
+        mat.onBind = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
             renderEncoder.setFragmentTexture(self.diffuseIBLTexture, index: PBRTexture.irradiance.rawValue)
             renderEncoder.setFragmentTexture(self.specularIBLTexture, index: PBRTexture.reflection.rawValue)
             renderEncoder.setFragmentTexture(self.brdfTexture, index: PBRTexture.brdf.rawValue)
+        }
+        return mat
+    }()
+
+    lazy var mesh: InstancedMesh = {
+        let mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.875, res: 4), material: customMaterial, count: 100)
+        mesh.label = "Spheres"
+        let placer = Object()
+        for y in 0..<10 {
+            for x in 0..<10 {
+                let index = y * 10 + x;
+                placer.position = simd_make_float3(2.0 * Float(x) - 9, 2.0 * Float(y) - 9, 0.0)
+                mesh.setMatrixAt(index: index, matrix: placer.localMatrix)
+            }
         }
         return mesh
     }()
@@ -77,7 +86,7 @@ class PBRRenderer: BaseRenderer {
     }
     
     func setupLights() {
-        let dist: Float = 10.0
+        let dist: Float = 12.0
         let positions = [
             simd_make_float3(dist, dist, dist),
             simd_make_float3(-dist, dist, dist),
@@ -88,7 +97,7 @@ class PBRRenderer: BaseRenderer {
         let sphereLightGeo = mesh.geometry
         let sphereLightMat = BasicColorMaterial(.one, .disabled)
         for (index, position) in positions.enumerated() {
-            let light = PointLight(color: .one, intensity: 200, radius: 50.0)
+            let light = PointLight(color: .one, intensity: 200, radius: 100.0)
             light.position = position
             let lightMesh = Mesh(geometry: sphereLightGeo, material: sphereLightMat)
             lightMesh.scale = .init(repeating: 0.25)

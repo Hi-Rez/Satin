@@ -1,4 +1,7 @@
-float3 fresnelSchlick(float HoV, float3 f0)
+float3 fresnelSchlick(float VoH, float3 f0, float3 f90)
 {
-    return f0 + (1.0 - f0) * pow(1.0 - HoV, 5.0);
+    const float x = saturate(1.0 - VoH);
+    const float x2 = x * x;
+    const float x5 = x * x2 * x2;
+    return f0 + (f90 - f0) * x5;
 }

@@ -283,7 +283,7 @@ open class Renderer
         
         renderEncoder.pushDebugGroup(object.label)
         
-        if let renderable = object as? Renderable
+        if let renderable = object as? Renderable, renderable.drawable
         {
             if let material = renderable.material, material.lighting
             {

@@ -10,6 +10,7 @@ import Metal
 import simd
 
 public protocol Renderable {
+    var drawable: Bool { get }
     var material: Material? { get set }
 
     func update(camera: Camera, viewport: simd_float4)

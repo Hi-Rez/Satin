@@ -72,6 +72,18 @@ func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
 }
 
 class LoadedMesh: Object, Renderable {
+    public var drawable: Bool {
+        if
+            uniforms != nil,
+            vertexBuffer != nil,
+            let material = material,
+            let _ = material.pipeline
+        {
+            return true
+        }
+        return false
+    }
+
     public var uniformBufferIndex: Int = 0
     public var uniformBufferOffset: Int = 0
     
@@ -192,20 +204,20 @@ class LoadedMesh: Object, Renderable {
     }
     
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
-        guard instanceCount > 0,
-              let uniforms = uniforms,
-              let vertexBuffer = vertexBuffer,
-              let material = material,
-              let _ = material.pipeline
-        else { return }
+        guard instanceCount > 0 else { return }
         
-        material.bind(renderEncoder)
+        material?.bind(renderEncoder)
+        
         renderEncoder.setFrontFacing(windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: VertexBufferIndex.Vertices.rawValue)
         renderEncoder.setVertexBuffer(genericsBuffer, offset: 0, index: VertexBufferIndex.Generics.rawValue)
-        renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
+        
+        if let uniforms = uniforms {
+            renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
+        }
+        
         
         if let indexBuffer = indexBuffer {
             renderEncoder.drawIndexedPrimitives(

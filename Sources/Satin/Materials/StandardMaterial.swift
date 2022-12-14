@@ -1,6 +1,6 @@
 //
 //  StandardMaterial.swift
-//  PBRTemplate
+//  Satin
 //
 //  Created by Reza Ali on 11/5/22.
 //  Copyright © 2022 Reza Ali. All rights reserved.
@@ -21,25 +21,25 @@ open class StandardMaterial: Material {
 
     public var emissiveColor: simd_float4 = .zero {
         didSet {
-            set("Emissive Color", baseColor)
+            set("Emissive Color", emissiveColor)
         }
     }
 
-    public var baseReflectivity = simd_make_float4(0.04, 0.04, 0.04, 1.0) {
+    public var reflectance: Float = 0.5 {
         didSet {
-            set("Base Reflectivity", baseColor)
+            set("Reflectance", reflectance)
         }
     }
 
-    public var metallic: Float = 0.0 {
+    public var metallic: Float = 1.0 {
         didSet {
-            set("Metallic", baseColor)
+            set("Metallic", metallic)
         }
     }
 
-    public var roughness: Float = 0.25 {
+    public var roughness: Float = 1.0 {
         didSet {
-            set("Roughness", baseColor)
+            set("Roughness", roughness)
         }
     }
 
@@ -70,7 +70,7 @@ open class StandardMaterial: Material {
     func initalizeParameters() {
         set("Base Color", baseColor)
         set("Emissive Color", emissiveColor)
-        set("Base Reflectivity", baseReflectivity)
+        set("Reflectance", reflectance)
         set("Metallic", metallic)
         set("Roughness", roughness)
     }

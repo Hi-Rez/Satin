@@ -13,26 +13,28 @@ float getSpotAngleAttenuation(float3 l, float3 lightDir, float2 spotInfo)
 }
 
 #if defined(LIGHTING)
-void getLightInfo(const Light light, float3 worldPosition, thread float3 &L, thread float3 &R)
+// Returns light radiance
+float3 getLightInfo(const Light light, float3 worldPosition, thread float3 &L)
 {
-    const float3 lightRadiance = light.color.rgb * light.color.a;
+    float3 lightRadiance = light.color.rgb * light.color.a;
     const float3 lightPosition = light.position.xyz;
     const LightType type = (LightType)light.position.w;
     const float3 lightDirection = light.direction.xyz;
-    const float inverseRadius = light.direction.w;
 
-    R = lightRadiance;       // R = Radiance
     L = light.direction.xyz; // L = Vector from Fragment to Light
 
     if (type > LightTypeDirectional) {
+        const float inverseRadius = light.direction.w;
         const float3 worldToLight = lightPosition - worldPosition;
         const float distanceSquare = dot(worldToLight, worldToLight);
-        R *= getSquareFalloffAttenuation(distanceSquare, inverseRadius);
+        lightRadiance *= getSquareFalloffAttenuation(distanceSquare, inverseRadius);
         L = worldToLight / sqrt(distanceSquare);
 
         if (type > LightTypePoint) {
-            R *= getSpotAngleAttenuation(L, lightDirection, light.spotInfo.xy);
+            lightRadiance *= getSpotAngleAttenuation(L, lightDirection, light.spotInfo.xy);
         }
     }
+
+    return lightRadiance;
 }
 #endif
