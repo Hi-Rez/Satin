@@ -13,7 +13,7 @@ import Forge
 import Satin
 
 class FXAARenderer: BaseRenderer {
-    class FxaaMaterial: LiveMaterial {}
+    class FxaaMaterial: SourceMaterial {}
     
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }

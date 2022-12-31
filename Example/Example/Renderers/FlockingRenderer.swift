@@ -15,8 +15,8 @@ import Satin
 
 class FlockingRenderer: BaseRenderer {
     class FlockingComputeSystem: LiveBufferComputeSystem {}
-    class InstanceMaterial: LiveMaterial {}
-    class SpriteMaterial: LiveMaterial {}
+    class InstanceMaterial: SourceMaterial {}
+    class SpriteMaterial: SourceMaterial {}
 
     // MARK: - Paths
     

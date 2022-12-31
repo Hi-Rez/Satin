@@ -20,7 +20,7 @@ class VertexAttributesRenderer: BaseRenderer {
         return mesh
     }()
     
-    class CustomMaterial: LiveMaterial {}
+    class CustomMaterial: SourceMaterial {}
     
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }

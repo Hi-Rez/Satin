@@ -13,7 +13,7 @@ import Forge
 import Satin
 
 class CustomInstancingRenderer: BaseRenderer {
-    class InstanceMaterial: LiveMaterial {}
+    class InstanceMaterial: SourceMaterial {}
     
     // MARK: - Paths
     

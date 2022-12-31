@@ -15,8 +15,8 @@ import Satin
 class BufferComputeRenderer: BaseRenderer {
     class ParticleComputeSystem: LiveBufferComputeSystem {}
     
-    class SpriteMaterial: LiveMaterial {}
-    class ChromaMaterial: LiveMaterial {}
+    class SpriteMaterial: SourceMaterial {}
+    class ChromaMaterial: SourceMaterial {}
 
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }

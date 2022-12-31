@@ -15,7 +15,7 @@ import Forge
 import Satin
 
 class CubemapRenderer: BaseRenderer {
-    class CustomMaterial: LiveMaterial {}
+    class CustomMaterial: SourceMaterial {}
     
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }

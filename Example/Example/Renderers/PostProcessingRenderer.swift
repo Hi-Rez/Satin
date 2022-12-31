@@ -16,7 +16,7 @@ import Satin
 class PostProcessingRenderer: BaseRenderer {
     var size = simd_int2(repeating: 0)
     
-    class PostMaterial: LiveMaterial {}
+    class PostMaterial: SourceMaterial {}
     
     var assetsURL: URL {
         Bundle.main.resourceURL!.appendingPathComponent("Assets")

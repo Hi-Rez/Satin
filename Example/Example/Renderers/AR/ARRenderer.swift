@@ -15,7 +15,7 @@ import Forge
 import Satin
 
 class ARRenderer: BaseRenderer, ARSessionDelegate {
-    class BackgroundMaterial: LiveMaterial {}
+    class BackgroundMaterial: SourceMaterial {}
     
     // MARK: - Paths
     

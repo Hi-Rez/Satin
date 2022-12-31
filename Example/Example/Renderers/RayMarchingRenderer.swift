@@ -13,7 +13,7 @@ import Forge
 import Satin
 
 class RayMarchingRenderer: BaseRenderer {
-    class RayMarchedMaterial: LiveMaterial {
+    class RayMarchedMaterial: SourceMaterial {
         var camera: PerspectiveCamera?
         
         init(pipelinesURL: URL, camera: PerspectiveCamera?) {
