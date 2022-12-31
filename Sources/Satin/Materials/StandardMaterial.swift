@@ -25,9 +25,9 @@ open class StandardMaterial: Material {
         }
     }
 
-    public var reflectance: Float = 0.5 {
+    public var specular: Float = 0.5 {
         didSet {
-            set("Reflectance", reflectance)
+            set("Specular", specular)
         }
     }
 
@@ -63,6 +63,7 @@ open class StandardMaterial: Material {
     public init(baseColor: simd_float4,
                 metallic: Float,
                 roughness: Float,
+                specular: Float = 0.5,
                 emissiveColor: simd_float4 = .zero,
                 maps: [PBRTexture: MTLTexture?] = [:])
     {
@@ -88,7 +89,7 @@ open class StandardMaterial: Material {
     func initalizeParameters() {
         set("Base Color", baseColor)
         set("Emissive Color", emissiveColor)
-        set("Reflectance", reflectance)
+        set("Specular", specular)
         set("Metallic", metallic)
         set("Roughness", roughness)
     }
