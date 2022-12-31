@@ -71,6 +71,7 @@ open class StandardMaterial: Material {
         self.baseColor = baseColor
         self.metallic = metallic
         self.roughness = roughness
+        self.specular = specular
         self.emissiveColor = emissiveColor
         self.maps = maps
         self.lighting = true
