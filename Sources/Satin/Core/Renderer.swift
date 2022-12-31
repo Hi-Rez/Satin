@@ -276,14 +276,8 @@ open class Renderer
     
     public func draw(renderEncoder: MTLRenderCommandEncoder, object: Object, camera: Camera)
     {
-        if object.context == nil || object.context != context
-        {
-            object.context = context
-        }
-        
+        object.context = context
         object.update(camera: camera, viewport: _viewport)
-        
-        guard !getRenderables(object, true, false).isEmpty else { return }
         
         renderEncoder.pushDebugGroup(object.label)
         

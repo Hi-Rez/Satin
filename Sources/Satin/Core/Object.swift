@@ -19,7 +19,7 @@ open class Object: Codable, ObservableObject {
     
     open weak var context: Context? = nil {
         didSet {
-            if context != nil, context != oldValue {
+            if context != nil, context !== oldValue {
                 setup()
                 for child in children {
                     child.context = context

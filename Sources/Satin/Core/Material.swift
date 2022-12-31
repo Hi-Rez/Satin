@@ -129,7 +129,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     
     public weak var context: Context? {
         didSet {
-            if context != nil, context != oldValue {
+            if context != nil, context !== oldValue {
                 setup()
             }
         }

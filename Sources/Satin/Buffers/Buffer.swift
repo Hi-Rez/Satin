@@ -29,7 +29,7 @@ open class Buffer {
     }
 
     func update(_ content: UnsafeMutableRawPointer) {
-        content.copyMemory(from: parameters.data, byteCount: parameters.size)
+        content.copyMemory(from: parameters.data, byteCount: parameters.size)        
     }
 
     public func sync(_ index: Int) {
