@@ -43,7 +43,7 @@ class MatcapRenderer: BaseRenderer {
     
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+    lazy var renderer = Satin.Renderer(context: context)
         
     var mesh: Mesh!
     
@@ -113,7 +113,12 @@ class MatcapRenderer: BaseRenderer {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     override func resize(_ size: (width: Float, height: Float)) {

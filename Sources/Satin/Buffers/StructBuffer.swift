@@ -18,13 +18,13 @@ open class StructBuffer<T> {
     public init(device: MTLDevice, count: Int, label: String = "Struct Buffer") {
         self.count = count
         let length = alignedSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.storageModeShared]) else { fatalError("Couldn't not create \(label)") }
+        guard let buffer = device.makeBuffer(length: count * length, options: [MTLResourceOptions.storageModeShared]) else { fatalError("Couldn't not create \(label)") }
         self.buffer = buffer
         self.buffer.label = label
     }
     
     public func update(data: [T]) {
-        (buffer.contents() + offset).copyMemory(from: data, byteCount: MemoryLayout<T>.size * data.count)
+        (buffer.contents() + offset).copyMemory(from: data, byteCount: alignedSize * data.count)
     }
     
     public func update() {

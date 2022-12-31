@@ -41,7 +41,7 @@ class ExportGeometryRenderer: BaseRenderer {
     lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     var camera = PerspectiveCamera(position: [0, 0, 5], near: 0.001, far: 100.0)
     lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
-    lazy var renderer: Satin.Renderer = .init(context: context, scene: scene, camera: camera)
+    lazy var renderer: Satin.Renderer = .init(context: context)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -55,7 +55,12 @@ class ExportGeometryRenderer: BaseRenderer {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     override func resize(_ size: (width: Float, height: Float)) {

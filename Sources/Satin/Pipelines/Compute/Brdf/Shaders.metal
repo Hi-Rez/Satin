@@ -1,16 +1,7 @@
 #include "Library/Pbr/ImportanceSampling.metal"
+#include "Library/Pbr/Visibility/VisibilitySmithGGXCorrelated.metal"
 
 #define SAMPLE_COUNT 1024u
-
-// From the filament docs. Geometric Shadowing function
-// https://google.github.io/filament/Filament.html#toc4.4.2
-float V_SmithGGXCorrelated(float NoV, float NoL, float roughness)
-{
-    float a2 = pow(roughness, 4.0);
-    float GGXV = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2);
-    float GGXL = NoV * sqrt(NoL * NoL * (1.0 - a2) + a2);
-    return 0.5 / (GGXV + GGXL);
-}
 
 // Karis 2014
 float2 integrate(float NoV, float roughness)
@@ -40,7 +31,7 @@ float2 integrate(float NoV, float roughness)
         float VoH = saturate(dot(V, H));
 
         if (NoL > 0.0) {
-            float V_pdf = V_SmithGGXCorrelated(NoV, NoL, roughness) * VoH * NoL / NoH;
+            float V_pdf = visibilitySmithGGXCorrelated(NoV, NoL, roughness) * VoH * NoL / NoH;
             float Fc = pow(1.0 - VoH, 5.0);
             A += (1.0 - Fc) * V_pdf;
             B += Fc * V_pdf;

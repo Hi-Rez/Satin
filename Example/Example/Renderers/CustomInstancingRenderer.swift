@@ -38,7 +38,7 @@ class CustomInstancingRenderer: BaseRenderer {
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView, defaultZoom: 2.0)
-    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+    lazy var renderer = Satin.Renderer(context: context)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.isPaused = false
@@ -90,7 +90,12 @@ class CustomInstancingRenderer: BaseRenderer {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     override func resize(_ size: (width: Float, height: Float)) {

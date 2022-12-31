@@ -3,9 +3,10 @@
 typedef struct {
     float4 baseColor;           // color,1,1,1,1
     float4 emissiveColor;       // color,0,0,0,1
-    float metallic;             // slider,0.0,1.0,1.0
-    float roughness;            // slider,0.0,1.0,1.0
-    float reflectance;          // slider,0.0,1.0,0.5
+    float subsurface;           // slider,0.0,1.0,0.0
+    float roughness;            // slider,0.0,1.0,0.0
+    float metallic;             // slider,0.0,1.0,0.0
+    float specular;             // slider,0.0,1.0,0.5
 } StandardUniforms;
 
 typedef struct {
@@ -45,6 +46,10 @@ fragment float4 standardFragment(
     // inject texture args
     constant StandardUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
+    PixelInfo pixel;
+    pixel.view = normalize(in.cameraPos - in.worldPos);
+    pixel.position = in.worldPos;
+    
     Material material;
 
     material.baseColor = uniforms.baseColor.rgb;
@@ -67,7 +72,7 @@ fragment float4 standardFragment(
     material.roughness *= roughnessMap.sample(pbrLinearSampler, in.texcoords).r;
 #endif
 
-    material.reflectance = uniforms.reflectance;
+    material.specular = uniforms.specular;
     
     material.ao = 1.0;
 #if defined(AMBIENT_OCCULSION_MAP)
@@ -87,6 +92,8 @@ fragment float4 standardFragment(
     // mapNormal.y = -mapNormal.y; // Flip normal map Y-axis if necessary
     const float3x3 TBN(in.tangent, in.bitangent, in.normal);
     const float3 N = normalize(TBN * mapNormal);
+    pixel.normal = normalize(TBN * mapNormal);
+    
 #else
     const float3 Q1 = dfdx(in.worldPos);
     const float3 Q2 = dfdy(in.worldPos);
@@ -98,17 +105,19 @@ fragment float4 standardFragment(
     float3 bitangent = -normalize(cross(normal, tangent));
     const float3x3 TBN = float3x3(tangent, bitangent, normal);
 
-    material.N = normalize(TBN * mapNormal);
+    pixel.normal = normalize(TBN * mapNormal);
 #endif
 
 #else
-    material.N = normalize(in.normal);
+    pixel.normal = normalize(in.normal);
 #endif
+    
+    pixel.material = material;
 
-    pbrInit(material, in.worldPos, in.cameraPos);
+    pbrInit(pixel);
 
 #if defined(MAX_LIGHTS)
-    pbrDirectLighting(material, lights);
+    pbrDirectLighting(pixel, lights);
 #endif
 
     pbrIndirectLighting(
@@ -121,7 +130,7 @@ fragment float4 standardFragment(
 #if defined(BRDF_MAP)
         brdfMap,
 #endif
-        material);
+        pixel);
 
-    return float4(pbrTonemap(material), material.alpha);
+    return float4(pbrTonemap(pixel), material.alpha);
 }

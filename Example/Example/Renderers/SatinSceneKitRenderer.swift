@@ -57,7 +57,7 @@ class SatinSceneKitRenderer: BaseRenderer {
     
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+    lazy var renderer = Satin.Renderer(context: context)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -92,7 +92,12 @@ class SatinSceneKitRenderer: BaseRenderer {
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.depthStoreAction = .store
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
         
         renderPassDescriptor.colorAttachments[0].loadAction = .load
         renderPassDescriptor.depthAttachment.loadAction = .load

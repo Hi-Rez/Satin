@@ -47,7 +47,7 @@ class BufferComputeRenderer: BaseRenderer {
     lazy var scene: Object = .init("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, .invalid, .invalid)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+    lazy var renderer = Satin.Renderer(context: context)
     
     var startTime: CFAbsoluteTime = 0.0
     
@@ -98,7 +98,13 @@ class BufferComputeRenderer: BaseRenderer {
         particleSystem.update(commandBuffer)
         
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, renderTarget: renderTexture)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera,
+            renderTarget: renderTexture
+        )
         
         chromaticProcessor.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }

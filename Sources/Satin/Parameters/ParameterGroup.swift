@@ -42,6 +42,8 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
     public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
 
+    public let publisher = PassthroughSubject<ParameterGroup, Never>()
+    
     deinit {
         params = []
         paramsMap = [:]
@@ -617,6 +619,7 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
     public func updated(parameter: Parameter) {
         objectWillChange.send()
         _updateData = true
+        publisher.send(self)
         delegate?.update(parameter: parameter, from: self)
     }
 }

@@ -51,21 +51,23 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     texture2d<float> brdfMap [[texture( PBRTextureBRDF )]],
     constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
-    Material material;
-
-    material.roughness = in.roughness;
-    material.metallic = in.metallic;
-    material.reflectance = 0.5;
-    material.baseColor = uniforms.baseColor.rgb;
-    material.ao = 1.0;
-    material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
-    material.alpha = uniforms.baseColor.a;
-    material.N = normalize(in.normal);
+    PixelInfo pixel;
+    pixel.view = normalize(in.cameraPos - in.worldPos);
+    pixel.position = in.worldPos;
+    pixel.normal = normalize(in.normal);
     
-    pbrInit(material, in.worldPos, in.cameraPos);
+    pixel.material.baseColor = uniforms.baseColor.rgb;
+    pixel.material.roughness = in.roughness;
+    pixel.material.metallic = in.metallic;
+    pixel.material.specular = 0.5;
+    pixel.material.ao = 1.0;
+    pixel.material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
+    pixel.material.alpha = uniforms.baseColor.a;
+    
+    pbrInit(pixel);
 
 #if defined(MAX_LIGHTS)
-    pbrDirectLighting(material, lights);
+    pbrDirectLighting(pixel, lights);
 #endif
 
     pbrIndirectLighting(
@@ -78,8 +80,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
 #if defined(BRDF_MAP)
         brdfMap,
 #endif
-        material
+        pixel
     );
 
-    return float4(pbrTonemap(material), material.alpha);
+    return float4(pbrTonemap(pixel), pixel.material.alpha);
 }

@@ -23,6 +23,14 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         }
     }
     
+    open var defines: [String: String] {
+        var results = [String: String]()
+        #if os(iOS)
+        results["MOBILE"] = "true"
+        #endif
+        return results
+    }
+    
     var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "BufferComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
@@ -88,6 +96,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     }
     
     open func inject(source: inout String) {
+        injectDefines(source: &source, defines: defines)
         injectConstants(source: &source)
     }
 

@@ -1,6 +1,6 @@
 //
 //  BrdfGenerator.swift
-//  PBRTemplate
+//  Satin
 //
 //  Created by Reza Ali on 11/8/22.
 //  Copyright © 2022 Reza Ali. All rights reserved.

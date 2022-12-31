@@ -18,22 +18,25 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     
-    public var scene: Object
+    internal var _scene = Object()
     {
         didSet
         {
-            setup()
+            if _scene != oldValue
+            {
+                setup()
+            }
         }
     }
     
-    public var camera: Camera
+    internal var _camera: Camera = Camera()
+    
     public var context: Context
     {
         didSet
         {
             if oldValue != context
             {
-                scene.context = context
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true
@@ -107,25 +110,24 @@ open class Renderer
     private var lightBuffer: StructBuffer<LightData>?
     private var lightSubscriptions = Set<AnyCancellable>()
     
-    public init(context: Context, scene: Object, camera: Camera)
+    public init(context: Context)
     {
-        self.scene = scene
-        self.camera = camera
         self.context = context
         setup()
     }
     
     func setup()
     {
+        updateLightBuffer = true
         setupLights()
-        scene.context = context
+        _scene.context = context
     }
     
     func setupLights()
     {
-        let lights = getLights(scene, true, true)
+        let lights = getLights(_scene, true, true)
         setupLightBuffer(lights: lights)
-        let renderables = getRenderables(scene, true, true)
+        let renderables = getRenderables(_scene, true, true)
         for renderable in renderables
         {
             if let material = renderable.material, material.lighting
@@ -140,32 +142,34 @@ open class Renderer
         clearColor = .init(red: Double(color.x), green: Double(color.y), blue: Double(color.z), alpha: Double(color.w))
     }
     
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
+    public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, scene: Object, camera: Camera, renderTarget: MTLTexture)
     {
         if context.sampleCount > 1
         {
             let resolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
             renderPassDescriptor.colorAttachments[0].resolveTexture = renderTarget
-            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, scene: scene, camera: camera)
             renderPassDescriptor.colorAttachments[0].resolveTexture = resolveTexture
         }
         else
         {
             let renderTexture = renderPassDescriptor.colorAttachments[0].texture
             renderPassDescriptor.colorAttachments[0].texture = renderTarget
-            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+            draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, scene: scene, camera: camera)
             renderPassDescriptor.colorAttachments[0].texture = renderTexture
         }
     }
     
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer)
+    public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, scene: Object, camera: Camera)
     {
+        _scene = scene
+        _camera = camera
+        
         onUpdate?()
         
         updateLightBuffer(lights: getLights(scene, true, true))
         
         camera.update()
-        
         scene.update()
         
         let inColorTexture = renderPassDescriptor.colorAttachments[0].texture
@@ -256,7 +260,7 @@ open class Renderer
             if scene.visible
             {
                 preDraw?(renderEncoder)
-                draw(renderEncoder: renderEncoder, object: scene)
+                draw(renderEncoder: renderEncoder, object: scene, camera: camera)
                 postDraw?(renderEncoder)
             }
             
@@ -270,7 +274,7 @@ open class Renderer
         renderPassDescriptor.stencilAttachment.texture = inStencilTexture
     }
     
-    public func draw(renderEncoder: MTLRenderCommandEncoder, object: Object)
+    public func draw(renderEncoder: MTLRenderCommandEncoder, object: Object, camera: Camera)
     {
         if object.context == nil || object.context != context
         {
@@ -304,7 +308,7 @@ open class Renderer
         {
             if child.visible
             {
-                draw(renderEncoder: renderEncoder, object: child)
+                draw(renderEncoder: renderEncoder, object: child, camera: camera)
             }
         }
         

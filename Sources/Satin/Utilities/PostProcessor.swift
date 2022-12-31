@@ -17,23 +17,12 @@ open class PostProcessor {
     }
     
     public var context: Context!
-    
-    public lazy var scene: Object = {
-        let scene = Object()
-        scene.add(mesh)
-        return scene
-    }()
-    
-    public lazy var mesh: Mesh = {
-        Mesh(geometry: QuadGeometry(), material: nil)
-    }()
-    
-    public lazy var camera: OrthographicCamera = {
-        OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
-    }()
+    public lazy var scene = Object("Scene", [mesh])
+    public var mesh = Mesh(geometry: QuadGeometry(), material: nil)
+    public var camera = OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
     
     public lazy var renderer: Renderer = {
-        let renderer = Renderer(context: context, scene: scene, camera: camera)
+        let renderer = Renderer(context: context)
         renderer.setClearColor([1, 1, 1, 0])
         return renderer
     }()
@@ -48,14 +37,24 @@ open class PostProcessor {
     open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                    commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture)
     {
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer,
-                      renderTarget: renderTarget)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera,
+            renderTarget: renderTarget
+        )
     }
     
     open func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                    commandBuffer: MTLCommandBuffer)
     {
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     open func resize(_ size: (width: Float, height: Float)) {

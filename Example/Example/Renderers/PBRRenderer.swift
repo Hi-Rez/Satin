@@ -28,7 +28,7 @@ class PBRRenderer: BaseRenderer {
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 40.0], near: 0.001, far: 1000.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    lazy var renderer: Satin.Renderer = .init(context: context, scene: scene, camera: camera)
+    lazy var renderer: Satin.Renderer = .init(context: context)
     
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
@@ -180,7 +180,12 @@ class PBRRenderer: BaseRenderer {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     override func resize(_ size: (width: Float, height: Float)) {

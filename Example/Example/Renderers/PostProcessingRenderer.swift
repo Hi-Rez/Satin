@@ -65,7 +65,7 @@ class PostProcessingRenderer: BaseRenderer {
     var camera = PerspectiveCamera(position: [0.0, 0.0, 10.0], near: 0.001, far: 100.0, fov: 30.0)
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    lazy var renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+    lazy var renderer = Satin.Renderer(context: context)
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -84,7 +84,13 @@ class PostProcessingRenderer: BaseRenderer {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor, let renderTexture = renderTexture else { return }
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, renderTarget: renderTexture)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera,
+            renderTarget: renderTexture
+        )
         postProcessor.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }
     

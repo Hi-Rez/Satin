@@ -23,6 +23,14 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         }
     }
     
+    open var defines: [String: String] {
+        var results = [String: String]()
+        #if os(iOS)
+        results["MOBILE"] = "true"
+        #endif
+        return results
+    }
+    
     public var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
@@ -72,6 +80,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     open func setupCompiler() {
         compiler.onUpdate = { [weak self] in
             guard let self = self else { return }
+            print("recompiling")
             self.source = nil
             self.source = self.compileSource()
             self.setupPipelines()
@@ -90,11 +99,12 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         super.update()
     }
     
-    override public func update(_ commandBuffer: MTLCommandBuffer) {
+    override open func update(_ commandBuffer: MTLCommandBuffer) {
         super.update(commandBuffer)
     }
     
     open func inject(source: inout String) {
+        injectDefines(source: &source, defines: defines)
         injectConstants(source: &source)
     }
 
@@ -123,7 +133,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
                         
                     uniforms = UniformBuffer(device: device, parameters: parameters!)
                 }
-                                
+
                 self.source = source
                 return source
             }
@@ -144,7 +154,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         return nil
     }
     
-    func setupPipelines(_ library: MTLLibrary) {
+    open func setupPipelines(_ library: MTLLibrary) {
         do {
             resetPipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Reset")
             updatePipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Update")

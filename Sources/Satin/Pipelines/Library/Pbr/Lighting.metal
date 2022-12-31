@@ -5,33 +5,36 @@ float getSquareFalloffAttenuation(float distanceSquare, float lightInvRadius)
     return (smoothFactor * smoothFactor) / max(distanceSquare, 1e-4);
 }
 
-float getSpotAngleAttenuation(float3 l, float3 lightDir, float2 spotInfo)
+float getSpotAngleAttenuation(float3 fragmentToLightDir, float3 lightDir, float2 spotInfo)
 {
-    const float cd = dot(lightDir, l);
+    const float cd = dot(lightDir, fragmentToLightDir);
     const float attenuation = saturate(cd * spotInfo.x + spotInfo.y);
     return attenuation * attenuation;
 }
 
 #if defined(LIGHTING)
-// Returns light radiance
-float3 getLightInfo(const Light light, float3 worldPosition, thread float3 &L)
+// Returns light radiance, set L to the light direction
+float3 getLightInfo(const Light light, float3 worldPosition, thread float3 &lightDirection, thread float &lightDistance)
 {
     float3 lightRadiance = light.color.rgb * light.color.a;
     const float3 lightPosition = light.position.xyz;
     const LightType type = (LightType)light.position.w;
-    const float3 lightDirection = light.direction.xyz;
 
-    L = light.direction.xyz; // L = Vector from Fragment to Light
+    lightDirection = light.direction.xyz; // L = Vector from Fragment to Light
+    lightDistance = INFINITY;
 
-    if (type > LightTypeDirectional) {
+    if (type > LightTypeDirectional) { // We are dealing with a point light
         const float inverseRadius = light.direction.w;
         const float3 worldToLight = lightPosition - worldPosition;
         const float distanceSquare = dot(worldToLight, worldToLight);
+        
         lightRadiance *= getSquareFalloffAttenuation(distanceSquare, inverseRadius);
-        L = worldToLight / sqrt(distanceSquare);
+        lightDistance = sqrt(distanceSquare);
+        lightDirection = worldToLight / lightDistance;
 
         if (type > LightTypePoint) {
-            lightRadiance *= getSpotAngleAttenuation(L, lightDirection, light.spotInfo.xy);
+            // We are dealing with a spot light
+            lightRadiance *= getSpotAngleAttenuation(lightDirection, light.direction.xyz, light.spotInfo.xy);
         }
     }
 

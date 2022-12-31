@@ -481,6 +481,15 @@ open class Object: Codable, ObservableObject {
         }
     }
     
+    public func isLight() -> Bool {
+        if let parent = parent {
+            return (parent.isLight() || (self is Light))
+        }
+        else {
+            return (self is Light)
+        }
+    }
+    
     public func setFrom(_ object: Object) {
         position = object.position
         orientation = object.orientation

@@ -1,3 +1,6 @@
-#define PI (M_PI_F)
-#define TWO_PI (PI * 2.0)
-#define HALF_PI (M_PI_2_F)
+#define HALF_PI    M_PI_2_F
+#define PI         M_PI_F
+#define INV_PI     M_1_PI_F
+#define TWO_PI     6.28318530717958648
+#define INV_TWO_PI 0.15915494309189533
+#define INV_4_PI   0.07957747154594766

@@ -60,8 +60,26 @@ open class StandardMaterial: Material {
         }
     }
 
+    public init(baseColor: simd_float4,
+                metallic: Float,
+                roughness: Float,
+                emissiveColor: simd_float4 = .zero,
+                maps: [PBRTexture: MTLTexture?] = [:])
+    {
+        super.init()
+        self.baseColor = baseColor
+        self.metallic = metallic
+        self.roughness = roughness
+        self.emissiveColor = emissiveColor
+        self.maps = maps
+        self.lighting = true
+        self.blending = .disabled
+        initalizeParameters()
+    }
+
     public init(maps: [PBRTexture: MTLTexture?] = [:]) {
         super.init()
+        self.maps = maps
         self.lighting = true
         self.blending = .disabled
         initalizeParameters()

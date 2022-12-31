@@ -1,11 +1,12 @@
+#include "../Pi.metal"
 #include "Lighting.metal"
 #include "Material.metal"
+#include "PixelInfo.metal"
 #include "Distribution/DistributionGGX.metal"
 #include "Geometry/GeometrySmith.metal"
 #include "Visibility/VisibilityKelemen.metal"
 #include "Visibility/VisibilitySmithGGXCorrelated.metal"
 #include "Fresnel/FresnelSchlick.metal"
-#include "Fresnel/FresnelSchlickRoughness.metal"
 #include "../Tonemapping/Aces.metal"
 #include "../Gamma.metal"
 
@@ -20,97 +21,71 @@ constexpr sampler pbrLinearSampler(mip_filter::linear, mag_filter::linear, min_f
 constexpr sampler pbrMipSampler(min_filter::linear, mag_filter::linear, mip_filter::linear);
 #endif
 
-void pbrInit(thread Material &material, float3 worldPos, float3 cameraPos)
-{
-    material.worldPos = worldPos;
-    material.cameraPos = cameraPos;
-
-    material.V = normalize(cameraPos - worldPos);
-    material.NoV = max(dot(material.N, material.V), 0.00001);
-    
-    material.diffuseColor = (1.0 - material.metallic) * material.baseColor.rgb;
-
-    material.f0 = 0.16 * material.reflectance * material.reflectance;
-    material.f0 = mix(material.f0, material.baseColor, material.metallic);
-    material.f90 = 1.0;
-
-    material.roughness = material.roughness * material.roughness; //UE5 preceptualRoughness to alpha?
-    material.roughness = clamp(material.roughness, 0.045, 1.0);
-
-#if defined(HAS_CLEAR_COAT)
-    const float3 sqrtf0 = sqrt(material.f0);
-    const float3 nom = 1.0 - 5.0 * sqrtf0;
-    const float3 den = 5.0 - sqrtf0;
-    const float3 f0Base = (nom * nom) / (den * den);
-
-    material.f0 = mix(material.f0, f0Base, material.clearCoat);
-
-    material.clearCoatf0 = 0.04;
-    material.clearCoatf90 = 1.0;
-    material.clearCoatRoughness = material.clearCoatRoughness * material.clearCoatRoughness; //UE5 preceptualRoughness to alpha?
-    material.clearCoatRoughness = clamp(material.clearCoatRoughness, 0.045, 1.0);
-#endif
-
-    material.Lo = material.emissiveColor;
+float3 evalDiffuse(thread PixelInfo &pixel, float LdotH, float NdotL, float NdotV) {
+    float FD90 = 0.5 + 2.0 * pixel.material.roughness * LdotH * LdotH;
+    const float3 FL = fresnelSchlick(NdotL, 1.0, FD90);
+    const float3 FV = fresnelSchlick(NdotV, 1.0, FD90);
+    return pixel.material.baseColor * INV_PI * FL * FV;
 }
 
-float Fd_Lambert()
-{
-    return M_1_PI_F;
-}
-
-float3 Fd_Burley(float NoV, float NoL, float LoH, float roughness)
-{
-    float f90 = 0.5 + 2.0 * roughness * LoH * LoH;
-    float3 lightScatter = fresnelSchlick(NoL, 1.0, f90);
-    float3 viewScatter = fresnelSchlick(NoV, 1.0, f90);
-    return lightScatter * viewScatter * M_1_PI_F;
-}
-
-float3 brdf(thread Material &material, float3 L, float NoL)
-{
-    const float3 V = material.V;       // View Vector
-    const float3 N = material.N;       // Normal Vector
-    const float3 H = normalize(V + L); // H = Half-way Vector of Light (L) and View Vector (V)
-    const float NoV = material.NoV;
-    const float NoH = max(dot(N, H), 0.00001);
-    const float LoH = max(dot(L, H), 0.00001);
-
+float3 evalSpecular(thread PixelInfo &pixel, float3 F, float NdotH, float NdotL, float NdotV) {
+    float roughness = pixel.material.roughness;
     // Cook-Torrance BRDF
-    const float D = distributionGGX(NoH, material.roughness);
-    const float Vis = visibilitySmithGGXCorrelated(NoV, NoL, material.roughness); // Note: Vis = G / (4 * NdotL * NdotV)
-    const float3 F = fresnelSchlick(LoH, material.f0, material.f90);
+    const float D = distributionGGX(NdotH, roughness);
+    const float Vis = visibilitySmithGGXCorrelated(NdotV, NdotL, roughness);
+    return D * Vis * F;
+}
 
+void pbrInit(thread PixelInfo &pixel)
+{
+    pixel.material.roughness = max(0.001, pixel.material.roughness * pixel.material.roughness);
+    pixel.radiance = pixel.material.emissiveColor;
+}
+
+float3 evalBRDF(thread PixelInfo &pixel, float3 L, float NdotL)
+{
+    const float3 V = pixel.view;        // View Vector
+    const float3 N = pixel.normal;      // Normal Vector
+    const float3 H = normalize(V + L);  // H = Half-way Vector of Light (L) and View Vector (V)
+    const float NdotV = saturate(dot(N, V));
+    const float NdotH = saturate(dot(N, H));
+    const float LdotH = saturate(dot(L, H));
+    
+    const float specular = pixel.material.specular;
+    const float metallic = pixel.material.metallic;
+    const float3 baseColor = pixel.material.baseColor;
+
+    float3 f0 = 0.16 * specular * specular;
+    f0 = mix(f0, baseColor, metallic);
+    
+    // Fresnel Approximation
+    float3 F = fresnelSchlick(LdotH, f0, 1.0);
+    
     // Energy Conservation (Ks + Kd = 1.0)
-    const float3 Ks = F;                                      // Specular Energy Contribution
-    const float3 Kd = (1.0 - Ks) * (1.0 - material.metallic); // Diffuse Energy Contribution
+    
+    // Specular Energy Contribution
+    const float3 Ks = F;
+    // Diffuse Energy Contribution
+    const float3 Kd = (1.0 - Ks) * (1.0 - metallic);
 
-    const float3 Fs = D * Vis * F;                            // Specular BRDF Component
-    const float3 Fd = Kd * material.diffuseColor * Fd_Lambert(); // Diffuse BRDF Component
-
-    float3 brdf = Fs + Fd;
-
-#if defined(HAS_CLEAR_COAT)
-    const float Dcc = distributionGGX(NoH, material.clearCoatRoughness);
-    const float3 Fcc = fresnelSchlick(LoH, material.clearCoatf0, material.clearCoatf90);
-    const float Vcc = visibilityKelemen(LoH);
-
-    const float3 Fscc = Dcc * Vcc * Fcc;
-
-    brdf = brdf * (1.0 - material.clearCoat * Fcc) + material.clearCoat * Fscc;
-#endif
-
-    return brdf;
+    // Specular BRDF Component
+    const float3 Fs = evalSpecular(pixel, F, NdotH, NdotL, NdotV);
+    
+    // Disney Diffuse BRDF Component
+    const float3 Fd = Kd * evalDiffuse(pixel, LdotH, NdotL, NdotV);
+    
+    return Fs + Fd;
 }
 
 #if defined(LIGHTING) && defined(MAX_LIGHTS)
-void pbrDirectLighting(thread Material &material, constant Light *lights)
+void pbrDirectLighting(thread PixelInfo &pixel, constant Light *lights)
 {
+    float3 L;
+    float lightDistance;
     for (int i = 0; i < MAX_LIGHTS; i++) {
-        float3 L;
-        const float3 lightRadiance = getLightInfo(lights[i], material.worldPos, L);
-        const float NoL = max(dot(material.N, L), 0.00001);
-        material.Lo += brdf(material, L, NoL) * lightRadiance * NoL * material.ao;
+        const float3 lightRadiance = getLightInfo(lights[i], pixel.position, L, lightDistance);
+        const float NdotL = saturate(dot(pixel.normal, L));
+        pixel.radiance += evalBRDF(pixel, L, NdotL) * lightRadiance * NdotL * pixel.material.ao;
     }
 }
 #endif
@@ -135,19 +110,28 @@ void pbrIndirectLighting(
 #if defined(BRDF_MAP)
     texture2d<float> brdfMap,
 #endif
-    thread Material &material)
+    thread PixelInfo &pixel)
 {
+    const float NdotV = saturate(dot(pixel.normal, pixel.view));
+    
+    const float roughness = pixel.material.roughness;
+    const float specular = pixel.material.specular;
+    const float metallic = pixel.material.metallic;
+    const float3 baseColor = pixel.material.baseColor;
+    
+    float3 f0 = 0.16 * specular * specular;
+    f0 = mix(f0, baseColor, metallic);
+    
 #if defined(IRRADIANCE_MAP) || defined(REFLECTION_MAP)
-    const float3 F = fresnelSchlick(material.NoV, material.f0, material.f90);
-//    const float3 F = fresnelSchlickRoughness(material.NoV, material.f0, material.roughness);
+    const float3 F = fresnelSchlick(NdotV, f0, 1.0);
     const float3 Ks = F;
-    const float3 Kd = (1.0 - Ks) * (1.0 - material.metallic);
+    const float3 Kd = (1.0 - Ks) * (1.0 - metallic);
 
 #endif
 
 #if defined(IRRADIANCE_MAP)
-    const float3 irradiance = irradianceMap.sample(pbrLinearSampler, material.N).rgb;
-    const float3 Fd = Kd * irradiance * material.diffuseColor; // Diffuse IBL
+    const float3 irradiance = irradianceMap.sample(pbrLinearSampler, pixel.normal).rgb;
+    const float3 Fd = Kd * irradiance * baseColor * INV_PI; // Diffuse IBL
 #else
     const float3 Fd = 0.0;
 #endif
@@ -156,27 +140,31 @@ void pbrIndirectLighting(
     // Combines them together as per the Split-Sum approximation to get the IBL specular part
     
 #if defined(REFLECTION_MAP) && defined(BRDF_MAP)
-    const float3 reflectDir = normalize(reflect(-material.V, material.N));
-    const float3 prefilteredRadiance = getIBLRadiance(reflectionMap, reflectDir, material.N, material.roughness);
-    const float2 brdf = brdfMap.sample(pbrLinearSampler, float2(material.NoV, material.roughness)).rg;
+    const float3 reflectDir = normalize(reflect(-pixel.view, pixel.normal));
+    const float3 prefilteredRadiance = getIBLRadiance(reflectionMap, reflectDir, pixel.normal, roughness);
+    const float2 brdf = brdfMap.sample(pbrLinearSampler, float2(NdotV, roughness)).rg;
     const float3 Fs = prefilteredRadiance * (F * brdf.x + brdf.y);
     
 #if defined(HAS_CLEAR_COAT)
-    const float3 prefilteredRadianceClearCoat = getIBLRadiance(reflectionMap, reflectDir, material.N, material.clearCoatRoughness);
-    const float3 Fc = fresnelSchlick(material.NoV, material.clearCoatf0, material.clearCoatf90);
-    const float2 brdfClearCoat = brdfMap.sample(pbrLinearSampler, float2(material.NoV, material.clearCoatRoughness)).rg;
+    
+    float clearcoat = pixel.material.clearcoat;
+    float clearcoatRoughness = pixel.material.clearcoatRoughness;
+    
+    const float3 prefilteredRadianceClearCoat = getIBLRadiance(reflectionMap, reflectDir, pixel.normal, pixel.material.clearcoatRoughness);
+    const float3 Fc = fresnelSchlick(NdotV, 0.04, 1.0);
+    const float2 brdfClearCoat = brdfMap.sample(pbrLinearSampler, float2(NdotV, pixel.material.clearcoatRoughness)).rg;
     const float3 Fsc = prefilteredRadianceClearCoat * (Fc * brdfClearCoat.x + brdfClearCoat.y);
-    material.Lo += ((Fd + Fs) * (1.0 - material.clearCoat * Fc) + material.clearCoat * Fsc) * material.ao;
+    pixel.radiance += ((Fd + Fs) * (1.0 - pixel.material.clearcoat * Fc) + material.clearcoat * Fsc) * material.ao;
 #else
-    material.Lo += (Fd + Fs) * material.ao;
+    pixel.radiance += (Fd + Fs) * pixel.material.ao;
 #endif
 
 #else
-    material.Lo += Fd * material.ao;
+    pixel.radiance += Fd * pixel.material.ao;
 #endif
 }
 
-float3 pbrTonemap(thread Material &material)
+float3 pbrTonemap(thread PixelInfo &pixel)
 {
-    return gamma(aces(material.Lo)); // HDR Tonemapping & Gamma Correction
+    return gamma(aces(pixel.radiance)); // HDR Tonemapping & Gamma Correction
 }
