@@ -119,6 +119,10 @@ public func getPipelinesLibraryUrl() -> URL? {
     return getPipelinesUrl("Library")
 }
 
+public func getPipelinesChunksUrl() -> URL? {
+    return getPipelinesUrl("Chunks")
+}
+
 public func getPipelinesLibraryUrl(_ path: String) -> URL? {
     return getPipelinesLibraryUrl()?.appendingPathComponent(path)
 }

@@ -1,5 +1,5 @@
 //
-//  PhysicalShader.swift
+//  PBRShader.swift
 //  Satin
 //
 //  Created by Reza Ali on 12/9/22.
@@ -8,15 +8,21 @@
 
 import Foundation
 
-open class PhysicalShader: PBRShader {
+open class PBRShader: SourceShader {
+    open var maps = Set<PBRTexture>() {
+        didSet {
+            if oldValue != maps {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
+
     open override var defines: [String: String] {
         var results = super.defines
-        results["HAS_CLEARCOAT"] = "true"
-        results["HAS_SUBSURFACE"] = "true"
-        results["HAS_SPECULAR"] = "true"
-        results["HAS_SHEEN"] = "true"
-        results["HAS_TRANSMISSION"] = "true"
-        results["HAS_ANISOTROPIC"] = "true"
+        if !maps.isEmpty {
+            results["HAS_MAPS"] = "true"
+        }
+        for map in maps { results[map.shaderDefine] = "true" }
         return results
     }
 

@@ -20,7 +20,8 @@ open class MetalFileCompiler
     var watchers: [FileWatcher] = []
     public var onUpdate: (() -> ())?
     
-    public init(watch: Bool = true) {
+    public init(watch: Bool = true)
+    {
         self.watch = watch
     }
     
@@ -50,8 +51,17 @@ open class MetalFileCompiler
             catch
             {
                 let pathComponents = fileURLResolved.pathComponents
-                
                 if let index = pathComponents.lastIndex(of: "Satin"), var frameworkFileURL = getPipelinesSatinUrl()
+                {
+                    for i in (index + 1)..<pathComponents.count
+                    {
+                        frameworkFileURL.appendPathComponent(pathComponents[i])
+                    }
+                    
+                    content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
+                    fileURLResolved = frameworkFileURL
+                }
+                else if let index = pathComponents.lastIndex(of: "Chunks"), var frameworkFileURL = getPipelinesChunksUrl()
                 {
                     for i in (index + 1)..<pathComponents.count
                     {
@@ -71,14 +81,17 @@ open class MetalFileCompiler
                     content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
                     fileURLResolved = frameworkFileURL
                 }
+                
                 else
                 {
                     throw MetalFileCompilerError.invalidFile(fileURLResolved)
                 }
             }
             
-            if watch {
-                let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25) { [weak self] in
+            if watch
+            {
+                let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
+                { [weak self] in
                     guard let self = self else { return }
                     self.onUpdate?()
                 }

@@ -45,7 +45,7 @@ open class StandardMaterial: Material {
 
     private var maps: [PBRTexture: MTLTexture?] = [:] {
         didSet {
-            if oldValue.keys != maps.keys, let shader = shader as? StandardShader {
+            if oldValue.keys != maps.keys, let shader = shader as? PBRShader {
                 shader.maps = Set(maps.keys)
             }
         }
@@ -111,7 +111,7 @@ open class StandardMaterial: Material {
 
     override open func updateShaderDefines() {
         super.updateShaderDefines()
-        guard let shader = shader as? StandardShader else { return }
+        guard let shader = shader as? PBRShader else { return }
         shader.maps = Set(maps.keys)
     }
 

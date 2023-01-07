@@ -249,6 +249,11 @@ open class Geometry: Codable {
         freeGeometryData(&unrolled)
     }
     
+    public func computeNormals() {
+        var data = getGeometryData()
+        computeNormalsOfGeometryData(&data)
+    }
+    
     public func setBuffer(_ buffer: MTLBuffer?, type: VertexBufferIndex) {
         vertexBuffers[type] = buffer
     }

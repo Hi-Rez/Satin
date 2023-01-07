@@ -1,22 +1,51 @@
 //
-//  Renderer.swift
-//  Cubemap
+//  EnhancedPBRRenderer.swift
+//  Satin
 //
-//  Created by Reza Ali on 6/7/20.
-//  Copyright © 2020 Hi-Rez. All rights reserved.
-//
-//  PBR Code from: https://learnopengl.com/PBR/
-//  Cube Map Texture from: https://hdrihaven.com/hdri/
+//  Created by Reza Ali on 1/6/23.
+//  Copyright © 2023 Hi-Rez. All rights reserved.
 //
 
 import Metal
 import MetalKit
-
 import Forge
 import Satin
 
-class PBRRenderer: BaseRenderer {
-    class CustomMaterial: SourceMaterial {}
+class EnhancedPBRRenderer: BaseRenderer {
+    // MARK: - 3D Scene
+    
+    class CustomShader: PBRShader {
+        open override var defines: [String: String] {
+            var results = super.defines
+            results["HAS_CLEARCOAT"] = "true"
+            results["HAS_SUBSURFACE"] = "true"
+            results["HAS_SPECULAR"] = "true"
+            results["HAS_SHEEN"] = "true"
+            results["HAS_TRANSMISSION"] = "true"
+            results["HAS_ANISOTROPIC"] = "true"
+            return results
+        }
+    }
+    
+    class CustomMaterial: StandardMaterial {
+        var pipelineURL: URL
+        required init(pipelinesURL: URL) {
+            self.pipelineURL = pipelinesURL.appendingPathComponent("Custom").appendingPathComponent("Shaders.metal")
+            super.init(baseColor: .one, metallic: .zero, roughness: .zero)
+        }
+        
+        required init() {
+            fatalError("init() has not been implemented")
+        }
+        
+        required init(from decoder: Decoder) throws {
+            fatalError("init(from:) has not been implemented")
+        }
+        
+        override func createShader() -> Shader {
+            return CustomShader(label, pipelineURL)
+        }
+    }
     
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
@@ -34,23 +63,17 @@ class PBRRenderer: BaseRenderer {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
         mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
         mat.set("Emissive Color", [1.0, 1.0, 1.0, 0.0])
-        mat.lighting = true
-        mat.onBind = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
-            renderEncoder.setFragmentTexture(self.diffuseIBLTexture, index: PBRTexture.irradiance.rawValue)
-            renderEncoder.setFragmentTexture(self.specularIBLTexture, index: PBRTexture.reflection.rawValue)
-            renderEncoder.setFragmentTexture(self.brdfTexture, index: PBRTexture.brdf.rawValue)
-        }
         return mat
     }()
 
     lazy var mesh: InstancedMesh = {
-        let mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.875, res: 4), material: customMaterial, count: 11*11)
+        let mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.875, res: 4), material: customMaterial, count: 11*12)
         mesh.label = "Spheres"
         let placer = Object()
-        for y in 0..<11 {
+        for y in 0..<12 {
             for x in 0..<11 {
                 let index = y * 11 + x;
-                placer.position = simd_make_float3(2.0 * Float(x) - 10, 2.0 * Float(y) - 10, 0.0)
+                placer.position = simd_make_float3(2.0 * Float(x) - 10, 2.0 * Float(y) - 11, 0.0)
                 mesh.setMatrixAt(index: index, matrix: placer.localMatrix)
             }
         }
@@ -121,6 +144,7 @@ class PBRRenderer: BaseRenderer {
             commandBuffer.waitUntilCompleted()
             cubemapTexture = texture
             skyboxMaterial.texture = texture
+            
         }
     }
     
@@ -136,6 +160,7 @@ class PBRRenderer: BaseRenderer {
             commandBuffer.waitUntilCompleted()
             
             diffuseIBLTexture = texture
+            customMaterial.setTexture(diffuseIBLTexture, type: .irradiance)
             texture.label = "Diffuse IBL"
         }
     }
@@ -152,6 +177,7 @@ class PBRRenderer: BaseRenderer {
             commandBuffer.waitUntilCompleted()
             
             specularIBLTexture = texture
+            customMaterial.setTexture(specularIBLTexture, type: .reflection)
             texture.label = "Specular IBL"
         }
     }
@@ -160,7 +186,7 @@ class PBRRenderer: BaseRenderer {
         if let commandBuffer = commandQueue.makeCommandBuffer() {
             brdfTexture = BrdfGenerator(device: device, size: 512)
                 .encode(commandBuffer: commandBuffer)
-            
+            customMaterial.setTexture(brdfTexture, type: .brdf)
             commandBuffer.commit()
             commandBuffer.waitUntilCompleted()
         }

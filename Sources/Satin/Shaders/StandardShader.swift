@@ -8,26 +8,4 @@
 
 import Foundation
 
-open class StandardShader: SourceShader {
-    var maps = Set<PBRTexture>() {
-        didSet {
-            if oldValue != maps {
-                sourceNeedsUpdate = true
-            }
-        }
-    }
-
-    open override var defines: [String: String] {
-        var results = super.defines
-        if !maps.isEmpty {
-            results["HAS_MAPS"] = "true"
-        }
-        for map in maps { results[map.shaderDefine] = "true" }
-        return results
-    }
-
-    open override func modifyShaderSource(source: inout String) {
-        super.modifyShaderSource(source: &source)
-        injectTexturesArgs(source: &source, maps: maps)
-    }
-}
+open class StandardShader: PBRShader {}

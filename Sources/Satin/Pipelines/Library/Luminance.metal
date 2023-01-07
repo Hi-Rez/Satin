@@ -1,6 +1,6 @@
 float luminance(float3 color) { return 0.299 * color.r + 0.587 * color.g + 0.114 * color.b; }
 
-float luminance2(float3 color) { return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b; }
+float luminance2(float3 color) { return 0.212671 * color.r + 0.715160 * color.g + 0.072169 * color.b; }
 
 float luminance3(float3 color)
 {

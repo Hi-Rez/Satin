@@ -38,8 +38,8 @@ vertex CustomVertexData customVertex(Vertex in [[stage_in]],
 #endif
 
     out.cameraPos = vertexUniforms.worldCameraPosition;
-    out.roughness = (float) ( (int)instanceID % 10 ) / 10.0;
-    out.metallic = (float) ( (int)instanceID / 10 ) / 10.0;
+    out.roughness = (float) ( (int)instanceID % 11 ) / 10.0;
+    out.metallic = (float) ( (int)instanceID / 11 ) / 10.0;
     
     return out;
 }
@@ -60,7 +60,7 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pixel.material.roughness = in.roughness;
     pixel.material.metallic = in.metallic;
     pixel.material.specular = 0.5;
-    pixel.material.ao = 1.0;
+    pixel.material.ambientOcclusion = 1.0;
     pixel.material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
     pixel.material.alpha = uniforms.baseColor.a;
     
@@ -70,18 +70,9 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pbrDirectLighting(pixel, lights);
 #endif
 
-    pbrIndirectLighting(
-#if defined(IRRADIANCE_MAP)
-        irradianceMap,
+#if defined(USE_IBL)
+    pbrIndirectLighting(irradianceMap, reflectionMap, brdfMap, pixel);
 #endif
-#if defined(REFLECTION_MAP)
-        reflectionMap,
-#endif
-#if defined(BRDF_MAP)
-        brdfMap,
-#endif
-        pixel
-    );
 
     return float4(pbrTonemap(pixel), pixel.material.alpha);
 }

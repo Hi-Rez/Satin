@@ -85,6 +85,8 @@
 		E1E7681528A736D0005D75AB /* Spectra in Frameworks */ = {isa = PBXBuildFile; productRef = E1E7681428A736D0005D75AB /* Spectra */; };
 		E1E7685128ADAF6F005D75AB /* FlockingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */; };
 		E1E7685328ADB23B005D75AB /* FlockingRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */; };
+		E1EB6DE829690C5B0029E4FC /* EnhancedPBRRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */; };
+		E1EB6DEA29690DD90029E4FC /* EnhancedPBRRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -165,6 +167,8 @@
 		E1E7681028A73661005D75AB /* AudioInputRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputRendererView.swift; sourceTree = "<group>"; };
 		E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRenderer.swift; sourceTree = "<group>"; };
 		E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRendererView.swift; sourceTree = "<group>"; };
+		E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedPBRRenderer.swift; sourceTree = "<group>"; };
+		E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedPBRRendererView.swift; sourceTree = "<group>"; };
 		E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchingRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32324BAA91F00563923 /* TextRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32724BAA93300563923 /* Renderer3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer3D.swift; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
 				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
+				E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */,
 				E129CBDE2520090E009B237A /* AR */,
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
@@ -345,6 +350,7 @@
 				E1E767EA28A6EA0B005D75AB /* MatcapRendererView.swift */,
 				E1E767C928A6D41B005D75AB /* OctasphereRendererView.swift */,
 				E1E7680228A72E50005D75AB /* PBRRendererView.swift */,
+				E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */,
 				E1E767F128A6F43C005D75AB /* PostProcessingRendererView.swift */,
 				E1E767F428A6F805005D75AB /* RayMarchingRendererView.swift */,
 				E1E767C128A6D341005D75AB /* Renderer2DView.swift */,
@@ -460,6 +466,7 @@
 				E1E767EF28A6EC6F005D75AB /* LoadObjRenderer.swift in Sources */,
 				E1E767EB28A6EA0B005D75AB /* MatcapRendererView.swift in Sources */,
 				E1E767D728A6D7F8005D75AB /* BufferComputeRenderer.swift in Sources */,
+				E1EB6DEA29690DD90029E4FC /* EnhancedPBRRendererView.swift in Sources */,
 				E17A55AF28A6C201008F1DDB /* Renderer3D.swift in Sources */,
 				E1E7680C28A73258005D75AB /* SatinSceneKitARRenderer+Background.swift in Sources */,
 				E17A55BC28A6C9C3008F1DDB /* CustomGeometryRenderer.swift in Sources */,
@@ -513,6 +520,7 @@
 				E1D714D428A6BADA00B517B6 /* ExampleApp.swift in Sources */,
 				E1E767BF28A6D2A2005D75AB /* Renderer3DView.swift in Sources */,
 				E1E767CD28A6D41B005D75AB /* CameraControllerRendererView.swift in Sources */,
+				E1EB6DE829690C5B0029E4FC /* EnhancedPBRRenderer.swift in Sources */,
 				E1E7680F28A73265005D75AB /* SatinSceneKitARRendererView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

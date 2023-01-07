@@ -3,13 +3,14 @@
 
 #define SAMPLE_COUNT 1024u
 
+// https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 // Karis 2014
-float2 integrate(float NoV, float roughness)
+float2 integrate(float NdotV, float roughness)
 {
     float3 V;
-    V.x = sqrt(1.0 - NoV * NoV); // sin
+    V.x = sqrt(1.0 - NdotV * NdotV); // sin
     V.y = 0.0;
-    V.z = NoV; // cos
+    V.z = NdotV; // cos
 
     // N points straight upwards for this integration
     const float3 N = float3(0.0, 0.0, 1.0);
@@ -19,20 +20,16 @@ float2 integrate(float NoV, float roughness)
 
     for (uint i = 0u; i < SAMPLE_COUNT; i++) {
         float2 Xi = hammersley(i, SAMPLE_COUNT);
-
-        // Sample microfacet direction
         float3 H = importanceSampleGGX(Xi, N, roughness);
-
-        // Get the light direction
         float3 L = 2.0 * dot(V, H) * H - V;
 
-        float NoL = saturate(dot(N, L));
-        float NoH = saturate(dot(N, H));
-        float VoH = saturate(dot(V, H));
-
-        if (NoL > 0.0) {
-            float V_pdf = visibilitySmithGGXCorrelated(NoV, NoL, roughness) * VoH * NoL / NoH;
-            float Fc = pow(1.0 - VoH, 5.0);
+        float NdotL = saturate(L.z);
+        float NdotH = saturate(H.z);
+        float VdotH = saturate(dot(V, H));
+        
+        if (NdotL > 0.0) {
+            float V_pdf = visibilitySmithGGXCorrelated(NdotV, NdotL, roughness) * VdotH * NdotL / NdotH;
+            float Fc = pow(1.0 - VdotH, 5.0);
             A += (1.0 - Fc) * V_pdf;
             B += Fc * V_pdf;
         }

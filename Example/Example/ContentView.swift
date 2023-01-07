@@ -101,6 +101,10 @@ struct ContentView: View {
                         Label("PBR", systemImage: "eye")
                     }
                     
+                    NavigationLink(destination: EnhancedPBRRendererView()) {
+                        Label("Enhanced PBR", systemImage: "party.popper")
+                    }
+                    
                     NavigationLink(destination: PostProcessingRendererView()) {
                         Label("Post Processing", systemImage: "checkerboard.rectangle")
                     }
