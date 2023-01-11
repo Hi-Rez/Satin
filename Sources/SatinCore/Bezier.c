@@ -56,6 +56,17 @@ void appendPolyline2D(Polyline2D *dst, Polyline2D *src) {
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
+Polyline2D getLinearPath2(simd_float2 a, simd_float2 b, int res) {
+    simd_float2 *data = (simd_float2 *)malloc(res * sizeof(simd_float2));
+    const float resMinusOne = res - 1;
+    for (int i = 0; i < res; i++) {
+        const float t = (float)i / resMinusOne;
+        data[i] = simd_mix(a, b, t);
+    }
+    return (Polyline2D) { .count = res, .capacity = res, .data = data };
+}
+
+
 Polyline2D getAdaptiveLinearPath2(simd_float2 a, simd_float2 b, float distanceLimit) {
     const float length = simd_length(b - a);
     if (length > distanceLimit) {
