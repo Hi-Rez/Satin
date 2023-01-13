@@ -114,7 +114,7 @@ class SimpleRenderer: Forge.Renderer {
         camera = PerspectiveCamera(position: [0.0, 0.0, 5.0], near: 0.01, far: 100.0)
         
         // Create a Satin Renderer by passing in a context, scene and camera
-        renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+        renderer = Satin.Renderer(context: context)
         // There are many properties you can set on the renderer, this is how to clear to white
         renderer.setClearColor([1, 1, 1, 1])
         
@@ -143,7 +143,12 @@ class SimpleRenderer: Forge.Renderer {
 
         // To render a scene into a render pass, just call draw and pass in the render pass descriptor
         // You can also specify a render target and render to a texture instead
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     // Forge calls resize whenever the view is resized
