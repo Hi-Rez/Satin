@@ -74,7 +74,7 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
     lazy var camera = PerspectiveCamera(position: .zero, near: 0.001, far: 100.0, fov: 45)
     
     lazy var renderer: Satin.Renderer = {
-        let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+        let renderer = Satin.Renderer(context: context)
         renderer.colorLoadAction = .load
         return renderer
     }()
@@ -96,12 +96,10 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
         }
         return Mesh(geometry: QuadGeometry(), material: material)
     }()
-    
-    lazy var backgroundRenderer: Satin.Renderer = .init(
-        context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
-        scene: backgroundMesh,
-        camera: OrthographicCamera()
-    )
+
+    let backgroundCamera = OrthographicCamera()
+    lazy var backgroundContext = Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid)
+    lazy var backgroundRenderer = Satin.Renderer(context: backgroundContext)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.colorPixelFormat = .bgra8Unorm_srgb
@@ -147,9 +145,20 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
         cameraNode.simdTransform = camera.worldMatrix
     
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        backgroundRenderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        backgroundRenderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: backgroundMesh,
+            camera: backgroundCamera
+        )
+
         renderer.depthStoreAction = .store
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
         
         renderPassDescriptor.colorAttachments[0].loadAction = .load
         renderPassDescriptor.depthAttachment.loadAction = .load

@@ -14,6 +14,8 @@
 		E11325D228AEB0770049CACC /* SuperShapesRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11325D128AEB0770049CACC /* SuperShapesRendererView.swift */; };
 		E13687282900BBEC00FFF43F /* InstancedMeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13687272900BBEC00FFF43F /* InstancedMeshRenderer.swift */; };
 		E136872A2900BEEC00FFF43F /* InstancedMeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */; };
+		E172B49229720A1C00341985 /* OcclusionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49129720A1C00341985 /* OcclusionRenderer.swift */; };
+		E172B49429720A6A00341985 /* OcclusionRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49329720A6A00341985 /* OcclusionRendererView.swift */; };
 		E17A55A828A6C11E008F1DDB /* Renderer2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17B986E2451488100216411 /* Renderer2D.swift */; };
 		E17A55AA28A6C13F008F1DDB /* Forge in Frameworks */ = {isa = PBXBuildFile; productRef = E17A55A928A6C13F008F1DDB /* Forge */; };
 		E17A55AC28A6C159008F1DDB /* Satin in Frameworks */ = {isa = PBXBuildFile; productRef = E17A55AB28A6C159008F1DDB /* Satin */; };
@@ -111,6 +113,8 @@
 		E1653F172684F4E90012C97F /* SatinSceneKitARRenderer+AR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SatinSceneKitARRenderer+AR.swift"; sourceTree = "<group>"; };
 		E1653F192684F4F60012C97F /* SatinSceneKitARRenderer+Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SatinSceneKitARRenderer+Background.swift"; sourceTree = "<group>"; };
 		E168FC76248ECCA2004B8407 /* PBRRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBRRenderer.swift; sourceTree = "<group>"; };
+		E172B49129720A1C00341985 /* OcclusionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRenderer.swift; sourceTree = "<group>"; };
+		E172B49329720A6A00341985 /* OcclusionRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRendererView.swift; sourceTree = "<group>"; };
 		E17B2FD7247A4E8900BD2BF9 /* LoadObjRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadObjRenderer.swift; sourceTree = "<group>"; };
 		E17B986E2451488100216411 /* Renderer2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer2D.swift; sourceTree = "<group>"; };
 		E17D2C1126BBB7DF005A136A /* AudioInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioInput.swift; sourceTree = "<group>"; };
@@ -243,6 +247,7 @@
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
+				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -364,6 +369,7 @@
 				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
 				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
 				E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */,
+				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -450,6 +456,7 @@
 			files = (
 				E1E767F328A6F7F7005D75AB /* RayMarchingRenderer.swift in Sources */,
 				E1E767FB28A6FB83005D75AB /* SatinSceneKitRendererView.swift in Sources */,
+				E172B49229720A1C00341985 /* OcclusionRenderer.swift in Sources */,
 				E1E767D128A6D41B005D75AB /* OctasphereRendererView.swift in Sources */,
 				E1E767DC28A6DA70005D75AB /* ARRenderer.swift in Sources */,
 				E1D714D628A6BADA00B517B6 /* ContentView.swift in Sources */,
@@ -466,6 +473,7 @@
 				E1E767EF28A6EC6F005D75AB /* LoadObjRenderer.swift in Sources */,
 				E1E767EB28A6EA0B005D75AB /* MatcapRendererView.swift in Sources */,
 				E1E767D728A6D7F8005D75AB /* BufferComputeRenderer.swift in Sources */,
+				E172B49429720A6A00341985 /* OcclusionRendererView.swift in Sources */,
 				E1EB6DEA29690DD90029E4FC /* EnhancedPBRRendererView.swift in Sources */,
 				E17A55AF28A6C201008F1DDB /* Renderer3D.swift in Sources */,
 				E1E7680C28A73258005D75AB /* SatinSceneKitARRenderer+Background.swift in Sources */,

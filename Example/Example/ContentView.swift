@@ -92,7 +92,11 @@ struct ContentView: View {
                     NavigationLink(destination: LoadObjRendererView()) {
                         Label("Obj Loading", systemImage: "arrow.down.doc")
                     }
-                    
+
+                    NavigationLink(destination: OcclusionRendererView()) {
+                        Label("Occlusion", systemImage: "moonphase.first.quarter.inverse")
+                    }
+
                     NavigationLink(destination: OctasphereRendererView()) {
                         Label("Octasphere", systemImage: "globe")
                     }
@@ -121,15 +125,15 @@ struct ContentView: View {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
 #endif
+                }
+                Group {
                     NavigationLink(destination: StandardMaterialRendererView()) {
                         Label("Standard PBR Material", systemImage: "flame")
                     }
-                    
+
                     NavigationLink(destination: ShippingShadersRendererView()) {
                         Label("Shipping Shaders", systemImage: "shippingbox")
                     }
-                }
-                Group {
                     NavigationLink(destination: SuperShapesRendererView()) {
                         Label("Super Shapes", systemImage: "seal")
                     }

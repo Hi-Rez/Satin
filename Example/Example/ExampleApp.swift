@@ -15,5 +15,8 @@ struct ExampleApp: App {
             ContentView()
                 .preferredColorScheme(.dark)
         }
+        .commands {
+            SidebarCommands()
+        }
     }
 }

@@ -54,7 +54,7 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
     var camera = PerspectiveCamera(position: .zero, near: 0.001, far: 100.0)
     
     lazy var renderer: Satin.Renderer = {
-        let renderer = Satin.Renderer(context: context, scene: scene, camera: camera)
+        let renderer = Satin.Renderer(context: context)
         renderer.colorLoadAction = .load
         return renderer
     }()
@@ -76,12 +76,10 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
         }
         return Mesh(geometry: QuadGeometry(), material: material)
     }()
-    
-    lazy var backgroundRenderer: Satin.Renderer = .init(
-        context: Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid),
-        scene: backgroundMesh,
-        camera: OrthographicCamera()
-    )
+
+    var backgroundCamera = OrthographicCamera()
+    lazy var backgroundContext = Context(context.device, 1, context.colorPixelFormat, .invalid, .invalid)
+    lazy var backgroundRenderer = Satin.Renderer(context: backgroundContext)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -111,8 +109,20 @@ class ARRenderer: BaseRenderer, ARSessionDelegate {
     
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
-        backgroundRenderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
-        renderer.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
+
+        backgroundRenderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: backgroundMesh,
+            camera: backgroundCamera
+        )
+
+        renderer.draw(
+            renderPassDescriptor: renderPassDescriptor,
+            commandBuffer: commandBuffer,
+            scene: scene,
+            camera: camera
+        )
     }
     
     override func resize(_ size: (width: Float, height: Float)) {

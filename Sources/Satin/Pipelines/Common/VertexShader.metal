@@ -1,7 +1,5 @@
 vertex VertexData satinVertex(Vertex in [[stage_in]],
-#if INSTANCING
-                              uint instanceID [[instance_id]], constant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],
-#endif
+                              // inject instancing args
                               constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
 {
     VertexData out;
