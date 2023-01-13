@@ -52,14 +52,14 @@ pod 'Satin'
 - [x] Tons of examples that show how to use the API (2D, 3D, Raycasting, Compute, Exporting, Live Coding, AR, etc). 
 - [x] Object, Mesh, InstancedMesh, Material, Shader, Geometry and Renderer classes.
 - [x] You can live code shaders :fire:.
-- [x] A couple builtin Materials (BasicColor, BasicTexture, BasicDiffuse, Normal, UV Color, Skybox, MatCap, and more).
+- [x] A couple builtin Materials (BasicColor, BasicTexture, BasicDiffuse, Normal, UV Color, Skybox, MatCap, PBR Standard, PBR Physical, and more).
 - [x] Tons of Geometries (Box, Sphere, IcoSphere, Circle, Cone,  Quad, Plane, Capsule, RoundedRect, Text, and more).
 - [x] Cameras (Orthographic, Perspective).
 - [x] 2D & 3D Camera Controllers.
 - [x] Run-time & Dynamic Struct creation via Parameters for Buffers and Uniforms.
 - [x] Metal Shader Compiler (useful when live coding), used in LiveShader (which is used in LiveMaterial).
 - [x] Buffer & Texture Compute Systems for crunching data fast and hard. 
-- [x] A fast GPU Raycaster (very helpful to see what you clicked or tapped on).  
+- [x] Fast raycasting via Bounding Volume Hierachies (very helpful to see what you clicked or tapped on).
 - [x] Hooks for custom Metal rendering Mesh's preDraw, Material's onBind, Buffer & Texture Computes' preCompute, etc
 - [x] FileWatcher for checking if a resource or shader file has changed. 
 
@@ -176,11 +176,9 @@ struct ContentView: View {
 # To Do 
 
 - [ ] More Documentation
-- [ ] Instanced Mesh
 - [ ] Line Mesh
-- [ ] Physically Based Shading, Lighting, Shadows
+- [ ] Shadows
 - [ ] SDF Text Rendering
-- [ ] RoundedBox Geometry
 - [ ] Flexible Vertex Structure
 - [ ] Ray Tracing Compute System
 
