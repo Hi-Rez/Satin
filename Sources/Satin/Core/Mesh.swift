@@ -20,16 +20,16 @@ open class Mesh: Object, Renderable, Intersectable {
         }
         return false
     }
-    
+
     public var instanceCount: Int = 1
     open var intersectable: Bool {
         geometry.vertexBuffer != nil && instanceCount > 0
     }
-    
+
     var uniforms: VertexUniformBuffer?
-    
+
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
-    
+
     open var geometry: Geometry {
         didSet {
             if geometry != oldValue {
@@ -40,9 +40,9 @@ open class Mesh: Object, Renderable, Intersectable {
             }
         }
     }
-    
+
     public let geometryPublisher = PassthroughSubject<Intersectable, Never>()
-    
+
     open var material: Material? {
         didSet {
             if material != oldValue {
@@ -50,20 +50,20 @@ open class Mesh: Object, Renderable, Intersectable {
             }
         }
     }
-    
+
     internal var geometrySubscriber: AnyCancellable?
-    
+
     public var submeshes: [Submesh] = []
-    
+
     public init(geometry: Geometry, material: Material?) {
         self.geometry = geometry
         self.material = material
         super.init()
         setupGeometrySubscriber()
     }
-    
+
     // MARK: - CodingKeys
-    
+
     public enum CodingKeys: String, CodingKey {
         case triangleFillMode
         case cullMode
@@ -71,9 +71,9 @@ open class Mesh: Object, Renderable, Intersectable {
         case geometry
         case material
     }
-    
+
     // MARK: - Decode
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         triangleFillMode = try values.decode(MTLTriangleFillMode.self, forKey: .triangleFillMode)
@@ -83,9 +83,9 @@ open class Mesh: Object, Renderable, Intersectable {
         material = try values.decode(AnyMaterial?.self, forKey: .material)?.material
         try super.init(from: decoder)
     }
-    
+
     // MARK: - Encode
-    
+
     override open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(triangleFillMode, forKey: .triangleFillMode)
@@ -96,7 +96,7 @@ open class Mesh: Object, Renderable, Intersectable {
             try container.encode(AnyMaterial(material), forKey: .material)
         }
     }
-    
+
     deinit {
         cleanupGeometrySubscriber()
     }
@@ -107,7 +107,7 @@ open class Mesh: Object, Renderable, Intersectable {
         setupMaterial()
         setupUniforms()
     }
-    
+
     internal func setupGeometrySubscriber() {
         geometrySubscriber?.cancel()
         geometrySubscriber = geometry.publisher.sink { [weak self] _ in
@@ -116,17 +116,17 @@ open class Mesh: Object, Renderable, Intersectable {
             self._updateLocalBounds = true
         }
     }
-        
+
     internal func cleanupGeometrySubscriber() {
         geometrySubscriber?.cancel()
         geometrySubscriber = nil
     }
-    
+
     open func setupGeometry() {
         guard let context = context else { return }
         geometry.context = context
     }
-    
+
     open func setupSubmeshes() {
         guard let context = context else { return }
         for submesh in submeshes {
@@ -138,50 +138,50 @@ open class Mesh: Object, Renderable, Intersectable {
         guard let context = context, let material = material else { return }
         material.context = context
     }
-    
+
     open func setupUniforms() {
         guard let context = context else { return }
         uniforms = VertexUniformBuffer(device: context.device)
     }
-    
+
     override open func update() {
         geometry.update()
         material?.update()
         uniforms?.update()
         super.update()
     }
-    
+
     override open func update(camera: Camera, viewport: simd_float4) {
         material?.update(camera: camera)
         uniforms?.update(object: self, camera: camera, viewport: viewport)
     }
-    
+
     open func draw(renderEncoder: MTLRenderCommandEncoder) {
         draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
     }
-    
+
     open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
         bindDrawingStates(renderEncoder)
         bindMaterial(renderEncoder)
         bindGeometry(renderEncoder)
         bindUniforms(renderEncoder)
     }
-    
+
     open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
         guard let uniforms = uniforms else { return }
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.VertexUniforms.rawValue)
     }
-    
+
     open func bindGeometry(_ renderEncoder: MTLRenderCommandEncoder) {
         for (index, buffer) in geometry.vertexBuffers {
             renderEncoder.setVertexBuffer(buffer, offset: 0, index: index.rawValue)
         }
     }
-    
+
     open func bindMaterial(_ renderEncoder: MTLRenderCommandEncoder) {
         material?.bind(renderEncoder)
     }
-    
+
     open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
@@ -190,9 +190,9 @@ open class Mesh: Object, Renderable, Intersectable {
 
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
         guard drawable else { return }
-        
+
         preDraw?(renderEncoder)
-        
+
         bind(renderEncoder)
 
         if !submeshes.isEmpty {
@@ -226,18 +226,18 @@ open class Mesh: Object, Renderable, Intersectable {
             )
         }
     }
-    
+
     open func addSubmesh(_ submesh: Submesh) {
         submesh.parent = self
         submeshes.append(submesh)
     }
-    
+
     // MARK: - Comoute Bounds
 
     override open func computeLocalBounds() -> Bounds {
         return transformBounds(geometry.bounds, localMatrix)
     }
-    
+
     override open func computeWorldBounds() -> Bounds {
         var result = transformBounds(geometry.bounds, worldMatrix)
         for child in children {
@@ -245,9 +245,9 @@ open class Mesh: Object, Renderable, Intersectable {
         }
         return result
     }
-    
+
     // MARK: - Intersect
-    
+
     override open func intersect(ray: Ray, intersections: inout [RaycastResult], recursive: Bool = true, invisible: Bool = false) {
         guard visible || invisible, intersects(ray: ray) else { return }
 
@@ -257,63 +257,75 @@ open class Mesh: Object, Renderable, Intersectable {
             intersections: &geometryIntersections
         )
 
-        intersections.append(contentsOf:
-            geometryIntersections.map {
+        var results = [RaycastResult]()
+        for geometryIntersection in geometryIntersections {
+            let hitPosition = simd_make_float3(
+                worldMatrix * simd_make_float4(geometryIntersection.position, 1.0)
+            )
+
+            results.append(
                 RaycastResult(
-                    barycentricCoordinates: $0.barycentricCoordinates,
-                    distance: $0.distance,
-                    normal: $0.normal,
-                    position: simd_make_float3(worldMatrix * simd_make_float4($0.position, 1.0)),
-                    uv: $0.uv,
-                    primitiveIndex: $0.primitiveIndex,
+                    barycentricCoordinates: geometryIntersection.barycentricCoordinates,
+                    distance: simd_length(hitPosition - ray.origin),
+                    normal: normalMatrix * geometryIntersection.normal,
+                    position: hitPosition,
+                    uv: geometryIntersection.uv,
+                    primitiveIndex: geometryIntersection.primitiveIndex,
                     object: self,
                     submesh: nil
                 )
-            }
-        )
+            )
+        }
+
+        intersections.append(contentsOf: results)
 
         if recursive {
             for child in children {
-                child.intersect(ray: ray, intersections: &intersections, recursive: recursive, invisible: invisible)
+                child.intersect(
+                    ray: ray,
+                    intersections: &intersections,
+                    recursive: recursive,
+                    invisible: invisible
+                )
             }
         }
-        
+
         intersections.sort { $0.distance < $1.distance }
     }
 
     // MARK: - Intersectable
-    
+
     public var vertexStride: Int {
         MemoryLayout<Vertex>.stride
     }
-    
+
     public var windingOrder: MTLWinding {
         geometry.windingOrder
     }
-    
+
     public var vertexBuffer: MTLBuffer? {
         geometry.vertexBuffer
     }
-    
+
     public var vertexCount: Int {
         geometry.vertexData.count
     }
-    
+
     public var indexBuffer: MTLBuffer? {
         geometry.indexBuffer
     }
-    
+
     public var indexCount: Int {
         geometry.indexData.count
     }
-    
+
     public var intersectionBounds: Bounds {
         geometry.bounds
     }
-  
+
     public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
         let index = Int(primitiveIndex) * 3
-            
+
         var i0 = 0
         var i1 = 0
         var i2 = 0
@@ -327,25 +339,25 @@ open class Mesh: Object, Renderable, Intersectable {
             i1 = index + 1
             i2 = index + 2
         }
-        
+
         guard i0 < vertexCount, i1 < vertexCount, i2 < vertexCount else { return nil }
-            
+
         let a: Vertex = geometry.vertexData[i0]
         let b: Vertex = geometry.vertexData[i1]
         let c: Vertex = geometry.vertexData[i2]
-            
+
         let u: Float = barycentricCoordinate.x
         let v: Float = barycentricCoordinate.y
         let w: Float = 1.0 - u - v
-    
+
         let aUv = a.uv * u
         let bUv = b.uv * v
         let cUv = c.uv * w
-            
+
         let aNormal = (normalMatrix * a.normal) * u
         let bNormal = (normalMatrix * b.normal) * v
         let cNormal = (normalMatrix * c.normal) * w
-            
+
         return RaycastResult(
             barycentricCoordinates: simd_make_float3(u, v, w),
             distance: distance,
