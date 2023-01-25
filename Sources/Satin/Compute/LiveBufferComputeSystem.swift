@@ -11,7 +11,6 @@ import simd
 open class LiveBufferComputeSystem: BufferComputeSystem {
     public var compiler = MetalFileCompiler()
     public var source: String?
-    public var instance: String = ""
     public var pipelineURL: URL
     
     public var uniforms: UniformBuffer?
@@ -43,12 +42,10 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     
     public init(device: MTLDevice,
                 pipelineURL: URL,
-                instance: String = "",
                 count: Int,
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelineURL
-        self.instance = instance
         super.init(device: device, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
         self.source = compileSource()
         setup()
@@ -61,7 +58,6 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
                 feedback: Bool = false)
     {
         self.pipelineURL = pipelinesURL
-        self.instance = instance
         super.init(device: device, resetPipeline: nil, updatePipeline: nil, params: [], count: count, feedback: feedback)
         self.pipelineURL = pipelineURL.appendingPathComponent(prefixLabel).appendingPathComponent("Shaders.metal")
         self.source = compileSource()
@@ -81,6 +77,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             self.source = nil
             self.source = self.compileSource()
             self.setupPipelines()
+            self.delegate?.updated(bufferComputeSystem: self)
         }
     }
     
@@ -119,7 +116,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
                 }
                 
                 if let params = parseParameters(source: source, key: "\(prefixLabel.titleCase)Uniforms") {
-                    params.label = prefixLabel.titleCase + (instance.isEmpty ? "" : " \(instance)")
+                    params.label = prefixLabel.titleCase
                     if let parameters = parameters {
                         parameters.setFrom(params)
                     }
