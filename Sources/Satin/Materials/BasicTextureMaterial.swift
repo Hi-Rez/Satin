@@ -25,11 +25,12 @@ open class BasicTextureMaterial: BasicColorMaterial {
         set("Flipped", flipped)
     }
 
-    public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
+    public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil, flipped: Bool = false) {
         super.init()
         if let texture = texture, texture.textureType != .type2D, texture.textureType != .type2DMultisample {
             fatalError("BasicTextureMaterial expects a 2D texture")
         }
+        self.flipped = flipped
         self.texture = texture
         self.sampler = sampler
         set("Flipped", flipped)

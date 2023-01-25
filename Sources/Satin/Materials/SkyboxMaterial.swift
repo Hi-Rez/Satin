@@ -49,8 +49,8 @@ open class SkyboxMaterial: BasicTextureMaterial {
         depthWriteEnabled = false
     }
 
-    override public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil) {
-        super.init(texture: texture, sampler: sampler)
+    override public init(texture: MTLTexture?, sampler: MTLSamplerState? = nil, flipped: Bool = false) {
+        super.init(texture: texture, sampler: sampler, flipped: flipped)
         if let texture = texture, texture.textureType != .typeCube {
             fatalError("SkyboxMaterial expects a Cube texture")
         }
