@@ -13,6 +13,15 @@ public enum MetalFileCompilerError: Error
     case invalidFile(_ fileURL: URL)
 }
 
+extension MetalFileCompilerError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+            case .invalidFile(let fileURL):
+                return NSLocalizedString("MetalFileCompiler did not find: \(fileURL.path)\n\n\n", comment: "MetalFileCompiler Error")
+        }
+    }
+}
+
 open class MetalFileCompiler
 {
     var watch: Bool
