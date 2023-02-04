@@ -23,7 +23,7 @@ public class Float2Parameter: GenericParameterWithMinMax<simd_float2> {
         }
     }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .none) {
         self.init(label, value, .zero, .one, controlType)
     }
 }

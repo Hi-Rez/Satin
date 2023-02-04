@@ -47,7 +47,6 @@ public protocol ValueMinMaxParameter: ValueParameter {
 
 public enum ControlType: String, Codable {
     case none
-    case unknown
     case slider
     case multislider
     case xypad

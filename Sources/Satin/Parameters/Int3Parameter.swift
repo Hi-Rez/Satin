@@ -18,7 +18,7 @@ public class Int3Parameter: GenericParameterWithMinMax<simd_int3> {
         return Int32.self
     }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .none) {
         self.init(label, value, .zero, .one, controlType)
     }
 }

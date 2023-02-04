@@ -72,7 +72,7 @@ public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
         try container.encode(value, forKey: .value)
     }
 
-    public init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: ValueType, _ controlType: ControlType = .none) {
         self.label = label
         self.controlType = controlType
         self.value = value
@@ -110,7 +110,7 @@ public class GenericParameterWithMinMax<T: Codable>: GenericParameter<T> {
         case max
     }
 
-    public init(_ label: String, _ value: ValueType, _ min: ValueType, _ max: ValueType, _ controlType: ControlType = .unknown) {
+    public init(_ label: String, _ value: ValueType, _ min: ValueType, _ max: ValueType, _ controlType: ControlType = .none) {
         self.min = min
         self.max = max
         super.init(label, value, controlType)

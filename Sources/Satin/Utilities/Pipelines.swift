@@ -518,7 +518,7 @@ public func injectInstancingArgs(source: inout String, instancing: Bool) {
 }
 
 public func injectLightingArgs(source: inout String, lighting: Bool) {
-    let injection = "\tconstant Light *lights [[buffer(FragmentBufferLighting)]],\n"
+    let injection = "\tconstant Light &lights [[buffer(FragmentBufferLighting)]],\n"
     source = source.replacingOccurrences(of: "// inject lighting args\n", with: lighting ? injection : "")
 }
 

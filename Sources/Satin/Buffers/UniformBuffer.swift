@@ -20,6 +20,7 @@ open class UniformBuffer: Buffer {
         self.parameters = parameters
         self.alignedSize = ((parameters.size + 255) / 256) * 256
         setupBuffer(device: device, count: maxBuffersInFlight, options: options)
+        update()
     }
     
     override func setupBuffer(device: MTLDevice, count: Int, options: MTLResourceOptions) {

@@ -259,7 +259,7 @@ open class Shader {
     }
     
     public func clone() -> Shader {
-        print("CLONING SHADER")
+        print("Cloning Shader: \(label)")
         
         let clone: Shader = type(of: self).init()
         

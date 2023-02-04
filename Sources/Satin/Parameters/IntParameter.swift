@@ -21,7 +21,7 @@ public class IntParameter: GenericParameterWithMinMax<Int> {
         return Int32.self
     }
 
-    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .unknown) {
+    public convenience init(_ label: String, _ value: ValueType, _ controlType: ControlType = .none) {
         self.init(label, value, 0, 1, controlType)
     }
 

@@ -298,9 +298,7 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
     func setupParametersSubscriber() {
         guard let shader = shader else { return }
         parametersSubscriber?.cancel()
-        parametersSubscriber = shader.parametersPublisher.sink { [weak self] newParameters in
-            self?.updateParameters(newParameters)
-        }
+        parametersSubscriber = shader.parametersPublisher.sink(receiveValue: self.updateParameters)
     }
     
     open func setup() {

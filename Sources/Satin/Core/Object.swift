@@ -12,11 +12,11 @@ import simd
 
 open class Object: Codable, ObservableObject {
     @Published open var id: String = UUID().uuidString
-    
+
     @Published open var label: String = "Object"
-    
+
     @Published open var visible: Bool = true
-    
+
     open weak var context: Context? = nil {
         didSet {
             if context != nil, context !== oldValue {
@@ -27,13 +27,13 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     @Published open var position = simd_make_float3(0, 0, 0) {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
         didSet {
             updateMatrix = true
@@ -41,13 +41,13 @@ open class Object: Codable, ObservableObject {
             _orientationMatrix.clear()
         }
     }
-    
+
     @Published open var scale = simd_make_float3(1, 1, 1) {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     var _updateLocalBounds: Bool = true {
         didSet {
             if _updateLocalBounds {
@@ -55,6 +55,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
+
     var _localBounds = createBounds()
     public var localBounds: Bounds {
         if _updateLocalBounds {
@@ -63,7 +64,7 @@ open class Object: Codable, ObservableObject {
         }
         return _localBounds
     }
-    
+
     var _updateWorldBounds: Bool = true {
         didSet {
             if _updateWorldBounds {
@@ -71,6 +72,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
+
     var _worldBounds = createBounds()
     public var worldBounds: Bounds {
         if _updateWorldBounds {
@@ -79,80 +81,80 @@ open class Object: Codable, ObservableObject {
         }
         return _worldBounds
     }
-    
+
     public var translationMatrix: matrix_float4x4 { translationMatrix3f(position) }
-    
+
     public var scaleMatrix: matrix_float4x4 { scaleMatrix3f(scale) }
-    
+
     var _rotationMatrix = ValueCache<matrix_float4x4>()
     public var rotationMatrix: matrix_float4x4 {
         _rotationMatrix.get { matrix_float4x4(orientation) }
     }
-    
+
     var _orientationMatrix = ValueCache<matrix_float3x3>()
     public var orientationMatrix: matrix_float3x3 {
         _orientationMatrix.get { matrix_float3x3(orientation) }
     }
-    
+
     public var forwardDirection: simd_float3 {
         return simd_normalize(orientation.act(Satin.worldForwardDirection))
     }
-    
+
     public var upDirection: simd_float3 {
         return simd_normalize(orientation.act(Satin.worldUpDirection))
     }
-    
+
     public var rightDirection: simd_float3 {
         return simd_normalize(orientation.act(Satin.worldRightDirection))
     }
-    
+
     public var worldForwardDirection: simd_float3 {
         return simd_normalize(worldOrientation.act(Satin.worldForwardDirection))
     }
-    
+
     public var worldUpDirection: simd_float3 {
         return simd_normalize(worldOrientation.act(Satin.worldUpDirection))
     }
-    
+
     public var worldRightDirection: simd_float3 {
         return simd_normalize(worldOrientation.act(Satin.worldRightDirection))
     }
-    
+
     open weak var parent: Object? {
         didSet {
             updateMatrix = true
         }
     }
-    
+
     @Published open var children: [Object] = [] {
         didSet {
             _updateWorldBounds = true
         }
     }
-    
+
     public var onUpdate: (() -> ())?
-    
+
     var updateMatrix: Bool = true {
         didSet {
             if updateMatrix {
                 _updateLocalBounds = true
-                                
+
                 _localMatrix.clear()
                 _normalMatrix.clear()
                 _worldMatrix.clear()
                 _worldOrientation.clear()
-                
+
                 transformPublisher.send(self)
-                
+
                 updateMatrix = false
-                
+
                 for child in children {
                     child.updateMatrix = true
                 }
             }
         }
     }
-    
+
     var _localMatrix = ValueCache<matrix_float4x4>()
     public var localMatrix: matrix_float4x4 {
         get {
@@ -172,7 +174,7 @@ open class Object: Codable, ObservableObject {
             orientation = simd_quatf(simd_float3x3(rx, ry, rz))
         }
     }
-    
+
     public var worldPosition: simd_float3 {
         get {
             let wp = worldMatrix.columns.3
@@ -187,7 +189,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     public var worldScale: simd_float3 {
         get {
             let wm = worldMatrix
@@ -205,7 +207,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     var _worldOrientation = ValueCache<simd_quatf>()
     public var worldOrientation: simd_quatf {
         get {
@@ -230,7 +232,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     var _worldMatrix = ValueCache<matrix_float4x4>()
     public var worldMatrix: matrix_float4x4 {
         get {
@@ -252,7 +254,7 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     var _normalMatrix = ValueCache<matrix_float3x3>()
     public var normalMatrix: matrix_float3x3 {
         _normalMatrix.get {
@@ -260,24 +262,29 @@ open class Object: Codable, ObservableObject {
             return simd_matrix(simd_make_float3(n.columns.0), simd_make_float3(n.columns.1), simd_make_float3(n.columns.2))
         }
     }
-    
+
     public let transformPublisher = PassthroughSubject<Object, Never>()
-    
+    public let childAddedPublisher = PassthroughSubject<Object, Never>()
+    public let childRemovedPublisher = PassthroughSubject<Object, Never>()
+
+    var childAddedSubscriptions: [Object: AnyCancellable] = [:]
+    var childRemovedSubscriptions: [Object: AnyCancellable] = [:]
+
     public init() {}
-    
+
     public init(_ label: String, _ children: [Object] = []) {
         self.label = label
         for child in children {
             add(child)
         }
     }
-    
+
     deinit {
         removeAll()
     }
-    
+
     // MARK: - CodingKeys
-    
+
     public enum CodingKeys: String, CodingKey {
         case id
         case label
@@ -287,9 +294,9 @@ open class Object: Codable, ObservableObject {
         case visible
         case children
     }
-    
+
     // MARK: - Decode
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = try values.decode(String.self, forKey: .id)
@@ -300,7 +307,7 @@ open class Object: Codable, ObservableObject {
         visible = try values.decode(Bool.self, forKey: .visible)
         try decodeChildren(from: decoder)
     }
-    
+
     open func decodeChildren(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         children = try values.decode([Object].self, forKey: .children)
@@ -309,9 +316,9 @@ open class Object: Codable, ObservableObject {
             child.context = context
         }
     }
-    
+
     // MARK: - Encode
-    
+
     open func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -322,20 +329,20 @@ open class Object: Codable, ObservableObject {
         try container.encode(visible, forKey: .visible)
         try encodeChildren(to: encoder)
     }
-    
+
     open func encodeChildren(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(children, forKey: .children)
     }
-    
+
     open func setup() {}
-    
+
     // MARK: - Compute Bounds
-    
+
     open func computeLocalBounds() -> Bounds {
         return Bounds(min: position, max: position)
     }
-    
+
     open func computeWorldBounds() -> Bounds {
         var result = Bounds(min: worldPosition, max: worldPosition)
         for child in children {
@@ -343,18 +350,18 @@ open class Object: Codable, ObservableObject {
         }
         return result
     }
-    
+
     open func update() {
         onUpdate?()
         for child in children {
             child.update()
         }
     }
-    
+
     open func update(camera: Camera, viewport: simd_float4) {}
-    
+
     // MARK: - Inserting, Adding & Removing
-    
+
     open func insert(_ child: Object, at: Int, setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
             if setParent {
@@ -364,7 +371,7 @@ open class Object: Codable, ObservableObject {
             children.insert(child, at: at)
         }
     }
-    
+
     open func add(_ child: Object, _ setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
             if setParent {
@@ -372,37 +379,46 @@ open class Object: Codable, ObservableObject {
             }
             child.context = context
             children.append(child)
+            childAddedPublisher.send(child)
+
+            childAddedSubscriptions[child] = child.childAddedPublisher.sink { [weak self] subchild in
+                self?.childAddedPublisher.send(subchild)
+            }
+
+            childRemovedSubscriptions[child] = child.childRemovedPublisher.sink { [weak self] subchild in
+                self?.childRemovedPublisher.send(subchild)
+            }
         }
     }
-    
+
     open func add(_ objects: [Object], _ setParent: Bool = true) {
         for obj in objects {
             add(obj, setParent)
         }
     }
-    
+
     open func remove(_ child: Object) {
-        for (index, object) in children.enumerated() {
-            if object === child {
-                if object.parent === self {
-                    object.parent = nil
-                }
-                children.remove(at: index)
-                return
+        if let index = children.firstIndex(of: child) {
+            childRemovedPublisher.send(child)
+            if child.parent === self {
+                child.parent = nil
             }
+            children.remove(at: index)
+            childAddedSubscriptions.removeValue(forKey: child)
+            childRemovedSubscriptions.removeValue(forKey: child)
         }
     }
-    
+
     open func removeFromParent() {
         parent?.remove(self)
     }
-    
+
     open func removeAll() {
         children = []
     }
-    
+
     // MARK: - Recursive Functions
-    
+
     public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
         fn(self)
         if recursive {
@@ -411,9 +427,9 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     // MARK: - Children
-    
+
     public func getChildren(_ recursive: Bool = true) -> [Object] {
         var results: [Object] = []
         for child in children {
@@ -424,7 +440,7 @@ open class Object: Codable, ObservableObject {
         }
         return results
     }
-    
+
     public func getChild(_ name: String, _ recursive: Bool = true) -> Object? {
         for child in children {
             if child.label == name {
@@ -436,7 +452,7 @@ open class Object: Codable, ObservableObject {
         }
         return nil
     }
-    
+
     public func getChildById(_ id: String, _ recursive: Bool = true) -> Object? {
         for child in children {
             if child.id == id {
@@ -452,13 +468,13 @@ open class Object: Codable, ObservableObject {
         }
         return nil
     }
-    
+
     public func getChildrenByName(_ name: String, _ recursive: Bool = true) -> [Object] {
         var results = [Object]()
         getChildrenByName(name, recursive, &results)
         return results
     }
-    
+
     func getChildrenByName(_ name: String, _ recursive: Bool = true, _ results: inout [Object]) {
         for child in children {
             if child.label == name {
@@ -469,9 +485,9 @@ open class Object: Codable, ObservableObject {
             }
         }
     }
-    
+
     // MARK: - isVisible
-    
+
     public func isVisible() -> Bool {
         if let parent = parent {
             return (parent.isVisible() && visible)
@@ -480,7 +496,7 @@ open class Object: Codable, ObservableObject {
             return visible
         }
     }
-    
+
     public func isLight() -> Bool {
         if let parent = parent {
             return (parent.isLight() || (self is Light))
@@ -489,23 +505,23 @@ open class Object: Codable, ObservableObject {
             return (self is Light)
         }
     }
-    
+
     public func setFrom(_ object: Object) {
         position = object.position
         orientation = object.orientation
         scale = object.scale
     }
-    
+
     public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
         localMatrix = lookAtMatrix3f(position, center, up)
     }
-    
+
     // MARK: - Intersections
-    
+
     open func intersects(ray: Ray) -> Bool {
         return rayBoundsIntersect(ray, worldBounds)
     }
-    
+
     open func intersect(ray: Ray, intersections: inout [RaycastResult], recursive: Bool = true, invisible: Bool = false) {
         guard visible || invisible, intersects(ray: ray), recursive else { return }
         for child in children {

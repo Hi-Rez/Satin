@@ -18,6 +18,13 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
 
+
+    internal var _lights = [Light]() {
+        didSet {
+
+        }
+    }
+
     internal var _scene = Object()
     {
         didSet
@@ -106,7 +113,7 @@ open class Renderer
 
     private var _viewport: simd_float4 = .zero
 
-    private var updateLightBuffer: Bool = false
+    private var _updateLightBuffer: Bool = false
     private var lightBuffer: StructBuffer<LightData>?
     private var lightSubscriptions = Set<AnyCancellable>()
 
@@ -122,8 +129,7 @@ open class Renderer
 
     func setup()
     {
-        updateLightBuffer = true
-        setupLights()
+        setupLights(lights: getLights(_scene, true, true))
         _scene.context = context
     }
 
@@ -264,7 +270,7 @@ open class Renderer
 
         onUpdate?()
 
-        updateLightBuffer(lights: getLights(scene, true, true))
+        updateLights(lights: getLights(scene, true, true))
 
         camera.update()
         scene.update()
@@ -306,6 +312,7 @@ open class Renderer
                 {
                     material.maxLights = 0
                 }
+                material.update()
             }
             renderable.draw(renderEncoder: renderEncoder)
         }
@@ -410,31 +417,22 @@ open class Renderer
 
     // MARK: - Lights
 
-    func setupLights()
+    func setupLights(lights: [Light])
     {
-        let lights = getLights(_scene, true, true)
         setupLightBuffer(lights: lights)
-        let renderables = getRenderables(_scene, true, true)
-        for renderable in renderables
-        {
-            if let material = renderable.material, material.lighting
-            {
-                material.maxLights = lights.count
-            }
-        }
+    }
+
+    func updateLights(lights: [Light])
+    {
+        setupLightBuffer(lights: lights)
+        updateLightBuffer(lights: lights)
     }
 
     func setupLightBuffer(lights: [Light])
     {
-        lightSubscriptions.removeAll()
+        guard !lights.isEmpty, lights.count != lightBuffer?.count else { return }
 
-        for light in lights
-        {
-            light.publisher.sink
-            { [weak self] _ in
-                self?.updateLightBuffer = true
-            }.store(in: &lightSubscriptions)
-        }
+        lightSubscriptions.removeAll()
 
         if lights.isEmpty
         {
@@ -442,25 +440,22 @@ open class Renderer
         }
         else
         {
+            for light in lights
+            {
+                light.publisher.sink { [weak self] _ in
+                    self?._updateLightBuffer = true
+                }.store(in: &lightSubscriptions)
+            }
+
             lightBuffer = StructBuffer<LightData>.init(device: context.device, count: lights.count, label: "Light Buffer")
-            updateLightBuffer = true
+            _updateLightBuffer = true
         }
     }
 
     func updateLightBuffer(lights: [Light])
     {
-        if let lightBuffer = lightBuffer, lights.count != lightBuffer.count
-        {
-            setupLightBuffer(lights: lights)
-        }
-
-        if let lightBuffer = lightBuffer, updateLightBuffer
-        {
-            lightBuffer.update(data: lights.map { $0.data })
-        }
-        else
-        {
-            updateLightBuffer = false
-        }
+        guard let lightBuffer = lightBuffer, _updateLightBuffer else { return }
+        lightBuffer.update(data: lights.map { $0.data })
+        _updateLightBuffer = false
     }
 }

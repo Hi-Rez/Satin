@@ -67,7 +67,7 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pbrInit(pixel);
 
 #if defined(MAX_LIGHTS)
-    pbrDirectLighting(pixel, lights);
+    pbrDirectLighting(pixel, &lights);
 #endif
 
 #if defined(USE_IBL)

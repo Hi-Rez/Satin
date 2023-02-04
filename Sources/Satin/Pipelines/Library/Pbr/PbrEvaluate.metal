@@ -133,9 +133,11 @@ float3 evalBRDF(thread PixelInfo &pixel, float3 L, float NdotL, float NdotV)
     float3 Fd = evalDiffuse(pixel, NdotL, NdotV, LdotH);
 
 #if defined(HAS_TRANSMISSION)
-    // Specular BTDF Component
-    float3 Ft = evalTransmission(pixel, F, L, NdotV);
-    Fd = mix(Fd, Ft, pixel.material.transmission);
+    if (pixel.material.transmission > 0) {
+        // Specular BTDF Component
+        float3 Ft = evalTransmission(pixel, F, L, NdotV);
+        Fd = mix(Fd, Ft, pixel.material.transmission);
+    }
 #endif
 
     float3 brdf = Kd * Fd + Fs;
