@@ -109,7 +109,20 @@ open class Renderer
         }
     }
 
-    public var invertViewportNearFar: Bool = false
+    public var invertViewportNearFar: Bool = false {
+        didSet {
+            let width = Double(size.width)
+            let height = Double(size.height)
+            viewport = MTLViewport(
+                originX: 0.0,
+                originY: 0.0,
+                width: width,
+                height: height,
+                znear: invertViewportNearFar ? 1.0 : 0.0,
+                zfar: invertViewportNearFar ? 0.0 : 1.0
+            )
+        }
+    }
 
     private var _viewport: simd_float4 = .zero
 

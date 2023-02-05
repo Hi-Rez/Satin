@@ -47,7 +47,7 @@ simd_float4x4 orthographicMatrixf(float left, float right, float bottom, float t
 
     result.columns[3].x = (left + right) / (left - right);
     result.columns[3].y = (top + bottom) / (bottom - top);
-    result.columns[3].z = near / (near - far);
+    result.columns[3].z = -near / (far - near);
 
     return result;
 }
