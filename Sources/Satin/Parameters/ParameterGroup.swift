@@ -570,6 +570,12 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
         }
     }
 
+    public func set(_ name: String, _ value: simd_float2x2) {
+        if let param = paramsMap[name], let p = param as? Float2x2Parameter {
+            p.value = value
+        }
+    }
+
     public func set(_ name: String, _ value: simd_float3x3) {
         if let param = paramsMap[name], let p = param as? Float3x3Parameter {
             p.value = value

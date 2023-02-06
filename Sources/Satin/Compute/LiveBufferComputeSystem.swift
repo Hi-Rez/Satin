@@ -229,6 +229,21 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         guard let parameters = parameters else { return }
         parameters.set(name, value)
     }
+
+    public func set(_ name: String, _ value: simd_float2x2) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
+
+    public func set(_ name: String, _ value: simd_float3x3) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
+
+    public func set(_ name: String, _ value: simd_float4x4) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
     
     public func set(_ name: String, _ value: Int) {
         guard let parameters = parameters else { return }
