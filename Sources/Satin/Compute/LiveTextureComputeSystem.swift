@@ -31,16 +31,6 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         return results
     }
     
-    public var prefixLabel: String {
-        var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
-        prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
-        if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != prefix {
-            prefix = prefix.replacingOccurrences(of: bundleName, with: "")
-        }
-        prefix = prefix.replacingOccurrences(of: ".", with: "")
-        return prefix
-    }
-    
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelineURL: URL,

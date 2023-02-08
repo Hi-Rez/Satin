@@ -13,6 +13,17 @@ public protocol TextureComputeSystemDelegate: AnyObject {
 
 open class TextureComputeSystem {
     public var label: String = "Satin Texture Compute Encoder"
+
+    public var prefixLabel: String {
+        var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
+        prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
+        if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != prefix {
+            prefix = prefix.replacingOccurrences(of: bundleName, with: "")
+        }
+        prefix = prefix.replacingOccurrences(of: ".", with: "")
+        return prefix
+    }
+
     public var textureDescriptors: [MTLTextureDescriptor] {
         didSet {
             reset()
@@ -165,8 +176,9 @@ open class TextureComputeSystem {
         textures = []
         let count = feedback ? 2 : 1
         for textureDescriptor in textureDescriptors {
-            for _ in 0..<count {
+            for i in 0..<count {
                 if let texture = device.makeTexture(descriptor: textureDescriptor) {
+                    texture.label = prefixLabel + " Texture \(i)"
                     textures.append(texture)
                 }
             }
@@ -221,6 +233,35 @@ open class TextureComputeSystem {
             }
 
             computeEncoder.endEncoding()
+        }
+    }
+
+    public func update(_ computeEncoder: MTLComputeCommandEncoder) {
+        update()
+        if textureDescriptors.count > 0, resetPipeline != nil || updatePipeline != nil {
+            computeEncoder.label = label
+
+            if _reset, let pipeline = resetPipeline {
+                computeEncoder.setComputePipelineState(pipeline)
+                let count = feedback ? 2 : 1
+                for _ in 0..<count {
+                    let offset = bind(computeEncoder)
+                    preReset?(computeEncoder, offset)
+                    preCompute?(computeEncoder, offset)
+                    dispatch(computeEncoder, pipeline)
+                    pingPong()
+                }
+                _reset = false
+            }
+
+            if let pipeline = updatePipeline {
+                computeEncoder.setComputePipelineState(pipeline)
+                let offset = bind(computeEncoder)
+                preUpdate?(computeEncoder, offset)
+                preCompute?(computeEncoder, offset)
+                dispatch(computeEncoder, pipeline)
+                pingPong()
+            }
         }
     }
 

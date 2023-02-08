@@ -168,12 +168,11 @@ open class SourceShader: Shader {
     }
 
     open func modifyShaderSource(source: inout String) {
-        injectInstancingArgs(source: &source, instancing: instancing)
-        injectLightingArgs(source: &source, lighting: lighting)
+
     }
 
     open func setupSource() {
-        guard let satinURL = getPipelinesSatinUrl(), var compiledShaderSource = setupShaderSource() else { return }
+        guard let satinURL = getPipelinesSatinUrl(), let compiledShaderSource = self.shaderSource ?? setupShaderSource() else { return }
         let includesURL = satinURL.appendingPathComponent("Includes.metal")
         do {
             // create boilerplate shader code
@@ -189,12 +188,16 @@ open class SourceShader: Shader {
             injectLighting(source: &source, lighting: lighting)
             injectInstanceMatrixUniforms(source: &source, instancing: instancing)
 
-            // modify shader if needed, instancing, etc
-            modifyShaderSource(source: &compiledShaderSource)
-
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)
+
+            injectInstancingArgs(source: &source, instancing: instancing)
+            injectLightingArgs(source: &source, lighting: lighting)
+
+            // modify shader if needed, instancing, etc
+            modifyShaderSource(source: &source)
+
             shaderSource = compiledShaderSource
             self.source = source
 
