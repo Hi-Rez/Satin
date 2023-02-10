@@ -209,29 +209,7 @@ open class TextureComputeSystem {
         update()
         if textureDescriptors.count > 0, resetPipeline != nil || updatePipeline != nil, let computeEncoder = commandBuffer.makeComputeCommandEncoder() {
             computeEncoder.label = label
-
-            if _reset, let pipeline = resetPipeline {
-                computeEncoder.setComputePipelineState(pipeline)
-                let count = feedback ? 2 : 1
-                for _ in 0..<count {
-                    let offset = bind(computeEncoder)
-                    preReset?(computeEncoder, offset)
-                    preCompute?(computeEncoder, offset)
-                    dispatch(computeEncoder, pipeline)
-                    pingPong()
-                }
-                _reset = false
-            }
-
-            if let pipeline = updatePipeline {
-                computeEncoder.setComputePipelineState(pipeline)
-                let offset = bind(computeEncoder)
-                preUpdate?(computeEncoder, offset)
-                preCompute?(computeEncoder, offset)
-                dispatch(computeEncoder, pipeline)
-                pingPong()
-            }
-
+            encode(computeEncoder)
             computeEncoder.endEncoding()
         }
     }
@@ -239,29 +217,31 @@ open class TextureComputeSystem {
     public func update(_ computeEncoder: MTLComputeCommandEncoder) {
         update()
         if textureDescriptors.count > 0, resetPipeline != nil || updatePipeline != nil {
-            computeEncoder.label = label
+            encode(computeEncoder)
+        }
+    }
 
-            if _reset, let pipeline = resetPipeline {
-                computeEncoder.setComputePipelineState(pipeline)
-                let count = feedback ? 2 : 1
-                for _ in 0..<count {
-                    let offset = bind(computeEncoder)
-                    preReset?(computeEncoder, offset)
-                    preCompute?(computeEncoder, offset)
-                    dispatch(computeEncoder, pipeline)
-                    pingPong()
-                }
-                _reset = false
-            }
-
-            if let pipeline = updatePipeline {
-                computeEncoder.setComputePipelineState(pipeline)
+    private func encode(_ computeEncoder: MTLComputeCommandEncoder) {
+        if _reset, let pipeline = resetPipeline {
+            computeEncoder.setComputePipelineState(pipeline)
+            let count = feedback ? 2 : 1
+            for _ in 0..<count {
                 let offset = bind(computeEncoder)
-                preUpdate?(computeEncoder, offset)
+                preReset?(computeEncoder, offset)
                 preCompute?(computeEncoder, offset)
                 dispatch(computeEncoder, pipeline)
                 pingPong()
             }
+            _reset = false
+        }
+
+        if let pipeline = updatePipeline {
+            computeEncoder.setComputePipelineState(pipeline)
+            let offset = bind(computeEncoder)
+            preUpdate?(computeEncoder, offset)
+            preCompute?(computeEncoder, offset)
+            dispatch(computeEncoder, pipeline)
+            pingPong()
         }
     }
 

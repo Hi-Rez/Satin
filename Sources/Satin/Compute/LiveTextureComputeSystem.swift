@@ -70,7 +70,6 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     open func setupCompiler() {
         compiler.onUpdate = { [weak self] in
             guard let self = self else { return }
-            print("recompiling")
             self.source = nil
             self.source = self.compileSource()
             self.setupPipelines()
@@ -256,6 +255,21 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
     
     public func set(_ name: String, _ value: Bool) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
+
+    public func set(_ name: String, _ value: simd_float2x2) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
+
+    public func set(_ name: String, _ value: simd_float3x3) {
+        guard let parameters = parameters else { return }
+        parameters.set(name, value)
+    }
+
+    public func set(_ name: String, _ value: simd_float4x4) {
         guard let parameters = parameters else { return }
         parameters.set(name, value)
     }
