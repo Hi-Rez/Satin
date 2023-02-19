@@ -27,6 +27,7 @@ open class LiveShader: SourceShader {
     func setupCompiler() {
         compiler.onUpdate = { [weak self] in
             guard let self = self else { return }
+            self.shaderSource = nil
             self.sourceNeedsUpdate = true
         }
     }

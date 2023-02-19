@@ -18,13 +18,6 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
 
-
-    internal var _lights = [Light]() {
-        didSet {
-
-        }
-    }
-
     internal var _scene = Object()
     {
         didSet

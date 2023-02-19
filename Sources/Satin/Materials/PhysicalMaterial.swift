@@ -18,13 +18,19 @@ open class PhysicalMaterial: StandardMaterial {
             set("Subsurface", subsurface)
         }
     }
+
+    public var anisotropic: Float = 0.0 {
+        didSet {
+            set("Anisotropic", anisotropic)
+        }
+    }
     
     public var specularTint: Float = 0.0 {
         didSet {
             set("Specular Tint", specularTint)
         }
     }
-    
+
     public var clearcoat: Float = 0.0 {
         didSet {
             set("Clearcoat", clearcoat)
@@ -54,6 +60,12 @@ open class PhysicalMaterial: StandardMaterial {
             set("Transmission", transmission)
         }
     }
+
+    public var thickness: Float = 0.0 {
+        didSet {
+            set("Thickness", thickness)
+        }
+    }
     
     public var ior: Float = 1.5 {
         didSet {
@@ -64,12 +76,15 @@ open class PhysicalMaterial: StandardMaterial {
     override func initalizeParameters() {
         super.initalizeParameters()
         set("Subsurface", subsurface)
+        set("Anisotropic", anisotropic)
         set("Specular Tint", specularTint)
+        set("Anisotropic", anisotropic)
         set("Clearcoat", clearcoat)
         set("Clearcoat Roughness", clearcoatRoughness)
         set("Sheen", sheen)
         set("Sheen Tint", sheenTint)
         set("Transmission", transmission)
+        set("Thickness", thickness)
         set("Ior", ior)
     }
     

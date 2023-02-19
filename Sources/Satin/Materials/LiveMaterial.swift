@@ -9,23 +9,30 @@
 import Metal
 
 open class LiveMaterial: SourceMaterial {
-    public override init(pipelineURL: URL) {
+    override public init(pipelineURL: URL) {
         super.init(pipelineURL: pipelineURL)
     }
 
-    public override init(pipelinesURL: URL) {
+    override public init(pipelinesURL: URL) {
         super.init(pipelinesURL: pipelinesURL)
     }
-    
-    open override func createShader() -> Shader {
+
+    override open func createShader() -> Shader {
         return LiveShader(label, pipelineURL)
     }
-    
+
     public required init() {
         fatalError("Please specify a pipeline url to use LiveMaterial")
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
+    }
+
+    override public func clone() -> Material {
+        let clone = LiveMaterial(pipelineURL: pipelineURL)
+        clone.isClone = true
+        cloneProperties(clone: clone)
+        return clone
     }
 }
