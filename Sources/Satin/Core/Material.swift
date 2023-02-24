@@ -26,7 +26,7 @@ public struct DepthBias: Codable {
     }
 }
 
-open class Material: Codable, ParameterGroupDelegate, ObservableObject {
+open class Material: Codable, ParameterGroupDelegate {
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -664,35 +664,28 @@ open class Material: Codable, ParameterGroupDelegate, ObservableObject {
 
 public extension Material {
     func added(parameter: Parameter, from group: ParameterGroup) {
-        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
 
     func removed(parameter: Parameter, from group: ParameterGroup) {
-        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
 
     func loaded(group: ParameterGroup) {
-        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
 
     func saved(group: ParameterGroup) {}
 
     func cleared(group: ParameterGroup) {
-        objectWillChange.send()
         uniformsNeedsUpdate = true
     }
 
-    func update(parameter: Parameter, from group: ParameterGroup) {
-        objectWillChange.send()
-    }
+    func update(parameter: Parameter, from group: ParameterGroup) {}
 }
 
 public extension Material {
     func updateParameters(_ newParameters: ParameterGroup) {
-        objectWillChange.send()
         parameters.setFrom(newParameters)
         parameters.label = newParameters.label
         uniformsNeedsUpdate = true

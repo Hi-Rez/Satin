@@ -12,173 +12,29 @@ import simd
 
 open class Object: Codable, ObservableObject {
     @Published open var id: String = UUID().uuidString
-
     @Published open var label: String = "Object"
-
     @Published open var visible: Bool = true
 
-    open weak var context: Context? = nil {
+    open var context: Context? = nil {
         didSet {
             if context != nil, context !== oldValue {
                 setup()
-                for child in children {
-                    child.context = context
-                }
             }
         }
     }
 
-    @Published open var position = simd_make_float3(0, 0, 0) {
+    // MARK: - Position
+
+    @Published open var position: simd_float3 = .zero {
         didSet {
-            updateMatrix = true
-        }
-    }
-
-    @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
-        didSet {
-            updateMatrix = true
-            _rotationMatrix.clear()
-            _orientationMatrix.clear()
-        }
-    }
-
-    @Published open var scale = simd_make_float3(1, 1, 1) {
-        didSet {
-            updateMatrix = true
-        }
-    }
-
-    var _updateLocalBounds: Bool = true {
-        didSet {
-            if _updateLocalBounds {
-                _updateWorldBounds = true
-            }
-        }
-    }
-
-    var _localBounds = createBounds()
-    public var localBounds: Bounds {
-        if _updateLocalBounds {
-            _localBounds = computeLocalBounds()
-            _updateLocalBounds = false
-        }
-        return _localBounds
-    }
-
-    var _updateWorldBounds: Bool = true {
-        didSet {
-            if _updateWorldBounds {
-                parent?._updateWorldBounds = true
-            }
-        }
-    }
-
-    var _worldBounds = createBounds()
-    public var worldBounds: Bounds {
-        if _updateWorldBounds {
-            _worldBounds = computeWorldBounds()
-            _updateWorldBounds = false
-        }
-        return _worldBounds
-    }
-
-    public var translationMatrix: matrix_float4x4 { translationMatrix3f(position) }
-
-    public var scaleMatrix: matrix_float4x4 { scaleMatrix3f(scale) }
-
-    var _rotationMatrix = ValueCache<matrix_float4x4>()
-    public var rotationMatrix: matrix_float4x4 {
-        _rotationMatrix.get { matrix_float4x4(orientation) }
-    }
-
-    var _orientationMatrix = ValueCache<matrix_float3x3>()
-    public var orientationMatrix: matrix_float3x3 {
-        _orientationMatrix.get { matrix_float3x3(orientation) }
-    }
-
-    public var forwardDirection: simd_float3 {
-        return simd_normalize(orientation.act(Satin.worldForwardDirection))
-    }
-
-    public var upDirection: simd_float3 {
-        return simd_normalize(orientation.act(Satin.worldUpDirection))
-    }
-
-    public var rightDirection: simd_float3 {
-        return simd_normalize(orientation.act(Satin.worldRightDirection))
-    }
-
-    public var worldForwardDirection: simd_float3 {
-        return simd_normalize(worldOrientation.act(Satin.worldForwardDirection))
-    }
-
-    public var worldUpDirection: simd_float3 {
-        return simd_normalize(worldOrientation.act(Satin.worldUpDirection))
-    }
-
-    public var worldRightDirection: simd_float3 {
-        return simd_normalize(worldOrientation.act(Satin.worldRightDirection))
-    }
-
-    open weak var parent: Object? {
-        didSet {
-            updateMatrix = true
-        }
-    }
-
-    @Published open var children: [Object] = [] {
-        didSet {
-            _updateWorldBounds = true
-        }
-    }
-
-    public var onUpdate: (() -> ())?
-
-    var updateMatrix: Bool = true {
-        didSet {
-            if updateMatrix {
-                _updateLocalBounds = true
-
-                _localMatrix.clear()
-                _normalMatrix.clear()
-                _worldMatrix.clear()
-                _worldOrientation.clear()
-
-                transformPublisher.send(self)
-
-                updateMatrix = false
-
-                for child in children {
-                    child.updateMatrix = true
-                }
-            }
-        }
-    }
-
-    var _localMatrix = ValueCache<matrix_float4x4>()
-    public var localMatrix: matrix_float4x4 {
-        get {
-            _localMatrix.get {
-                simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
-            }
-        }
-        set {
-            position = simd_make_float3(newValue.columns.3)
-            let sx = newValue.columns.0
-            let sy = newValue.columns.1
-            let sz = newValue.columns.2
-            scale = simd_make_float3(simd_length(sx), simd_length(sy), simd_length(sz))
-            let rx = simd_make_float3(sx) / scale.x
-            let ry = simd_make_float3(sy) / scale.y
-            let rz = simd_make_float3(sz) / scale.z
-            orientation = simd_quatf(simd_float3x3(rx, ry, rz))
+            _translationMatrix.clear()
+            updateLocalMatrix = true
         }
     }
 
     public var worldPosition: simd_float3 {
         get {
-            let wp = worldMatrix.columns.3
-            return simd_make_float3(wp.x, wp.y, wp.z)
+            simd_make_float3(worldMatrix.columns.3)
         }
         set {
             if let parent = parent {
@@ -187,6 +43,56 @@ open class Object: Codable, ObservableObject {
             else {
                 position = newValue
             }
+        }
+    }
+
+    var _translationMatrix = ValueCache<matrix_float4x4>()
+    public var translationMatrix: matrix_float4x4 {
+        _translationMatrix.get { translationMatrix3f(position) }
+    }
+
+    // MARK: - Orientation
+
+    @Published open var orientation = simd_quatf(matrix_identity_float4x4) {
+        didSet {
+            _rotationMatrix.clear()
+            updateLocalMatrix = true
+        }
+    }
+
+    public var worldOrientation: simd_quatf {
+        get {
+            let ws = worldScale
+            let wm = worldMatrix
+            let c0 = wm.columns.0
+            let c1 = wm.columns.1
+            let c2 = wm.columns.2
+            let x = simd_make_float3(c0.x, c0.y, c0.z) / ws.x
+            let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
+            let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
+            return simd_quatf(simd_float3x3(columns: (x, y, z)))
+        }
+        set {
+            if let parent = parent {
+                orientation = parent.worldOrientation.inverse * newValue
+            }
+            else {
+                orientation = newValue
+            }
+        }
+    }
+
+    var _rotationMatrix = ValueCache<matrix_float4x4>()
+    public var rotationMatrix: matrix_float4x4 {
+        _rotationMatrix.get { matrix_float4x4(orientation) }
+    }
+
+    // MARK: - Scale
+
+    @Published open var scale: simd_float3 = .one {
+        didSet {
+            _scaleMatrix.clear()
+            updateLocalMatrix = true
         }
     }
 
@@ -208,30 +114,54 @@ open class Object: Codable, ObservableObject {
         }
     }
 
-    var _worldOrientation = ValueCache<simd_quatf>()
-    public var worldOrientation: simd_quatf {
+    var _scaleMatrix = ValueCache<matrix_float4x4>()
+    public var scaleMatrix: matrix_float4x4 {
+        _scaleMatrix.get { scaleMatrix3f(scale) }
+    }
+
+    // MARK: - Local Matrix
+
+    var _localMatrix = ValueCache<matrix_float4x4>()
+    public var localMatrix: matrix_float4x4 {
         get {
-            _worldOrientation.get {
-                let ws = worldScale
-                let wm = worldMatrix
-                let c0 = wm.columns.0
-                let c1 = wm.columns.1
-                let c2 = wm.columns.2
-                let x = simd_make_float3(c0.x, c0.y, c0.z) / ws.x
-                let y = simd_make_float3(c1.x, c1.y, c1.z) / ws.y
-                let z = simd_make_float3(c2.x, c2.y, c2.z) / ws.z
-                return simd_quatf(simd_float3x3(columns: (x, y, z)))
+            _localMatrix.get {
+                simd_mul(simd_mul(translationMatrix, rotationMatrix), scaleMatrix)
             }
         }
         set {
-            if let parent = parent {
-                orientation = parent.worldOrientation.inverse * newValue
-            }
-            else {
-                orientation = newValue
+            position = simd_make_float3(newValue.columns.3)
+            let sx = newValue.columns.0
+            let sy = newValue.columns.1
+            let sz = newValue.columns.2
+            scale = simd_make_float3(simd_length(sx), simd_length(sy), simd_length(sz))
+            let rx = simd_make_float3(sx) / scale.x
+            let ry = simd_make_float3(sy) / scale.y
+            let rz = simd_make_float3(sz) / scale.z
+            orientation = simd_quatf(simd_float3x3(rx, ry, rz))
+        }
+    }
+
+    var updateLocalMatrix: Bool = true {
+        didSet {
+            if updateLocalMatrix {
+                _updateLocalBounds = true
+
+                _normalMatrix.clear()
+                _worldMatrix.clear()
+                _localMatrix.clear()
+
+                transformPublisher.send(self)
+
+                updateLocalMatrix = false
+
+                for child in children {
+                    child.updateWorldMatrix = true
+                }
             }
         }
     }
+
+    // MARK: - World Matrix
 
     var _worldMatrix = ValueCache<matrix_float4x4>()
     public var worldMatrix: matrix_float4x4 {
@@ -255,6 +185,27 @@ open class Object: Codable, ObservableObject {
         }
     }
 
+    var updateWorldMatrix: Bool = true {
+        didSet {
+            if updateWorldMatrix {
+                _updateWorldBounds = true
+
+                _normalMatrix.clear()
+                _worldMatrix.clear()
+
+                transformPublisher.send(self)
+
+                updateWorldMatrix = false
+
+                for child in children {
+                    child.updateWorldMatrix = true
+                }
+            }
+        }
+    }
+
+    // MARK: - Normal Bounds
+
     var _normalMatrix = ValueCache<matrix_float3x3>()
     public var normalMatrix: matrix_float3x3 {
         _normalMatrix.get {
@@ -263,12 +214,84 @@ open class Object: Codable, ObservableObject {
         }
     }
 
+    // MARK: - Local Bounds
+
+    var _updateLocalBounds: Bool = true {
+        didSet {
+            if _updateLocalBounds {
+                _updateWorldBounds = true
+            }
+        }
+    }
+
+    var _localBounds = createBounds()
+    public var localBounds: Bounds {
+        if _updateLocalBounds {
+            _localBounds = computeLocalBounds()
+            _updateLocalBounds = false
+        }
+        return _localBounds
+    }
+
+    // MARK: - World Bounds
+
+    var _updateWorldBounds: Bool = true {
+        didSet {
+            if _updateWorldBounds {
+                parent?._updateWorldBounds = true
+            }
+        }
+    }
+
+    var _worldBounds = createBounds()
+    public var worldBounds: Bounds {
+        if _updateWorldBounds {
+            _worldBounds = computeWorldBounds()
+            _updateWorldBounds = false
+        }
+        return _worldBounds
+    }
+
+    // MARK: - Directions
+
+    public var forwardDirection: simd_float3 { simd_normalize(orientation.act(Satin.worldForwardDirection)) }
+    public var upDirection: simd_float3 { simd_normalize(orientation.act(Satin.worldUpDirection)) }
+    public var rightDirection: simd_float3 { simd_normalize(orientation.act(Satin.worldRightDirection)) }
+
+    // MARK: - World Directions
+
+    public var worldForwardDirection: simd_float3 { simd_normalize(worldOrientation.act(Satin.worldForwardDirection)) }
+    public var worldUpDirection: simd_float3 { simd_normalize(worldOrientation.act(Satin.worldUpDirection)) }
+    public var worldRightDirection: simd_float3 { simd_normalize(worldOrientation.act(Satin.worldRightDirection)) }
+
+    // MARK: - Parent & Children
+
+    open weak var parent: Object? {
+        didSet {
+            updateWorldMatrix = true
+        }
+    }
+
+    @Published open var children: [Object] = [] {
+        didSet {
+            _updateWorldBounds = true
+        }
+    }
+
+    // MARK: - OnUpdate Hook
+
+    public var onUpdate: (() -> ())?
+
+    // MARK: - Publishers
+
     public let transformPublisher = PassthroughSubject<Object, Never>()
     public let childAddedPublisher = PassthroughSubject<Object, Never>()
     public let childRemovedPublisher = PassthroughSubject<Object, Never>()
 
     var childAddedSubscriptions: [Object: AnyCancellable] = [:]
     var childRemovedSubscriptions: [Object: AnyCancellable] = [:]
+
+    // MARK: - Init
 
     public init() {}
 
@@ -278,6 +301,8 @@ open class Object: Codable, ObservableObject {
             add(child)
         }
     }
+
+    // MARK: - Deinit
 
     deinit {
         removeAll()
@@ -335,6 +360,8 @@ open class Object: Codable, ObservableObject {
         try container.encode(children, forKey: .children)
     }
 
+    // MARK: - Setup
+
     open func setup() {}
 
     // MARK: - Compute Bounds
@@ -353,14 +380,11 @@ open class Object: Codable, ObservableObject {
 
     open func update() {
         onUpdate?()
-        for child in children {
-            child.update()
-        }
     }
 
     open func update(camera: Camera, viewport: simd_float4) {}
 
-    // MARK: - Inserting, Adding & Removing
+    // MARK: - Inserting, Adding, Attaching & Removing
 
     open func insert(_ child: Object, at: Int, setParent: Bool = true) {
         if !children.contains(where: { $0 === child }) {
@@ -391,6 +415,10 @@ open class Object: Codable, ObservableObject {
         }
     }
 
+    open func attach(_ child: Object) {
+        add(child, false)
+    }
+
     open func add(_ objects: [Object], _ setParent: Bool = true) {
         for obj in objects {
             add(obj, setParent)
@@ -417,7 +445,7 @@ open class Object: Codable, ObservableObject {
         children = []
     }
 
-    // MARK: - Recursive Functions
+    // MARK: - Recursive Scene Graph Functions
 
     public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
         fn(self)
@@ -425,6 +453,27 @@ open class Object: Codable, ObservableObject {
             for child in children {
                 child.apply(fn, recursive)
             }
+        }
+    }
+
+    public func traverse(_ fn: (_ object: Object) -> ()) {
+        for child in children {
+            fn(child)
+            child.traverse(fn)
+        }
+    }
+
+    public func traverseVisible(_ fn: (_ object: Object) -> ()) {
+        for child in children where child.visible {
+            fn(child)
+            child.traverse(fn)
+        }
+    }
+
+    public func traverseAncestors(_ fn: (_ object: Object) -> ()) {
+        if let parent = parent {
+            fn(parent)
+            parent.traverseAncestors(fn)
         }
     }
 
@@ -497,6 +546,8 @@ open class Object: Codable, ObservableObject {
         }
     }
 
+    // MARK: - isLight
+
     public func isLight() -> Bool {
         if let parent = parent {
             return (parent.isLight() || (self is Light))
@@ -511,6 +562,8 @@ open class Object: Codable, ObservableObject {
         orientation = object.orientation
         scale = object.scale
     }
+
+    // MARK: - Look At
 
     public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
         localMatrix = lookAtMatrix3f(position, center, up)
@@ -529,6 +582,8 @@ open class Object: Codable, ObservableObject {
         }
     }
 }
+
+// MARK: - Equatable
 
 extension Object: Equatable {
     public static func == (lhs: Object, rhs: Object) -> Bool {

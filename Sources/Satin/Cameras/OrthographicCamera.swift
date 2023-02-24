@@ -15,7 +15,7 @@ open class OrthographicCamera: Camera
         didSet
         {
             updateViewMatrix = true
-            updateMatrix = true
+            updateWorldMatrix = true
         }
     }
     
@@ -24,7 +24,7 @@ open class OrthographicCamera: Camera
         didSet
         {
             updateViewMatrix = true
-            updateMatrix = true
+            updateWorldMatrix = true
         }
     }
     

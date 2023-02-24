@@ -18,18 +18,7 @@ open class Renderer
     public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
     public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
 
-    internal var _scene = Object()
-    {
-        didSet
-        {
-            if _scene != oldValue
-            {
-                setup()
-            }
-        }
-    }
-
-    internal var _camera: Camera = .init()
+    public var sortObjects: Bool = false
 
     public var context: Context
     {
@@ -102,8 +91,10 @@ open class Renderer
         }
     }
 
-    public var invertViewportNearFar: Bool = false {
-        didSet {
+    public var invertViewportNearFar: Bool = false
+    {
+        didSet
+        {
             let width = Double(size.width)
             let height = Double(size.height)
             viewport = MTLViewport(
@@ -119,6 +110,9 @@ open class Renderer
 
     private var _viewport: simd_float4 = .zero
 
+    private var renderList: [Renderable] = []
+    private var lightList: [Light] = []
+
     private var _updateLightBuffer: Bool = false
     private var lightBuffer: StructBuffer<LightData>?
     private var lightSubscriptions = Set<AnyCancellable>()
@@ -128,15 +122,6 @@ open class Renderer
     public init(context: Context)
     {
         self.context = context
-        setup()
-    }
-
-    // MARK: - Internal Setup
-
-    func setup()
-    {
-        setupLights(lights: getLights(_scene, true, true))
-        _scene.context = context
     }
 
     public func setClearColor(_ color: simd_float4)
@@ -251,7 +236,7 @@ open class Renderer
         {
             renderEncoder.label = label + " Encoder"
             renderEncoder.setViewport(viewport)
-            encode(renderEncoder: renderEncoder, scene: scene, camera: camera)
+            encode(renderEncoder: renderEncoder, scene: scene)
             renderEncoder.endEncoding()
         }
 
@@ -264,43 +249,100 @@ open class Renderer
     public func draw(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera)
     {
         update(scene: scene, camera: camera)
-        encode(renderEncoder: renderEncoder, scene: scene, camera: camera)
+        encode(renderEncoder: renderEncoder, scene: scene)
     }
 
     // MARK: - Internal Update
 
     func update(scene: Object, camera: Camera)
     {
-        _scene = scene
-        _camera = camera
-
         onUpdate?()
 
-        updateLights(lights: getLights(scene, true, true))
+        renderList = []
+        lightList = []
 
-        camera.update()
-        scene.update()
+        camera.update() // FIXME: - traverse children and make sure you update everything
+
+        updateScene(object: scene, camera: camera)
+        updateLights(lights: lightList)
+    }
+
+    func updateScene(object: Object, camera: Camera, visible: Bool = true)
+    {
+        object.context = context
+        object.update()
+        object.update(camera: camera, viewport: _viewport)
+
+        if visible && object.visible
+        {
+            if let light = object as? Light
+            {
+                lightList.append(light)
+            }
+            else if let renderable = object as? Renderable, renderable.drawable
+            {
+                renderList.append(renderable)
+            }
+        }
+
+        for child in object.children
+        {
+            updateScene(object: child, camera: camera, visible: visible && object.visible)
+        }
     }
 
     // MARK: - Internal Encoding
 
-    func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera)
+    func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object)
     {
+        guard scene.visible, !renderList.isEmpty else { return }
+
         renderEncoder.pushDebugGroup(label + " Pass")
         preDraw?(renderEncoder)
 
-        if scene.visible
+        var renderables = renderList
+        if sortObjects
         {
-            encodeObject(renderEncoder: renderEncoder, object: scene, camera: camera)
+            renderables.sort
+            {
+                $0.renderOrder < $1.renderOrder
+            }
+        }
+
+        for renderable in renderables
+        {
+            _encode(renderEncoder: renderEncoder, renderable: renderable)
         }
 
         postDraw?(renderEncoder)
         renderEncoder.popDebugGroup()
     }
 
+    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable)
+    {
+        renderEncoder.pushDebugGroup(renderable.label)
+
+        if let material = renderable.material, material.lighting
+        {
+            if let lightBuffer = lightBuffer
+            {
+                material.maxLights = lightBuffer.count
+                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
+            }
+            else
+            {
+                material.maxLights = 0
+            }
+            material.update()
+        }
+
+        renderable.draw(renderEncoder: renderEncoder)
+
+        renderEncoder.popDebugGroup()
+    }
+
     func encodeObject(renderEncoder: MTLRenderCommandEncoder, object: Object, camera: Camera)
     {
-        object.context = context
         object.update(camera: camera, viewport: _viewport)
 
         renderEncoder.pushDebugGroup(object.label)
@@ -340,7 +382,7 @@ open class Renderer
 
     // MARK: - Textures
 
-    public func setupDepthTexture()
+    func setupDepthTexture()
     {
         guard updateDepthTexture else { return }
 
@@ -367,7 +409,7 @@ open class Renderer
         }
     }
 
-    public func setupStencilTexture()
+    func setupStencilTexture()
     {
         guard updateStencilTexture else { return }
 
@@ -394,7 +436,7 @@ open class Renderer
         }
     }
 
-    public func setupColorTexture()
+    func setupColorTexture()
     {
         guard updateColorTexture else { return }
 
@@ -421,12 +463,9 @@ open class Renderer
         }
     }
 
-    // MARK: - Lights
+    // MARK: - Scene Graph
 
-    func setupLights(lights: [Light])
-    {
-        setupLightBuffer(lights: lights)
-    }
+    // MARK: - Lights
 
     func updateLights(lights: [Light])
     {
@@ -448,7 +487,8 @@ open class Renderer
         {
             for light in lights
             {
-                light.publisher.sink { [weak self] _ in
+                light.publisher.sink
+                { [weak self] _ in
                     self?._updateLightBuffer = true
                 }.store(in: &lightSubscriptions)
             }
@@ -463,5 +503,21 @@ open class Renderer
         guard let lightBuffer = lightBuffer, _updateLightBuffer else { return }
         lightBuffer.update(data: lights.map { $0.data })
         _updateLightBuffer = false
+    }
+
+    // MARK: - Compile
+
+    public func compile(scene: Object, camera: Camera)
+    {
+        _compile(object: scene, camera: camera)
+    }
+
+    func _compile(object: Object, camera: Camera)
+    {
+        object.context = context
+        for child in object.children
+        {
+            _compile(object: child, camera: camera)
+        }
     }
 }

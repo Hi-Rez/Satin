@@ -222,7 +222,7 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
-				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
+				E129CBDE2520090E009B237A /* AR */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
 				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
@@ -230,6 +230,7 @@
 				E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */,
 				E11325C828ADC4520049CACC /* CustomInstancingRenderer.swift */,
 				E1E69D1624A4711E00EDA686 /* DepthMaterialRenderer.swift */,
+				E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */,
 				E1FABFFC2527E698008569F7 /* ExportGeometryRenderer.swift */,
 				E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */,
 				E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */,
@@ -238,23 +239,22 @@
 				E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */,
 				E17B2FD7247A4E8900BD2BF9 /* LoadObjRenderer.swift */,
 				E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */,
+				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
 				E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */,
+				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
 				E1D62565269D21C8000094C1 /* PostProcessingRenderer.swift */,
+				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
 				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,
 				E17B986E2451488100216411 /* Renderer2D.swift */,
 				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
+				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
+				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
+				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
 				E11325CC28AEADAA0049CACC /* SuperShapesRenderer.swift */,
 				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
-				E168FC76248ECCA2004B8407 /* PBRRenderer.swift */,
-				E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */,
-				E129CBDE2520090E009B237A /* AR */,
-				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
-				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
-				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
-				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";

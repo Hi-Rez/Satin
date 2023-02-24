@@ -100,7 +100,7 @@ open class Camera: Object
         }
     }
     
-    override var updateMatrix: Bool
+    override var updateWorldMatrix: Bool
     {
         didSet
         {

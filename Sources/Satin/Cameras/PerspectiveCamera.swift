@@ -31,7 +31,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
-            updateMatrix = true
+            updateWorldMatrix = true
         }
     }
     
@@ -40,7 +40,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
-            updateMatrix = true
+            updateWorldMatrix = true
         }
     }
     
@@ -49,7 +49,7 @@ open class PerspectiveCamera: Camera
         didSet
         {
             updateViewMatrix = true
-            updateMatrix = true
+            updateWorldMatrix = true
         }
     }
     

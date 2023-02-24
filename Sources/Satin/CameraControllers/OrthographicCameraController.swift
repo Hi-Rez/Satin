@@ -349,7 +349,6 @@ open class OrthographicCameraController: CameraController {
                 
                 camera.orientation = defaultOrientation
                 camera.position = defaultPosition
-                camera.updateMatrix = true
 
                 start()
                 change()

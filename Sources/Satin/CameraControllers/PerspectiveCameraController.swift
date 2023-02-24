@@ -272,7 +272,6 @@ open class PerspectiveCameraController: CameraController {
                 guard let camera = self.camera else { return }
                 camera.orientation = simd_quatf(matrix_identity_float4x4)
                 camera.position = [0, 0, simd_length(defaultPosition)]
-                camera.updateMatrix = true
                 
                 start()
                 change()

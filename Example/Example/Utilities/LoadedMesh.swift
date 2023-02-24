@@ -72,6 +72,7 @@ func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
 }
 
 class LoadedMesh: Object, Renderable {
+    public var renderOrder: Int = 0    
     public var drawable: Bool {
         if
             uniforms != nil,
