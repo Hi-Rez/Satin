@@ -35,16 +35,16 @@ public class SpecularIBLGenerator {
     private var compute: SpecularIBLComputeSystem
 
     public init(device: MTLDevice) {
-        self.compute = SpecularIBLComputeSystem(device: device)
+        compute = SpecularIBLComputeSystem(device: device)
     }
 
     public func encode(commandBuffer: MTLCommandBuffer, sourceTexture: MTLTexture, destinationTexture: MTLTexture) {
         let levels = destinationTexture.mipmapLevelCount
         var size = destinationTexture.width
 
-        for level in 0..<levels {
+        for level in 0 ..< levels {
             compute.roughness = Float(level) / Float(levels - 1)
-            for face in 0..<6 {
+            for face in 0 ..< 6 {
                 compute.face = UInt32(face)
                 compute.sourceTexture = sourceTexture
                 compute.textureDescriptors = [
@@ -53,7 +53,7 @@ public class SpecularIBLGenerator {
                         width: size,
                         height: size,
                         mipmapped: false
-                    )
+                    ),
                 ]
 
                 commandBuffer.label = "\(compute.label) Compute Command Buffer"

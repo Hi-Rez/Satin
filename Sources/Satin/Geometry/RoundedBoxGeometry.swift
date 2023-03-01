@@ -22,7 +22,7 @@ open class RoundedBoxGeometry: Geometry {
         super.init()
         setupData(width: size.width, height: size.height, depth: size.depth, radius: radius, res: res)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

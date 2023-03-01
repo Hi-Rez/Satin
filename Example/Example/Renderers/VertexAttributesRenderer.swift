@@ -19,9 +19,9 @@ class VertexAttributesRenderer: BaseRenderer {
         mesh.visible = false
         return mesh
     }()
-    
+
     class CustomMaterial: SourceMaterial {}
-    
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
@@ -33,16 +33,16 @@ class VertexAttributesRenderer: BaseRenderer {
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm
     }
-    
+
     var loadedMesh: LoadedMesh!
-    
+
     override func setup() {
         loadedMesh = LoadedMesh(
             url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"),
@@ -50,11 +50,11 @@ class VertexAttributesRenderer: BaseRenderer {
         )
         scene.add(loadedMesh)
     }
-    
+
     override func update() {
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -64,13 +64,13 @@ class VertexAttributesRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         let aspect = size.width / size.height
         camera.aspect = aspect
         renderer.resize(size)
     }
-    
+
     #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         let pt = normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size)
@@ -84,7 +84,7 @@ class VertexAttributesRenderer: BaseRenderer {
     }
 
     #elseif os(iOS)
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with _: UIEvent?) {
         if let first = touches.first {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size
@@ -97,7 +97,7 @@ class VertexAttributesRenderer: BaseRenderer {
         }
     }
     #endif
-    
+
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
         #if os(macOS)
         return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0

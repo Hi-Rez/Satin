@@ -10,16 +10,16 @@ import Metal
 open class BasicTextureMaterial: BasicColorMaterial {
     public var texture: MTLTexture?
     public var sampler: MTLSamplerState?
-    public var flipped: Bool = false {
+    public var flipped = false {
         didSet {
             set("Flipped", flipped)
         }
     }
-    
+
     public required init() {
         super.init()
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
         set("Flipped", flipped)

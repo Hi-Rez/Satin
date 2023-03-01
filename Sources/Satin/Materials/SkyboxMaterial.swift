@@ -15,13 +15,13 @@ open class SkyboxMaterial: BasicTextureMaterial {
             }
         }
     }
-    
+
     public init(tonemapped: Bool = false, gammaCorrected: Bool = false) {
         super.init()
         depthWriteEnabled = false
         initalizeParameters(tonemapped: tonemapped, gammaCorrected: gammaCorrected)
     }
-    
+
     public init(texture: MTLTexture, sampler: MTLSamplerState? = nil, tonemapped: Bool = false, gammaCorrected: Bool = false) {
         super.init()
         if texture.textureType != .typeCube {
@@ -32,18 +32,18 @@ open class SkyboxMaterial: BasicTextureMaterial {
         depthWriteEnabled = false
         initalizeParameters(tonemapped: tonemapped, gammaCorrected: gammaCorrected)
     }
-    
+
     func initalizeParameters(tonemapped: Bool = false, gammaCorrected: Bool = false) {
         set("Tone Mapped", tonemapped)
         set("Gamma Corrected", gammaCorrected)
     }
-    
+
     public required init() {
         super.init()
         depthWriteEnabled = false
         initalizeParameters()
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
         depthWriteEnabled = false

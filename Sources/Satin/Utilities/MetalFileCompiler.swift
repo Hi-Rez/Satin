@@ -8,138 +8,114 @@
 
 import Foundation
 
-public enum MetalFileCompilerError: Error
-{
+public enum MetalFileCompilerError: Error {
     case invalidFile(_ fileURL: URL)
 }
 
 extension MetalFileCompilerError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-            case .invalidFile(let fileURL):
-                return NSLocalizedString("MetalFileCompiler did not find: \(fileURL.path)\n\n\n", comment: "MetalFileCompiler Error")
+        case let .invalidFile(fileURL):
+            return NSLocalizedString("MetalFileCompiler did not find: \(fileURL.path)\n\n\n", comment: "MetalFileCompiler Error")
         }
     }
 }
 
-open class MetalFileCompiler
-{
+open class MetalFileCompiler {
     var watch: Bool
     var files: [URL] = []
     var watchers: [FileWatcher] = []
-    public var onUpdate: (() -> ())?
-    
-    public init(watch: Bool = true)
-    {
+    public var onUpdate: (() -> Void)?
+
+    public init(watch: Bool = true) {
         self.watch = watch
     }
-    
-    public func touch()
-    {
+
+    public func touch() {
         onUpdate?()
     }
-    
-    public func parse(_ fileURL: URL) throws -> String
-    {
+
+    public func parse(_ fileURL: URL) throws -> String {
         files = []
         watchers = []
         return try _parse(fileURL)
     }
-    
-    func _parse(_ fileURL: URL) throws -> String
-    {
+
+    func _parse(_ fileURL: URL) throws -> String {
         var fileURLResolved = fileURL.resolvingSymlinksInPath()
-        if !files.contains(fileURLResolved)
-        {
+        if !files.contains(fileURLResolved) {
             let baseURL = fileURL.deletingLastPathComponent()
             var content = ""
-            do
-            {
+            do {
                 content = try String(contentsOf: fileURLResolved, encoding: .utf8)
-            }
-            catch
-            {
+            } catch {
                 let pathComponents = fileURLResolved.pathComponents
                 if let index = pathComponents.lastIndex(of: "Satin"), var frameworkFileURL = getPipelinesSatinUrl()
                 {
-                    for i in (index + 1)..<pathComponents.count
-                    {
+                    for i in (index + 1) ..< pathComponents.count {
                         frameworkFileURL.appendPathComponent(pathComponents[i])
                     }
-                    
+
                     content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
                     fileURLResolved = frameworkFileURL
-                }
-                else if let index = pathComponents.lastIndex(of: "Chunks"), var frameworkFileURL = getPipelinesChunksUrl()
+                } else if let index = pathComponents.lastIndex(of: "Chunks"), var frameworkFileURL = getPipelinesChunksUrl()
                 {
-                    for i in (index + 1)..<pathComponents.count
-                    {
+                    for i in (index + 1) ..< pathComponents.count {
                         frameworkFileURL.appendPathComponent(pathComponents[i])
                     }
-                    
+
                     content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
                     fileURLResolved = frameworkFileURL
-                }
-                else if let index = pathComponents.lastIndex(of: "Library"), var frameworkFileURL = getPipelinesLibraryUrl()
+                } else if let index = pathComponents.lastIndex(of: "Library"), var frameworkFileURL = getPipelinesLibraryUrl()
                 {
-                    for i in (index + 1)..<pathComponents.count
-                    {
+                    for i in (index + 1) ..< pathComponents.count {
                         frameworkFileURL.appendPathComponent(pathComponents[i])
                     }
-                    
+
                     content = try String(contentsOf: frameworkFileURL, encoding: .utf8)
                     fileURLResolved = frameworkFileURL
-                }
-                
-                else
-                {
+                } else {
                     throw MetalFileCompilerError.invalidFile(fileURLResolved)
                 }
             }
-            
-            if watch
-            {
+
+            if watch {
                 let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
-                { [weak self] in
-                    guard let self = self else { return }
-                    self.onUpdate?()
-                }
+                    { [weak self] in
+                        guard let self = self else { return }
+                        self.onUpdate?()
+                    }
                 watchers.append(watcher)
             }
             files.append(fileURLResolved)
-            
+
             let pattern = #"^#include\s+\"(.*)\"\n"#
             let regex = try NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines])
-            let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
+            let nsrange = NSRange(content.startIndex ..< content.endIndex, in: content)
             var matches = regex.matches(in: content, options: [], range: nsrange)
-            while !matches.isEmpty
-            {
+            while !matches.isEmpty {
                 let match = matches[0]
                 if match.numberOfRanges == 2, let r0 = Range(match.range(at: 0), in: content), let r1 = Range(match.range(at: 1), in: content)
                 {
                     let includeURL = URL(fileURLWithPath: String(content[r1]), relativeTo: baseURL)
-                    do
-                    {
+                    do {
                         let includeContent = try _parse(includeURL)
                         content.replaceSubrange(r0, with: includeContent + "\n")
-                    }
-                    catch
-                    {
+                    } catch {
                         throw MetalFileCompilerError.invalidFile(includeURL)
                     }
                 }
-                let nsrange = NSRange(content.startIndex..<content.endIndex, in: content)
+                let nsrange = NSRange(content.startIndex ..< content.endIndex, in: content)
                 matches = regex.matches(in: content, options: [], range: nsrange)
             }
-            
+
             return content
         }
-        
+
         return ""
     }
-    
-    deinit
-    {
+
+    deinit {
         onUpdate = nil
         files = []
         watchers = []

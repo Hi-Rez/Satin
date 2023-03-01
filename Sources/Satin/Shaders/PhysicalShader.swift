@@ -9,7 +9,7 @@
 import Foundation
 
 open class PhysicalShader: PBRShader {
-    open override var defines: [String: String] {
+    override open var defines: [String: String] {
         var results = super.defines
         results["HAS_CLEARCOAT"] = "true"
         results["HAS_SUBSURFACE"] = "true"
@@ -20,7 +20,7 @@ open class PhysicalShader: PBRShader {
         return results
     }
 
-    open override func modifyShaderSource(source: inout String) {
+    override open func modifyShaderSource(source: inout String) {
         super.modifyShaderSource(source: &source)
         injectTexturesArgs(source: &source, maps: maps)
     }

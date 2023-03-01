@@ -18,11 +18,11 @@ open class BasicPointMaterial: Material {
 
     public required init() {
         super.init()
-        self.blending = .alpha
+        blending = .alpha
         set("Color", [1, 1, 1, 1])
         set("Point Size", 2.0)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

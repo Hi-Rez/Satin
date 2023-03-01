@@ -10,7 +10,7 @@ import Metal
 public func makeRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
-                               label: String,
+                               label _: String,
                                context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
@@ -32,7 +32,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
                                vertex: String,
                                fragment: String,
                                fragmentConstants: MTLFunctionConstantValues,
-                               label: String,
+                               label _: String,
                                context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex) {
@@ -56,7 +56,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
                                vertexConstants: MTLFunctionConstantValues,
                                fragment: String,
                                fragmentConstants: MTLFunctionConstantValues,
-                               label: String,
+                               label _: String,
                                context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library {
@@ -79,7 +79,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
 public func makeIndirectRenderPipeline(library: MTLLibrary?,
                                        vertex: String,
                                        fragment: String,
-                                       label: String,
+                                       label _: String,
                                        context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
@@ -141,7 +141,7 @@ public func makeRenderPipeline(library: MTLLibrary?,
 public func makeAlphaRenderPipeline(library: MTLLibrary?,
                                     vertex: String,
                                     fragment: String,
-                                    label: String,
+                                    label _: String,
                                     context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
@@ -174,7 +174,7 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
                                     vertex: String,
                                     fragment: String,
                                     fragmentConstants: MTLFunctionConstantValues,
-                                    label: String,
+                                    label _: String,
                                     context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex) {
@@ -206,7 +206,7 @@ public func makeAlphaRenderPipeline(library: MTLLibrary?,
 
 public func makeShadowRenderPipeline(library: MTLLibrary?,
                                      vertex: String,
-                                     label: String,
+                                     label _: String,
                                      context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex) {
@@ -227,7 +227,7 @@ public func makeShadowRenderPipeline(library: MTLLibrary?,
 public func makeAdditiveRenderPipeline(library: MTLLibrary?,
                                        vertex: String,
                                        fragment: String,
-                                       label: String,
+                                       label _: String,
                                        context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
@@ -259,7 +259,7 @@ public func makeAdditiveRenderPipeline(library: MTLLibrary?,
 public func makeSubtractRenderPipeline(library: MTLLibrary?,
                                        vertex: String,
                                        fragment: String,
-                                       label: String,
+                                       label _: String,
                                        context: Context) throws -> MTLRenderPipelineState?
 {
     if let library = library, let vertexProgram = library.makeFunction(name: vertex), let fragmentProgram = library.makeFunction(name: fragment) {
@@ -312,8 +312,7 @@ public func compilePipelineSource(_ label: String) throws -> String? {
         var source = try compiler.parse(includesURL)
         source += try compiler.parse(shadersURL)
         return source
-    }
-    catch {
+    } catch {
         print(error)
         return nil
     }
@@ -337,13 +336,12 @@ public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescri
     var vertexSource: String?
     if vertexDescriptor == SatinVertexDescriptor {
         vertexSource = VertexSource.get()
-    }
-    else {
+    } else {
         var vertexDataType: [String] = []
         var vertexName: [String] = []
         var vertexAttributes: [String] = []
 
-        for i in 0..<31 {
+        for i in 0 ..< 31 {
             let format = vertexDescriptor.attributes[i].format
             switch format {
             case .invalid:
@@ -462,7 +460,7 @@ public func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescri
         }
 
         var structMembers: [String] = []
-        for i in 0..<vertexDataType.count {
+        for i in 0 ..< vertexDataType.count {
             structMembers.append("\t\(vertexDataType[i]) \(vertexName[i]) [[attribute(VertexAttribute\(vertexAttributes[i]))]];")
         }
 
@@ -498,8 +496,7 @@ public func injectPassThroughVertex(label: String, source: inout String) {
     if !source.contains(vertexFunctionName), let passThroughVertexSource = PassThroughVertexPipelineSource.get() {
         let vertexSource = passThroughVertexSource.replacingOccurrences(of: "satinVertex", with: vertexFunctionName)
         source = source.replacingOccurrences(of: "// inject vertex shader\n", with: vertexSource + "\n")
-    }
-    else {
+    } else {
         source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
     }
 }
@@ -510,10 +507,10 @@ public func injectPassThroughVertex(source: inout String) {
 
 public func injectInstancingArgs(source: inout String, instancing: Bool) {
     let injection =
-    """
-    \tuint instanceID [[instance_id]],
-    \tconstant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],\n
-    """
+        """
+        \tuint instanceID [[instance_id]],
+        \tconstant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],\n
+        """
     source = source.replacingOccurrences(of: "// inject instancing args\n", with: instancing ? injection : "")
 }
 
@@ -533,8 +530,7 @@ class PassThroughVertexPipelineSource {
         if let vertexURL = getPipelinesCommonUrl("VertexShader.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(vertexURL)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -553,8 +549,7 @@ class ConstantsSource {
         if let url = getPipelinesSatinUrl("Constants.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -573,8 +568,7 @@ class VertexSource {
         if let url = getPipelinesSatinUrl("Vertex.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -593,8 +587,7 @@ class VertexDataSource {
         if let url = getPipelinesSatinUrl("VertexData.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -613,8 +606,7 @@ class VertexUniformsSource {
         if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -633,8 +625,7 @@ class InstanceMatrixUniformsSource {
         if let url = getPipelinesSatinUrl("InstanceMatrixUniforms.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -653,8 +644,7 @@ class LightingSource {
         if let url = getPipelinesSatinUrl("Light.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -673,8 +663,7 @@ class InstancingArgsSource {
         if let url = getPipelinesSatinUrl("InstancingArgs.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error.localizedDescription)
             }
         }
@@ -683,7 +672,7 @@ class InstancingArgsSource {
 }
 
 public func injectTexturesArgs(source: inout String, maps: Set<PBRTexture>) {
-    var injection: String = ""
+    var injection = ""
     for map in maps {
         injection += "\t\(map.textureType)<float> \(map.textureName) [[texture(\(map.textureIndex))]],\n"
     }
@@ -701,8 +690,7 @@ class TextureArgsSource {
         if let url = getPipelinesSatinUrl("TextureArgs.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            }
-            catch {
+            } catch {
                 print(error.localizedDescription)
             }
         }

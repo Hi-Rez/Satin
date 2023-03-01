@@ -15,9 +15,9 @@ import Satin
 class ExtrudedTextRenderer: BaseRenderer {
     var scene = Object()
     var mesh: Mesh!
-    
+
     var camera = PerspectiveCamera(position: [0.0, 0.0, 30.0], near: 0.001, far: 100.0, fov: 60.0)
-    
+
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
@@ -27,11 +27,11 @@ class ExtrudedTextRenderer: BaseRenderer {
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func setup() {
         setupText()
     }
-    
+
     func setupText() {
         let input = "stay hungry\nstay foolish"
         let geo = ExtrudedTextGeometry(
@@ -44,7 +44,7 @@ class ExtrudedTextRenderer: BaseRenderer {
             textAlignment: .left,
             verticalAlignment: .center
         )
-        
+
         let mat = DepthMaterial()
         mat.set("Near", 10.0)
         mat.set("Far", 40.0)
@@ -52,11 +52,11 @@ class ExtrudedTextRenderer: BaseRenderer {
         mesh = Mesh(geometry: geo, material: mat)
         scene.add(mesh)
     }
-    
+
     override func update() {
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -66,7 +66,7 @@ class ExtrudedTextRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)

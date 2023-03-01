@@ -11,7 +11,7 @@ import simd
 open class BoxGeometry: Geometry {
     override public init() {
         super.init()
-        self.setupData(width: 2, height: 2, depth: 2, resWidth: 1, resHeight: 1, resDepth: 1)
+        setupData(width: 2, height: 2, depth: 2, resWidth: 1, resHeight: 1, resDepth: 1)
     }
 
     public convenience init(size: Float) {
@@ -32,14 +32,14 @@ open class BoxGeometry: Geometry {
 
     public init(size: (width: Float, height: Float, depth: Float), res: (width: Int, height: Int, depth: Int)) {
         super.init()
-        self.setupData(width: size.width, height: size.height, depth: size.depth, resWidth: res.width, resHeight: res.height, resDepth: res.depth)
+        setupData(width: size.width, height: size.height, depth: size.depth, resWidth: res.width, resHeight: res.height, resDepth: res.depth)
     }
 
     public init(bounds: Bounds, res: (width: Int, height: Int, depth: Int) = (1, 1, 1)) {
         super.init()
-        self.setupData(bounds, res)
+        setupData(bounds, res)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

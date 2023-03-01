@@ -5,14 +5,14 @@
 //  Created by Reza Ali on 11/3/22.
 //
 
-import Foundation
 import Combine
+import Foundation
 import Metal
 import simd
 
 open class DirectionalLight: Object, Light {
     public var type: LightType { .directional }
-    
+
     public var data: LightData {
         LightData(
             // (rgb, intensity)
@@ -31,12 +31,13 @@ open class DirectionalLight: Object, Light {
             publisher.send(self)
         }
     }
+
     public var intensity: Float {
         didSet {
             publisher.send(self)
         }
     }
-    
+
     public let publisher = PassthroughSubject<Light, Never>()
     private var transformSubscriber: AnyCancellable?
 
@@ -44,30 +45,30 @@ open class DirectionalLight: Object, Light {
         case color
         case intensity
     }
-    
+
     public init(label: String = "Directional Light", color: simd_float3, intensity: Float = 1.0) {
         self.color = color
         self.intensity = intensity
         super.init(label)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         color = try values.decode(simd_float3.self, forKey: .color)
         intensity = try values.decode(Float.self, forKey: .intensity)
         try super.init(from: decoder)
     }
-    
+
     override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(color, forKey: .color)
         try container.encode(intensity, forKey: .intensity)
     }
-    
-    open override func setup() {
+
+    override open func setup() {
         super.setup()
-        transformSubscriber = transformPublisher.sink { [weak self] value in
+        transformSubscriber = transformPublisher.sink { [weak self] _ in
             guard let self = self else { return }
             self.publisher.send(self)
         }

@@ -19,11 +19,11 @@ open class IcosahedronGeometry: Geometry {
         super.init()
         setupData(size: size, res: res)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-    
+
     func setupData(size: Float, res: Int) {
         primitiveType = .triangle
         var geo = generateIcosahedronGeometryData(size, Int32(res))
@@ -46,38 +46,38 @@ class CustomGeometryRenderer: BaseRenderer {
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var texturesURL: URL { assetsURL.appendingPathComponent("Textures") }
     var modelsURL: URL { assetsURL.appendingPathComponent("Models") }
-    
+
     var scene = Object("Scene")
-    
+
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 6.0], near: 0.001, far: 100.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
-    
+
     var mesh: Mesh!
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm
     }
-    
+
     override func setup() {
         setupMesh()
     }
-    
+
     func setupMesh() {
         mesh = Mesh(geometry: IcosahedronGeometry(size: 1.0, res: 4), material: NormalColorMaterial(true))
         mesh.label = "Icosahedron"
         mesh.triangleFillMode = .lines
         scene.add(mesh)
     }
-    
+
     override func update() {
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -87,7 +87,7 @@ class CustomGeometryRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)

@@ -12,8 +12,8 @@ import simd
 
 open class Object: Codable, ObservableObject {
     @Published open var id: String = UUID().uuidString
-    @Published open var label: String = "Object"
-    @Published open var visible: Bool = true
+    @Published open var label = "Object"
+    @Published open var visible = true
 
     open var context: Context? = nil {
         didSet {
@@ -39,8 +39,7 @@ open class Object: Codable, ObservableObject {
         set {
             if let parent = parent {
                 position = simd_make_float3(parent.worldMatrix.inverse * simd_make_float4(newValue, 1.0))
-            }
-            else {
+            } else {
                 position = newValue
             }
         }
@@ -75,8 +74,7 @@ open class Object: Codable, ObservableObject {
         set {
             if let parent = parent {
                 orientation = parent.worldOrientation.inverse * newValue
-            }
-            else {
+            } else {
                 orientation = newValue
             }
         }
@@ -107,8 +105,7 @@ open class Object: Codable, ObservableObject {
         set {
             if let parent = parent {
                 scale = newValue / parent.worldScale
-            }
-            else {
+            } else {
                 scale = newValue
             }
         }
@@ -141,7 +138,7 @@ open class Object: Codable, ObservableObject {
         }
     }
 
-    var updateLocalMatrix: Bool = true {
+    var updateLocalMatrix = true {
         didSet {
             if updateLocalMatrix {
                 _updateLocalBounds = true
@@ -169,8 +166,7 @@ open class Object: Codable, ObservableObject {
             _worldMatrix.get {
                 if let parent = parent {
                     return simd_mul(parent.worldMatrix, localMatrix)
-                }
-                else {
+                } else {
                     return localMatrix
                 }
             }
@@ -178,14 +174,13 @@ open class Object: Codable, ObservableObject {
         set {
             if let parent = parent {
                 localMatrix = parent.worldMatrix.inverse * newValue
-            }
-            else {
+            } else {
                 localMatrix = newValue
             }
         }
     }
 
-    var updateWorldMatrix: Bool = true {
+    var updateWorldMatrix = true {
         didSet {
             if updateWorldMatrix {
                 _updateWorldBounds = true
@@ -216,7 +211,7 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - Local Bounds
 
-    var _updateLocalBounds: Bool = true {
+    var _updateLocalBounds = true {
         didSet {
             if _updateLocalBounds {
                 _updateWorldBounds = true
@@ -235,7 +230,7 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - World Bounds
 
-    var _updateWorldBounds: Bool = true {
+    var _updateWorldBounds = true {
         didSet {
             if _updateWorldBounds {
                 parent?._updateWorldBounds = true
@@ -280,7 +275,7 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - OnUpdate Hook
 
-    public var onUpdate: (() -> ())?
+    public var onUpdate: (() -> Void)?
 
     // MARK: - Publishers
 
@@ -382,7 +377,7 @@ open class Object: Codable, ObservableObject {
         onUpdate?()
     }
 
-    open func update(camera: Camera, viewport: simd_float4) {}
+    open func update(camera _: Camera, viewport _: simd_float4) {}
 
     // MARK: - Inserting, Adding, Attaching & Removing
 
@@ -447,7 +442,7 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - Recursive Scene Graph Functions
 
-    public func apply(_ fn: (_ object: Object) -> (), _ recursive: Bool = true) {
+    public func apply(_ fn: (_ object: Object) -> Void, _ recursive: Bool = true) {
         fn(self)
         if recursive {
             for child in children {
@@ -456,21 +451,21 @@ open class Object: Codable, ObservableObject {
         }
     }
 
-    public func traverse(_ fn: (_ object: Object) -> ()) {
+    public func traverse(_ fn: (_ object: Object) -> Void) {
         for child in children {
             fn(child)
             child.traverse(fn)
         }
     }
 
-    public func traverseVisible(_ fn: (_ object: Object) -> ()) {
+    public func traverseVisible(_ fn: (_ object: Object) -> Void) {
         for child in children where child.visible {
             fn(child)
             child.traverse(fn)
         }
     }
 
-    public func traverseAncestors(_ fn: (_ object: Object) -> ()) {
+    public func traverseAncestors(_ fn: (_ object: Object) -> Void) {
         if let parent = parent {
             fn(parent)
             parent.traverseAncestors(fn)
@@ -494,8 +489,7 @@ open class Object: Codable, ObservableObject {
         for child in children {
             if child.label == name {
                 return child
-            }
-            else if recursive, let found = child.getChild(name, recursive) {
+            } else if recursive, let found = child.getChild(name, recursive) {
                 return found
             }
         }
@@ -528,8 +522,7 @@ open class Object: Codable, ObservableObject {
         for child in children {
             if child.label == name {
                 results.append(child)
-            }
-            else if recursive {
+            } else if recursive {
                 child.getChildrenByName(name, recursive, &results)
             }
         }
@@ -540,8 +533,7 @@ open class Object: Codable, ObservableObject {
     public func isVisible() -> Bool {
         if let parent = parent {
             return (parent.isVisible() && visible)
-        }
-        else {
+        } else {
             return visible
         }
     }
@@ -551,8 +543,7 @@ open class Object: Codable, ObservableObject {
     public func isLight() -> Bool {
         if let parent = parent {
             return (parent.isLight() || (self is Light))
-        }
-        else {
+        } else {
             return (self is Light)
         }
     }

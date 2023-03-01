@@ -87,18 +87,18 @@ class OcclusionRenderer: BaseRenderer {
         renderer.resize(size)
     }
 
-#if os(macOS)
+    #if os(macOS)
     override func mouseDown(with event: NSEvent) {
         intersect(coordinate: normalizePoint(mtkView.convert(event.locationInWindow, from: nil), mtkView.frame.size))
     }
 
-#elseif os(iOS)
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    #elseif os(iOS)
+    override func touchesBegan(_ touches: Set<UITouch>, with _: UIEvent?) {
         if let first = touches.first {
             intersect(coordinate: normalizePoint(first.location(in: mtkView), mtkView.frame.size))
         }
     }
-#endif
+    #endif
 
     func intersect(coordinate: simd_float2) {
         let results = raycast(camera: camera, coordinate: coordinate, object: scene)
@@ -111,10 +111,10 @@ class OcclusionRenderer: BaseRenderer {
     }
 
     func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
-#if os(macOS)
+        #if os(macOS)
         return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
-#else
+        #else
         return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
-#endif
+        #endif
     }
 }

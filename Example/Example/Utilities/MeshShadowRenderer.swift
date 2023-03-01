@@ -6,8 +6,8 @@
 //  Copyright © 2023 Hi-Rez. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 import Metal
 import MetalPerformanceShaders
 import Satin
@@ -17,7 +17,7 @@ class MeshShadowRenderer {
         _texture
     }
 
-    public var update: Bool = true
+    public var update = true
 
     private var subscription: AnyCancellable?
     private var device: MTLDevice
@@ -81,14 +81,13 @@ class MeshShadowRenderer {
 
             self?.shadowMesh.material?.set("Color", [0.0, 0.0, 0.0, alpha])
         }
-
     }
 
     func draw(commandBuffer: MTLCommandBuffer) {
         guard update, var _texture = _texture else { return }
-        
+
         let rpd = MTLRenderPassDescriptor()
-        rpd.colorAttachments[0].texture =  _texture
+        rpd.colorAttachments[0].texture = _texture
         rpd.renderTargetWidth = width
         rpd.renderTargetHeight = height
 
@@ -120,5 +119,3 @@ class MeshShadowRenderer {
         return texture
     }
 }
-
-

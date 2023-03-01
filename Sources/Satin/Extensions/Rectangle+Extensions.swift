@@ -1,6 +1,6 @@
 //
 //  Rectangle+Extensions.swift
-//  
+//
 //
 //  Created by Reza Ali on 12/2/22.
 //
@@ -16,11 +16,11 @@ public extension Rectangle {
     var size: simd_float2 {
         max - min
     }
-    
+
     var width: Float {
         size.x
     }
-    
+
     var height: Float {
         size.y
     }
@@ -37,17 +37,16 @@ public extension Rectangle {
             simd_make_float2(min.x, min.y), // 3
         ]
     }
-    
+
     func contains(rectangle: Rectangle) {
         rectangleContainsRectangle(self, rectangle)
     }
-    
+
     func intersects(rectangle: Rectangle) -> Bool {
         return rectangleIntersectsRectangle(self, rectangle)
     }
-    
+
     func contains(point: simd_float2) -> Bool {
         return rectangleContainsPoint(self, point)
     }
 }
-

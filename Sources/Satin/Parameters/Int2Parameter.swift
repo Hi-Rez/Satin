@@ -17,8 +17,8 @@ public class Int2Parameter: GenericParameterWithMinMax<simd_int2> {
     override public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }
-    
-    public override subscript<T>(index: Int) -> T {
+
+    override public subscript<T>(index: Int) -> T {
         get {
             return value[index] as! T
         }

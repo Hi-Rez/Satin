@@ -14,23 +14,23 @@ import Satin
 
 class BufferComputeRenderer: BaseRenderer {
     class ParticleComputeSystem: LiveBufferComputeSystem {}
-    
+
     class SpriteMaterial: SourceMaterial {}
     class ChromaMaterial: SourceMaterial {}
 
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    
+
     lazy var particleSystem = ParticleComputeSystem(device: device, pipelinesURL: pipelinesURL, count: 8192)
-    
+
     lazy var spriteMaterial: SpriteMaterial = {
         let material = SpriteMaterial(pipelinesURL: pipelinesURL)
         material.blending = .additive
         material.depthWriteEnabled = false
         return material
     }()
-    
+
     lazy var mesh: Mesh = {
         let mesh = Mesh(geometry: PointGeometry(), material: spriteMaterial)
         mesh.instanceCount = particleSystem.count
@@ -41,23 +41,23 @@ class BufferComputeRenderer: BaseRenderer {
         }
         return mesh
     }()
-    
+
     var camera = PerspectiveCamera(position: [0.0, 0.0, 100.0], near: 0.001, far: 1000.0)
-    
+
     lazy var scene: Object = .init("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, .invalid, .invalid)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
-    
+
     var startTime: CFAbsoluteTime = 0.0
-    
+
     // MARK: Render to Texture
-    
+
     var renderTexture: MTLTexture!
-    var updateRenderTexture: Bool = true
-    
+    var updateRenderTexture = true
+
     lazy var chromaMaterial = ChromaMaterial(pipelinesURL: pipelinesURL)
-    
+
     lazy var chromaticProcessor: PostProcessor = {
         let pp = PostProcessor(context: Context(context.device, context.sampleCount, context.colorPixelFormat, .invalid, .invalid), material: chromaMaterial)
         pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
@@ -66,37 +66,37 @@ class BufferComputeRenderer: BaseRenderer {
         pp.label = "Chroma Processor"
         return pp
     }()
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm
         metalKitView.depthStencilPixelFormat = .invalid
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func setup() {
         startTime = CFAbsoluteTimeGetCurrent()
     }
-    
+
     override func update() {
         if updateRenderTexture {
             renderTexture = createTexture("Render Texture", context.colorPixelFormat)
             updateRenderTexture = false
         }
-        
+
         var time = Float(CFAbsoluteTimeGetCurrent() - startTime)
         chromaMaterial.set("Time", time)
-        
+
         time *= 0.25
         let radius: Float = 10.0 * sin(time * 0.5) * cos(time)
         camera.position = simd_make_float3(radius * sin(time), radius * cos(time), 100.0)
-        
+
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         particleSystem.update(commandBuffer)
-        
+
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
             renderPassDescriptor: renderPassDescriptor,
@@ -105,23 +105,22 @@ class BufferComputeRenderer: BaseRenderer {
             camera: camera,
             renderTarget: renderTexture
         )
-        
+
         chromaticProcessor.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
         chromaticProcessor.resize(size)
         updateRenderTexture = true
     }
-    
+
     #if os(macOS)
     func openEditor() {
         if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
             NSWorkspace.shared.openFile(assetsURL.path, withApplication: editorPath)
-        }
-        else {
+        } else {
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.allowsMultipleSelection = false
@@ -138,14 +137,14 @@ class BufferComputeRenderer: BaseRenderer {
             })
         }
     }
-    
+
     override func keyDown(with event: NSEvent) {
         if event.characters == "e" {
             openEditor()
         }
     }
     #endif
-    
+
     func createTexture(_ label: String, _ pixelFormat: MTLPixelFormat) -> MTLTexture? {
         if mtkView.drawableSize.width > 0, mtkView.drawableSize.height > 0 {
             let descriptor = MTLTextureDescriptor()

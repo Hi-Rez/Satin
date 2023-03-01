@@ -18,7 +18,7 @@ public struct RaycastResult {
     public let object: Object
     public let submesh: Submesh?
     public let instance: Int
-    
+
     public init(barycentricCoordinates: simd_float3, distance: Float, normal: simd_float3, position: simd_float3, uv: simd_float2, primitiveIndex: UInt32, object: Object, submesh: Submesh?, instance: Int = 0) {
         self.barycentricCoordinates = barycentricCoordinates
         self.distance = distance

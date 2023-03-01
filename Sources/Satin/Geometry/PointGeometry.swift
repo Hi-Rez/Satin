@@ -10,9 +10,9 @@ import simd
 open class PointGeometry: Geometry {
     override public init() {
         super.init()
-        self.setupData()
+        setupData()
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

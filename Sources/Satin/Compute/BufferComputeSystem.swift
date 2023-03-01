@@ -12,16 +12,16 @@ public protocol BufferComputeSystemDelegate: AnyObject {
 }
 
 open class BufferComputeSystem {
-    var _reset: Bool = true
-    var _setupBuffers: Bool = false
-    var _index: Int = 0
-    var _count: Int = 0
+    var _reset = true
+    var _setupBuffers = false
+    var _index = 0
+    var _count = 0
 
-    private var _useDispatchThreads: Bool = false
+    private var _useDispatchThreads = false
 
-    public var label: String = "Satin Buffer Compute Encoder"
+    public var label = "Satin Buffer Compute Encoder"
 
-    public var count: Int = 0 {
+    public var count = 0 {
         didSet {
             if count != oldValue {
                 _reset = true
@@ -52,9 +52,9 @@ open class BufferComputeSystem {
 
     var params: [ParameterGroup] = []
 
-    public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
-    public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
-    public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> ())?
+    public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> Void)?
+    public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> Void)?
+    public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ bufferOffset: Int) -> Void)?
 
     public var device: MTLDevice
 
@@ -76,7 +76,7 @@ open class BufferComputeSystem {
         self.updatePipeline = updatePipeline
         self.params = params
         self.count = count
-        self._count = count
+        _count = count
         self.feedback = feedback
         setupBuffers()
     }
@@ -88,7 +88,7 @@ open class BufferComputeSystem {
 
         self.device = device
         self.count = count
-        self._count = count
+        _count = count
         self.feedback = feedback
         setup()
     }
@@ -139,7 +139,7 @@ open class BufferComputeSystem {
                 bufferMap[label] = []
                 bufferOrder.append(label)
                 var buffers: [MTLBuffer] = []
-                for i in 0..<bufferCount {
+                for i in 0 ..< bufferCount {
                     if let buffer = device.makeBuffer(length: stride * count, options: [.storageModePrivate]) {
                         buffer.label = param.label + " \(i)"
                         buffers.append(buffer)
@@ -174,7 +174,7 @@ open class BufferComputeSystem {
             computeEncoder.label = label
             if _reset, let pipeline = resetPipeline {
                 computeEncoder.setComputePipelineState(pipeline)
-                for i in 0..<bufferCount {
+                for i in 0 ..< bufferCount {
                     let offset = setBuffers(computeEncoder, i, ComputeBufferIndex.Custom0.rawValue)
                     preReset?(computeEncoder, offset)
                     preCompute?(computeEncoder, offset)

@@ -21,7 +21,7 @@ open class OctaSphereGeometry: Geometry {
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-    
+
     func setupData(radius: Float, res: Int) {
         var geometryData = generateOctaSphereGeometryData(radius, Int32(res))
         setFrom(&geometryData)

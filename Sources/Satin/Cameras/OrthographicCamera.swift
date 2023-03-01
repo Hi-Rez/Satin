@@ -8,95 +8,73 @@
 
 import simd
 
-open class OrthographicCamera: Camera
-{
-    override public var scale: simd_float3
-    {
-        didSet
-        {
+open class OrthographicCamera: Camera {
+    override public var scale: simd_float3 {
+        didSet {
             updateViewMatrix = true
             updateWorldMatrix = true
         }
     }
-    
-    override public var position: simd_float3
-    {
-        didSet
-        {
+
+    override public var position: simd_float3 {
+        didSet {
             updateViewMatrix = true
             updateWorldMatrix = true
         }
     }
-    
-    public var left: Float = -1.0
-    {
-        didSet
-        {
+
+    public var left: Float = -1.0 {
+        didSet {
             updateProjectionMatrix = true
         }
     }
-    
-    public var right: Float = 1.0
-    {
-        didSet
-        {
+
+    public var right: Float = 1.0 {
+        didSet {
             updateProjectionMatrix = true
         }
     }
-    
-    public var top: Float = 1.0
-    {
-        didSet
-        {
+
+    public var top: Float = 1.0 {
+        didSet {
             updateProjectionMatrix = true
         }
     }
-    
-    public var bottom: Float = -1.0
-    {
-        didSet
-        {
+
+    public var bottom: Float = -1.0 {
+        didSet {
             updateProjectionMatrix = true
         }
     }
-    
-    override public var projectionMatrix: matrix_float4x4
-    {
-        get
-        {
-            if updateProjectionMatrix
-            {
+
+    override public var projectionMatrix: matrix_float4x4 {
+        get {
+            if updateProjectionMatrix {
                 _projectionMatrix = orthographicMatrixf(left, right, bottom, top, near, far)
                 updateProjectionMatrix = false
             }
             return _projectionMatrix
         }
-        set
-        {
+        set {
             _projectionMatrix = newValue
         }
     }
-    
-    override public var viewMatrix: matrix_float4x4
-    {
-        get
-        {
-            if updateViewMatrix
-            {
+
+    override public var viewMatrix: matrix_float4x4 {
+        get {
+            if updateViewMatrix {
                 _viewMatrix = worldMatrix.inverse
                 updateViewMatrix = false
             }
             return _viewMatrix
         }
-        set
-        {
+        set {
             _viewMatrix = newValue
             localMatrix = newValue.inverse
         }
     }
-    
-    override public init()
-    {
+
+    override public init() {
         super.init()
         left = -1
         right = 1
@@ -105,9 +83,8 @@ open class OrthographicCamera: Camera
         near = -1
         far = 1
     }
-    
-    public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
-    {
+
+    public init(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float) {
         super.init()
         self.left = left
         self.right = right
@@ -116,15 +93,14 @@ open class OrthographicCamera: Camera
         self.near = near
         self.far = far
     }
-    
-    public func update(left: Float, right: Float, bottom: Float, top: Float)
-    {
+
+    public func update(left: Float, right: Float, bottom: Float, top: Float) {
         self.left = left
         self.right = right
         self.bottom = bottom
         self.top = top
     }
-    
+
     public func update(left: Float, right: Float, bottom: Float, top: Float, near: Float, far: Float)
     {
         self.left = left
@@ -134,9 +110,8 @@ open class OrthographicCamera: Camera
         self.near = near
         self.far = far
     }
-    
-    public required init(from decoder: Decoder) throws
-    {
+
+    public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
         let values = try decoder.container(keyedBy: CodingKeys.self)
         left = try values.decode(Float.self, forKey: .left)
@@ -146,9 +121,8 @@ open class OrthographicCamera: Camera
         near = try values.decode(Float.self, forKey: .near)
         far = try values.decode(Float.self, forKey: .far)
     }
-    
-    override open func encode(to encoder: Encoder) throws
-    {
+
+    override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(left, forKey: .left)
@@ -158,9 +132,8 @@ open class OrthographicCamera: Camera
         try container.encode(near, forKey: .near)
         try container.encode(far, forKey: .far)
     }
-    
-    private enum CodingKeys: String, CodingKey
-    {
+
+    private enum CodingKeys: String, CodingKey {
         case left
         case right
         case bottom
@@ -168,19 +141,16 @@ open class OrthographicCamera: Camera
         case near
         case far
     }
-    
+
     // Projects a point from the camera's normalized device coordinate (NDC) space into world space, the returned point is at a distance equal to the near property of the camera
-    override open func unProject(_ ndcCoordinate: simd_float2) -> simd_float3
-    {
+    override open func unProject(_ ndcCoordinate: simd_float2) -> simd_float3 {
         let wc = worldMatrix * projectionMatrix.inverse * simd_make_float4(ndcCoordinate.x, ndcCoordinate.y, -far / (near - far), 1.0)
         return simd_make_float3(wc) / wc.w
     }
-    
-    override public func setFrom(_ object: Object)
-    {
+
+    override public func setFrom(_ object: Object) {
         super.setFrom(object)
-        if let camera = object as? OrthographicCamera
-        {
+        if let camera = object as? OrthographicCamera {
             left = camera.left
             right = camera.right
             bottom = camera.bottom

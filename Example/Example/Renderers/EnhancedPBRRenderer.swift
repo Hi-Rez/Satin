@@ -6,16 +6,16 @@
 //  Copyright © 2023 Hi-Rez. All rights reserved.
 //
 
+import Forge
 import Metal
 import MetalKit
-import Forge
 import Satin
 
 class EnhancedPBRRenderer: BaseRenderer {
     // MARK: - 3D Scene
-    
+
     class CustomShader: PBRShader {
-        open override var defines: [String: String] {
+        override open var defines: [String: String] {
             var results = super.defines
             results["HAS_CLEARCOAT"] = "true"
             results["HAS_SUBSURFACE"] = "true"
@@ -26,39 +26,39 @@ class EnhancedPBRRenderer: BaseRenderer {
             return results
         }
     }
-    
+
     class CustomMaterial: StandardMaterial {
         var pipelineURL: URL
         required init(pipelinesURL: URL) {
-            self.pipelineURL = pipelinesURL.appendingPathComponent("Custom").appendingPathComponent("Shaders.metal")
+            pipelineURL = pipelinesURL.appendingPathComponent("Custom").appendingPathComponent("Shaders.metal")
             super.init(baseColor: .one, metallic: .zero, roughness: .zero)
         }
-        
+
         required init() {
             fatalError("init() has not been implemented")
         }
-        
-        required init(from decoder: Decoder) throws {
+
+        required init(from _: Decoder) throws {
             fatalError("init(from:) has not been implemented")
         }
-        
+
         override func createShader() -> Shader {
             return CustomShader(label, pipelineURL)
         }
     }
-    
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
-    
+
     lazy var scene = Object("Scene", [mesh, skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 40.0], near: 0.001, far: 1000.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer: Satin.Renderer = .init(context: context)
-    
+
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
         mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
@@ -67,22 +67,22 @@ class EnhancedPBRRenderer: BaseRenderer {
     }()
 
     lazy var mesh: InstancedMesh = {
-        let mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.875, res: 4), material: customMaterial, count: 11*12)
+        let mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.875, res: 4), material: customMaterial, count: 11 * 12)
         mesh.label = "Spheres"
         let placer = Object()
-        for y in 0..<12 {
-            for x in 0..<11 {
-                let index = y * 11 + x;
+        for y in 0 ..< 12 {
+            for x in 0 ..< 11 {
+                let index = y * 11 + x
                 placer.position = simd_make_float3(2.0 * Float(x) - 10, 2.0 * Float(y) - 11, 0.0)
                 mesh.setMatrixAt(index: index, matrix: placer.localMatrix)
             }
         }
         return mesh
     }()
-    
+
     lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
     lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
-    
+
     // Textures
     var hdriTexture: MTLTexture?
     var cubemapTexture: MTLTexture?
@@ -96,7 +96,7 @@ class EnhancedPBRRenderer: BaseRenderer {
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm
     }
-    
+
     override func setup() {
         setupLights()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -107,16 +107,16 @@ class EnhancedPBRRenderer: BaseRenderer {
             self.setupBRDF()
         }
     }
-    
+
     func setupLights() {
         let dist: Float = 12.0
         let positions = [
             simd_make_float3(dist, dist, dist),
             simd_make_float3(-dist, dist, dist),
             simd_make_float3(dist, -dist, dist),
-            simd_make_float3(-dist, -dist, dist)
+            simd_make_float3(-dist, -dist, dist),
         ]
-        
+
         let sphereLightGeo = mesh.geometry
         let sphereLightMat = BasicColorMaterial(.one, .disabled)
         for (index, position) in positions.enumerated() {
@@ -126,16 +126,16 @@ class EnhancedPBRRenderer: BaseRenderer {
             lightMesh.scale = .init(repeating: 0.25)
             lightMesh.label = "Light Mesh \(index)"
             light.add(lightMesh)
-            
+
             scene.add(light)
         }
     }
-    
+
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
         hdriTexture = loadHDR(device, texturesURL.appendingPathComponent(filename))
     }
-    
+
     func setupCubemap() {
         if let hdriTexture = hdriTexture, let commandBuffer = commandQueue.makeCommandBuffer(), let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true) {
             CubemapGenerator(device: device)
@@ -144,10 +144,9 @@ class EnhancedPBRRenderer: BaseRenderer {
             commandBuffer.waitUntilCompleted()
             cubemapTexture = texture
             skyboxMaterial.texture = texture
-            
         }
     }
-    
+
     func setupDiffuseIBL() {
         if let cubemapTexture = cubemapTexture,
            let commandBuffer = commandQueue.makeCommandBuffer(),
@@ -155,16 +154,16 @@ class EnhancedPBRRenderer: BaseRenderer {
         {
             DiffuseIBLGenerator(device: device)
                 .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-            
+
             commandBuffer.commit()
             commandBuffer.waitUntilCompleted()
-            
+
             diffuseIBLTexture = texture
             customMaterial.setTexture(diffuseIBLTexture, type: .irradiance)
             texture.label = "Diffuse IBL"
         }
     }
-    
+
     func setupSpecularIBL() {
         if let cubemapTexture = cubemapTexture,
            let commandBuffer = commandQueue.makeCommandBuffer(),
@@ -172,16 +171,16 @@ class EnhancedPBRRenderer: BaseRenderer {
         {
             SpecularIBLGenerator(device: device)
                 .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-            
+
             commandBuffer.commit()
             commandBuffer.waitUntilCompleted()
-            
+
             specularIBLTexture = texture
             customMaterial.setTexture(specularIBLTexture, type: .reflection)
             texture.label = "Specular IBL"
         }
     }
-    
+
     func setupBRDF() {
         if let commandBuffer = commandQueue.makeCommandBuffer() {
             brdfTexture = BrdfGenerator(device: device, size: 512)
@@ -191,7 +190,7 @@ class EnhancedPBRRenderer: BaseRenderer {
             commandBuffer.waitUntilCompleted()
         }
     }
-    
+
     func createCubemapTexture(pixelFormat: MTLPixelFormat, size: Int, mipmapped: Bool) -> MTLTexture?
     {
         let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: pixelFormat, size: size, mipmapped: mipmapped)
@@ -199,11 +198,11 @@ class EnhancedPBRRenderer: BaseRenderer {
         texture?.label = "Cubemap"
         return texture
     }
-    
+
     override func update() {
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -213,7 +212,7 @@ class EnhancedPBRRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)

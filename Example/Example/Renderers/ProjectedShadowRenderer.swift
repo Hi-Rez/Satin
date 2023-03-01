@@ -50,8 +50,6 @@ class ProjectedShadowRenderer: BaseRenderer {
         cameraController.target.position.y += 1
     }
 
-
-
     override func update() {
         cameraController.update()
 

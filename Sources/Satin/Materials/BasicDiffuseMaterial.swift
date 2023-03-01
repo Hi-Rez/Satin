@@ -17,7 +17,7 @@ open class BasicDiffuseMaterial: BasicColorMaterial {
         super.init()
         set("Hardness", 0.75)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

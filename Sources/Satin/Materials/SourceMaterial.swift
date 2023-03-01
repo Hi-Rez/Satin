@@ -12,9 +12,9 @@ open class SourceMaterial: Material {
     public enum CodingKeys: String, CodingKey {
         case pipelineURL
     }
-    
+
     public var pipelineURL: URL
-    
+
     public var source: String? {
         if let shader = shader as? SourceShader {
             return shader.source
@@ -36,23 +36,23 @@ open class SourceMaterial: Material {
                 .appendingPathComponent("Shaders.metal")
         }
     }
-    
+
     override open func createShader() -> Shader {
         return SourceShader(label, pipelineURL)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         pipelineURL = try values.decode(URL.self, forKey: .pipelineURL)
         try super.init(from: decoder)
     }
-    
+
     override open func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(pipelineURL, forKey: .pipelineURL)
     }
-    
+
     public required init() {
         fatalError("Please specify a pipeline url to use SourceMaterial")
     }

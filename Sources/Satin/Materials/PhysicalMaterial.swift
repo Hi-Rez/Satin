@@ -24,7 +24,7 @@ open class PhysicalMaterial: StandardMaterial {
             set("Anisotropic", anisotropic)
         }
     }
-    
+
     public var specularTint: Float = .zero {
         didSet {
             set("Specular Tint", specularTint)
@@ -36,25 +36,25 @@ open class PhysicalMaterial: StandardMaterial {
             set("Clearcoat", clearcoat)
         }
     }
-    
+
     public var clearcoatRoughness: Float = .zero {
         didSet {
             set("Clearcoat Roughness", clearcoatRoughness)
         }
     }
-    
+
     public var sheen: Float = .zero {
         didSet {
             set("Sheen", sheen)
         }
     }
-    
+
     public var sheenTint: Float = .zero {
         didSet {
             set("Sheen Tint", sheenTint)
         }
     }
-    
+
     public var transmission: Float = .zero {
         didSet {
             set("Transmission", transmission)
@@ -66,7 +66,7 @@ open class PhysicalMaterial: StandardMaterial {
             set("Thickness", thickness)
         }
     }
-    
+
     public var ior: Float = 1.5 {
         didSet {
             set("Ior", ior)
@@ -89,22 +89,22 @@ open class PhysicalMaterial: StandardMaterial {
     }
 
     public init(baseColor: simd_float4 = .one,
-                         metallic: Float = 1.0,
-                         roughness: Float = 1.0,
-                         specular: Float = 0.5,
-                         emissiveColor: simd_float4 = .zero,
-                         subsurface: Float = .zero,
-                         anisotropic: Float = .zero,
-                         specularTint: Float = .zero,
-                         clearcoat: Float = .zero,
-                         clearcoatRoughness: Float = .zero,
-                         sheen: Float = .zero,
-                         sheenTint: Float = .zero,
-                         transmission: Float = .zero,
-                         thickness: Float = 0.0,
-                         ior: Float = 1.5,
-                         maps: [PBRTexture : MTLTexture?] = [:]) {
-
+                metallic: Float = 1.0,
+                roughness: Float = 1.0,
+                specular: Float = 0.5,
+                emissiveColor: simd_float4 = .zero,
+                subsurface: Float = .zero,
+                anisotropic: Float = .zero,
+                specularTint: Float = .zero,
+                clearcoat: Float = .zero,
+                clearcoatRoughness: Float = .zero,
+                sheen: Float = .zero,
+                sheenTint: Float = .zero,
+                transmission: Float = .zero,
+                thickness: Float = 0.0,
+                ior: Float = 1.5,
+                maps: [PBRTexture: MTLTexture?] = [:])
+    {
         super.init(baseColor: baseColor, metallic: metallic, roughness: roughness, specular: specular, emissiveColor: emissiveColor, maps: maps)
 
         self.subsurface = subsurface
@@ -119,22 +119,22 @@ open class PhysicalMaterial: StandardMaterial {
         self.thickness = thickness
         self.ior = ior
 
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
 
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-    
+
     public required init() {
         super.init()
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
-    
+
     override open func createShader() -> Shader {
         return PhysicalShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
     }

@@ -10,9 +10,9 @@ import simd
 open class SquircleGeometry: Geometry {
     public init(size: Float = 2.0, p: Float = 4.0, res: (angular: Int, radial: Int) = (90, 20)) {
         super.init()
-        self.setupData(size: size, p: p, res: res)
+        setupData(size: size, p: p, res: res)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

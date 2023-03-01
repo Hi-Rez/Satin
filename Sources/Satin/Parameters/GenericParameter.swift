@@ -27,7 +27,7 @@ public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
     // Setable Properties
     public var controlType = ControlType.none
     public var label: String
-    
+
     public var description: String {
         "Label: \(label) type: \(string) value: \(value)"
     }
@@ -39,7 +39,7 @@ public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
         }
     }
 
-    public subscript<T>(index: Int) -> T {
+    public subscript<T>(_: Int) -> T {
         get {
             return value as! T
         }

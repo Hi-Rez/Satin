@@ -1,6 +1,6 @@
 //
 //  AnyMaterial.swift
-//  
+//
 //
 //  Created by Reza Ali on 11/18/22.
 //
@@ -46,42 +46,31 @@ open class AnyMaterial: Codable {
 
     public init(_ material: Material) {
         self.material = material
-        
+
         if material is BasicColorMaterial {
-            self.type = .basiccolor
-        }
-        else if material is BasicDiffuseMaterial {
-            self.type = .basicdiffuse
-        }
-        else if material is BasicPointMaterial {
-            self.type = .basicpoint
-        }
-        else if material is BasicTextureMaterial {
-            self.type = .basictexture
-        }
-        else if material is DepthMaterial {
-            self.type = .depth
-        }
-        else if material is LiveMaterial {
-            self.type = .live
-        }
-        else if material is MatCapMaterial {
-            self.type = .matcap
-        }
-        else if material is NormalColorMaterial {
-            self.type = .normal
-        }
-        else if material is SkyboxMaterial {
-            self.type = .skybox
-        }
-        else if material is StandardMaterial {
-            self.type = .standard
-        }
-        else if material is UvColorMaterial {
-            self.type = .uvcolor
-        }
-        else {
-            self.type = .base
+            type = .basiccolor
+        } else if material is BasicDiffuseMaterial {
+            type = .basicdiffuse
+        } else if material is BasicPointMaterial {
+            type = .basicpoint
+        } else if material is BasicTextureMaterial {
+            type = .basictexture
+        } else if material is DepthMaterial {
+            type = .depth
+        } else if material is LiveMaterial {
+            type = .live
+        } else if material is MatCapMaterial {
+            type = .matcap
+        } else if material is NormalColorMaterial {
+            type = .normal
+        } else if material is SkyboxMaterial {
+            type = .skybox
+        } else if material is StandardMaterial {
+            type = .standard
+        } else if material is UvColorMaterial {
+            type = .uvcolor
+        } else {
+            type = .base
         }
     }
 

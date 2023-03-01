@@ -10,22 +10,18 @@ import Combine
 import Metal
 import simd
 
-open class Renderer
-{
-    public var label: String = "Satin Renderer"
+open class Renderer {
+    public var label = "Satin Renderer"
 
-    public var onUpdate: (() -> ())?
-    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
-    public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
+    public var onUpdate: (() -> Void)?
+    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
+    public var postDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
 
-    public var sortObjects: Bool = false
+    public var sortObjects = false
 
-    public var context: Context
-    {
-        didSet
-        {
-            if oldValue != context
-            {
+    public var context: Context {
+        didSet {
+            if oldValue != context {
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true
@@ -33,12 +29,9 @@ open class Renderer
         }
     }
 
-    public var size: (width: Float, height: Float) = (0, 0)
-    {
-        didSet
-        {
-            if oldValue.width != size.width || oldValue.height != size.height
-            {
+    public var size: (width: Float, height: Float) = (0, 0) {
+        didSet {
+            if oldValue.width != size.width || oldValue.height != size.height {
                 let width = Double(size.width)
                 let height = Double(size.height)
                 viewport = MTLViewport(
@@ -57,31 +50,29 @@ open class Renderer
     }
 
     public var clearColor: MTLClearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
-    public var clearDepth: Double = 0.0
+    public var clearDepth = 0.0
     public var clearStencil: UInt32 = 0
 
-    public var updateColorTexture: Bool = true
+    public var updateColorTexture = true
     public var colorTexture: MTLTexture?
 
     public var colorLoadAction: MTLLoadAction = .clear
     public var colorStoreAction: MTLStoreAction = .store
 
-    public var updateDepthTexture: Bool = true
+    public var updateDepthTexture = true
     public var depthTexture: MTLTexture?
 
     public var depthLoadAction: MTLLoadAction = .clear
     public var depthStoreAction: MTLStoreAction = .dontCare
 
-    public var updateStencilTexture: Bool = true
+    public var updateStencilTexture = true
     public var stencilTexture: MTLTexture?
 
     public var stencilLoadAction: MTLLoadAction = .clear
     public var stencilStoreAction: MTLStoreAction = .dontCare
 
-    public var viewport = MTLViewport()
-    {
-        didSet
-        {
+    public var viewport = MTLViewport() {
+        didSet {
             _viewport = simd_make_float4(
                 Float(viewport.originX),
                 Float(viewport.originY),
@@ -91,10 +82,8 @@ open class Renderer
         }
     }
 
-    public var invertViewportNearFar: Bool = false
-    {
-        didSet
-        {
+    public var invertViewportNearFar = false {
+        didSet {
             let width = Double(size.width)
             let height = Double(size.height)
             viewport = MTLViewport(
@@ -113,19 +102,17 @@ open class Renderer
     private var renderList: [Renderable] = []
     private var lightList: [Light] = []
 
-    private var _updateLightBuffer: Bool = false
+    private var _updateLightBuffer = false
     private var lightBuffer: StructBuffer<LightData>?
     private var lightSubscriptions = Set<AnyCancellable>()
 
     // MARK: - Init
 
-    public init(context: Context)
-    {
+    public init(context: Context) {
         self.context = context
     }
 
-    public func setClearColor(_ color: simd_float4)
-    {
+    public func setClearColor(_ color: simd_float4) {
         clearColor = .init(red: Double(color.x), green: Double(color.y), blue: Double(color.z), alpha: Double(color.w))
     }
 
@@ -133,15 +120,12 @@ open class Renderer
 
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, scene: Object, camera: Camera, renderTarget: MTLTexture)
     {
-        if context.sampleCount > 1
-        {
+        if context.sampleCount > 1 {
             let resolveTexture = renderPassDescriptor.colorAttachments[0].resolveTexture
             renderPassDescriptor.colorAttachments[0].resolveTexture = renderTarget
             draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, scene: scene, camera: camera)
             renderPassDescriptor.colorAttachments[0].resolveTexture = resolveTexture
-        }
-        else
-        {
+        } else {
             let renderTexture = renderPassDescriptor.colorAttachments[0].texture
             renderPassDescriptor.colorAttachments[0].texture = renderTarget
             draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, scene: scene, camera: camera)
@@ -177,8 +161,7 @@ open class Renderer
         {
             setupDepthTexture()
             renderPassDescriptor.depthAttachment.texture = depthTexture
-            if depthPixelFormat == .depth32Float_stencil8
-            {
+            if depthPixelFormat == .depth32Float_stencil8 {
                 renderPassDescriptor.stencilAttachment.texture = depthTexture
             }
         }
@@ -188,35 +171,23 @@ open class Renderer
         if inStencilTexture?.sampleCount != sampleCount || inStencilTexture?.pixelFormat != stencilPixelFormat
         {
             setupStencilTexture()
-            if depthPixelFormat == .depth32Float_stencil8
-            {
+            if depthPixelFormat == .depth32Float_stencil8 {
                 renderPassDescriptor.stencilAttachment.texture = depthTexture
-            }
-            else
-            {
+            } else {
                 renderPassDescriptor.stencilAttachment.texture = stencilTexture
             }
         }
 
-        if sampleCount > 1
-        {
-            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
-            {
+        if sampleCount > 1 {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
                 renderPassDescriptor.colorAttachments[0].storeAction = .storeAndMultisampleResolve
-            }
-            else
-            {
+            } else {
                 renderPassDescriptor.colorAttachments[0].storeAction = .multisampleResolve
             }
-        }
-        else
-        {
-            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve
-            {
+        } else {
+            if colorStoreAction == .store || colorStoreAction == .storeAndMultisampleResolve {
                 renderPassDescriptor.colorAttachments[0].storeAction = .store
-            }
-            else
-            {
+            } else {
                 renderPassDescriptor.colorAttachments[0].storeAction = .dontCare
             }
         }
@@ -246,16 +217,14 @@ open class Renderer
         renderPassDescriptor.stencilAttachment.texture = inStencilTexture
     }
 
-    public func draw(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera)
-    {
+    public func draw(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera) {
         update(scene: scene, camera: camera)
         encode(renderEncoder: renderEncoder, scene: scene)
     }
 
     // MARK: - Internal Update
 
-    func update(scene: Object, camera: Camera)
-    {
+    func update(scene: Object, camera: Camera) {
         onUpdate?()
 
         renderList = []
@@ -267,50 +236,40 @@ open class Renderer
         updateLights(lights: lightList)
     }
 
-    func updateScene(object: Object, camera: Camera, visible: Bool = true)
-    {
+    func updateScene(object: Object, camera: Camera, visible: Bool = true) {
         object.context = context
         object.update()
         object.update(camera: camera, viewport: _viewport)
 
-        if visible && object.visible
-        {
-            if let light = object as? Light
-            {
+        if visible && object.visible {
+            if let light = object as? Light {
                 lightList.append(light)
-            }
-            else if let renderable = object as? Renderable, renderable.drawable
-            {
+            } else if let renderable = object as? Renderable, renderable.drawable {
                 renderList.append(renderable)
             }
         }
 
-        for child in object.children
-        {
+        for child in object.children {
             updateScene(object: child, camera: camera, visible: visible && object.visible)
         }
     }
 
     // MARK: - Internal Encoding
 
-    func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object)
-    {
+    func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object) {
         guard scene.visible, !renderList.isEmpty else { return }
 
         renderEncoder.pushDebugGroup(label + " Pass")
         preDraw?(renderEncoder)
 
         var renderables = renderList
-        if sortObjects
-        {
-            renderables.sort
-            {
+        if sortObjects {
+            renderables.sort {
                 $0.renderOrder < $1.renderOrder
             }
         }
 
-        for renderable in renderables
-        {
+        for renderable in renderables {
             _encode(renderEncoder: renderEncoder, renderable: renderable)
         }
 
@@ -318,19 +277,14 @@ open class Renderer
         renderEncoder.popDebugGroup()
     }
 
-    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable)
-    {
+    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable) {
         renderEncoder.pushDebugGroup(renderable.label)
 
-        if let material = renderable.material, material.lighting
-        {
-            if let lightBuffer = lightBuffer
-            {
+        if let material = renderable.material, material.lighting {
+            if let lightBuffer = lightBuffer {
                 material.maxLights = lightBuffer.count
-                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
-            }
-            else
-            {
+                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.offset, index: FragmentBufferIndex.Lighting.rawValue)
+            } else {
                 material.maxLights = 0
             }
             material.update()
@@ -343,21 +297,18 @@ open class Renderer
 
     // MARK: - Resizing
 
-    public func resize(_ size: (width: Float, height: Float))
-    {
+    public func resize(_ size: (width: Float, height: Float)) {
         self.size = size
     }
 
     // MARK: - Textures
 
-    func setupDepthTexture()
-    {
+    func setupDepthTexture() {
         guard updateDepthTexture else { return }
 
         let sampleCount = context.sampleCount
         let depthPixelFormat = context.depthPixelFormat
-        if depthPixelFormat != .invalid, size.width > 1, size.height > 1
-        {
+        if depthPixelFormat != .invalid, size.width > 1, size.height > 1 {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = depthPixelFormat
             descriptor.width = Int(size.width)
@@ -370,21 +321,17 @@ open class Renderer
             depthTexture = context.device.makeTexture(descriptor: descriptor)
             depthTexture?.label = label + " Depth Texture"
             updateDepthTexture = false
-        }
-        else
-        {
+        } else {
             depthTexture = nil
         }
     }
 
-    func setupStencilTexture()
-    {
+    func setupStencilTexture() {
         guard updateStencilTexture else { return }
 
         let sampleCount = context.sampleCount
         let stencilPixelFormat = context.stencilPixelFormat
-        if stencilPixelFormat != .invalid, size.width > 1, size.height > 1
-        {
+        if stencilPixelFormat != .invalid, size.width > 1, size.height > 1 {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = stencilPixelFormat
             descriptor.width = Int(size.width)
@@ -397,21 +344,17 @@ open class Renderer
             stencilTexture = context.device.makeTexture(descriptor: descriptor)
             stencilTexture?.label = label + " Stencil Texture"
             updateStencilTexture = false
-        }
-        else
-        {
+        } else {
             stencilTexture = nil
         }
     }
 
-    func setupColorTexture()
-    {
+    func setupColorTexture() {
         guard updateColorTexture else { return }
 
         let sampleCount = context.sampleCount
         let colorPixelFormat = context.colorPixelFormat
-        if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1
-        {
+        if colorPixelFormat != .invalid, size.width > 1, size.height > 1, sampleCount > 1 {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = colorPixelFormat
             descriptor.width = Int(size.width)
@@ -424,9 +367,7 @@ open class Renderer
             colorTexture = context.device.makeTexture(descriptor: descriptor)
             colorTexture?.label = label + " Color Texture"
             updateColorTexture = false
-        }
-        else
-        {
+        } else {
             colorTexture = nil
         }
     }
@@ -435,28 +376,21 @@ open class Renderer
 
     // MARK: - Lights
 
-    func updateLights(lights: [Light])
-    {
+    func updateLights(lights: [Light]) {
         setupLightBuffer(lights: lights)
         updateLightBuffer(lights: lights)
     }
 
-    func setupLightBuffer(lights: [Light])
-    {
+    func setupLightBuffer(lights: [Light]) {
         guard !lights.isEmpty, lights.count != lightBuffer?.count else { return }
 
         lightSubscriptions.removeAll()
 
-        if lights.isEmpty
-        {
+        if lights.isEmpty {
             lightBuffer = nil
-        }
-        else
-        {
-            for light in lights
-            {
-                light.publisher.sink
-                { [weak self] _ in
+        } else {
+            for light in lights {
+                light.publisher.sink { [weak self] _ in
                     self?._updateLightBuffer = true
                 }.store(in: &lightSubscriptions)
             }
@@ -466,26 +400,21 @@ open class Renderer
         }
     }
 
-    func updateLightBuffer(lights: [Light])
-    {
+    func updateLightBuffer(lights: [Light]) {
         guard let lightBuffer = lightBuffer, _updateLightBuffer else { return }
-        let data = lights.map { $0.data }
-        lightBuffer.update(data: data)
+        lightBuffer.update(data: lights.map { $0.data })
         _updateLightBuffer = false
     }
 
     // MARK: - Compile
 
-    public func compile(scene: Object, camera: Camera)
-    {
+    public func compile(scene: Object, camera: Camera) {
         _compile(object: scene, camera: camera)
     }
 
-    func _compile(object: Object, camera: Camera)
-    {
+    func _compile(object: Object, camera: Camera) {
         object.context = context
-        for child in object.children
-        {
+        for child in object.children {
             _compile(object: child, camera: camera)
         }
     }

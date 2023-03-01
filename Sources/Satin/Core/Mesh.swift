@@ -14,7 +14,7 @@ import simd
 open class Mesh: Object, Renderable, Intersectable {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
-    public var renderOrder: Int = 0
+    public var renderOrder = 0
 
     public var drawable: Bool {
         if instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil, material?.pipeline != nil {
@@ -23,14 +23,14 @@ open class Mesh: Object, Renderable, Intersectable {
         return false
     }
 
-    public var instanceCount: Int = 1
+    public var instanceCount = 1
     open var intersectable: Bool {
         geometry.vertexBuffer != nil && instanceCount > 0
     }
 
     var uniforms: VertexUniformBuffer?
 
-    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
+    public var preDraw: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
 
     open var geometry: Geometry {
         didSet {

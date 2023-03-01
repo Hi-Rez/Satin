@@ -13,13 +13,13 @@ open class Shader {
     var pipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
     }
-    
+
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var library: MTLLibrary?
     public internal(set) var error: Error?
     var libraryURL: URL?
-    
+
     public var blending: Blending = .alpha {
         didSet {
             if oldValue != blending {
@@ -27,7 +27,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var sourceRGBBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceRGBBlendFactor {
@@ -35,7 +35,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var sourceAlphaBlendFactor: MTLBlendFactor = .sourceAlpha {
         didSet {
             if oldValue != sourceAlphaBlendFactor {
@@ -43,7 +43,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var destinationRGBBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationRGBBlendFactor {
@@ -51,7 +51,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var destinationAlphaBlendFactor: MTLBlendFactor = .oneMinusSourceAlpha {
         didSet {
             if oldValue != destinationAlphaBlendFactor {
@@ -59,7 +59,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var rgbBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != rgbBlendOperation {
@@ -67,7 +67,7 @@ open class Shader {
             }
         }
     }
-    
+
     public var alphaBlendOperation: MTLBlendOperation = .add {
         didSet {
             if oldValue != alphaBlendOperation {
@@ -75,13 +75,13 @@ open class Shader {
             }
         }
     }
-    
-    public var instancing: Bool = false
-    
-    public var lighting: Bool = false
-    
+
+    public var instancing = false
+
+    public var lighting = false
+
     public var maxLights: Int = -1
-    
+
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
             if oldValue != vertexDescriptor {
@@ -89,7 +89,7 @@ open class Shader {
             }
         }
     }
-    
+
     weak var context: Context? {
         didSet {
             if oldValue != context {
@@ -97,90 +97,90 @@ open class Shader {
             }
         }
     }
-    
-    var label: String = "Shader"
-    
-    var libraryNeedsUpdate: Bool = true {
+
+    var label = "Shader"
+
+    var libraryNeedsUpdate = true {
         didSet {
             if libraryNeedsUpdate {
                 pipelineNeedsUpdate = true
             }
         }
     }
-    
-    var pipelineNeedsUpdate: Bool = true {
+
+    var pipelineNeedsUpdate = true {
         didSet {
             if pipelineNeedsUpdate {
                 parametersNeedsUpdate = true
             }
         }
     }
-    
-    var parametersNeedsUpdate: Bool = true
-    
-    public var vertexFunctionName: String = "shaderVertex" {
+
+    var parametersNeedsUpdate = true
+
+    public var vertexFunctionName = "shaderVertex" {
         didSet {
             if oldValue != vertexFunctionName {
                 pipelineNeedsUpdate = true
             }
         }
     }
-    
-    public var fragmentFunctionName: String = "shaderFragment" {
+
+    public var fragmentFunctionName = "shaderFragment" {
         didSet {
             if oldValue != fragmentFunctionName {
                 pipelineNeedsUpdate = true
             }
         }
     }
-    
+
     public let parametersPublisher = PassthroughSubject<ParameterGroup, Never>()
-    
+
     public var parameters = ParameterGroup() {
         didSet {
             parametersPublisher.send(parameters)
         }
     }
-    
+
     public required init() {}
-    
+
     public init(_ label: String, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil, _ libraryURL: URL? = nil) {
         self.label = label
         self.vertexFunctionName = vertexFunctionName ?? label.camelCase + "Vertex"
         self.fragmentFunctionName = fragmentFunctionName ?? label.camelCase + "Fragment"
         self.libraryURL = libraryURL
     }
-    
+
     func setup() {
         setupLibrary()
         setupPipeline()
         setupParameters()
     }
-    
+
     func update() {
         updateLibrary()
         updatePipeline()
         updateParameters()
     }
-        
+
     func updateLibrary() {
         if libraryNeedsUpdate {
             setupLibrary()
         }
     }
-    
+
     func updatePipeline() {
         if pipelineNeedsUpdate {
             setupPipeline()
         }
     }
-    
+
     func updateParameters() {
         if parametersNeedsUpdate {
             setupParameters()
         }
     }
-        
+
     deinit {
         pipeline = nil
         library = nil
@@ -189,7 +189,7 @@ open class Shader {
 
     func setupPipeline() {
         guard let context = context, let library = library, let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
-        
+
         let device = library.device
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.label = label
@@ -200,7 +200,7 @@ open class Shader {
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat
-        
+
         if blending != .disabled, let colorAttachment = pipelineStateDescriptor.colorAttachments[0] {
             colorAttachment.isBlendingEnabled = true
             colorAttachment.sourceRGBBlendFactor = sourceRGBBlendFactor
@@ -210,20 +210,19 @@ open class Shader {
             colorAttachment.rgbBlendOperation = rgbBlendOperation
             colorAttachment.alphaBlendOperation = alphaBlendOperation
         }
-        
+
         do {
             pipeline = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
             error = nil
-        }
-        catch {
+        } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
             pipeline = nil
         }
-        
+
         pipelineNeedsUpdate = false
     }
-    
+
     func setupParameters() {
         guard let reflection = pipelineReflection, let fragmentArgs = reflection.fragmentArguments else { return }
         let args = fragmentArgs[FragmentBufferIndex.MaterialUniforms.rawValue]
@@ -234,22 +233,20 @@ open class Shader {
         }
         parametersNeedsUpdate = false
     }
-    
+
     func setupLibrary() {
         guard let context = context else { return }
         do {
             var library: MTLLibrary?
             if let url = libraryURL {
                 library = try context.device.makeLibrary(URL: url)
-            }
-            else {
+            } else {
                 library = try context.device.makeDefaultLibrary(bundle: Bundle.main)
             }
-            
+
             self.library = library
             error = nil
-        }
-        catch {
+        } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
             library = nil
@@ -257,20 +254,20 @@ open class Shader {
         }
         libraryNeedsUpdate = false
     }
-    
+
     public func clone() -> Shader {
         print("Cloning Shader: \(label)")
-        
+
         let clone: Shader = type(of: self).init()
-        
+
         clone.label = label
         clone.libraryURL = libraryURL
         clone.library = library
         clone.pipeline = pipeline
         clone.pipelineReflection = pipelineReflection
-        
+
         clone.parameters = parameters.clone()
-        
+
         clone.blending = blending
         clone.sourceRGBBlendFactor = sourceRGBBlendFactor
         clone.sourceAlphaBlendFactor = sourceAlphaBlendFactor
@@ -278,14 +275,14 @@ open class Shader {
         clone.destinationAlphaBlendFactor = destinationAlphaBlendFactor
         clone.rgbBlendOperation = rgbBlendOperation
         clone.alphaBlendOperation = alphaBlendOperation
-        
+
         clone.instancing = instancing
         clone.lighting = lighting
         clone.vertexDescriptor = vertexDescriptor
-        
+
         clone.vertexFunctionName = vertexFunctionName
         clone.fragmentFunctionName = fragmentFunctionName
-        
+
         return clone
     }
 }

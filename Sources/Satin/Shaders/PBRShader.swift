@@ -17,7 +17,7 @@ open class PBRShader: SourceShader {
         }
     }
 
-    open override var defines: [String: String] {
+    override open var defines: [String: String] {
         var results = super.defines
         if !maps.isEmpty {
             results["HAS_MAPS"] = "true"
@@ -26,7 +26,7 @@ open class PBRShader: SourceShader {
         return results
     }
 
-    open override func modifyShaderSource(source: inout String) {
+    override open func modifyShaderSource(source: inout String) {
         super.modifyShaderSource(source: &source)
         injectTexturesArgs(source: &source, maps: maps)
     }

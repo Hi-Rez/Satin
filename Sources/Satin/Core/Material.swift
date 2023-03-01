@@ -120,7 +120,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public internal(set) var isClone: Bool = false
+    public internal(set) var isClone = false
     public weak var delegate: MaterialDelegate?
 
     public var pipeline: MTLRenderPipelineState? {
@@ -135,7 +135,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var instancing: Bool = false {
+    public var instancing = false {
         didSet {
             if oldValue != instancing {
                 shaderDefinesNeedsUpdate = true
@@ -143,7 +143,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var lighting: Bool = false {
+    public var lighting = false {
         didSet {
             if oldValue != lighting {
                 shaderDefinesNeedsUpdate = true
@@ -176,7 +176,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var depthWriteEnabled: Bool = true {
+    public var depthWriteEnabled = true {
         didSet {
             if oldValue != depthWriteEnabled {
                 depthNeedsUpdate = true
@@ -214,25 +214,25 @@ open class Material: Codable, ParameterGroupDelegate {
     var depthNeedsUpdate = false
 
     public var depthBias: DepthBias?
-    public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> ())?
-    public var onUpdate: (() -> ())?
+    public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
+    public var onUpdate: (() -> Void)?
 
     public required init() {}
 
     public init(shader: Shader) {
-        self.instancing = shader.instancing
-        self.lighting = shader.lighting
-        self.vertexDescriptor = shader.vertexDescriptor
-        self.blending = shader.blending
+        instancing = shader.instancing
+        lighting = shader.lighting
+        vertexDescriptor = shader.vertexDescriptor
+        blending = shader.blending
 
-        self.sourceRGBBlendFactor = shader.sourceRGBBlendFactor
-        self.sourceAlphaBlendFactor = shader.sourceAlphaBlendFactor
-        self.destinationRGBBlendFactor = shader.destinationRGBBlendFactor
-        self.destinationAlphaBlendFactor = shader.destinationAlphaBlendFactor
-        self.rgbBlendOperation = shader.rgbBlendOperation
-        self.alphaBlendOperation = shader.alphaBlendOperation
+        sourceRGBBlendFactor = shader.sourceRGBBlendFactor
+        sourceAlphaBlendFactor = shader.sourceAlphaBlendFactor
+        destinationRGBBlendFactor = shader.destinationRGBBlendFactor
+        destinationAlphaBlendFactor = shader.destinationAlphaBlendFactor
+        rgbBlendOperation = shader.rgbBlendOperation
+        alphaBlendOperation = shader.alphaBlendOperation
 
-        self.label = shader.label
+        label = shader.label
         self.shader = shader
 
         setupParametersSubscriber()
@@ -328,8 +328,7 @@ open class Material: Codable, ParameterGroupDelegate {
         if shader == nil {
             shader = createShader()
             isClone = false
-        }
-        else if let shader = shader, isClone, shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate || shaderDefinesNeedsUpdate {
+        } else if let shader = shader, isClone, shaderBlendingNeedsUpdate || shaderVertexDescriptorNeedsUpdate || shaderDefinesNeedsUpdate {
             self.shader = cloneShader(shader)
             isClone = false
         }
@@ -349,7 +348,7 @@ open class Material: Codable, ParameterGroupDelegate {
         uniformsNeedsUpdate = false
     }
 
-    open func update(camera: Camera) {}
+    open func update(camera _: Camera) {}
 
     open func update() {
         updateDepth()
@@ -476,14 +475,11 @@ open class Material: Codable, ParameterGroupDelegate {
         let count = value.count
         if count == 1 {
             set(name, value[0])
-        }
-        else if count == 2 {
+        } else if count == 2 {
             set(name, simd_make_float2(value[0], value[1]))
-        }
-        else if count == 3 {
+        } else if count == 3 {
             set(name, simd_make_float3(value[0], value[1], value[2]))
-        }
-        else if count == 4 {
+        } else if count == 4 {
             set(name, simd_make_float4(value[0], value[1], value[2], value[3]))
         }
     }
@@ -492,14 +488,11 @@ open class Material: Codable, ParameterGroupDelegate {
         let count = value.count
         if count == 1 {
             set(name, value[0])
-        }
-        else if count == 2 {
+        } else if count == 2 {
             set(name, simd_make_int2(Int32(value[0]), Int32(value[1])))
-        }
-        else if count == 3 {
+        } else if count == 3 {
             set(name, simd_make_int3(Int32(value[0]), Int32(value[1]), Int32(value[2])))
-        }
-        else if count == 4 {
+        } else if count == 4 {
             set(name, simd_make_int4(Int32(value[0]), Int32(value[1]), Int32(value[2]), Int32(value[3])))
         }
     }
@@ -507,8 +500,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: Float) {
         if let param = parameters.get(name) as? FloatParameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(FloatParameter(name, value))
         }
     }
@@ -516,8 +508,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float2) {
         if let param = parameters.get(name) as? Float2Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float2Parameter(name, value))
         }
     }
@@ -525,8 +516,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float3) {
         if let param = parameters.get(name) as? Float3Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float3Parameter(name, value))
         }
     }
@@ -534,8 +524,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float4) {
         if let param = parameters.get(name) as? Float4Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float4Parameter(name, value))
         }
     }
@@ -543,8 +532,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: Int) {
         if let param = parameters.get(name) as? IntParameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(IntParameter(name, value))
         }
     }
@@ -552,8 +540,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_int2) {
         if let param = parameters.get(name) as? Int2Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Int2Parameter(name, value))
         }
     }
@@ -561,8 +548,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_int3) {
         if let param = parameters.get(name) as? Int3Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Int3Parameter(name, value))
         }
     }
@@ -570,8 +556,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_int4) {
         if let param = parameters.get(name) as? Int4Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Int4Parameter(name, value))
         }
     }
@@ -579,8 +564,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: Bool) {
         if let param = parameters.get(name) as? BoolParameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(BoolParameter(name, value))
         }
     }
@@ -588,8 +572,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float2x2) {
         if let param = parameters.get(name) as? Float2x2Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float2x2Parameter(name, value))
         }
     }
@@ -597,8 +580,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float3x3) {
         if let param = parameters.get(name) as? Float3x3Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float3x3Parameter(name, value))
         }
     }
@@ -606,8 +588,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public func set(_ name: String, _ value: simd_float4x4) {
         if let param = parameters.get(name) as? Float4x4Parameter {
             param.value = value
-        }
-        else {
+        } else {
             parameters.append(Float4x4Parameter(name, value))
         }
     }
@@ -663,25 +644,25 @@ open class Material: Codable, ParameterGroupDelegate {
 }
 
 public extension Material {
-    func added(parameter: Parameter, from group: ParameterGroup) {
+    func added(parameter _: Parameter, from _: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
 
-    func removed(parameter: Parameter, from group: ParameterGroup) {
+    func removed(parameter _: Parameter, from _: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
 
-    func loaded(group: ParameterGroup) {
+    func loaded(group _: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
 
-    func saved(group: ParameterGroup) {}
+    func saved(group _: ParameterGroup) {}
 
-    func cleared(group: ParameterGroup) {
+    func cleared(group _: ParameterGroup) {
         uniformsNeedsUpdate = true
     }
 
-    func update(parameter: Parameter, from group: ParameterGroup) {}
+    func update(parameter _: Parameter, from _: ParameterGroup) {}
 }
 
 public extension Material {

@@ -19,39 +19,39 @@ class FlockingRenderer: BaseRenderer {
     class SpriteMaterial: SourceMaterial {}
 
     // MARK: - Paths
-    
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    
+
     lazy var startTime = CFAbsoluteTimeGetCurrent()
-    
+
     // MARK: - Controls
-    
+
     var cancellables = Set<AnyCancellable>()
     #if os(macOS)
     var particleCountParam = IntParameter("Particle Count", 16384, .inputfield)
     #elseif os(iOS)
     var particleCountParam = IntParameter("Particle Count", 4096, .inputfield)
     #endif
-    
+
     var resetParam = BoolParameter("Reset", false)
     var pauseParam = BoolParameter("Pause", false)
-    
+
     lazy var params = ParameterGroup("Controls", [pauseParam, resetParam, particleCountParam])
-    
+
     lazy var scene = Object("Scene", [sprite])
     var camera = OrthographicCamera()
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var renderer = Satin.Renderer(context: context)
     lazy var particleSystem = FlockingComputeSystem(device: device, pipelinesURL: pipelinesURL, count: particleCountParam.value, feedback: true)
-        
+
     lazy var spriteMaterial: SpriteMaterial = {
         let material = SpriteMaterial(pipelinesURL: pipelinesURL)
         material.depthWriteEnabled = false
         return material
     }()
-    
+
     lazy var sprite: Mesh = {
         let mesh = Mesh(geometry: PointGeometry(), material: spriteMaterial)
         mesh.label = "Sprite"
@@ -75,43 +75,43 @@ class FlockingRenderer: BaseRenderer {
         }
         return mesh
     }()
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.isPaused = false
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .invalid
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func setup() {
         setupObservers()
     }
-    
+
     func setupObservers() {
         particleCountParam.$value.sink { [weak self] value in
             guard let self = self else { return }
             self.particleSystem.count = value
             self.sprite.instanceCount = value
         }.store(in: &cancellables)
-        
+
         resetParam.$value.sink { [weak self] value in
             guard let self = self, value == true else { return }
             self.particleSystem.reset()
             self.resetParam.value = false
         }.store(in: &cancellables)
     }
-    
+
     override func update() {
         let time = Float(CFAbsoluteTimeGetCurrent() - startTime)
         particleSystem.set("Time", time)
         spriteMaterial.set("Time", time)
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         if !pauseParam.value {
             particleSystem.update(commandBuffer)
         }
-        
+
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
             renderPassDescriptor: renderPassDescriptor,
@@ -120,12 +120,12 @@ class FlockingRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         let hw = size.width
         let hh = size.height
         camera.update(left: -hw, right: hw, bottom: -hh, top: hh, near: -100.0, far: 100.0)
-        
+
         renderer.resize(size)
         let res: simd_float3 = [size.width, size.height, size.width / size.height]
         spriteMaterial.set("Resolution", res)

@@ -15,8 +15,7 @@ open class DepthMaterial: Material {
         if let camera = camera {
             set("Near", camera.near)
             set("Far", camera.far)
-        }
-        else {
+        } else {
             set("Near", -1.0)
             set("Far", -1.0)
         }
@@ -29,7 +28,7 @@ open class DepthMaterial: Material {
         set("Near", -1.0)
         set("Far", -1.0)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

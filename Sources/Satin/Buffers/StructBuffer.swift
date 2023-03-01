@@ -11,10 +11,10 @@ import simd
 
 open class StructBuffer<T> {
     public private(set) var buffer: MTLBuffer!
-    public private(set) var offset: Int = 0
-    public private(set) var index: Int = 0
+    public private(set) var offset = 0
+    public private(set) var index = 0
     public private(set) var count: Int
-            
+
     public init(device: MTLDevice, count: Int, label: String = "Struct Buffer") {
         self.count = count
         let length = alignedSize * Satin.maxBuffersInFlight
@@ -22,20 +22,17 @@ open class StructBuffer<T> {
         self.buffer = buffer
         self.buffer.label = label
     }
-    
+
     public func update(data: [T]) {
-        (buffer.contents() + offset).copyMemory(from: data, byteCount: MemoryLayout<T>.size * data.count)
-    }
-    
-    public func update() {
         index = (index + 1) % maxBuffersInFlight
         offset = alignedSize * index
+        (buffer.contents() + offset).copyMemory(from: data, byteCount: MemoryLayout<T>.size * data.count)
     }
-    
+
     private var alignedSize: Int {
         align(size: MemoryLayout<T>.size * count)
     }
-    
+
     private func align(size: Int) -> Int {
         return ((size + 255) / 256) * 256
     }

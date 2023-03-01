@@ -1,6 +1,6 @@
 //
 //  Float2x2Parameter.swift
-//  
+//
 //
 //  Created by Reza Ali on 8/3/22.
 //
@@ -12,7 +12,7 @@ public class Float2x2Parameter: GenericParameter<simd_float2x2> {
     override public var type: ParameterType { .float2x2 }
     override public var string: String { "float2x2" }
     override public var count: Int { 2 }
-    
+
     override public subscript<simd_float2>(index: Int) -> simd_float2 {
         get {
             return value[index % count] as! simd_float2

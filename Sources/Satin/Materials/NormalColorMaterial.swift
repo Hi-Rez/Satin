@@ -18,7 +18,7 @@ open class NormalColorMaterial: Material {
         super.init()
         set("Absolute", false)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

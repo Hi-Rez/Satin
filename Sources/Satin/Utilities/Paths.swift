@@ -10,9 +10,9 @@ import Foundation
 
 public func getResourcePath() -> String? {
     #if SWIFT_PACKAGE
-        return Bundle.module.resourcePath
+    return Bundle.module.resourcePath
     #else
-        return Bundle(for: Object.self).resourcePath
+    return Bundle(for: Object.self).resourcePath
     #endif
 }
 
@@ -97,9 +97,9 @@ public func getPipelinesMaterialsPath(_ path: String) -> String? {
 
 public func getResourceUrl() -> URL? {
     #if SWIFT_PACKAGE
-        return Bundle.module.resourceURL
+    return Bundle.module.resourceURL
     #else
-        return Bundle(for: Object.self).resourceURL
+    return Bundle(for: Object.self).resourceURL
     #endif
 }
 

@@ -11,13 +11,13 @@ import simd
 open class ParametricGeometry: Geometry {
     public init(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
         super.init()
-        self.setupData(u: u, v: v, res: res, generator: generator)
+        setupData(u: u, v: v, res: res, generator: generator)
     }
 
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-    
+
     func setupData(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {
         let ru = res.u
         let rv = res.v
@@ -31,10 +31,10 @@ open class ParametricGeometry: Geometry {
         let uminf = Float(u.min)
         let vminf = Float(v.min)
 
-        for v in 0...rv {
+        for v in 0 ... rv {
             let vf = Float(v)
             let vIn = vminf + vf * rvInc
-            for u in 0...ru {
+            for u in 0 ... ru {
                 let uf = Float(u)
                 let uIn = uminf + uf * ruInc
                 let pos = generator(uIn, vIn)

@@ -25,14 +25,14 @@ class DepthMaterialRenderer: BaseRenderer {
         material.set("Far", 20.0)
         return material
     }()
-    
+
     lazy var container: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(size: 10), material: depthMaterial)
         mesh.label = "Container"
         mesh.geometry.windingOrder = .clockwise
         return mesh
     }()
-    
+
     lazy var torus: Mesh = {
         let mesh = Mesh(geometry: TorusGeometry(radius: (0.5, 2.0), res: (90, 30)), material: depthMaterial)
         mesh.label = "Torus"
@@ -40,7 +40,7 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.orientation = simd_quatf(angle: Float.pi * 0.25, axis: normalize([1, 1, 1]))
         return mesh
     }()
-    
+
     lazy var cylinder: Mesh = {
         let mesh = Mesh(geometry: CylinderGeometry(size: (0.5, 2.0), res: (60, 1, 1)), material: depthMaterial)
         mesh.label = "Cylinder"
@@ -48,7 +48,7 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, 1, 1]))
         return mesh
     }()
-    
+
     lazy var capsule: Mesh = {
         let mesh = Mesh(geometry: CapsuleGeometry(size: (0.5, 2.0), res: (60, 30, 1)), material: depthMaterial)
         mesh.label = "Capsule"
@@ -56,7 +56,7 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, 0.5, 1]))
         return mesh
     }()
-    
+
     lazy var box: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(), material: depthMaterial)
         mesh.label = "Box"
@@ -67,7 +67,7 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.add(rod)
         return mesh
     }()
-    
+
     lazy var longBox: Mesh = {
         let mesh = Mesh(geometry: BoxGeometry(size: (0.5, 2.0, 4.0)), material: depthMaterial)
         mesh.label = "Long Box"
@@ -75,7 +75,7 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.orientation = simd_quatf(angle: -Float.pi * 0.25, axis: normalize([0.5, -0.5, 0.25]))
         return mesh
     }()
-    
+
     lazy var cone: Mesh = {
         let mesh = Mesh(geometry: ConeGeometry(size: (1.0, 2.0), res: (30, 30, 30)), material: depthMaterial)
         mesh.label = "Cone"
@@ -83,13 +83,13 @@ class DepthMaterialRenderer: BaseRenderer {
         mesh.orientation = simd_quatf(angle: Float.pi * 0.25, axis: normalize([1.0, 0.5, 0.25]))
         return mesh
     }()
-    
+
     lazy var sphere: Mesh = {
         let mesh = Mesh(geometry: IcoSphereGeometry(radius: 1.5, res: 0), material: depthMaterial)
         mesh.label = "Sphere"
         return mesh
     }()
-    
+
     lazy var scene: Object = {
         let obj = Object("Scene", [
             container,
@@ -99,29 +99,29 @@ class DepthMaterialRenderer: BaseRenderer {
             cylinder,
             capsule,
             longBox,
-            cone
+            cone,
         ])
         return obj
     }()
-    
+
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    
+
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 13.0], near: 0.001, far: 20.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
-    
+
     lazy var renderer: Satin.Renderer = {
         let renderer = Satin.Renderer(context: context)
         renderer.clearColor = .init(red: 0.137254902, green: 0.09411764706, blue: 0.1058823529, alpha: 1.0)
         return renderer
     }()
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func setup() {
 //        // Setup things here
 //        let mat = UvColorMaterial()
@@ -134,11 +134,11 @@ class DepthMaterialRenderer: BaseRenderer {
 //        }
 //        scene.add(boundingBoxes)
     }
-    
+
     override func update() {
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -148,7 +148,7 @@ class DepthMaterialRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
@@ -166,7 +166,7 @@ class DepthMaterialRenderer: BaseRenderer {
     }
 
     #elseif os(iOS)
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with _: UIEvent?) {
         if let first = touches.first {
             let point = first.location(in: mtkView)
             let size = mtkView.frame.size

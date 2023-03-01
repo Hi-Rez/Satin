@@ -14,18 +14,18 @@ import Satin
 
 class FXAARenderer: BaseRenderer {
     class FxaaMaterial: SourceMaterial {}
-    
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
 
     // MARK: Render to Texture
-    
+
     var renderTexture: MTLTexture!
-    var updateRenderTexture: Bool = true
-    
+    var updateRenderTexture = true
+
     lazy var fxaaMaterial = FxaaMaterial(pipelinesURL: pipelinesURL)
-    
+
     lazy var fxaaProcessor: PostProcessor = {
         let pp = PostProcessor(context: Context(context.device, context.sampleCount, context.colorPixelFormat, .invalid, .invalid), material: fxaaMaterial)
         pp.mesh.preDraw = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
@@ -34,7 +34,7 @@ class FXAARenderer: BaseRenderer {
         pp.label = "FXAA Post Processor"
         return pp
     }()
-        
+
     lazy var mesh: Mesh = {
         let mesh = Mesh(
             geometry:
@@ -49,30 +49,30 @@ class FXAARenderer: BaseRenderer {
         )
         return mesh
     }()
-    
+
     var camera = PerspectiveCamera(position: [0, 0, 9], near: 0.001, far: 100.0)
-    
+
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
-        
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func update() {
         if updateRenderTexture {
             renderTexture = createTexture("Render Texture", context.colorPixelFormat)
             updateRenderTexture = false
         }
-        
+
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -84,7 +84,7 @@ class FXAARenderer: BaseRenderer {
         )
         fxaaProcessor.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer)
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
@@ -92,7 +92,7 @@ class FXAARenderer: BaseRenderer {
         updateRenderTexture = true
         fxaaMaterial.set("Inverse Resolution", 1.0 / simd_make_float2(size.width, size.height))
     }
-    
+
     func createTexture(_ label: String, _ pixelFormat: MTLPixelFormat) -> MTLTexture? {
         if mtkView.drawableSize.width > 0, mtkView.drawableSize.height > 0 {
             let descriptor = MTLTextureDescriptor()
@@ -110,13 +110,12 @@ class FXAARenderer: BaseRenderer {
         }
         return nil
     }
-    
+
     #if os(macOS)
     func openEditor() {
         if let editorPath = UserDefaults.standard.string(forKey: "Editor") {
             NSWorkspace.shared.openFile(assetsURL.path, withApplication: editorPath)
-        }
-        else {
+        } else {
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.allowsMultipleSelection = false
@@ -133,7 +132,7 @@ class FXAARenderer: BaseRenderer {
             })
         }
     }
-    
+
     override func keyDown(with event: NSEvent) {
         if event.characters == "e" {
             openEditor()

@@ -12,38 +12,38 @@ import ARKit
 
 extension ARRenderer {
     // MARK: - Setup AR Session
-    
+
     func setupARSession() {
         session = ARSession()
         session.delegate = self
-        
+
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-        
+
         // Run the view's session
         session.run(configuration)
     }
-    
+
     func updateCamera() {
         guard let frame = session.currentFrame, let orientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else {
             return
         }
-        
+
         camera.viewMatrix = frame.camera.viewMatrix(for: orientation)
         camera.projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: viewportSize, zNear: 0.001, zFar: 100.0)
     }
-    
+
     // MARK: - ARSessionDelegate
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
+
+    func session(_: ARSession, didFailWithError _: Error) {
         // Present an error message to the user
     }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
+
+    func sessionWasInterrupted(_: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
     }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
+
+    func sessionInterruptionEnded(_: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
     }
 }

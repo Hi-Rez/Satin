@@ -14,29 +14,29 @@ import Satin
 
 class LiveCodeRenderer: BaseRenderer {
     // Material names must not be the target name, i.e. LiveCodeMaterial won't work
-    
+
     class CustomMaterial: LiveMaterial {}
-    
+
     var startTime: CFAbsoluteTime = 0.0
-    
+
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    
+
     var camera = OrthographicCamera()
-    
+
     lazy var mesh = Mesh(geometry: QuadGeometry(), material: CustomMaterial(pipelinesURL: pipelinesURL))
     lazy var scene = Object("Scene", [mesh])
-    
+
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var renderer = Satin.Renderer(context: context)
-    
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .invalid
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override func setup() {
         copySatinCore()
         copySatinLibrary()
@@ -45,24 +45,22 @@ class LiveCodeRenderer: BaseRenderer {
         openEditor()
         #endif
     }
-    
+
     func copySatinCore() {
         if let satinCore = getPipelinesSatinUrl() {
             do {
                 try FileManager.default.copyItem(at: satinCore, to: assetsURL.appendingPathComponent("Satin"))
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
     }
-    
+
     func copySatinLibrary() {
         if let satinLibrary = Satin.getPipelinesLibraryUrl() {
             do {
                 try FileManager.default.copyItem(at: satinLibrary, to: assetsURL.appendingPathComponent("Library"))
-            }
-            catch {
+            } catch {
                 print(error)
             }
         }
@@ -74,7 +72,7 @@ class LiveCodeRenderer: BaseRenderer {
             material.set("Time", Float(getTime() - startTime))
         }
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -84,7 +82,7 @@ class LiveCodeRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         renderer.resize(size)
         if let material = mesh.material {
@@ -92,20 +90,19 @@ class LiveCodeRenderer: BaseRenderer {
             material.set("App Resolution", res)
         }
     }
-    
+
     #if os(macOS)
-    
+
     override func keyDown(with event: NSEvent) {
         if event.characters == "e" {
             openEditor()
         }
     }
-    
+
     func openEditor() {
         if let editorURL = UserDefaults.standard.url(forKey: "Editor") {
             openEditor(at: editorURL)
-        }
-        else {
+        } else {
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.allowsMultipleSelection = false
@@ -125,14 +122,13 @@ class LiveCodeRenderer: BaseRenderer {
     func openEditor(at editorURL: URL) {
         do {
             try NSWorkspace.shared.open([assetsURL], withApplicationAt: editorURL, options: [], configuration: [:])
-        }
-        catch {
+        } catch {
             print(error)
         }
     }
-    
+
     #endif
-    
+
     func getTime() -> CFAbsoluteTime {
         return CFAbsoluteTimeGetCurrent()
     }

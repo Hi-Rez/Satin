@@ -13,8 +13,7 @@ extension MTLCullMode: Codable {}
 extension MTLPrimitiveType: Codable {}
 extension MTLWinding: Codable {}
 extension MTLIndexType: Codable {}
- 
+
 extension MTLCompareFunction: Codable {}
 extension MTLBlendOperation: Codable {}
 extension MTLBlendFactor: Codable {}
-

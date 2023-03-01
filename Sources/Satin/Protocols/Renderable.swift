@@ -12,7 +12,7 @@ import simd
 public protocol Renderable {
     var label: String { get }
     var renderOrder: Int { get }
-    
+
     var drawable: Bool { get }
     var material: Material? { get set }
 

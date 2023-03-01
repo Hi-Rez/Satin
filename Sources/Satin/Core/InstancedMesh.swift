@@ -29,9 +29,9 @@ public class InstancedMesh: Mesh {
     var instanceMatricesUniforms: [InstanceMatrixUniforms]
 
     private var transformSubscriber: AnyCancellable?
-    private var _updateInstanceMatricesUniforms: Bool = true
-    private var _setupInstanceMatrixBuffer: Bool = true
-    private var _updateInstanceMatrixBuffer: Bool = true
+    private var _updateInstanceMatricesUniforms = true
+    private var _setupInstanceMatrixBuffer = true
+    private var _updateInstanceMatrixBuffer = true
     private var instanceMatrixBuffer: InstanceMatrixUniformBuffer?
 
     override public var material: Material? {
@@ -56,7 +56,7 @@ public class InstancedMesh: Mesh {
         }
     }
 
-    public required init(from decoder: Decoder) throws {
+    public required init(from _: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
 
@@ -95,7 +95,7 @@ public class InstancedMesh: Mesh {
         if _updateInstanceMatricesUniforms {
             updateInstanceMatricesUniforms()
         }
-        
+
         if _setupInstanceMatrixBuffer {
             setupInstanceBuffer()
         }
@@ -127,7 +127,6 @@ public class InstancedMesh: Mesh {
     }
 
     func updateInstanceBuffer() {
-        instanceMatrixBuffer?.update()
         instanceMatrixBuffer?.update(data: &instanceMatricesUniforms)
         _updateInstanceMatrixBuffer = false
     }
@@ -146,8 +145,8 @@ public class InstancedMesh: Mesh {
         _updateInstanceMatricesUniforms = false
         _updateInstanceMatrixBuffer = true
     }
-    
-    public override func draw(renderEncoder: MTLRenderCommandEncoder) {
+
+    override public func draw(renderEncoder: MTLRenderCommandEncoder) {
         guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count >= instanceCount else { return }
         super.draw(renderEncoder: renderEncoder)
     }

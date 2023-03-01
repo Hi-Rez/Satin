@@ -15,15 +15,15 @@ import Satin
 
 class SuperShapesRenderer: BaseRenderer {
     var cancellables = Set<AnyCancellable>()
-    
+
     var updateGeometry = true
 
-    var wireframe: Bool = false {
+    var wireframe = false {
         didSet {
             mesh.triangleFillMode = wireframe ? .lines : .fill
         }
     }
-    
+
     var resParam = IntParameter("Resolution", 300, 3, 300, .slider)
     var r1Param = FloatParameter("R1", 1.0, 0, 2, .inputfield)
     var a1Param = FloatParameter("A1", 1.0, 0.0, 5.0, .slider)
@@ -41,37 +41,37 @@ class SuperShapesRenderer: BaseRenderer {
     var n32Param = FloatParameter("N32", 0.651718, 0.0, 100.0, .slider)
 
     var parameters: ParameterGroup!
-    
+
     var mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.7))
-    
+
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera(position: simd_make_float3(2.0, 1.0, 4.0), near: 0.001, far: 200.0)
         camera.lookAt(.zero)
         return camera
     }()
-    
+
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
-        
+
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.isPaused = false
         metalKitView.sampleCount = 4
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
-    
+
     override init() {
         super.init()
         setupParameters()
         setupObservers()
     }
-    
+
     override func setup() {
         mesh.cullMode = .none
     }
-    
+
     func setupParameters() {
         parameters = ParameterGroup("Shape Controls", [
             resParam,
@@ -88,10 +88,10 @@ class SuperShapesRenderer: BaseRenderer {
             m2Param,
             n12Param,
             n22Param,
-            n32Param
+            n32Param,
         ])
     }
-        
+
     func setupGeometry() {
         let res = Int32(resParam.value)
         var geoData = generateSuperShapeGeometryData(
@@ -109,26 +109,26 @@ class SuperShapesRenderer: BaseRenderer {
             n12Param.value,
             n22Param.value,
             n32Param.value,
-            res, res)
+            res, res
+        )
         mesh.geometry = Geometry(&geoData)
         freeGeometryData(&geoData)
     }
-    
+
     func setupObservers() {
         for param in parameters.params {
             if let p = param as? FloatParameter {
                 p.$value.sink { [weak self] _ in
                     self?.updateGeometry = true
                 }.store(in: &cancellables)
-            }
-            else if let p = param as? IntParameter {
+            } else if let p = param as? IntParameter {
                 p.$value.sink { [weak self] _ in
                     self?.updateGeometry = true
                 }.store(in: &cancellables)
             }
         }
     }
-    
+
     override func update() {
         if updateGeometry {
             setupGeometry()
@@ -136,7 +136,7 @@ class SuperShapesRenderer: BaseRenderer {
         }
         cameraController.update()
     }
-    
+
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
         renderer.draw(
@@ -146,7 +146,7 @@ class SuperShapesRenderer: BaseRenderer {
             camera: camera
         )
     }
-    
+
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)

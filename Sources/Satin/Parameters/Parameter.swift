@@ -28,7 +28,7 @@ public protocol Parameter: Codable, CustomStringConvertible, AnyObject {
 
     var delegate: ParameterDelegate? { get set }
 
-    subscript<T>(index: Int) -> T { get set }
+    subscript<T>(_: Int) -> T { get set }
     func dataType<T>() -> T.Type
 
     func alignData(pointer: UnsafeMutableRawPointer, offset: inout Int) -> UnsafeMutableRawPointer

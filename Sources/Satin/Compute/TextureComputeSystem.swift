@@ -12,7 +12,7 @@ public protocol TextureComputeSystemDelegate: AnyObject {
 }
 
 open class TextureComputeSystem {
-    public var label: String = "Satin Texture Compute Encoder"
+    public var label = "Satin Texture Compute Encoder"
 
     public var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "TextureComputeSystem", with: "")
@@ -78,19 +78,19 @@ open class TextureComputeSystem {
 
     public var updatePipeline: MTLComputePipelineState?
 
-    public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
-    public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
-    public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> ())?
+    public var preUpdate: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> Void)?
+    public var preReset: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> Void)?
+    public var preCompute: ((_ computeEncoder: MTLComputeCommandEncoder, _ offset: Int) -> Void)?
 
-    private var _reset: Bool = true {
+    private var _reset = true {
         didSet {
             _index = 0
         }
     }
 
-    private var _setupTextures: Bool = true
-    private var _index: Int = 0
-    private var _useDispatchThreads: Bool = false
+    private var _setupTextures = true
+    private var _index = 0
+    private var _useDispatchThreads = false
 
     public var device: MTLDevice
 
@@ -176,7 +176,7 @@ open class TextureComputeSystem {
         textures = []
         let count = feedback ? 2 : 1
         for textureDescriptor in textureDescriptors {
-            for i in 0..<count {
+            for i in 0 ..< count {
                 if let texture = device.makeTexture(descriptor: textureDescriptor) {
                     texture.label = prefixLabel + " Texture \(i)"
                     textures.append(texture)
@@ -274,7 +274,7 @@ open class TextureComputeSystem {
         if _reset, let pipeline = resetPipeline {
             computeEncoder.setComputePipelineState(pipeline)
             let count = feedback ? 2 : 1
-            for _ in 0..<count {
+            for _ in 0 ..< count {
                 let offset = bind(computeEncoder)
                 preReset?(computeEncoder, offset)
                 preCompute?(computeEncoder, offset)

@@ -27,7 +27,7 @@ open class SourceShader: Shader {
         }
     }
 
-    open var sourceNeedsUpdate: Bool = true {
+    open var sourceNeedsUpdate = true {
         didSet {
             if sourceNeedsUpdate {
                 libraryNeedsUpdate = true
@@ -93,7 +93,7 @@ open class SourceShader: Shader {
     }
 
     public required init(label: String, source: String, vertexFunctionName: String? = nil, fragmentFunctionName: String? = nil) {
-        self.shaderSource = source
+        shaderSource = source
         super.init(label, vertexFunctionName, fragmentFunctionName, nil)
     }
 
@@ -130,8 +130,7 @@ open class SourceShader: Shader {
         do {
             library = try context.device.makeLibrary(source: source, options: nil)
             error = nil
-        }
-        catch {
+        } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
             library = nil
@@ -148,18 +147,15 @@ open class SourceShader: Shader {
             do {
                 result = try MetalFileCompiler(watch: false).parse(pipelineURL)
                 error = nil
-            }
-            catch {
+            } catch {
                 self.error = error
                 print("\(label) Shader: \(error.localizedDescription)")
             }
-        }
-        else if let shaderSource = shaderSource {
+        } else if let shaderSource = shaderSource {
             do {
                 result = try compileMetalSource(shaderSource)
                 error = nil
-            }
-            catch {
+            } catch {
                 self.error = error
                 print("\(label) Shader: \(error.localizedDescription)")
             }
@@ -167,12 +163,10 @@ open class SourceShader: Shader {
         return result
     }
 
-    open func modifyShaderSource(source: inout String) {
-
-    }
+    open func modifyShaderSource(source _: inout String) {}
 
     open func setupSource() {
-        guard let satinURL = getPipelinesSatinUrl(), let compiledShaderSource = self.shaderSource ?? setupShaderSource() else { return }
+        guard let satinURL = getPipelinesSatinUrl(), let compiledShaderSource = shaderSource ?? setupShaderSource() else { return }
         let includesURL = satinURL.appendingPathComponent("Includes.metal")
         do {
             // create boilerplate shader code
@@ -202,8 +196,7 @@ open class SourceShader: Shader {
             self.source = source
 
             error = nil
-        }
-        catch {
+        } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
         }
@@ -216,16 +209,14 @@ open class SourceShader: Shader {
 
         if let pipelineURL = pipelineURL {
             clone = type(of: self).init(label, pipelineURL, vertexFunctionName, fragmentFunctionName)
-        }
-        else if let shaderSource = shaderSource {
+        } else if let shaderSource = shaderSource {
             clone = type(of: self).init(
                 label: label,
                 source: shaderSource,
                 vertexFunctionName: vertexFunctionName,
                 fragmentFunctionName: fragmentFunctionName
             )
-        }
-        else {
+        } else {
             fatalError("Source Shader improperly constructed")
         }
 

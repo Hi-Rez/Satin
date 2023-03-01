@@ -21,15 +21,15 @@ struct ContentView: View {
                     NavigationLink(destination: Renderer3DView()) {
                         Label("3D", systemImage: "cube")
                     }
-#if os(iOS)
+                    #if os(iOS)
                     NavigationLink(destination: ARRendererView()) {
                         Label("AR", systemImage: "arkit")
                     }
-#elseif os(macOS)
+                    #elseif os(macOS)
                     NavigationLink(destination: AudioInputRendererView()) {
                         Label("Audio Input", systemImage: "mic")
                     }
-#endif
+                    #endif
                     NavigationLink(destination: BufferComputeRendererView()) {
                         Label("Buffer Compute", systemImage: "aqi.medium")
                     }
@@ -123,11 +123,11 @@ struct ContentView: View {
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
-#if os(iOS)
+                    #if os(iOS)
                     NavigationLink(destination: SatinSceneKitARRendererView()) {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
-#endif
+                    #endif
                 }
                 Group {
                     NavigationLink(destination: StandardMaterialRendererView()) {

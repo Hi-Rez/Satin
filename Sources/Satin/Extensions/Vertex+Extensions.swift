@@ -24,8 +24,8 @@ extension Vertex: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.position, forKey: .position)
-        try container.encode(self.normal, forKey: .normal)
-        try container.encode(self.uv, forKey: .uv)
+        try container.encode(position, forKey: .position)
+        try container.encode(normal, forKey: .normal)
+        try container.encode(uv, forKey: .uv)
     }
 }

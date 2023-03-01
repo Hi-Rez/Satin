@@ -20,7 +20,7 @@ open class LiveShader: SourceShader {
         setupCompiler()
     }
 
-    public required init(label: String, source: String, vertexFunctionName: String? = nil, fragmentFunctionName: String? = nil) {
+    public required init(label _: String, source _: String, vertexFunctionName _: String? = nil, fragmentFunctionName _: String? = nil) {
         fatalError("init(_:_:_:_:) has not been implemented")
     }
 
@@ -36,8 +36,7 @@ open class LiveShader: SourceShader {
         guard let pipelineURL = pipelineURL else { return nil }
         do {
             return try compiler.parse(pipelineURL)
-        }
-        catch {
+        } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
         }

@@ -9,9 +9,9 @@ import simd
 open class SkyboxGeometry: Geometry {
     public init(size: Float = 2) {
         super.init()
-        self.setupData(size: size)
+        setupData(size: size)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

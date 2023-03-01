@@ -19,9 +19,9 @@ public class BrdfGenerator {
             )
         }
     }
-    
+
     private var compute: BrdfComputeSystem
-    
+
     public init(device: MTLDevice, size: Int) {
         let textureDescriptor: MTLTextureDescriptor = .texture2DDescriptor(
             pixelFormat: .rg16Float,
@@ -29,9 +29,9 @@ public class BrdfGenerator {
             height: size,
             mipmapped: false
         )
-        self.compute = BrdfComputeSystem(device: device, textureDescriptor: textureDescriptor)
+        compute = BrdfComputeSystem(device: device, textureDescriptor: textureDescriptor)
     }
-    
+
     public func encode(commandBuffer: MTLCommandBuffer) -> MTLTexture? {
         commandBuffer.label = "\(compute.label) Compute Command Buffer"
         compute.update(commandBuffer)
@@ -40,4 +40,3 @@ public class BrdfGenerator {
         return texture
     }
 }
-

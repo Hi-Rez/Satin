@@ -8,7 +8,7 @@
 
 import simd
 
-public let maxBuffersInFlight: Int = 3
+public let maxBuffersInFlight = 3
 
 public let worldForwardDirection = simd_make_float3(0, 0, 1)
 public let worldUpDirection = simd_make_float3(0, 1, 0)
@@ -22,7 +22,7 @@ public enum Blending: Codable {
     case custom
 }
 
-public enum LightType: Int  {
+public enum LightType: Int {
     case directional = 0
     case point = 1
     case spot = 2
@@ -92,7 +92,7 @@ public enum VertexAttribute: Int, CaseIterable {
             return "custom11"
         }
     }
-    
+
     public var shaderDefine: String {
         switch self {
         case .Position:
@@ -220,7 +220,7 @@ public enum PBRTexture: Int {
     case reflection = 14
     case irradiance = 15
     case brdf = 16
-    
+
     public var shaderDefine: String {
         switch self {
         case .baseColor:
@@ -259,7 +259,7 @@ public enum PBRTexture: Int {
             return "BRDF_MAP"
         }
     }
-    
+
     public var textureType: String {
         switch self {
         case .irradiance, .reflection:
@@ -268,7 +268,7 @@ public enum PBRTexture: Int {
             return "texture2d"
         }
     }
-    
+
     public var textureName: String {
         switch self {
         case .baseColor:
@@ -307,7 +307,7 @@ public enum PBRTexture: Int {
             return "brdfMap"
         }
     }
-    
+
     public var textureIndex: String {
         switch self {
         case .baseColor:

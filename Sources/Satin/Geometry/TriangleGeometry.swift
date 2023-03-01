@@ -11,13 +11,13 @@ import simd
 open class TriangleGeometry: Geometry {
     public init(size: Float = 1) {
         super.init()
-        self.setupData(size: size)
+        setupData(size: size)
     }
 
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
-    
+
     func setupData(size: Float) {
         var geometryData = generateTriangleGeometryData(size)
         setFrom(&geometryData)

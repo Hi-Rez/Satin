@@ -19,10 +19,10 @@ extension simd_quatf: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.vector.x, forKey: .x)
-        try container.encode(self.vector.y, forKey: .y)
-        try container.encode(self.vector.z, forKey: .z)
-        try container.encode(self.vector.w, forKey: .w)
+        try container.encode(vector.x, forKey: .x)
+        try container.encode(vector.y, forKey: .y)
+        try container.encode(vector.z, forKey: .z)
+        try container.encode(vector.w, forKey: .w)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -42,10 +42,10 @@ extension simd_float4x4: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.columns.0, forKey: .col0)
-        try container.encode(self.columns.1, forKey: .col1)
-        try container.encode(self.columns.2, forKey: .col2)
-        try container.encode(self.columns.3, forKey: .col3)
+        try container.encode(columns.0, forKey: .col0)
+        try container.encode(columns.1, forKey: .col1)
+        try container.encode(columns.2, forKey: .col2)
+        try container.encode(columns.3, forKey: .col3)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -72,9 +72,9 @@ extension simd_float3x3: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.columns.0, forKey: .col0)
-        try container.encode(self.columns.1, forKey: .col1)
-        try container.encode(self.columns.2, forKey: .col2)
+        try container.encode(columns.0, forKey: .col0)
+        try container.encode(columns.1, forKey: .col1)
+        try container.encode(columns.2, forKey: .col2)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -92,8 +92,8 @@ extension simd_float2x2: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.columns.0, forKey: .col0)
-        try container.encode(self.columns.1, forKey: .col1)
+        try container.encode(columns.0, forKey: .col0)
+        try container.encode(columns.1, forKey: .col1)
     }
 
     private enum CodingKeys: String, CodingKey {

@@ -29,7 +29,7 @@ open class Buffer {
     }
 
     func update(_ content: UnsafeMutableRawPointer) {
-        content.copyMemory(from: parameters.data, byteCount: parameters.size)        
+        content.copyMemory(from: parameters.data, byteCount: parameters.size)
     }
 
     public func sync(_ index: Int) {
@@ -53,18 +53,15 @@ open class Buffer {
                 let boolParam = param as! BoolParameter
                 boolParam.value = pointer.bindMemory(to: Bool.self, capacity: 1).pointee
                 pointer += size
-            }
-            else if param is UInt32Parameter {
+            } else if param is UInt32Parameter {
                 let intParam = param as! UInt32Parameter
                 intParam.value = pointer.bindMemory(to: UInt32.self, capacity: 1).pointee
                 pointer += size
-            }
-            else if param is IntParameter {
+            } else if param is IntParameter {
                 let intParam = param as! IntParameter
                 intParam.value = Int(pointer.bindMemory(to: Int32.self, capacity: 1).pointee)
                 pointer += size
-            }
-            else if param is Int2Parameter {
+            } else if param is Int2Parameter {
                 let intParam = param as! Int2Parameter
                 let isize = MemoryLayout<Int32>.size
                 let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
@@ -72,8 +69,7 @@ open class Buffer {
                 let y = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
                 pointer += isize
                 intParam.value = .init(x, y)
-            }
-            else if param is Int3Parameter {
+            } else if param is Int3Parameter {
                 let intParam = param as! Int3Parameter
                 let isize = MemoryLayout<Int32>.size
                 let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
@@ -85,8 +81,7 @@ open class Buffer {
                 // because alignment is 16 not 12
                 pointer += isize
                 intParam.value = .init(x, y, z)
-            }
-            else if param is Int4Parameter {
+            } else if param is Int4Parameter {
                 let intParam = param as! Int4Parameter
                 let isize = MemoryLayout<Int32>.size
                 let x = pointer.bindMemory(to: Int32.self, capacity: 1).pointee
@@ -99,13 +94,11 @@ open class Buffer {
                 pointer += isize
 
                 intParam.value = .init(x, y, z, w)
-            }
-            else if param is FloatParameter {
+            } else if param is FloatParameter {
                 let floatParam = param as! FloatParameter
                 floatParam.value = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += size
-            }
-            else if param is Float2Parameter {
+            } else if param is Float2Parameter {
                 let floatParam = param as! Float2Parameter
                 let fsize = MemoryLayout<Float>.size
                 let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
@@ -113,8 +106,7 @@ open class Buffer {
                 let y = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
                 floatParam.value = .init(x, y)
-            }
-            else if param is Float3Parameter {
+            } else if param is Float3Parameter {
                 let floatParam = param as! Float3Parameter
                 let fsize = MemoryLayout<Float>.size
                 let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
@@ -126,8 +118,7 @@ open class Buffer {
                 // because alignment is 16 not 12
                 pointer += fsize
                 floatParam.value = .init(x, y, z)
-            }
-            else if param is PackedFloat3Parameter {
+            } else if param is PackedFloat3Parameter {
                 let floatParam = param as! PackedFloat3Parameter
                 let fsize = MemoryLayout<Float>.size
                 let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee
@@ -137,8 +128,7 @@ open class Buffer {
                 let z = pointer.bindMemory(to: Float.self, capacity: 1).pointee
                 pointer += fsize
                 floatParam.value = .init(x, y, z)
-            }
-            else if param is Float4Parameter {
+            } else if param is Float4Parameter {
                 let floatParam = param as! Float4Parameter
                 let fsize = MemoryLayout<Float>.size
                 let x = pointer.bindMemory(to: Float.self, capacity: 1).pointee

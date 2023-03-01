@@ -19,7 +19,7 @@ public class RandomNoiseGenerator {
             )
         }
     }
-    
+
     var textureDescriptor: MTLTextureDescriptor {
         .texture2DDescriptor(
             pixelFormat: .rgba32Float,
@@ -28,7 +28,7 @@ public class RandomNoiseGenerator {
             mipmapped: false
         )
     }
-        
+
     public var size: (width: Int, height: Int) {
         didSet {
             if size != oldValue {
@@ -39,10 +39,10 @@ public class RandomNoiseGenerator {
 
     public var seed: Int
     public var range: ClosedRange<Float>
-    
+
     private var compute: RandomNoiseComputeSystem
-    
-    public init(device: MTLDevice, size: (width: Int, height: Int) = (1024, 1024), range: ClosedRange<Float> = -1.0...1.0, seed: Int = 0) {
+
+    public init(device: MTLDevice, size: (width: Int, height: Int) = (1024, 1024), range: ClosedRange<Float> = -1.0 ... 1.0, seed: Int = 0) {
         self.size = size
         self.range = range
         self.seed = seed
@@ -56,7 +56,7 @@ public class RandomNoiseGenerator {
             )
         )
     }
-    
+
     public func encode(commandBuffer: MTLCommandBuffer) -> MTLTexture? {
         commandBuffer.label = "\(compute.label) Compute Command Buffer"
         compute.set("Range", [range.lowerBound, range.upperBound])

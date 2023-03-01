@@ -9,7 +9,7 @@ import Foundation
 
 public extension String {
     var camelCase: String {
-        var parts = self.split(separator: " ")
+        var parts = split(separator: " ")
         if let first = parts.first {
             var tmp = Substring(first.prefix(1).lowercased())
             tmp += Substring(first.dropFirst())
@@ -19,11 +19,10 @@ public extension String {
     }
 
     var titleCase: String {
-        return self
-            .replacingOccurrences(of: "([A-Z])",
-                                  with: " $1",
-                                  options: .regularExpression,
-                                  range: range(of: self))
+        return replacingOccurrences(of: "([A-Z])",
+                                    with: " $1",
+                                    options: .regularExpression,
+                                    range: range(of: self))
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .capitalized
     }

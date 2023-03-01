@@ -11,14 +11,14 @@ import simd
 open class TorusGeometry: Geometry {
     override public init() {
         super.init()
-        self.setupData(radius: (1, 2), res: (60, 60))
+        setupData(radius: (1, 2), res: (60, 60))
     }
 
     public init(radius: (minor: Float, major: Float), res: (minor: Int, major: Int) = (60, 60)) {
         super.init()
-        self.setupData(radius: radius, res: res)
+        setupData(radius: radius, res: res)
     }
-    
+
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }

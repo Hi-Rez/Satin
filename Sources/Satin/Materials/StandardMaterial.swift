@@ -54,8 +54,7 @@ open class StandardMaterial: Material {
     public func setTexture(_ texture: MTLTexture?, type: PBRTexture) {
         if let texture = texture {
             maps[type] = texture
-        }
-        else {
+        } else {
             maps.removeValue(forKey: type)
         }
     }
@@ -74,16 +73,16 @@ open class StandardMaterial: Material {
         self.specular = specular
         self.emissiveColor = emissiveColor
         self.maps = maps
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
 
     public init(maps: [PBRTexture: MTLTexture?] = [:]) {
         super.init()
         self.maps = maps
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
 
@@ -97,15 +96,15 @@ open class StandardMaterial: Material {
 
     public required init(from decoder: Decoder) throws {
         try super.init(from: decoder)
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
 
     public required init() {
         super.init()
-        self.lighting = true
-        self.blending = .disabled
+        lighting = true
+        blending = .disabled
         initalizeParameters()
     }
 
