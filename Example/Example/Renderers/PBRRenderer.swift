@@ -32,9 +32,10 @@ class PBRRenderer: BaseRenderer {
     
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
+        mat.lighting = true
+
         mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
         mat.set("Emissive Color", [1.0, 1.0, 1.0, 0.0])
-        mat.lighting = true
         mat.onBind = { [unowned self] (renderEncoder: MTLRenderCommandEncoder) in
             renderEncoder.setFragmentTexture(self.diffuseIBLTexture, index: PBRTexture.irradiance.rawValue)
             renderEncoder.setFragmentTexture(self.specularIBLTexture, index: PBRTexture.reflection.rawValue)

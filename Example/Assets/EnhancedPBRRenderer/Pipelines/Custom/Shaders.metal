@@ -22,8 +22,8 @@ typedef struct {
     float4 position [[position]];
     float3 normal;
     float2 texcoords;
-    float3 worldPos;
-    float3 cameraPos;
+    float3 worldPosition;
+    float3 cameraPosition;
 #if defined(HAS_TRANSMISSION)
     float3 thickness;
 #endif
@@ -54,8 +54,8 @@ vertex CustomVertexData customVertex(
     out.position = vertexUniforms.viewProjectionMatrix * modelMatrix * in.position;
     out.texcoords = in.uv;
     out.normal = normalMatrix * in.normal;
-    out.worldPos = (modelMatrix * in.position).xyz;
-    out.cameraPos = vertexUniforms.worldCameraPosition.xyz;
+    out.worldPosition = (modelMatrix * in.position).xyz;
+    out.cameraPosition = vertexUniforms.worldCameraPosition.xyz;
     out.xyz = xyz;
 #if defined(HAS_TRANSMISSION)
     float3 modelScale;
@@ -96,10 +96,9 @@ fragment float4 customFragment(CustomVertexData in [[stage_in]],
                                  // inject texture args
                                  constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
-    PixelInfo pixel;
-    pixel.radiance = 0.0; 
-    pixel.view = normalize(in.cameraPos - in.worldPos);
-    pixel.position = in.worldPos;
+#include "Chunks/PixelInfo.metal"
+#include "Chunks/PixelInfoInitView.metal"
+#include "Chunks/PixelInfoInitPosition.metal"
 
 #if 0
     pixel.normal = normalize(in.normal);
@@ -311,15 +310,11 @@ fragment float4 customFragment(CustomVertexData in [[stage_in]],
     }
 
     pixel.material = material;
-    pbrInit(pixel);
 
-#if defined(MAX_LIGHTS)
-    pbrDirectLighting(pixel, &lights);
-#endif
-
-#if defined(USE_IBL)
-    pbrIndirectLighting(irradianceMap, reflectionMap, brdfMap, pixel);
-#endif
-
-    return float4(pbrTonemap(pixel), material.alpha);
+    float4 outColor;
+#include "Chunks/PbrInit.metal"
+#include "Chunks/PbrDirectLighting.metal"
+#include "Chunks/PbrInDirectLighting.metal"
+#include "Chunks/PbrTonemap.metal"
+    return outColor;
 }

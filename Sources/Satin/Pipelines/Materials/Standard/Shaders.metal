@@ -12,8 +12,8 @@ typedef struct {
     float4 position [[position]];
     float3 normal;
     float2 texcoords;
-    float3 worldPos;
-    float3 cameraPos;
+    float3 worldPosition;
+    float3 cameraPosition;
 } CustomVertexData;
 
 vertex CustomVertexData standardVertex(
@@ -34,8 +34,8 @@ vertex CustomVertexData standardVertex(
         vertexUniforms.viewProjectionMatrix * modelMatrix * in.position;
     out.texcoords = in.uv;
     out.normal = normalMatrix * in.normal;
-    out.worldPos = (modelMatrix * in.position).xyz;
-    out.cameraPos = vertexUniforms.worldCameraPosition.xyz;
+    out.worldPosition = (modelMatrix * in.position).xyz;
+    out.cameraPosition = vertexUniforms.worldCameraPosition.xyz;
     return out;
 }
 
@@ -45,17 +45,13 @@ fragment float4 standardFragment(
     // inject texture args
     constant StandardUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
-#include "Chunks/Pbr/FragInit.metal"
+    float4 outColor;
 
-    pbrInit(pixel);
+#include "Chunks/PixelInfoInit.metal"
+#include "Chunks/PbrInit.metal"
+#include "Chunks/PbrDirectLighting.metal"
+#include "Chunks/PbrInDirectLighting.metal"
+#include "Chunks/PbrTonemap.metal"
 
-#if defined(MAX_LIGHTS)
-    pbrDirectLighting(pixel, &lights);
-#endif
-
-#if defined(USE_IBL)
-    pbrIndirectLighting(irradianceMap, reflectionMap, brdfMap, pixel);
-#endif
-    
-    return float4(pbrTonemap(pixel), material.alpha);
+    return outColor;
 }

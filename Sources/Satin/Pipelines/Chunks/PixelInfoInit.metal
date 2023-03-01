@@ -1,0 +1,5 @@
+#include "PixelInfo.metal"
+#include "PixelInfoInitView.metal"
+#include "PixelInfoInitPosition.metal"
+#include "PixelInfoInitNormal.metal"
+#include "PixelInfoInitMaterial.metal"

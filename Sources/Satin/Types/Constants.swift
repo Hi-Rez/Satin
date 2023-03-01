@@ -215,7 +215,7 @@ public enum PBRTexture: Int {
     case bump = 9
     case displacement = 10
     case alpha = 11
-    case ambient = 12
+    case transmission = 12
     case ambientOcculsion = 13
     case reflection = 14
     case irradiance = 15
@@ -247,8 +247,8 @@ public enum PBRTexture: Int {
             return "DISPLACEMENT_MAP"
         case .alpha:
             return "ALPHA_MAP"
-        case .ambient:
-            return "AMBIENT_MAP"
+        case .transmission:
+            return "TRANSMISSION_MAP"
         case .ambientOcculsion:
             return "AMBIENT_OCCULSION_MAP"
         case .reflection:
@@ -295,8 +295,8 @@ public enum PBRTexture: Int {
             return "displacementMap"
         case .alpha:
             return "alphaMap"
-        case .ambient:
-            return "ambientMap"
+        case .transmission:
+            return "transmissionMap"
         case .ambientOcculsion:
             return "ambientOcclusionMap"
         case .reflection:
@@ -334,8 +334,8 @@ public enum PBRTexture: Int {
             return "PBRTextureDisplacement"
         case .alpha:
             return "PBRTextureAlpha"
-        case .ambient:
-            return "PBRTextureAmbient"
+        case .transmission:
+            return "PBRTextureTransmission"
         case .ambientOcculsion:
             return "PBRTextureAmbientOcculsion"
         case .reflection:

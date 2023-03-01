@@ -341,38 +341,6 @@ open class Renderer
         renderEncoder.popDebugGroup()
     }
 
-    func encodeObject(renderEncoder: MTLRenderCommandEncoder, object: Object, camera: Camera)
-    {
-        object.update(camera: camera, viewport: _viewport)
-
-        renderEncoder.pushDebugGroup(object.label)
-
-        if let renderable = object as? Renderable, renderable.drawable
-        {
-            if let material = renderable.material, material.lighting
-            {
-                if let lightBuffer = lightBuffer
-                {
-                    material.maxLights = lightBuffer.count
-                    renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.index, index: FragmentBufferIndex.Lighting.rawValue)
-                }
-                else
-                {
-                    material.maxLights = 0
-                }
-                material.update()
-            }
-            renderable.draw(renderEncoder: renderEncoder)
-        }
-
-        for child in object.children where child.visible
-        {
-            encodeObject(renderEncoder: renderEncoder, object: child, camera: camera)
-        }
-
-        renderEncoder.popDebugGroup()
-    }
-
     // MARK: - Resizing
 
     public func resize(_ size: (width: Float, height: Float))
@@ -501,7 +469,8 @@ open class Renderer
     func updateLightBuffer(lights: [Light])
     {
         guard let lightBuffer = lightBuffer, _updateLightBuffer else { return }
-        lightBuffer.update(data: lights.map { $0.data })
+        let data = lights.map { $0.data }
+        lightBuffer.update(data: data)
         _updateLightBuffer = false
     }
 

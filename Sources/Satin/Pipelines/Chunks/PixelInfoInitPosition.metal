@@ -1,0 +1,1 @@
+    pixel.position = in.worldPosition;

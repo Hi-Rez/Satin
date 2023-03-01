@@ -13,28 +13,14 @@ import Forge
 import Satin
 
 class OctasphereRenderer: BaseRenderer {
-    lazy var mesh: Mesh = {
-        let geo = OctaSphereGeometry(radius: 1, res: 3)
-        return Mesh(geometry: geo, material: BasicDiffuseMaterial(0.75))
-    }()
-    
-    lazy var scene: Object = {
-        let scene = Object()
-        scene.add(mesh)
-        return scene
-    }()
-    
+    lazy var mesh = Mesh(geometry: OctaSphereGeometry(radius: 1, res: 3), material: BasicDiffuseMaterial(0.75))
+    lazy var scene = Object("Scene", [mesh])
     lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     
-    lazy var camera: PerspectiveCamera = {
-        let camera = PerspectiveCamera(position: simd_make_float3(0.0, 0.0, 5.0), near: 0.01, far: 100.0)
-        camera.fov = 30
-        return camera
-    }()
-    
-    lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
-    
-    lazy var renderer: Satin.Renderer = .init(context: context)
+    var camera = PerspectiveCamera(position: simd_make_float3(0.0, 0.0, 5.0), near: 0.01, far: 100.0, fov: 30)
+
+    lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
+    lazy var renderer = Satin.Renderer(context: context)
     
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1

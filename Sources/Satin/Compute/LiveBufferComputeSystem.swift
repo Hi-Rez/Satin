@@ -18,7 +18,9 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     
     override public var count: Int {
         didSet {
-            updateSize()
+            if count != oldValue {
+                updateSize()
+            }
         }
     }
     

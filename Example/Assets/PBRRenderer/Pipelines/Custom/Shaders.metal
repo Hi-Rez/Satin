@@ -12,9 +12,9 @@ typedef struct {
 
 typedef struct {
 	float4 position [[position]];
-    float3 worldPos;
+    float3 worldPosition;
     float3 normal;
-    float3 cameraPos;
+    float3 cameraPosition;
 	float roughness [[flat]];
 	float metallic [[flat]];
 } CustomVertexData;
@@ -29,15 +29,15 @@ vertex CustomVertexData customVertex(Vertex in [[stage_in]],
     CustomVertexData out;
 #if INSTANCING
     out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;
-    out.worldPos = (instanceUniforms[instanceID].modelMatrix * in.position).xyz;
+    out.worldPosition = (instanceUniforms[instanceID].modelMatrix * in.position).xyz;
     out.normal = instanceUniforms[instanceID].normalMatrix * in.normal;
 #else
     out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
-    out.worldPos = (vertexUniforms.modelMatrix * in.position).xyz;
+    out.worldPosition = (vertexUniforms.modelMatrix * in.position).xyz;
     out.normal = vertexUniforms.normalMatrix * in.normal;
 #endif
 
-    out.cameraPos = vertexUniforms.worldCameraPosition;
+    out.cameraPosition = vertexUniforms.worldCameraPosition;
     out.roughness = (float) ( (int)instanceID % 11 ) / 10.0;
     out.metallic = (float) ( (int)instanceID / 11 ) / 10.0;
     
@@ -51,9 +51,10 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     texture2d<float> brdfMap [[texture( PBRTextureBRDF )]],
     constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
-    PixelInfo pixel;
-    pixel.view = normalize(in.cameraPos - in.worldPos);
-    pixel.position = in.worldPos;
+#include "Chunks/PixelInfo.metal"
+#include "Chunks/PixelInfoInitView.metal"
+#include "Chunks/PixelInfoInitPosition.metal"
+
     pixel.normal = normalize(in.normal);
     
     pixel.material.baseColor = uniforms.baseColor.rgb;
@@ -63,16 +64,13 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pixel.material.ambientOcclusion = 1.0;
     pixel.material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
     pixel.material.alpha = uniforms.baseColor.a;
+
+    float4 outColor;
+
+#include "Chunks/PbrInit.metal"
+#include "Chunks/PbrDirectLighting.metal"
+#include "Chunks/PbrInDirectLighting.metal"
+#include "Chunks/PbrTonemap.metal"
     
-    pbrInit(pixel);
-
-#if defined(MAX_LIGHTS)
-    pbrDirectLighting(pixel, &lights);
-#endif
-
-#if defined(USE_IBL)
-    pbrIndirectLighting(irradianceMap, reflectionMap, brdfMap, pixel);
-#endif
-
-    return float4(pbrTonemap(pixel), pixel.material.alpha);
+    return outColor;
 }

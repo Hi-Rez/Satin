@@ -23,8 +23,10 @@ open class BufferComputeSystem {
 
     public var count: Int = 0 {
         didSet {
-            _reset = true
-            _setupBuffers = true
+            if count != oldValue {
+                _reset = true
+                _setupBuffers = true
+            }
         }
     }
 

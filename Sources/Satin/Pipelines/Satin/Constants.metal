@@ -95,7 +95,7 @@ typedef enum PBRTextureIndex {
     PBRTextureBump = 9,
     PBRTextureDisplacement = 10,
     PBRTextureAlpha = 11,
-    PBRTextureAmbient = 12,
+    PBRTextureTransmission = 12,
     PBRTextureAmbientOcculsion = 13,
     PBRTextureReflection = 14,
     PBRTextureIrradiance = 15,
