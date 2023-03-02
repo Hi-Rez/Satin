@@ -17,5 +17,5 @@ public protocol Renderable {
     var material: Material? { get set }
 
     func update(camera: Camera, viewport: simd_float4)
-    func draw(renderEncoder: MTLRenderCommandEncoder)
+    func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool)
 }

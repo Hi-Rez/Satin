@@ -158,13 +158,13 @@ open class Mesh: Object, Renderable, Intersectable {
         uniforms?.update(object: self, camera: camera, viewport: viewport)
     }
 
-    open func draw(renderEncoder: MTLRenderCommandEncoder) {
-        draw(renderEncoder: renderEncoder, instanceCount: instanceCount)
+    open func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool = false) {
+        draw(renderEncoder: renderEncoder, instanceCount: instanceCount, shadow: shadow)
     }
 
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         bindDrawingStates(renderEncoder)
-        bindMaterial(renderEncoder)
+        bindMaterial(renderEncoder, shadow: shadow)
         bindGeometry(renderEncoder)
         bindUniforms(renderEncoder)
     }
@@ -180,8 +180,8 @@ open class Mesh: Object, Renderable, Intersectable {
         }
     }
 
-    open func bindMaterial(_ renderEncoder: MTLRenderCommandEncoder) {
-        material?.bind(renderEncoder)
+    open func bindMaterial(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+        material?.bind(renderEncoder, shadow: shadow)
     }
 
     open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder) {
@@ -190,12 +190,12 @@ open class Mesh: Object, Renderable, Intersectable {
         renderEncoder.setTriangleFillMode(triangleFillMode)
     }
 
-    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
+    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int, shadow: Bool) {
         guard drawable else { return }
 
         preDraw?(renderEncoder)
 
-        bind(renderEncoder)
+        bind(renderEncoder, shadow: shadow)
 
         if !submeshes.isEmpty {
             for submesh in submeshes {

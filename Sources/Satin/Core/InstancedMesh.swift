@@ -107,8 +107,8 @@ public class InstancedMesh: Mesh {
         super.update()
     }
 
-    override open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        super.bind(renderEncoder)
+    override open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+        super.bind(renderEncoder, shadow: shadow)
         bindInstanceMatrixBuffer(renderEncoder)
     }
 
@@ -146,9 +146,9 @@ public class InstancedMesh: Mesh {
         _updateInstanceMatrixBuffer = true
     }
 
-    override public func draw(renderEncoder: MTLRenderCommandEncoder) {
+    override public func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool = false) {
         guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count >= instanceCount else { return }
-        super.draw(renderEncoder: renderEncoder)
+        super.draw(renderEncoder: renderEncoder, shadow: shadow)
     }
 
     // MARK: - Intersections

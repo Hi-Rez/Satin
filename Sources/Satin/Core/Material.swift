@@ -127,6 +127,10 @@ open class Material: Codable, ParameterGroupDelegate {
         return shader?.pipeline
     }
 
+    public var shadowPipeline: MTLRenderPipelineState? {
+        return shader?.shadowPipeline
+    }
+
     public weak var context: Context? {
         didSet {
             if context != nil, context !== oldValue {
@@ -390,8 +394,8 @@ open class Material: Codable, ParameterGroupDelegate {
         uniforms?.update()
     }
 
-    open func bindPipeline(_ renderEncoder: MTLRenderCommandEncoder) {
-        guard let pipeline = pipeline else { return }
+    open func bindPipeline(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+        guard let pipeline = shadow ? shadowPipeline : pipeline else { return }
         renderEncoder.setRenderPipelineState(pipeline)
     }
 
@@ -409,8 +413,8 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-        bindPipeline(renderEncoder)
+    open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+        bindPipeline(renderEncoder, shadow: shadow)
         bindUniforms(renderEncoder)
         bindDepthStencilState(renderEncoder)
         onBind?(renderEncoder)

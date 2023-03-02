@@ -16,8 +16,13 @@ open class Shader {
 
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
-    public internal(set) var library: MTLLibrary?
     public internal(set) var error: Error?
+
+    public internal(set) var shadowPipelineReflection: MTLRenderPipelineReflection?
+    public internal(set) var shadowPipeline: MTLRenderPipelineState?
+    public internal(set) var shadowError: Error?
+
+    public internal(set) var library: MTLLibrary?
     var libraryURL: URL?
 
     public var blending: Blending = .alpha {
@@ -188,13 +193,22 @@ open class Shader {
     }
 
     func setupPipeline() {
-        guard let context = context, let library = library, let vertexProgram = library.makeFunction(name: vertexFunctionName), let fragmentProgram = library.makeFunction(name: fragmentFunctionName) else { return }
+        guard let context = context,
+              let library = library,
+              let vertexFunction = library.makeFunction(name: vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return }
 
-        let device = library.device
+        createPipeline(context, vertexFunction, fragmentFunction)
+        createShadowPipeline(context, vertexFunction)
+
+        pipelineNeedsUpdate = false
+    }
+
+    func createPipeline(_ context: Context, _ vertexFunction: MTLFunction, _ fragmentFunction: MTLFunction) {
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.label = label
-        pipelineStateDescriptor.vertexFunction = vertexProgram
-        pipelineStateDescriptor.fragmentFunction = fragmentProgram
+        pipelineStateDescriptor.vertexFunction = vertexFunction
+        pipelineStateDescriptor.fragmentFunction = fragmentFunction
         pipelineStateDescriptor.sampleCount = context.sampleCount
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
@@ -212,15 +226,40 @@ open class Shader {
         }
 
         do {
-            pipeline = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor, options: pipelineOptions, reflection: &pipelineReflection)
+            pipeline = try context.device.makeRenderPipelineState(
+                descriptor: pipelineStateDescriptor,
+                options: pipelineOptions,
+                reflection: &pipelineReflection
+            )
             error = nil
         } catch {
             self.error = error
             print("\(label) Shader: \(error.localizedDescription)")
             pipeline = nil
         }
+    }
 
-        pipelineNeedsUpdate = false
+    func createShadowPipeline(_ context: Context, _ vertexFunction: MTLFunction) {
+        let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
+        pipelineStateDescriptor.label = label + " Shadow"
+        pipelineStateDescriptor.vertexFunction = vertexFunction
+        pipelineStateDescriptor.fragmentFunction = nil
+        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
+        pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
+
+        do {
+            shadowPipeline = try context.device.makeRenderPipelineState(
+                descriptor: pipelineStateDescriptor,
+                options: pipelineOptions,
+                reflection: &shadowPipelineReflection
+            )
+            shadowError = nil
+        } catch {
+            shadowError = error
+            print("\(label) Shadow Shader: \(error.localizedDescription)")
+            shadowPipeline = nil
+        }
     }
 
     func setupParameters() {

@@ -290,7 +290,7 @@ open class Renderer {
             material.update()
         }
 
-        renderable.draw(renderEncoder: renderEncoder)
+        renderable.draw(renderEncoder: renderEncoder, shadow: false)
 
         renderEncoder.popDebugGroup()
     }

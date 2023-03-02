@@ -72,9 +72,9 @@ open class BasicTextureMaterial: BasicColorMaterial {
         }
     }
 
-    override open func bind(_ renderEncoder: MTLRenderCommandEncoder) {
+    override open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         bindTexture(renderEncoder)
         bindSampler(renderEncoder)
-        super.bind(renderEncoder)
+        super.bind(renderEncoder, shadow: shadow)
     }
 }
