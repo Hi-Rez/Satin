@@ -35,6 +35,8 @@
 		E17A55BD28A6C9C6008F1DDB /* IcosahedronGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CC099F2489797300B92285 /* IcosahedronGenerator.c */; };
 		E18A1ED9291EF89800A71453 /* StandardMaterialRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */; };
 		E18A1EDB291EFB1D00A71453 /* StandardMaterialRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */; };
+		E1CB360D29B15D300043D54F /* ShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB360C29B15D300043D54F /* ShadowRenderer.swift */; };
+		E1CB360F29B15D540043D54F /* ShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CB360E29B15D540043D54F /* ShadowRendererView.swift */; };
 		E1D714D428A6BADA00B517B6 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D714D328A6BADA00B517B6 /* ExampleApp.swift */; };
 		E1D714D628A6BADA00B517B6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D714D528A6BADA00B517B6 /* ContentView.swift */; };
 		E1D714D828A6BADA00B517B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1D714D728A6BADA00B517B6 /* Assets.xcassets */; };
@@ -135,6 +137,8 @@
 		E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TorusKnotGenerator.c; sourceTree = "<group>"; };
 		E19B058F26BB704100D91376 /* AudioInputRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputRenderer.swift; sourceTree = "<group>"; };
 		E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureComputeRenderer.swift; sourceTree = "<group>"; };
+		E1CB360C29B15D300043D54F /* ShadowRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowRenderer.swift; sourceTree = "<group>"; };
+		E1CB360E29B15D540043D54F /* ShadowRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowRendererView.swift; sourceTree = "<group>"; };
 		E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomGeometryRenderer.swift; sourceTree = "<group>"; };
 		E1CC099D2489797300B92285 /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1CC099E2489797300B92285 /* IcosahedronGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IcosahedronGenerator.h; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
 				E1653F132684F4AB0012C97F /* SatinSceneKitAR */,
 				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
+				E1CB360C29B15D300043D54F /* ShadowRenderer.swift */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
 				E11325CC28AEADAA0049CACC /* SuperShapesRenderer.swift */,
@@ -379,6 +384,7 @@
 				E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */,
 				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
 				E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */,
+				E1CB360E29B15D540043D54F /* ShadowRendererView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -470,6 +476,7 @@
 				E1E767DC28A6DA70005D75AB /* ARRenderer.swift in Sources */,
 				E1D714D628A6BADA00B517B6 /* ContentView.swift in Sources */,
 				E11325D028AEAEB50049CACC /* SuperShapeGenerator.c in Sources */,
+				E1CB360F29B15D540043D54F /* ShadowRendererView.swift in Sources */,
 				E1E767FF28A6FD6A005D75AB /* TextureComputeRenderer.swift in Sources */,
 				E11325D228AEB0770049CACC /* SuperShapesRendererView.swift in Sources */,
 				E1E767E028A6E7DD005D75AB /* CubemapRendererView.swift in Sources */,
@@ -507,6 +514,7 @@
 				E1E7681128A73661005D75AB /* AudioInputRendererView.swift in Sources */,
 				E1E767F028A6F2E5005D75AB /* PostProcessingRenderer.swift in Sources */,
 				E1E7680728A7302F005D75AB /* VertexAttributesRenderer.swift in Sources */,
+				E1CB360D29B15D300043D54F /* ShadowRenderer.swift in Sources */,
 				E17A55BA28A6C891008F1DDB /* CameraControllerRenderer.swift in Sources */,
 				E1E767F928A6FAE1005D75AB /* SatinSceneKitRenderer.swift in Sources */,
 				E1E7680A28A73086005D75AB /* VertexAttributesRendererView.swift in Sources */,

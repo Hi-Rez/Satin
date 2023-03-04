@@ -25,17 +25,18 @@ typedef enum VertexBufferIndex {
     VertexBufferVertexUniforms = 2,
     VertexBufferInstanceMatrixUniforms = 3,
     VertexBufferMaterialUniforms = 4,
-    VertexBufferCustom0 = 5,
-    VertexBufferCustom1 = 6,
-    VertexBufferCustom2 = 7,
-    VertexBufferCustom3 = 8,
-    VertexBufferCustom4 = 9,
-    VertexBufferCustom5 = 10,
-    VertexBufferCustom6 = 11,
-    VertexBufferCustom7 = 12,
-    VertexBufferCustom8 = 13,
-    VertexBufferCustom9 = 14,
-    VertexBufferCustom10 = 15
+    VertexBufferShadowMatrices = 5,
+    VertexBufferCustom0 = 6,
+    VertexBufferCustom1 = 7,
+    VertexBufferCustom2 = 8,
+    VertexBufferCustom3 = 9,
+    VertexBufferCustom4 = 10,
+    VertexBufferCustom5 = 11,
+    VertexBufferCustom6 = 12,
+    VertexBufferCustom7 = 13,
+    VertexBufferCustom8 = 14,
+    VertexBufferCustom9 = 15,
+    VertexBufferCustom10 = 16
 } VertexBufferIndex;
 
 typedef enum VertexTextureIndex {

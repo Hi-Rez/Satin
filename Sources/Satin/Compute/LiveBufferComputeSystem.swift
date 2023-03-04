@@ -67,6 +67,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
     }
 
     override open func setup() {
+        self.label = prefixLabel + " Buffer Compute Encoder"
         super.setup()
         setupCompiler()
         setupPipelines()

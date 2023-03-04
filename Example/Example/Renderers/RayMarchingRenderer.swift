@@ -30,8 +30,8 @@ class RayMarchingRenderer: BaseRenderer {
             try super.init(from: decoder)
         }
 
-        override func bind(_ renderEncoder: MTLRenderCommandEncoder) {
-            super.bind(renderEncoder)
+        override func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+            super.bind(renderEncoder, shadow: shadow)
             if let camera = camera {
                 var view = camera.viewMatrix
                 renderEncoder.setFragmentBytes(&view, length: MemoryLayout<float4x4>.size, index: FragmentBufferIndex.Custom0.rawValue)

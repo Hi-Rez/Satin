@@ -147,6 +147,22 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
+    public var castShadow = false {
+        didSet {
+            if oldValue != castShadow {
+                shaderDefinesNeedsUpdate = true
+            }
+        }
+    }
+
+    public var receiveShadow = false {
+        didSet {
+            if oldValue != receiveShadow {
+                shaderDefinesNeedsUpdate = true
+            }
+        }
+    }
+
     public var lighting = false {
         didSet {
             if oldValue != lighting {
@@ -163,7 +179,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var blending: Blending = .alpha {
+    public var blending: Blending = .disabled {
         didSet {
             if oldValue != blending {
                 setupBlending()
@@ -473,6 +489,8 @@ open class Material: Codable, ParameterGroupDelegate {
         shader.instancing = instancing
         shader.lighting = lighting
         shader.maxLights = maxLights
+        shader.receiveShadow = receiveShadow
+        shader.castShadow = castShadow
     }
 
     public func set(_ name: String, _ value: [Float]) {

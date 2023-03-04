@@ -73,6 +73,9 @@ func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
 
 class LoadedMesh: Object, Renderable {
     public var renderOrder = 0
+    public var receiveShadow: Bool = false
+    public var castShadow: Bool = false
+
     public var drawable: Bool {
         if
             uniforms != nil,
@@ -189,7 +192,6 @@ class LoadedMesh: Object, Renderable {
 
     override func update() {
         material?.update()
-        uniforms?.update()
         super.update()
     }
 
@@ -200,14 +202,14 @@ class LoadedMesh: Object, Renderable {
 
     // MARK: - Draw
 
-    open func draw(renderEncoder: MTLRenderCommandEncoder) {
-        draw(renderEncoder: renderEncoder, instanceCount: 1)
+    func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+        draw(renderEncoder: renderEncoder, instanceCount: 1, shadow: shadow)
     }
 
-    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int) {
+    open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int, shadow: Bool) {
         guard instanceCount > 0 else { return }
 
-        material?.bind(renderEncoder)
+        material?.bind(renderEncoder, shadow: shadow)
 
         renderEncoder.setFrontFacing(windingOrder)
         renderEncoder.setCullMode(cullMode)

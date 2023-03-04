@@ -38,6 +38,13 @@ open class DirectionalLight: Object, Light {
         }
     }
 
+    public var castShadow = false {
+        didSet {
+            setupShadow()
+        }
+    }
+    public lazy var shadow: LightShadow = DirectionalLightShadow(label: label)
+
     public let publisher = PassthroughSubject<Light, Never>()
     private var transformSubscriber: AnyCancellable?
 
@@ -68,9 +75,21 @@ open class DirectionalLight: Object, Light {
 
     override open func setup() {
         super.setup()
+        setupTransformSubscriber()
+        setupShadow()
+    }
+
+    func setupTransformSubscriber()
+    {
         transformSubscriber = transformPublisher.sink { [weak self] _ in
             guard let self = self else { return }
+            self.shadow.update(light: self)
             self.publisher.send(self)
         }
+    }
+
+    func setupShadow() {
+        guard castShadow, let directionalShadow = shadow as? DirectionalLightShadow, let context = context else { return }
+        directionalShadow.device = context.device
     }
 }

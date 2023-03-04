@@ -12,9 +12,21 @@ import MetalPerformanceShaders
 import simd
 
 open class Mesh: Object, Renderable, Intersectable {
+    public var renderOrder = 0
+    
+    public var receiveShadow: Bool = false {
+        didSet {
+            material?.receiveShadow = receiveShadow
+        }
+    }
+    public var castShadow: Bool = false {
+        didSet {
+            material?.castShadow = castShadow
+        }
+    }
+
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
-    public var renderOrder = 0
 
     public var drawable: Bool {
         if instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil, material?.pipeline != nil {
@@ -149,7 +161,6 @@ open class Mesh: Object, Renderable, Intersectable {
     override open func update() {
         geometry.update()
         material?.update()
-        uniforms?.update()
         super.update()
     }
 

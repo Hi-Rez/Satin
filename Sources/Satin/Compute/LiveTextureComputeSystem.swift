@@ -61,6 +61,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
 
     override open func setup() {
+        self.label = prefixLabel + " Texture Compute Encoder"
         super.setup()
         setupCompiler()
         setupPipelines()

@@ -17,5 +17,8 @@ public protocol Light {
     var color: simd_float3 { get set } // color
     var intensity: Float { get set }
 
+    var castShadow: Bool { get }
+    var shadow: LightShadow { get }
+
     var publisher: PassthroughSubject<Light, Never> { get }
 }

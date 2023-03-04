@@ -2,6 +2,7 @@
 
 typedef struct {
     float4 position [[position]];
+    // inject shadow coords
     float3 viewPosition;
     float3 normal;
 } DiffuseVertexData;
@@ -12,8 +13,11 @@ typedef struct {
     float diffusePower; // slider,0,2,0.5
 } BasicDiffuseUniforms;
 
-vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
-// inject instancing args
+vertex DiffuseVertexData basicDiffuseVertex
+(
+    Vertex in [[stage_in]],
+    // inject instancing args
+    // inject shadow vertex args
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
 {
 #if INSTANCING
@@ -33,20 +37,31 @@ vertex DiffuseVertexData basicDiffuseVertex(Vertex in [[stage_in]],
     out.viewPosition = viewPosition.xyz;
     out.position = vertexUniforms.projectionMatrix * viewPosition;
     out.normal = screenSpaceNormal.xyz;
+
+    // inject shadow vertex calc
+    
     return out;
 }
 
-fragment float4 basicDiffuseFragment(DiffuseVertexData in [[stage_in]],
+fragment float4 basicDiffuseFragment
+(
+    DiffuseVertexData in [[stage_in]],
+    // inject shadow fragment args
     constant BasicDiffuseUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
+    float4 outColor = uniforms.color;
+
     const float3 pos = in.viewPosition;
     const float3 dx = normalize(dfdx(pos));
     const float3 dy = normalize(dfdy(pos));
     const float3 normal = normalize(cross(dx, dy));
     const float soft = dot(normalize(in.normal), float3(0.0, 0.0, 1.0));
     const float hard = saturate(dot(normal, float3(0.0, 0.0, -1.0)));
-    float3 color =
-        uniforms.color.rgb * float3(pow(mix(soft, hard, uniforms.hardness), uniforms.diffusePower));
-    color = dither8x8(in.position.xy, color);
-    return float4(color, uniforms.color.a);
+
+    outColor.rgb *= pow(mix(soft, hard, uniforms.hardness), uniforms.diffusePower);
+    outColor.rgb = dither8x8(in.position.xy, outColor.rgb);
+
+    // inject shadow fragment calc
+
+    return outColor;
 }

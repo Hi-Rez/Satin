@@ -99,12 +99,17 @@ open class Renderer {
 
     private var _viewport: simd_float4 = .zero
 
-    private var renderList: [Renderable] = []
-    private var lightList: [Light] = []
+    private var renderList = [Renderable]()
+    private var lightList = [Light]()
+    private var shadowList = [LightShadow]()
 
-    private var _updateLightBuffer = false
-    private var lightBuffer: StructBuffer<LightData>?
-    private var lightSubscriptions = Set<AnyCancellable>()
+    private var _updateShadowMatricesBuffer = false
+    private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
+    private var shadowMatricesSubscriptions = Set<AnyCancellable>()
+
+    private var _updateLightDataBuffer = false
+    private var lightDataBuffer: StructBuffer<LightData>?
+    private var lightDataSubscriptions = Set<AnyCancellable>()
 
     // MARK: - Init
 
@@ -203,11 +208,15 @@ open class Renderer {
         renderPassDescriptor.stencilAttachment.storeAction = stencilStoreAction
         renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
 
-        if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-        {
+        // render objects that cast shadows into the depth textures
+        for light in lightList where light.castShadow {
+            light.shadow.draw(commandBuffer: commandBuffer, renderables: renderList)
+        }
+
+        if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
             renderEncoder.label = label + " Encoder"
             renderEncoder.setViewport(viewport)
-            encode(renderEncoder: renderEncoder, scene: scene)
+            encode(renderEncoder: renderEncoder, scene: scene, camera: camera)
             renderEncoder.endEncoding()
         }
 
@@ -219,7 +228,7 @@ open class Renderer {
 
     public func draw(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera) {
         update(scene: scene, camera: camera)
-        encode(renderEncoder: renderEncoder, scene: scene)
+        encode(renderEncoder: renderEncoder, scene: scene, camera: camera)
     }
 
     // MARK: - Internal Update
@@ -227,61 +236,58 @@ open class Renderer {
     func update(scene: Object, camera: Camera) {
         onUpdate?()
 
-        renderList = []
-        lightList = []
+        renderList.removeAll(keepingCapacity: true)
+        lightList.removeAll(keepingCapacity: true)
+        shadowList.removeAll(keepingCapacity: true)
 
         camera.update() // FIXME: - traverse children and make sure you update everything
 
         updateScene(object: scene, camera: camera)
-        updateLights(lights: lightList)
+        updateLights()
+        updateShadows()
     }
 
     func updateScene(object: Object, camera: Camera, visible: Bool = true) {
         object.context = context
         object.update()
-        object.update(camera: camera, viewport: _viewport)
 
-        if visible && object.visible {
+        let isVisible = visible && object.visible
+        if isVisible {
             if let light = object as? Light {
                 lightList.append(light)
+                if light.castShadow {
+                    shadowList.append(light.shadow)
+                }
             } else if let renderable = object as? Renderable, renderable.drawable {
                 renderList.append(renderable)
             }
         }
 
         for child in object.children {
-            updateScene(object: child, camera: camera, visible: visible && object.visible)
+            updateScene(object: child, camera: camera, visible: isVisible)
         }
     }
 
     // MARK: - Internal Encoding
 
-    func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object) {
-        guard scene.visible, !renderList.isEmpty else { return }
-
+    func encode(renderEncoder: MTLRenderCommandEncoder, scene _: Object, camera: Camera) {
         renderEncoder.pushDebugGroup(label + " Pass")
         preDraw?(renderEncoder)
 
-        var renderables = renderList
-        if sortObjects {
-            renderables.sort {
-                $0.renderOrder < $1.renderOrder
-            }
-        }
-
+        let renderables = sortObjects ? renderList.sorted { $0.renderOrder < $1.renderOrder } : renderList
         for renderable in renderables {
-            _encode(renderEncoder: renderEncoder, renderable: renderable)
+            _encode(renderEncoder: renderEncoder, renderable: renderable, camera: camera)
         }
 
         postDraw?(renderEncoder)
         renderEncoder.popDebugGroup()
     }
 
-    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable) {
+    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
         renderEncoder.pushDebugGroup(renderable.label)
 
         if let material = renderable.material, material.lighting {
-            if let lightBuffer = lightBuffer {
+            if let lightBuffer = lightDataBuffer {
                 material.maxLights = lightBuffer.count
                 renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.offset, index: FragmentBufferIndex.Lighting.rawValue)
             } else {
@@ -290,6 +296,17 @@ open class Renderer {
             material.update()
         }
 
+        if renderable.receiveShadow {
+            if let shadowBuffer = shadowMatricesBuffer {
+                renderEncoder.setVertexBuffer(shadowBuffer.buffer, offset: shadowBuffer.offset, index: VertexBufferIndex.ShadowMatrices.rawValue)
+            }
+
+            for (index, light) in lightList.enumerated() where light.castShadow {
+                renderEncoder.setFragmentTexture(light.shadow.texture, index: FragmentTextureIndex.Custom0.rawValue + index)
+            }
+        }
+
+        renderable.update(camera: camera, viewport: _viewport)
         renderable.draw(renderEncoder: renderEncoder, shadow: false)
 
         renderEncoder.popDebugGroup()
@@ -372,38 +389,76 @@ open class Renderer {
         }
     }
 
-    // MARK: - Scene Graph
-
     // MARK: - Lights
 
-    func updateLights(lights: [Light]) {
-        setupLightBuffer(lights: lights)
-        updateLightBuffer(lights: lights)
+    func updateLights() {
+        setupLightDataBuffer()
+        updateLightDataBuffer()
     }
 
-    func setupLightBuffer(lights: [Light]) {
-        guard !lights.isEmpty, lights.count != lightBuffer?.count else { return }
+    func setupLightDataBuffer() {
+        guard !lightList.isEmpty, lightList.count != lightDataBuffer?.count else { return }
 
-        lightSubscriptions.removeAll()
+        lightDataSubscriptions.removeAll(keepingCapacity: true)
 
-        if lights.isEmpty {
-            lightBuffer = nil
+        if lightList.isEmpty {
+            lightDataBuffer = nil
         } else {
-            for light in lights {
+            for light in lightList {
                 light.publisher.sink { [weak self] _ in
-                    self?._updateLightBuffer = true
-                }.store(in: &lightSubscriptions)
+                    self?._updateLightDataBuffer = true
+                }.store(in: &lightDataSubscriptions)
             }
+            lightDataBuffer = StructBuffer<LightData>.init(
+                device: context.device,
+                count: lightList.count,
+                label: "Light Data Buffer"
+            )
 
-            lightBuffer = StructBuffer<LightData>.init(device: context.device, count: lights.count, label: "Light Buffer")
-            _updateLightBuffer = true
+            _updateLightDataBuffer = true
         }
     }
 
-    func updateLightBuffer(lights: [Light]) {
-        guard let lightBuffer = lightBuffer, _updateLightBuffer else { return }
-        lightBuffer.update(data: lights.map { $0.data })
-        _updateLightBuffer = false
+    func updateLightDataBuffer() {
+        guard let lightBuffer = lightDataBuffer, _updateLightDataBuffer else { return }
+        lightBuffer.update(data: lightList.map { $0.data })
+        _updateLightDataBuffer = false
+    }
+
+    // MARK: - Shadows
+
+    func updateShadows() {
+        setupShadowMatricesBuffer()
+        updateShadowMatricesBuffer()
+    }
+
+    func setupShadowMatricesBuffer() {
+        guard !shadowList.isEmpty, shadowList.count != shadowMatricesBuffer?.count else { return }
+
+        shadowMatricesSubscriptions.removeAll(keepingCapacity: true)
+
+        if shadowList.isEmpty {
+            shadowMatricesBuffer = nil
+        } else {
+            for light in lightList where light.castShadow {
+                light.publisher.sink { [weak self] _ in
+                    self?._updateShadowMatricesBuffer = true
+                }.store(in: &shadowMatricesSubscriptions)
+            }
+
+            shadowMatricesBuffer = StructBuffer<simd_float4x4>.init(
+                device: context.device,
+                count: shadowList.count,
+                label: "Shadow Matrices Buffer"
+            )
+            _updateShadowMatricesBuffer = true
+        }
+    }
+
+    func updateShadowMatricesBuffer() {
+        guard let shadowMatricesBuffer = shadowMatricesBuffer, _updateShadowMatricesBuffer else { return }
+        shadowMatricesBuffer.update(data: shadowList.map { $0.camera.viewProjectionMatrix })
+        _updateShadowMatricesBuffer = false
     }
 
     // MARK: - Compile

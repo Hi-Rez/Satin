@@ -130,6 +130,10 @@ struct ContentView: View {
                     #endif
                 }
                 Group {
+                    NavigationLink(destination: ShadowRendererView()) {
+                        Label("Shadow", systemImage: "shadow")
+                    }
+
                     NavigationLink(destination: StandardMaterialRendererView()) {
                         Label("Standard PBR Material", systemImage: "flame")
                     }
@@ -151,6 +155,8 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Satin Examples")
+
+            ShadowRendererView()
         }
     }
 }

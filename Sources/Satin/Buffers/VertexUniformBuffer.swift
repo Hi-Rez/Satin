@@ -25,6 +25,10 @@ open class VertexUniformBuffer {
     }
 
     public func update(object: Object, camera: Camera, viewport: simd_float4) {
+        index = (index + 1) % maxBuffersInFlight
+        offset = alignedSize * index
+        uniforms = UnsafeMutableRawPointer(buffer.contents() + offset).bindMemory(to: VertexUniforms.self, capacity: 1)
+
         uniforms[0].modelMatrix = object.worldMatrix
         uniforms[0].viewMatrix = camera.viewMatrix
         uniforms[0].modelViewMatrix = simd_mul(uniforms[0].viewMatrix, uniforms[0].modelMatrix)
@@ -37,11 +41,5 @@ open class VertexUniformBuffer {
         uniforms[0].viewport = viewport
         uniforms[0].worldCameraPosition = camera.worldPosition
         uniforms[0].worldCameraViewDirection = camera.viewDirection
-    }
-
-    public func update() {
-        index = (index + 1) % maxBuffersInFlight
-        offset = alignedSize * index
-        uniforms = UnsafeMutableRawPointer(buffer.contents() + offset).bindMemory(to: VertexUniforms.self, capacity: 1)
     }
 }

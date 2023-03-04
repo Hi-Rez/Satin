@@ -84,8 +84,10 @@ open class Shader {
     public var instancing = false
 
     public var lighting = false
-
     public var maxLights: Int = -1
+
+    public var castShadow = false
+    public var receiveShadow = false
 
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
@@ -131,6 +133,14 @@ open class Shader {
         }
     }
 
+    public var shadowFunctionName = "shaderShadowVertex" {
+        didSet {
+            if oldValue != shadowFunctionName {
+                pipelineNeedsUpdate = true
+            }
+        }
+    }
+
     public var fragmentFunctionName = "shaderFragment" {
         didSet {
             if oldValue != fragmentFunctionName {
@@ -149,9 +159,16 @@ open class Shader {
 
     public required init() {}
 
-    public init(_ label: String, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil, _ libraryURL: URL? = nil) {
+    public init(
+        _ label: String,
+        _ vertexFunctionName: String? = nil,
+        _ fragmentFunctionName: String? = nil,
+        _ shadowFunctionName: String? = nil,
+        _ libraryURL: URL? = nil
+    ) {
         self.label = label
         self.vertexFunctionName = vertexFunctionName ?? label.camelCase + "Vertex"
+        self.shadowFunctionName = vertexFunctionName ?? label.camelCase + "ShadowVertex"
         self.fragmentFunctionName = fragmentFunctionName ?? label.camelCase + "Fragment"
         self.libraryURL = libraryURL
     }
@@ -199,7 +216,7 @@ open class Shader {
               let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return }
 
         createPipeline(context, vertexFunction, fragmentFunction)
-        createShadowPipeline(context, vertexFunction)
+        createShadowPipeline(context, library.makeFunction(name: shadowFunctionName) ?? vertexFunction)
 
         pipelineNeedsUpdate = false
     }
@@ -316,7 +333,13 @@ open class Shader {
         clone.alphaBlendOperation = alphaBlendOperation
 
         clone.instancing = instancing
+
         clone.lighting = lighting
+        clone.maxLights = maxLights
+
+        clone.castShadow = castShadow
+        clone.receiveShadow = receiveShadow
+
         clone.vertexDescriptor = vertexDescriptor
 
         clone.vertexFunctionName = vertexFunctionName

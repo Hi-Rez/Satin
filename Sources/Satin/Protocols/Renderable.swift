@@ -13,8 +13,12 @@ public protocol Renderable {
     var label: String { get }
     var renderOrder: Int { get }
 
+    var receiveShadow: Bool { get }
+    var castShadow: Bool { get }
+
     var drawable: Bool { get }
     var material: Material? { get set }
+
 
     func update(camera: Camera, viewport: simd_float4)
     func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool)

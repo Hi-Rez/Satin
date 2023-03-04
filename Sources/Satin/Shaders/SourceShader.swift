@@ -43,6 +43,14 @@ open class SourceShader: Shader {
         }
     }
 
+    override public var receiveShadow: Bool {
+        didSet {
+            if oldValue != receiveShadow {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
+
     override public var lighting: Bool {
         didSet {
             if oldValue != lighting {
@@ -174,6 +182,8 @@ open class SourceShader: Shader {
 
             injectDefines(source: &source, defines: defines)
             injectConstants(source: &source)
+            
+            injectShadowSampler(source: &source, receiveShadow: receiveShadow)
 
             injectVertex(source: &source, vertexDescriptor: vertexDescriptor)
             injectVertexData(source: &source)
@@ -185,14 +195,29 @@ open class SourceShader: Shader {
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)
+            injectPassThroughShadowVertex(label: label, source: &source)
 
             injectInstancingArgs(source: &source, instancing: instancing)
+
+
+            injectShadowCoords(source: &source, receiveShadow: receiveShadow)
+            injectShadowVertexArgs(source: &source, receiveShadow: receiveShadow)
+            injectShadowVertexCalc(source: &source, receiveShadow: receiveShadow)
+
+            injectShadowFragmentArgs(source: &source, receiveShadow: receiveShadow)
+            injectShadowFragmentCalc(source: &source, receiveShadow: receiveShadow)
+
             injectLightingArgs(source: &source, lighting: lighting)
 
             // modify shader if needed, instancing, etc
             modifyShaderSource(source: &source)
 
             shaderSource = compiledShaderSource
+
+            if self is LiveShader {
+                print(source)
+            }
+
             self.source = source
 
             error = nil
