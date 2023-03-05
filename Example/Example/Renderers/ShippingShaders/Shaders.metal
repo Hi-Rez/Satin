@@ -67,17 +67,18 @@ typedef enum VertexTextureIndex {
 typedef enum FragmentBufferIndex {
     FragmentBufferMaterialUniforms = 0,
     FragmentBufferLighting = 1,
-    FragmentBufferCustom0 = 2,
-    FragmentBufferCustom1 = 3,
-    FragmentBufferCustom2 = 4,
-    FragmentBufferCustom3 = 5,
-    FragmentBufferCustom4 = 6,
-    FragmentBufferCustom5 = 7,
-    FragmentBufferCustom6 = 8,
-    FragmentBufferCustom7 = 9,
-    FragmentBufferCustom8 = 10,
-    FragmentBufferCustom9 = 11,
-    FragmentBufferCustom10 = 12
+    FragmentBufferShadows = 2,
+    FragmentBufferCustom0 = 3,
+    FragmentBufferCustom1 = 4,
+    FragmentBufferCustom2 = 5,
+    FragmentBufferCustom3 = 6,
+    FragmentBufferCustom4 = 7,
+    FragmentBufferCustom5 = 8,
+    FragmentBufferCustom6 = 9,
+    FragmentBufferCustom7 = 10,
+    FragmentBufferCustom8 = 11,
+    FragmentBufferCustom9 = 12,
+    FragmentBufferCustom10 = 13
 } FragmentBufferIndex;
 
 typedef enum FragmentTextureIndex {
@@ -91,7 +92,15 @@ typedef enum FragmentTextureIndex {
     FragmentTextureCustom7 = 7,
     FragmentTextureCustom8 = 8,
     FragmentTextureCustom9 = 9,
-    FragmentTextureCustom10 = 10
+    FragmentTextureCustom10 = 10,
+    FragmentTextureShadow0 = 11,
+    FragmentTextureShadow1 = 12,
+    FragmentTextureShadow2 = 13,
+    FragmentTextureShadow3 = 14,
+    FragmentTextureShadow4 = 15,
+    FragmentTextureShadow5 = 16,
+    FragmentTextureShadow6 = 17,
+    FragmentTextureShadow7 = 18
 } FragmentTextureIndex;
 
 typedef enum PBRTextureIndex {

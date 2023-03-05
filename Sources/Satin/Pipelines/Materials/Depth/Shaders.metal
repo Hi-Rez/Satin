@@ -14,10 +14,13 @@ typedef struct {
     bool color;  // toggle
 } DepthUniforms;
 
-vertex DepthVertexData depthVertex(Vertex v [[stage_in]],
-// inject instancing args
+vertex DepthVertexData depthVertex
+(
+    Vertex v [[stage_in]],
+    // inject instancing args
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
-    constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]])
+    constant DepthUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]]
+)
 {
 #if INSTANCING
     const float4 position = vertexUniforms.viewMatrix * instanceUniforms[instanceID].modelMatrix * v.position;

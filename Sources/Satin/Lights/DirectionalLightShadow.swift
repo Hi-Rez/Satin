@@ -52,8 +52,8 @@ public class DirectionalLightShadow: LightShadow {
 
     init(label: String) {
         self.label = label
-        camera = OrthographicCamera(left: -5, right: 5, bottom: -5, top: 5, near: 0.01, far: 20.0)
-//        self.camera = PerspectiveCamera(position: .zero, near: 0.01, far: 20.0)
+        camera = OrthographicCamera(left: -5, right: 5, bottom: -5, top: 5, near: 0.01, far: 100.0)
+//        self.camera = PerspectiveCamera(position: .zero, near: 0.01, far: 50.0)
     }
 
     func setup()
@@ -63,7 +63,7 @@ public class DirectionalLightShadow: LightShadow {
 
     public func update(light: Object) {
         camera.position = light.worldPosition
-        camera.lookAt(light.worldPosition + light.worldForwardDirection, -Satin.worldForwardDirection)
+        camera.lookAt(light.worldPosition + light.worldForwardDirection, Satin.worldUpDirection)
     }
 
     public func draw(commandBuffer: MTLCommandBuffer, renderables: [Renderable]) {

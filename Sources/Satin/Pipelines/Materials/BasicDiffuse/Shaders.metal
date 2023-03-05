@@ -59,9 +59,9 @@ fragment float4 basicDiffuseFragment
     const float hard = saturate(dot(normal, float3(0.0, 0.0, -1.0)));
 
     outColor.rgb *= pow(mix(soft, hard, uniforms.hardness), uniforms.diffusePower);
-    outColor.rgb = dither8x8(in.position.xy, outColor.rgb);
 
     // inject shadow fragment calc
 
+    outColor.rgb = dither8x8(in.position.xy, outColor.rgb);
     return outColor;
 }

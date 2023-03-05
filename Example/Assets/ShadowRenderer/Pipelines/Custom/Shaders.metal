@@ -2,14 +2,7 @@ typedef struct {
     float4 color; //color
 } CustomUniforms;
 
-typedef struct {
-    float4 position [[position]];
-    // inject shadow coords
-    float3 normal;
-    float2 uv;
-} CustomVertexData;
-
-vertex CustomVertexData customVertex
+vertex VertexData customVertex
 (
     Vertex in [[stage_in]],
     // inject instancing args
@@ -17,7 +10,7 @@ vertex CustomVertexData customVertex
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]]
 )
 {
-    CustomVertexData out;
+    VertexData out;
 
 #if INSTANCING
     out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;
@@ -36,7 +29,7 @@ vertex CustomVertexData customVertex
 
 fragment float4 customFragment
 (
-    CustomVertexData in [[stage_in]],
+    VertexData in [[stage_in]],
     // inject shadow fragment args
     constant CustomUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]]
 )

@@ -5,7 +5,8 @@ using namespace metal;
 
 // inject defines
 // inject constants
-// inject shadow sampler
+// inject shadow buffer
+// inject shadow function
 // inject vertex
 // inject vertex data
 // inject vertex uniforms

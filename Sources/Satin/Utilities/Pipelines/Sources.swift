@@ -45,6 +45,27 @@ class PassThroughShadowPipelineSource {
     }
 }
 
+class ShadowFunctionSource {
+    static let shared = ShadowFunctionSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard ShadowFunctionSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesLibraryUrl("Shadow.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return sharedSource
+    }
+}
+
+
+
 class ConstantsSource {
     static let shared = ConstantsSource()
     private static var sharedSource: String?

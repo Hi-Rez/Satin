@@ -67,6 +67,14 @@ open class SourceShader: Shader {
         }
     }
 
+    override public var shadowCount: Int {
+        didSet {
+            if oldValue != shadowCount {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
+
     open var defines: [String: String] {
         var results = [String: String]()
 
@@ -86,12 +94,19 @@ open class SourceShader: Shader {
         if instancing {
             results["INSTANCING"] = "true"
         }
+
         if lighting {
             results["LIGHTING"] = "true"
-            if maxLights > -1 {
-                results["MAX_LIGHTS"] = "\(maxLights)"
-            }
         }
+
+        if maxLights > -1 {
+            results["MAX_LIGHTS"] = "\(maxLights)"
+        }
+
+        if shadowCount > -1 {
+            results["SHADOW_COUNT"] = "\(shadowCount)"
+        }
+
         return results
     }
 
@@ -182,8 +197,9 @@ open class SourceShader: Shader {
 
             injectDefines(source: &source, defines: defines)
             injectConstants(source: &source)
-            
-            injectShadowSampler(source: &source, receiveShadow: receiveShadow)
+
+            injectShadowBuffer(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
+            injectShadowFunction(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
 
             injectVertex(source: &source, vertexDescriptor: vertexDescriptor)
             injectVertexData(source: &source)
@@ -199,24 +215,19 @@ open class SourceShader: Shader {
 
             injectInstancingArgs(source: &source, instancing: instancing)
 
-
-            injectShadowCoords(source: &source, receiveShadow: receiveShadow)
+            injectShadowCoords(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
             injectShadowVertexArgs(source: &source, receiveShadow: receiveShadow)
-            injectShadowVertexCalc(source: &source, receiveShadow: receiveShadow)
+            injectShadowVertexCalc(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
 
-            injectShadowFragmentArgs(source: &source, receiveShadow: receiveShadow)
-            injectShadowFragmentCalc(source: &source, receiveShadow: receiveShadow)
+            injectShadowFragmentArgs(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
+            injectShadowFragmentCalc(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
 
             injectLightingArgs(source: &source, lighting: lighting)
 
-            // modify shader if needed, instancing, etc
+            // user hook to modify shader if needed
             modifyShaderSource(source: &source)
 
             shaderSource = compiledShaderSource
-
-            if self is LiveShader {
-                print(source)
-            }
 
             self.source = source
 
@@ -227,6 +238,21 @@ open class SourceShader: Shader {
         }
 
         sourceNeedsUpdate = false
+    }
+
+    override func createPipeline(_ context: Context, _ vertexFunction: MTLFunction, _ fragmentFunction: MTLFunction) {
+        if receiveShadow, shadowCount > 0 {
+            let shadowArgumentEncoder = fragmentFunction.makeArgumentEncoder(bufferIndex: FragmentBufferIndex.Shadows.rawValue)
+
+            let shadowArgumentBuffer = context.device.makeBuffer(length: shadowArgumentEncoder.encodedLength, options: .storageModeManaged)
+            shadowArgumentBuffer?.label = "Shadow Argument Buffer"
+
+            shadowArgumentEncoder.setArgumentBuffer(shadowArgumentBuffer, offset: 0)
+
+            self.shadowArgumentBuffer = shadowArgumentBuffer
+            self.shadowArgumentEncoder = shadowArgumentEncoder
+        }
+        super.createPipeline(context, vertexFunction, fragmentFunction)
     }
 
     override public func clone() -> Shader {

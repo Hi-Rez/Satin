@@ -18,9 +18,16 @@ open class Shader {
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var error: Error?
 
+    var shadowPipelineOptions: MTLPipelineOption {
+        [.argumentInfo, .bufferTypeInfo]
+    }
+
     public internal(set) var shadowPipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var shadowPipeline: MTLRenderPipelineState?
     public internal(set) var shadowError: Error?
+
+    public internal(set) var shadowArgumentEncoder: MTLArgumentEncoder?
+    public internal(set) var shadowArgumentBuffer: MTLBuffer?
 
     public internal(set) var library: MTLLibrary?
     var libraryURL: URL?
@@ -84,10 +91,12 @@ open class Shader {
     public var instancing = false
 
     public var lighting = false
-    public var maxLights: Int = -1
+    public var maxLights: Int = 0
 
     public var castShadow = false
+
     public var receiveShadow = false
+    public var shadowCount: Int = 0
 
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
@@ -268,7 +277,7 @@ open class Shader {
         do {
             shadowPipeline = try context.device.makeRenderPipelineState(
                 descriptor: pipelineStateDescriptor,
-                options: pipelineOptions,
+                options: shadowPipelineOptions,
                 reflection: &shadowPipelineReflection
             )
             shadowError = nil

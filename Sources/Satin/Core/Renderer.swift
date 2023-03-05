@@ -32,16 +32,7 @@ open class Renderer {
     public var size: (width: Float, height: Float) = (0, 0) {
         didSet {
             if oldValue.width != size.width || oldValue.height != size.height {
-                let width = Double(size.width)
-                let height = Double(size.height)
-                viewport = MTLViewport(
-                    originX: 0.0,
-                    originY: 0.0,
-                    width: width,
-                    height: height,
-                    znear: invertViewportNearFar ? 1.0 : 0.0,
-                    zfar: invertViewportNearFar ? 0.0 : 1.0
-                )
+                updateViewport()
                 updateColorTexture = true
                 updateDepthTexture = true
                 updateStencilTexture = true
@@ -84,32 +75,26 @@ open class Renderer {
 
     public var invertViewportNearFar = false {
         didSet {
-            let width = Double(size.width)
-            let height = Double(size.height)
-            viewport = MTLViewport(
-                originX: 0.0,
-                originY: 0.0,
-                width: width,
-                height: height,
-                znear: invertViewportNearFar ? 1.0 : 0.0,
-                zfar: invertViewportNearFar ? 0.0 : 1.0
-            )
+            if invertViewportNearFar != oldValue {
+                updateViewport()
+            }
         }
     }
 
     private var _viewport: simd_float4 = .zero
 
+    private var objectList = [Object]()
     private var renderList = [Renderable]()
+
     private var lightList = [Light]()
-    private var shadowList = [LightShadow]()
-
-    private var _updateShadowMatricesBuffer = false
-    private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
-    private var shadowMatricesSubscriptions = Set<AnyCancellable>()
-
     private var _updateLightDataBuffer = false
     private var lightDataBuffer: StructBuffer<LightData>?
     private var lightDataSubscriptions = Set<AnyCancellable>()
+
+    private var shadowList = [LightShadow]()
+    private var _updateShadowMatricesBuffer = false
+    private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
+    private var shadowMatricesSubscriptions = Set<AnyCancellable>()
 
     // MARK: - Init
 
@@ -236,20 +221,22 @@ open class Renderer {
     func update(scene: Object, camera: Camera) {
         onUpdate?()
 
+        objectList.removeAll(keepingCapacity: true)
         renderList.removeAll(keepingCapacity: true)
         lightList.removeAll(keepingCapacity: true)
         shadowList.removeAll(keepingCapacity: true)
 
         camera.update() // FIXME: - traverse children and make sure you update everything
 
-        updateScene(object: scene, camera: camera)
+        updateLists(object: scene)
+
+        updateScene()
         updateLights()
         updateShadows()
     }
 
-    func updateScene(object: Object, camera: Camera, visible: Bool = true) {
-        object.context = context
-        object.update()
+    func updateLists(object: Object, visible: Bool = true) {
+        objectList.append(object)
 
         let isVisible = visible && object.visible
         if isVisible {
@@ -258,13 +245,30 @@ open class Renderer {
                 if light.castShadow {
                     shadowList.append(light.shadow)
                 }
-            } else if let renderable = object as? Renderable, renderable.drawable {
+            }
+            if let renderable = object as? Renderable {
                 renderList.append(renderable)
             }
         }
 
         for child in object.children {
-            updateScene(object: child, camera: camera, visible: isVisible)
+            updateLists(object: child, visible: isVisible)
+        }
+    }
+
+    func updateScene() {
+        let maxLights = lightList.count
+        let shadowCount = shadowList.count
+
+        for object in objectList {
+            if let renderable = object as? Renderable {
+                renderable.material?.maxLights = maxLights
+                if renderable.receiveShadow {
+                    renderable.material?.shadowCount = shadowCount
+                }
+            }
+            object.context = context
+            object.update()
         }
     }
 
@@ -275,7 +279,7 @@ open class Renderer {
         preDraw?(renderEncoder)
 
         let renderables = sortObjects ? renderList.sorted { $0.renderOrder < $1.renderOrder } : renderList
-        for renderable in renderables {
+        for renderable in renderables where renderable.drawable {
             _encode(renderEncoder: renderEncoder, renderable: renderable, camera: camera)
         }
 
@@ -286,23 +290,34 @@ open class Renderer {
     func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
         renderEncoder.pushDebugGroup(renderable.label)
 
-        if let material = renderable.material, material.lighting {
-            if let lightBuffer = lightDataBuffer {
-                material.maxLights = lightBuffer.count
-                renderEncoder.setFragmentBuffer(lightBuffer.buffer, offset: lightBuffer.offset, index: FragmentBufferIndex.Lighting.rawValue)
-            } else {
-                material.maxLights = 0
-            }
-            material.update()
-        }
+        // TO DO: Ideally we should set the maxLights & shadowCount before we set the context for the object
+        // that way we avoid compiling the material twice
 
-        if renderable.receiveShadow {
-            if let shadowBuffer = shadowMatricesBuffer {
-                renderEncoder.setVertexBuffer(shadowBuffer.buffer, offset: shadowBuffer.offset, index: VertexBufferIndex.ShadowMatrices.rawValue)
+        if let material = renderable.material {
+            if material.lighting, let lightBuffer = lightDataBuffer {
+                renderEncoder.setFragmentBuffer(
+                    lightBuffer.buffer,
+                    offset: lightBuffer.offset,
+                    index: FragmentBufferIndex.Lighting.rawValue
+                )
             }
 
-            for (index, light) in lightList.enumerated() where light.castShadow {
-                renderEncoder.setFragmentTexture(light.shadow.texture, index: FragmentTextureIndex.Custom0.rawValue + index)
+            if material.receiveShadow, let shadowBuffer = shadowMatricesBuffer {
+                renderEncoder.setVertexBuffer(
+                    shadowBuffer.buffer,
+                    offset: shadowBuffer.offset,
+                    index: VertexBufferIndex.ShadowMatrices.rawValue
+                )
+
+                for (index, light) in lightList.enumerated() where light.castShadow {
+                    material.shader?.shadowArgumentEncoder?.setTexture(light.shadow.texture, index: FragmentTextureIndex.Shadow0.rawValue + index)
+
+                    if let shadowTexture = light.shadow.texture {
+                        renderEncoder.useResource(shadowTexture, usage: .read)
+                    }
+                }
+
+                renderEncoder.setFragmentBuffer(material.shader?.shadowArgumentBuffer, offset: 0, index: FragmentBufferIndex.Shadows.rawValue)
             }
         }
 
@@ -316,6 +331,26 @@ open class Renderer {
 
     public func resize(_ size: (width: Float, height: Float)) {
         self.size = size
+    }
+
+    func updateViewport() {
+        viewport = MTLViewport(
+            originX: 0.0,
+            originY: 0.0,
+            width: Double(size.width),
+            height: Double(size.height),
+            znear: invertViewportNearFar ? 1.0 : 0.0,
+            zfar: invertViewportNearFar ? 0.0 : 1.0
+        )
+
+        viewport = MTLViewport(
+            originX: 0.0,
+            originY: 0.0,
+            width: Double(size.width),
+            height: Double(size.height),
+            znear: invertViewportNearFar ? 1.0 : 0.0,
+            zfar: invertViewportNearFar ? 0.0 : 1.0
+        )
     }
 
     // MARK: - Textures

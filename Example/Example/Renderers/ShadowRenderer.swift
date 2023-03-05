@@ -19,16 +19,27 @@ class ShadowRenderer: BaseRenderer {
     var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
 
-    var lightHelperMesh = Mesh(geometry: BoxGeometry(size: (0.1, 0.1, 0.5), res: 10), material: BasicDiffuseMaterial(0.7))
+    let lightHelperGeo = BoxGeometry(size: (0.1, 0.1, 0.5))
+    let lightHelperMat = BasicDiffuseMaterial(0.7)
 
-    var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: BasicDiffuseMaterial(0.7))
+    lazy var lightHelperMesh0 = Mesh(geometry: lightHelperGeo, material: lightHelperMat)
+    lazy var lightHelperMesh1 = Mesh(geometry: lightHelperGeo, material: lightHelperMat)
 
-    var mesh = Mesh(geometry: BoxGeometry(size: 1.0), material: StandardMaterial())
+    var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: StandardMaterial(baseColor: [1.0, 0.0, 0.0, 1.0], metallic: 0.0, roughness: 0.2))
+
+    lazy var mainGeometry: Geometry = {
+        let geo = IcoSphereGeometry(radius: 0.5, res: 1)
+        geo.unroll()
+        return geo
+    }()
+
+    lazy var mesh = Mesh(geometry: mainGeometry, material: StandardMaterial())
     lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: CustomMaterial(pipelinesURL: pipelinesURL))
 
-    var light = DirectionalLight(color: .one, intensity: 2.0)
+    var light0 = DirectionalLight(color: .one, intensity: 2.0)
+    var light1 = DirectionalLight(color: .one, intensity: 2.0)
 
-    lazy var scene = Object("Scene", [light, floorMesh, baseMesh, mesh])
+    lazy var scene = Object("Scene", [light0, light1, floorMesh, baseMesh, mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: .init(repeating: 5.0), near: 0.01, far: 100.0, fov: 30)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
@@ -41,23 +52,32 @@ class ShadowRenderer: BaseRenderer {
     }
 
     override func setup() {
-        light.position.y = 5.0
-        light.lookAt(.zero, -Satin.worldForwardDirection)
-        light.castShadow = true
-        light.add(lightHelperMesh)
-        light.shadow.resolution = (1024, 1024)
+        light0.position.y = 5.0
+        light0.castShadow = true
+        lightHelperMesh0.label = "Light Helper 0"
+        light0.add(lightHelperMesh0)
+        light0.shadow.resolution = (1024, 1024)
+
+        light1.position.y = 5.0
+        light1.castShadow = true
+        lightHelperMesh1.label = "Light Helper 1"
+        light1.add(lightHelperMesh1)
+        light1.shadow.resolution = (1024, 1024)
 
         // Setup things here
         camera.lookAt(.zero)
         floorMesh.position.y = -1.0
 
+        mesh.label = "Sphere"
         mesh.castShadow = true
         mesh.receiveShadow = true
 
+        baseMesh.label = "Base"
         baseMesh.position.y = -0.75
         baseMesh.castShadow = true
         baseMesh.receiveShadow = true
 
+        floorMesh.label = "Floor"
         floorMesh.material?.set("Color", [1.0, 1.0, 0.0, 1.0])
         floorMesh.receiveShadow = true
     }
@@ -68,11 +88,17 @@ class ShadowRenderer: BaseRenderer {
         cameraController.update()
 
         let time = getTime() - startTime
-        let theta = Float(time)
+        var theta = Float(time)
         let radius: Float = 5.0
 
-        light.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
-        light.lookAt(.zero, -Satin.worldForwardDirection)
+//        baseMesh.orientation = simd_quatf(angle: theta, axis: Satin.worldUpDirection)
+
+        light0.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
+        light0.lookAt(.zero, Satin.worldUpDirection)
+
+        theta += .pi * 0.5
+        light1.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
+        light1.lookAt(.zero, Satin.worldUpDirection)
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

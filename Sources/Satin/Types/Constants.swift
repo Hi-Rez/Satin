@@ -176,17 +176,18 @@ public enum FragmentConstantIndex: Int {
 public enum FragmentBufferIndex: Int {
     case MaterialUniforms = 0
     case Lighting = 1
-    case Custom0 = 2
-    case Custom1 = 3
-    case Custom2 = 4
-    case Custom3 = 5
-    case Custom4 = 6
-    case Custom5 = 7
-    case Custom6 = 8
-    case Custom7 = 9
-    case Custom8 = 10
-    case Custom9 = 11
-    case Custom10 = 12
+    case Shadows = 2
+    case Custom0 = 3
+    case Custom1 = 4
+    case Custom2 = 5
+    case Custom3 = 6
+    case Custom4 = 7
+    case Custom5 = 8
+    case Custom6 = 9
+    case Custom7 = 10
+    case Custom8 = 11
+    case Custom9 = 12
+    case Custom10 = 13
 }
 
 public enum FragmentTextureIndex: Int {
@@ -201,6 +202,14 @@ public enum FragmentTextureIndex: Int {
     case Custom8 = 8
     case Custom9 = 9
     case Custom10 = 10
+    case Shadow0 = 17
+    case Shadow1 = 18
+    case Shadow2 = 19
+    case Shadow3 = 20
+    case Shadow4 = 21
+    case Shadow5 = 22
+    case Shadow6 = 23
+    case Shadow7 = 24
 }
 
 public enum PBRTexture: Int {

@@ -171,7 +171,15 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var maxLights: Int = -1 {
+    public var shadowCount: Int = 0 {
+        didSet {
+            if oldValue != shadowCount {
+                shaderDefinesNeedsUpdate = true
+            }
+        }
+    }
+
+    public var maxLights: Int = 0 {
         didSet {
             if oldValue != maxLights {
                 shaderDefinesNeedsUpdate = true
@@ -489,8 +497,9 @@ open class Material: Codable, ParameterGroupDelegate {
         shader.instancing = instancing
         shader.lighting = lighting
         shader.maxLights = maxLights
+        shader.shadowCount = shadowCount
         shader.receiveShadow = receiveShadow
-        shader.castShadow = castShadow
+        shader.castShadow = castShadow        
     }
 
     public func set(_ name: String, _ value: [Float]) {
