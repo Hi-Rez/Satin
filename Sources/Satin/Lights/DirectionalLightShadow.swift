@@ -6,11 +6,11 @@
 //  Copyright © 2023 Reza Ali. All rights reserved.
 //
 
+import Combine
 import Foundation
 import Metal
 
 public class DirectionalLightShadow: LightShadow {
-
     public var label: String
 
     var device: MTLDevice? {
@@ -47,8 +47,15 @@ public class DirectionalLightShadow: LightShadow {
         }
     }
 
-    public var texture: MTLTexture?
+    public var texture: MTLTexture? {
+        didSet {
+            publisher.send(self)
+        }
+    }
+
     var _updateTexture = true
+
+    public let publisher = PassthroughSubject<LightShadow, Never>()
 
     init(label: String) {
         self.label = label
@@ -56,8 +63,7 @@ public class DirectionalLightShadow: LightShadow {
 //        self.camera = PerspectiveCamera(position: .zero, near: 0.01, far: 50.0)
     }
 
-    func setup()
-    {
+    func setup() {
         setupTexture()
     }
 
@@ -102,7 +108,7 @@ public class DirectionalLightShadow: LightShadow {
         descriptor.resourceOptions = .storageModePrivate
         texture = device.makeTexture(descriptor: descriptor)
         texture?.label = label + " Depth Texture"
-        
+
         _updateTexture = false
     }
 }

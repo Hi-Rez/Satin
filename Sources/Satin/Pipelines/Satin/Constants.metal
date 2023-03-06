@@ -50,7 +50,13 @@ typedef enum VertexTextureIndex {
     VertexTextureCustom7 = 7,
     VertexTextureCustom8 = 8,
     VertexTextureCustom9 = 9,
-    VertexTextureCustom10 = 10
+    VertexTextureCustom10 = 10,
+    VertexTextureCustom11 = 11,
+    VertexTextureCustom12 = 12,
+    VertexTextureCustom13 = 13,
+    VertexTextureCustom14 = 14,
+    VertexTextureCustom15 = 15,
+    VertexTextureCustom16 = 16
 } VertexTextureIndex;
 
 typedef enum FragmentBufferIndex {
@@ -82,6 +88,12 @@ typedef enum FragmentTextureIndex {
     FragmentTextureCustom8 = 8,
     FragmentTextureCustom9 = 9,
     FragmentTextureCustom10 = 10,
+    FragmentTextureCustom11 = 11,
+    FragmentTextureCustom12 = 12,
+    FragmentTextureCustom13 = 13,
+    FragmentTextureCustom14 = 14,
+    FragmentTextureCustom15 = 15,
+    FragmentTextureCustom16 = 16,
     FragmentTextureShadow0 = 17,
     FragmentTextureShadow1 = 18,
     FragmentTextureShadow2 = 19,

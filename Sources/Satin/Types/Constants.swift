@@ -167,6 +167,12 @@ public enum VertexTextureIndex: Int {
     case Custom8 = 8
     case Custom9 = 9
     case Custom10 = 10
+    case Custom11 = 11
+    case Custom12 = 12
+    case Custom13 = 13
+    case Custom14 = 14
+    case Custom15 = 15
+    case Custom16 = 16
 }
 
 public enum FragmentConstantIndex: Int {
@@ -202,6 +208,12 @@ public enum FragmentTextureIndex: Int {
     case Custom8 = 8
     case Custom9 = 9
     case Custom10 = 10
+    case Custom11 = 11
+    case Custom12 = 12
+    case Custom13 = 13
+    case Custom14 = 14
+    case Custom15 = 15
+    case Custom16 = 16
     case Shadow0 = 17
     case Shadow1 = 18
     case Shadow2 = 19

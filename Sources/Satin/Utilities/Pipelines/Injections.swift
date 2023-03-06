@@ -292,7 +292,7 @@ func injectShadowFragmentCalc(source: inout String, receiveShadow: Bool, shadowC
 
     if receiveShadow, shadowCount > 0 {
         injection += "\tfloat shadow = 1.0;\n"
-        injection += "\tconstexpr sampler ss(min_filter::nearest, mag_filter::nearest, compare_func::greater_equal);\n"
+        injection += "\tconstexpr sampler ss(min_filter::linear, mag_filter::linear, compare_func::greater_equal);\n"
         for i in 0 ..< shadowCount {
             injection += "\tshadow *= calculateShadow(in.shadowCoord\(i), shadows.tex\(i), ss);\n"
         }

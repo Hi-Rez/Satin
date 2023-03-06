@@ -5,6 +5,7 @@
 //  Created by Reza Ali on 3/2/23.
 //
 
+import Combine
 import Foundation
 import Metal
 
@@ -16,5 +17,6 @@ public protocol LightShadow {
     
     func update(light: Object)
     func draw(commandBuffer: MTLCommandBuffer, renderables: [Renderable])
-}
 
+    var publisher: PassthroughSubject<LightShadow, Never> { get }
+}

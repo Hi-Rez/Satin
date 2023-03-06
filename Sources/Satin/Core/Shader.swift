@@ -10,6 +10,8 @@ import Foundation
 import Metal
 
 open class Shader {
+    // MARK: - Main Pipeline
+
     var pipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
     }
@@ -17,6 +19,8 @@ open class Shader {
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var error: Error?
+
+    // MARK: - Shadow Pipeline
 
     var shadowPipelineOptions: MTLPipelineOption {
         [.argumentInfo, .bufferTypeInfo]
@@ -26,11 +30,12 @@ open class Shader {
     public internal(set) var shadowPipeline: MTLRenderPipelineState?
     public internal(set) var shadowError: Error?
 
-    public internal(set) var shadowArgumentEncoder: MTLArgumentEncoder?
-    public internal(set) var shadowArgumentBuffer: MTLBuffer?
+    // MARK: - MTLLibrary
 
     public internal(set) var library: MTLLibrary?
     var libraryURL: URL?
+
+    // MARK: - Blending
 
     public var blending: Blending = .alpha {
         didSet {
@@ -88,10 +93,16 @@ open class Shader {
         }
     }
 
+    // MARK: - Instancing
+
     public var instancing = false
+
+    // MARK: - Lighting
 
     public var lighting = false
     public var maxLights: Int = 0
+
+    // MARK: - Shadows
 
     public var castShadow = false
 
@@ -347,11 +358,14 @@ open class Shader {
         clone.maxLights = maxLights
 
         clone.castShadow = castShadow
+
+        clone.shadowCount = shadowCount
         clone.receiveShadow = receiveShadow
 
         clone.vertexDescriptor = vertexDescriptor
 
         clone.vertexFunctionName = vertexFunctionName
+        clone.shadowFunctionName = shadowFunctionName
         clone.fragmentFunctionName = fragmentFunctionName
 
         return clone

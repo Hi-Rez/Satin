@@ -28,7 +28,7 @@ class ShadowRenderer: BaseRenderer {
     var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: StandardMaterial(baseColor: [1.0, 0.0, 0.0, 1.0], metallic: 0.0, roughness: 0.2))
 
     lazy var mainGeometry: Geometry = {
-        let geo = IcoSphereGeometry(radius: 0.5, res: 1)
+        let geo = IcoSphereGeometry(radius: 0.5, res: 2)
         geo.unroll()
         return geo
     }()
@@ -36,8 +36,8 @@ class ShadowRenderer: BaseRenderer {
     lazy var mesh = Mesh(geometry: mainGeometry, material: StandardMaterial())
     lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: CustomMaterial(pipelinesURL: pipelinesURL))
 
-    var light0 = DirectionalLight(color: .one, intensity: 2.0)
-    var light1 = DirectionalLight(color: .one, intensity: 2.0)
+    var light0 = DirectionalLight(color: [1.0, 0.0, 1.0], intensity: 2.0)
+    var light1 = DirectionalLight(color: [0.0, 1.0, 1.0], intensity: 2.0)
 
     lazy var scene = Object("Scene", [light0, light1, floorMesh, baseMesh, mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -70,7 +70,7 @@ class ShadowRenderer: BaseRenderer {
 
         mesh.label = "Sphere"
         mesh.castShadow = true
-        mesh.receiveShadow = true
+        mesh.receiveShadow = false
 
         baseMesh.label = "Base"
         baseMesh.position.y = -0.75

@@ -189,8 +189,10 @@ open class SourceShader: Shader {
     open func modifyShaderSource(source _: inout String) {}
 
     open func setupSource() {
-        guard let satinURL = getPipelinesSatinUrl(), let compiledShaderSource = shaderSource ?? setupShaderSource() else { return }
-        let includesURL = satinURL.appendingPathComponent("Includes.metal")
+        guard let includesURL = getPipelinesSatinUrl("Includes.metal"),
+              let compiledShaderSource = shaderSource ?? setupShaderSource()
+        else { return }
+
         do {
             // create boilerplate shader code
             var source = try MetalFileCompiler(watch: false).parse(includesURL)
@@ -238,21 +240,6 @@ open class SourceShader: Shader {
         }
 
         sourceNeedsUpdate = false
-    }
-
-    override func createPipeline(_ context: Context, _ vertexFunction: MTLFunction, _ fragmentFunction: MTLFunction) {
-        if receiveShadow, shadowCount > 0 {
-            let shadowArgumentEncoder = fragmentFunction.makeArgumentEncoder(bufferIndex: FragmentBufferIndex.Shadows.rawValue)
-
-            let shadowArgumentBuffer = context.device.makeBuffer(length: shadowArgumentEncoder.encodedLength, options: .storageModeManaged)
-            shadowArgumentBuffer?.label = "Shadow Argument Buffer"
-
-            shadowArgumentEncoder.setArgumentBuffer(shadowArgumentBuffer, offset: 0)
-
-            self.shadowArgumentBuffer = shadowArgumentBuffer
-            self.shadowArgumentEncoder = shadowArgumentEncoder
-        }
-        super.createPipeline(context, vertexFunction, fragmentFunction)
     }
 
     override public func clone() -> Shader {

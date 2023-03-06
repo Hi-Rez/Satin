@@ -44,6 +44,7 @@ open class SpotLight: Object, Light {
     }
 
     public var castShadow: Bool = false
+    /* FIX ME */
     public lazy var shadow: LightShadow = DirectionalLightShadow(label: label)
     
     public var radius: Float {
