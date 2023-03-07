@@ -104,7 +104,13 @@ open class Shader {
 
     // MARK: - Shadows
 
-    public var castShadow = false
+    public var castShadow = false {
+        didSet {
+            if oldValue != castShadow {
+                pipelineNeedsUpdate = true
+            }
+        }
+    }
 
     public var receiveShadow = false
     public var shadowCount: Int = 0
@@ -236,7 +242,9 @@ open class Shader {
               let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return }
 
         createPipeline(context, vertexFunction, fragmentFunction)
-        createShadowPipeline(context, library.makeFunction(name: shadowFunctionName) ?? vertexFunction)
+        if castShadow {
+            createShadowPipeline(context, library.makeFunction(name: shadowFunctionName) ?? vertexFunction)
+        }
 
         pipelineNeedsUpdate = false
     }

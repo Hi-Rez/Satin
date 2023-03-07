@@ -155,8 +155,6 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Satin Examples")
-
-            ShadowRendererView()
         }
     }
 }

@@ -59,8 +59,7 @@ public class DirectionalLightShadow: LightShadow {
 
     init(label: String) {
         self.label = label
-        camera = OrthographicCamera(left: -5, right: 5, bottom: -5, top: 5, near: 0.01, far: 100.0)
-//        self.camera = PerspectiveCamera(position: .zero, near: 0.01, far: 50.0)
+        camera = OrthographicCamera(left: -5, right: 5, bottom: -5, top: 5, near: 0.01, far: 50.0)
     }
 
     func setup() {

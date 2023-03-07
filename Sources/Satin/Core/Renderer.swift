@@ -91,6 +91,8 @@ open class Renderer {
     private var lightDataBuffer: StructBuffer<LightData>?
     private var lightDataSubscriptions = Set<AnyCancellable>()
 
+    private var shadowCasters = [Renderable]()
+    private var shadowReceivers = [Renderable]()
     private var shadowList = [LightShadow]()
     private var _updateShadowMatricesBuffer = false
     private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
@@ -200,8 +202,10 @@ open class Renderer {
         renderPassDescriptor.stencilAttachment.clearStencil = clearStencil
 
         // render objects that cast shadows into the depth textures
-        for light in lightList where light.castShadow {
-            light.shadow.draw(commandBuffer: commandBuffer, renderables: renderList)
+        if !shadowCasters.isEmpty, !shadowReceivers.isEmpty {
+            for light in lightList where light.castShadow {
+                light.shadow.draw(commandBuffer: commandBuffer, renderables: renderList)
+            }
         }
 
         if let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
@@ -230,7 +234,10 @@ open class Renderer {
         objectList.removeAll(keepingCapacity: true)
         renderList.removeAll(keepingCapacity: true)
         lightList.removeAll(keepingCapacity: true)
+
         shadowList.removeAll(keepingCapacity: true)
+        shadowCasters.removeAll(keepingCapacity: true)
+        shadowReceivers.removeAll(keepingCapacity: true)
 
         camera.update() // FIXME: - traverse children and make sure you update everything
 
@@ -254,6 +261,12 @@ open class Renderer {
             }
             if let renderable = object as? Renderable {
                 renderList.append(renderable)
+                if renderable.receiveShadow {
+                    shadowReceivers.append(renderable)
+                }
+                if renderable.castShadow {
+                    shadowCasters.append(renderable)
+                }
             }
         }
 
@@ -286,6 +299,7 @@ open class Renderer {
         preDraw?(renderEncoder)
 
         let renderables = sortObjects ? renderList.sorted { $0.renderOrder < $1.renderOrder } : renderList
+
 
         if !renderables.isEmpty {
             for shadow in shadowList {
@@ -515,7 +529,7 @@ open class Renderer {
             desc.dataType = .texture
             desc.textureType = .type2D
             if let shadowArgumentEncoder = context.device.makeArgumentEncoder(arguments: [desc]) {
-                let shadowArgumentBuffer = context.device.makeBuffer(length: shadowArgumentEncoder.encodedLength, options: .storageModeManaged)
+                let shadowArgumentBuffer = context.device.makeBuffer(length: shadowArgumentEncoder.encodedLength, options: .storageModeShared)
                 shadowArgumentBuffer?.label = "Shadow Argument Buffer"
                 shadowArgumentEncoder.setArgumentBuffer(shadowArgumentBuffer, offset: 0)
 
