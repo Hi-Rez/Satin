@@ -94,15 +94,18 @@ open class Renderer {
     private var shadowCasters = [Renderable]()
     private var shadowReceivers = [Renderable]()
     private var shadowList = [LightShadow]()
-    private var _updateShadowMatricesBuffer = false
+    private var _updateShadowMatrices = false
     private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
     private var shadowMatricesSubscriptions = Set<AnyCancellable>()
 
 //    to do: fix this so we actually listen to texture updates and update the arg encoder
-    private var _updateShadowArgumentEncoder = false
+    private var _updateShadowData = false
+    private var _updateShadowTextures = false
     private var shadowArgumentEncoder: MTLArgumentEncoder?
     private var shadowArgumentBuffer: MTLBuffer?
+    private var shadowDataBuffer: StructBuffer<ShadowData>?
     private var shadowTextureSubscriptions = Set<AnyCancellable>()
+    private var shadowBufferSubscriptions = Set<AnyCancellable>()
 
     // MARK: - Init
 
@@ -300,12 +303,15 @@ open class Renderer {
 
         let renderables = sortObjects ? renderList.sorted { $0.renderOrder < $1.renderOrder } : renderList
 
-
         if !renderables.isEmpty {
             for shadow in shadowList {
                 if let shadowTexture = shadow.texture {
                     renderEncoder.useResource(shadowTexture, usage: .read, stages: .fragment)
                 }
+            }
+
+            if let shadowDataBuffer = shadowDataBuffer {
+                renderEncoder.useResource(shadowDataBuffer.buffer, usage: .read, stages: .fragment)
             }
 
             for renderable in renderables where renderable.drawable {
@@ -321,7 +327,6 @@ open class Renderer {
         renderEncoder.pushDebugGroup(renderable.label)
 
         if let material = renderable.material {
-
             if material.lighting, let lightBuffer = lightDataBuffer {
                 renderEncoder.setFragmentBuffer(
                     lightBuffer.buffer,
@@ -483,7 +488,9 @@ open class Renderer {
 
     func updateLightDataBuffer() {
         guard let lightBuffer = lightDataBuffer, _updateLightDataBuffer else { return }
+
         lightBuffer.update(data: lightList.map { $0.data })
+
         _updateLightDataBuffer = false
     }
 
@@ -491,8 +498,9 @@ open class Renderer {
 
     func updateShadows() {
         setupShadows()
-        updateShadowMatricesBuffer()
-        updateShadowArgumentEncoder()
+        updateShadowMatrices()
+        updateShadowStrengths()
+        updateShadowTextures()
     }
 
     func setupShadows() {
@@ -500,13 +508,14 @@ open class Renderer {
 
         shadowMatricesSubscriptions.removeAll(keepingCapacity: true)
         shadowTextureSubscriptions.removeAll(keepingCapacity: true)
+        shadowBufferSubscriptions.removeAll(keepingCapacity: true)
 
         if shadowList.isEmpty {
             shadowMatricesBuffer = nil
             shadowArgumentEncoder = nil
             shadowArgumentBuffer = nil
-        } else {
 
+        } else {
             shadowMatricesBuffer = StructBuffer<simd_float4x4>.init(
                 device: context.device,
                 count: shadowList.count,
@@ -515,26 +524,39 @@ open class Renderer {
 
             for light in lightList where light.castShadow {
                 light.publisher.sink { [weak self] _ in
-                    self?._updateShadowMatricesBuffer = true
+                    self?._updateShadowMatrices = true
                 }.store(in: &shadowMatricesSubscriptions)
             }
 
-            _updateShadowMatricesBuffer = true
+            _updateShadowMatrices = true
 
+            let strengthsArg = MTLArgumentDescriptor()
+            strengthsArg.index = FragmentBufferIndex.ShadowData.rawValue
+            strengthsArg.access = .readOnly
+            strengthsArg.dataType = .pointer
 
-            let desc = MTLArgumentDescriptor()
-            desc.index = FragmentTextureIndex.Shadow0.rawValue
-            desc.access = .readOnly
-            desc.arrayLength = shadowList.count
-            desc.dataType = .texture
-            desc.textureType = .type2D
-            if let shadowArgumentEncoder = context.device.makeArgumentEncoder(arguments: [desc]) {
+            let texturesArg = MTLArgumentDescriptor()
+            texturesArg.index = FragmentTextureIndex.Shadow0.rawValue
+            texturesArg.access = .readOnly
+            texturesArg.arrayLength = shadowList.count
+            texturesArg.dataType = .texture
+            texturesArg.textureType = .type2D
+
+            if let shadowArgumentEncoder = context.device.makeArgumentEncoder(arguments: [strengthsArg, texturesArg]) {
                 let shadowArgumentBuffer = context.device.makeBuffer(length: shadowArgumentEncoder.encodedLength, options: .storageModeShared)
                 shadowArgumentBuffer?.label = "Shadow Argument Buffer"
                 shadowArgumentEncoder.setArgumentBuffer(shadowArgumentBuffer, offset: 0)
 
+                let shadowDataBuffer = StructBuffer<ShadowData>.init(
+                    device: context.device,
+                    count: shadowList.count,
+                    label: "Shadow Data Buffer")
+
                 self.shadowArgumentBuffer = shadowArgumentBuffer
                 self.shadowArgumentEncoder = shadowArgumentEncoder
+                self.shadowDataBuffer = shadowDataBuffer
+
+                shadowArgumentEncoder.setBuffer(shadowDataBuffer.buffer, offset: shadowDataBuffer.offset, index: FragmentBufferIndex.ShadowData.rawValue)
 
                 for (index, shadow) in shadowList.enumerated() {
                     shadowArgumentEncoder.setTexture(shadow.texture, index: FragmentTextureIndex.Shadow0.rawValue + index)
@@ -542,26 +564,52 @@ open class Renderer {
             }
 
             for shadow in shadowList {
-                shadow.publisher.sink { [weak self] _ in
-                    self?._updateShadowArgumentEncoder = true
+                shadow.dataPublisher.sink { [weak self] _ in
+                    self?._updateShadowData = true
+                }.store(in: &shadowBufferSubscriptions)
+
+                shadow.texturePublisher.sink { [weak self] _ in
+                    self?._updateShadowTextures = true
                 }.store(in: &shadowTextureSubscriptions)
             }
 
-            _updateShadowArgumentEncoder = true
+            _updateShadowData = true
+            _updateShadowTextures = true
         }
     }
 
-    func updateShadowMatricesBuffer() {
-        guard let shadowMatricesBuffer = shadowMatricesBuffer, _updateShadowMatricesBuffer else { return }
+    func updateShadowMatrices() {
+        guard let shadowMatricesBuffer = shadowMatricesBuffer,
+              _updateShadowMatrices else { return }
+
         shadowMatricesBuffer.update(data: shadowList.map { $0.camera.viewProjectionMatrix })
-        _updateShadowMatricesBuffer = false
+
+        _updateShadowMatrices = false
     }
 
-    func updateShadowArgumentEncoder() {
-        guard let shadowArgumentEncoder = shadowArgumentEncoder, _updateShadowArgumentEncoder else { return }
+    func updateShadowStrengths() {
+        guard let shadowArgumentEncoder = shadowArgumentEncoder,
+              let shadowDataBuffer = shadowDataBuffer,
+              _updateShadowData else { return }
+
+        shadowDataBuffer.update(data: shadowList.map { $0.data })
+        shadowArgumentEncoder.setBuffer(
+            shadowDataBuffer.buffer,
+            offset: shadowDataBuffer.offset,
+            index: FragmentBufferIndex.ShadowData.rawValue
+        )
+
+        _updateShadowData = false
+    }
+
+    func updateShadowTextures() {
+        guard let shadowArgumentEncoder = shadowArgumentEncoder,
+              _updateShadowTextures else { return }
+
         for (index, shadow) in shadowList.enumerated() {
             shadowArgumentEncoder.setTexture(shadow.texture, index: FragmentTextureIndex.Shadow0.rawValue + index)
         }
-        _updateShadowArgumentEncoder = false
+
+        _updateShadowTextures = false
     }
 }

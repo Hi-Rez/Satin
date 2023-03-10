@@ -12,7 +12,7 @@ import MetalKit
 import Forge
 import Satin
 
-class ShadowRenderer: BaseRenderer {
+class DirectionalShadowRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
 
     var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
@@ -28,13 +28,12 @@ class ShadowRenderer: BaseRenderer {
     var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: StandardMaterial(baseColor: [1.0, 0.0, 0.0, 1.0], metallic: 0.0, roughness: 0.2))
 
     lazy var mainGeometry: Geometry = {
-        let geo = IcoSphereGeometry(radius: 0.5, res: 2)
-        geo.unroll()
+        let geo = TorusGeometry(radius: (0.1, 0.5))
         return geo
     }()
 
     lazy var mesh = Mesh(geometry: mainGeometry, material: StandardMaterial())
-    lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: CustomMaterial(pipelinesURL: pipelinesURL))
+    lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: ShadowMaterial())
 
     var light0 = DirectionalLight(color: [1.0, 0.0, 1.0], intensity: 2.0)
     var light1 = DirectionalLight(color: [0.0, 1.0, 1.0], intensity: 2.0)
@@ -46,29 +45,41 @@ class ShadowRenderer: BaseRenderer {
     lazy var renderer = Satin.Renderer(context: context)
 
     override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.sampleCount = 1
+        metalKitView.sampleCount = 4
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
 
     override func setup() {
+        renderer.clearColor = .init(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
+
         light0.position.y = 5.0
         light0.castShadow = true
         lightHelperMesh0.label = "Light Helper 0"
         light0.add(lightHelperMesh0)
-        light0.shadow.resolution = (1024, 1024)
+        if let shadowCamera = light0.shadow.camera as? OrthographicCamera {
+            shadowCamera.update(left: -2, right: 2, bottom: -2, top: 2)
+        }
+        light0.shadow.resolution = (2048, 2048)
+        light0.shadow.bias = 0.0005
+        light0.shadow.radius = 2
 
         light1.position.y = 5.0
         light1.castShadow = true
         lightHelperMesh1.label = "Light Helper 1"
         light1.add(lightHelperMesh1)
-        light1.shadow.resolution = (1024, 1024)
+        if let shadowCamera = light1.shadow.camera as? OrthographicCamera {
+            shadowCamera.update(left: -2, right: 2, bottom: -2, top: 2)
+        }
+        light1.shadow.resolution = (2048, 2048)
+        light1.shadow.bias = 0.0005
+        light1.shadow.radius = 2
 
         // Setup things here
         camera.lookAt(.zero)
         floorMesh.position.y = -1.0
 
-        mesh.label = "Sphere"
+        mesh.label = "Main"
         mesh.castShadow = true
         mesh.receiveShadow = false
 
@@ -78,7 +89,7 @@ class ShadowRenderer: BaseRenderer {
         baseMesh.receiveShadow = true
 
         floorMesh.label = "Floor"
-        floorMesh.material?.set("Color", [1.0, 1.0, 0.0, 1.0])
+        floorMesh.material?.set("Color", [0.0, 0.0, 0.0, 1.0])
         floorMesh.receiveShadow = true
     }
 
@@ -91,14 +102,18 @@ class ShadowRenderer: BaseRenderer {
         var theta = Float(time)
         let radius: Float = 5.0
 
-//        baseMesh.orientation = simd_quatf(angle: theta, axis: Satin.worldUpDirection)
+
+        mesh.orientation = simd_quatf(angle: theta, axis: Satin.worldUpDirection)
+        mesh.orientation *= simd_quatf(angle: theta, axis: Satin.worldRightDirection)
 
         light0.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
         light0.lookAt(.zero, Satin.worldUpDirection)
+        light0.shadow.strength = 0.5
 
         theta += .pi * 0.5
         light1.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
         light1.lookAt(.zero, Satin.worldUpDirection)
+        light1.shadow.strength = 0.5
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

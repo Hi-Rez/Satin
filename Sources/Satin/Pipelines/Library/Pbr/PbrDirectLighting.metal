@@ -1,5 +1,5 @@
 #if defined(LIGHTING) && defined(MAX_LIGHTS)
-void pbrDirectLighting(thread PixelInfo &pixel, constant Light *lights)
+void pbrDirectLighting(thread PixelInfo &pixel, constant LightData *lights)
 {
     float3 N = pixel.normal;
     float3 V = pixel.view;

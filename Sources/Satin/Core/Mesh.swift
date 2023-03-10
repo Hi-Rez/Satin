@@ -174,7 +174,7 @@ open class Mesh: Object, Renderable, Intersectable {
     }
 
     open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
-        bindDrawingStates(renderEncoder)
+        bindDrawingStates(renderEncoder, shadow: shadow)
         bindMaterial(renderEncoder, shadow: shadow)
         bindGeometry(renderEncoder)
         bindUniforms(renderEncoder)
@@ -195,8 +195,9 @@ open class Mesh: Object, Renderable, Intersectable {
         material?.bind(renderEncoder, shadow: shadow)
     }
 
-    open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder) {
+    open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         renderEncoder.setFrontFacing(geometry.windingOrder)
+//        renderEncoder.setCullMode(shadow ? .front : cullMode)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
     }

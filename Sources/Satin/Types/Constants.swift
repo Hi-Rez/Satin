@@ -183,17 +183,18 @@ public enum FragmentBufferIndex: Int {
     case MaterialUniforms = 0
     case Lighting = 1
     case Shadows = 2
-    case Custom0 = 3
-    case Custom1 = 4
-    case Custom2 = 5
-    case Custom3 = 6
-    case Custom4 = 7
-    case Custom5 = 8
-    case Custom6 = 9
-    case Custom7 = 10
-    case Custom8 = 11
-    case Custom9 = 12
-    case Custom10 = 13
+    case ShadowData = 3
+    case Custom0 = 4
+    case Custom1 = 5
+    case Custom2 = 6
+    case Custom3 = 7
+    case Custom4 = 8
+    case Custom5 = 9
+    case Custom6 = 10
+    case Custom7 = 11
+    case Custom8 = 12
+    case Custom9 = 13
+    case Custom10 = 14
 }
 
 public enum FragmentTextureIndex: Int {

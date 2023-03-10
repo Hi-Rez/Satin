@@ -103,6 +103,10 @@ open class SourceShader: Shader {
             results["MAX_LIGHTS"] = "\(maxLights)"
         }
 
+        if receiveShadow {
+            results["HAS_SHADOWS"] = "true"
+        }
+
         if shadowCount > -1 {
             results["SHADOW_COUNT"] = "\(shadowCount)"
         }
@@ -200,6 +204,8 @@ open class SourceShader: Shader {
             injectDefines(source: &source, defines: defines)
             injectConstants(source: &source)
 
+
+            injectShadowData(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
             injectShadowBuffer(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
             injectShadowFunction(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
 

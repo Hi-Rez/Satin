@@ -9,16 +9,16 @@
 import Forge
 import SwiftUI
 
-struct ShadowRendererView: View {
+struct DirectionalShadowRendererView: View {
     var body: some View {
-        ForgeView(renderer: ShadowRenderer())
+        ForgeView(renderer: DirectionalShadowRenderer())
             .ignoresSafeArea()
-            .navigationTitle("3D")
+            .navigationTitle("Directional Shadows")
     }
 }
 
 struct ShadowRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        ShadowRendererView()
+        DirectionalShadowRendererView()
     }
 }

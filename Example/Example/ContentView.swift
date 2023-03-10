@@ -55,6 +55,10 @@ struct ContentView: View {
                         Label("Depth Material", systemImage: "rectangle.stack")
                     }
 
+                    NavigationLink(destination: DirectionalShadowRendererView()) {
+                        Label("Directional Shadow", systemImage: "shadow")
+                    }
+
                     NavigationLink(destination: ExportGeometryRendererView()) {
                         Label("Export Geometry", systemImage: "square.and.arrow.up")
                     }
@@ -82,12 +86,12 @@ struct ContentView: View {
                     NavigationLink(destination: LiveCodeRendererView()) {
                         Label("Live Code", systemImage: "doc.text")
                     }
-
+                }
+                Group {
                     NavigationLink(destination: MatcapRendererView()) {
                         Label("Matcap", systemImage: "graduationcap")
                     }
-                }
-                Group {
+
                     NavigationLink(destination: LoadObjRendererView()) {
                         Label("Obj Loading", systemImage: "arrow.down.doc")
                     }
@@ -119,21 +123,16 @@ struct ContentView: View {
                     NavigationLink(destination: RayMarchingRendererView()) {
                         Label("Ray Marching", systemImage: "camera.metering.multispot")
                     }
-
+                }
+                Group {
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
-                    #if os(iOS)
+#if os(iOS)
                     NavigationLink(destination: SatinSceneKitARRendererView()) {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
-                    #endif
-                }
-                Group {
-                    NavigationLink(destination: ShadowRendererView()) {
-                        Label("Shadow", systemImage: "shadow")
-                    }
-
+#endif
                     NavigationLink(destination: StandardMaterialRendererView()) {
                         Label("Standard PBR Material", systemImage: "flame")
                     }

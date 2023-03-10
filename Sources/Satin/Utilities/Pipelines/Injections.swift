@@ -219,19 +219,26 @@ func injectLighting(source: inout String, lighting: Bool) {
 }
 
 func injectLightingArgs(source: inout String, lighting: Bool) {
-    let injection = "\tconstant Light *lights [[buffer(FragmentBufferLighting)]],\n"
+    let injection = "\tconstant LightData *lights [[buffer(FragmentBufferLighting)]],\n"
     source = source.replacingOccurrences(of: "// inject lighting args\n", with: lighting ? injection : "")
 }
 
 // MARK: - Shadows
 
+func injectShadowData(source: inout String, receiveShadow: Bool, shadowCount: Int) {
+    var injection = ""
+    if receiveShadow, shadowCount > 0, let shadowDataSource = ShadowDataSource.get() {
+        injection = shadowDataSource
+    }
+    source = source.replacingOccurrences(of: "// inject shadow data\n", with: injection)
+}
+
 func injectShadowBuffer(source: inout String, receiveShadow: Bool, shadowCount: Int) {
     var injection = ""
     if receiveShadow, shadowCount > 0 {
-        injection += "struct ShadowTextures {\n"
-        for i in 0 ..< shadowCount {
-            injection += "\tdepth2d<float> tex\(i) [[id(FragmentTextureShadow\(i))]];\n"
-        }
+        injection += "struct Shadows {\n"
+        injection += "\tconstant ShadowData *data [[buffer(FragmentBufferShadowData)]];\n"
+        injection += "\tarray<depth2d<float>, \(shadowCount)> textures [[texture(FragmentTextureShadow0)]];\n"
         injection += "};\n\n"
     }
     source = source.replacingOccurrences(of: "// inject shadow buffer\n", with: injection)
@@ -259,10 +266,15 @@ func injectPassThroughShadowVertex(label: String, source: inout String) {
 
 func injectShadowCoords(source: inout String, receiveShadow: Bool, shadowCount: Int) {
     var injection = ""
-    for i in 0 ..< shadowCount {
-        injection += "float4 shadowCoord\(i);\n"
+    if receiveShadow {
+        for i in 0 ..< shadowCount {
+            if i > 0 {
+                injection += "\t"
+            }
+            injection += "float4 shadowCoord\(i);\n"
+        }
     }
-    source = source.replacingOccurrences(of: "// inject shadow coords\n", with: receiveShadow ? injection : "")
+    source = source.replacingOccurrences(of: "// inject shadow coords\n", with: injection)
 }
 
 func injectShadowVertexArgs(source: inout String, receiveShadow: Bool) {
@@ -273,28 +285,33 @@ func injectShadowVertexArgs(source: inout String, receiveShadow: Bool) {
 func injectShadowFragmentArgs(source: inout String, receiveShadow: Bool, shadowCount: Int) {
     var injection = ""
     if receiveShadow, shadowCount > 0 {
-        injection += "constant ShadowTextures &shadows [[buffer(FragmentBufferShadows)]],\n"
+        injection += "constant Shadows &shadows [[buffer(FragmentBufferShadows)]],\n"
     }
 
-    source = source.replacingOccurrences(of: "// inject shadow fragment args\n", with: receiveShadow ? injection : "")
+    source = source.replacingOccurrences(of: "// inject shadow fragment args\n", with: injection)
 }
 
 func injectShadowVertexCalc(source: inout String, receiveShadow: Bool, shadowCount: Int) {
     var injection = ""
-    for i in 0 ..< shadowCount {
-        injection += "out.shadowCoord\(i) = shadowMatrices[\(i)] * vertexUniforms.modelMatrix * in.position;\n"
+    if receiveShadow {
+        for i in 0 ..< shadowCount {
+            if i > 0 {
+                injection += "\t"
+            }
+            injection += "out.shadowCoord\(i) = shadowMatrices[\(i)] * vertexUniforms.modelMatrix * in.position;\n"
+        }
     }
-    source = source.replacingOccurrences(of: "// inject shadow vertex calc\n", with: receiveShadow ? injection : "")
+    source = source.replacingOccurrences(of: "// inject shadow vertex calc\n", with: injection)
 }
 
 func injectShadowFragmentCalc(source: inout String, receiveShadow: Bool, shadowCount: Int) {
-    var injection = "\n"
+    var injection = ""
 
     if receiveShadow, shadowCount > 0 {
-        injection += "\tfloat shadow = 1.0;\n"
+        injection += "float shadow = 1.0;\n"
         injection += "\tconstexpr sampler ss(coord::normalized, address::clamp_to_edge, filter::linear, compare_func::greater_equal);\n"
         for i in 0 ..< shadowCount {
-            injection += "\tshadow *= calculateShadow(in.shadowCoord\(i), shadows.tex\(i), ss);\n"
+            injection += "\tshadow *= calculateShadow(in.shadowCoord\(i), shadows.textures[\(i)], shadows.data[\(i)], ss);\n"
         }
         injection += "\toutColor.rgb *= shadow;\n\n"
     }

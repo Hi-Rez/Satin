@@ -14,7 +14,7 @@ float getSpotAngleAttenuation(float3 fragmentToLightDir, float3 lightDir, float2
 
 #if defined(LIGHTING)
 // Returns light radiance, set L to the light direction
-float3 getLightInfo(const Light light, float3 worldPosition, thread float3 &lightDirection, thread float &lightDistance)
+float3 getLightInfo(const LightData light, float3 worldPosition, thread float3 &lightDirection, thread float &lightDistance)
 {
     float3 lightRadiance = light.color.rgb * light.color.a;
     const float3 lightPosition = light.position.xyz;

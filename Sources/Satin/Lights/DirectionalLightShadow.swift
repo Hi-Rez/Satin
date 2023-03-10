@@ -13,6 +13,10 @@ import Metal
 public class DirectionalLightShadow: LightShadow {
     public var label: String
 
+    public var data: ShadowData {
+        ShadowData(strength: strength, bias: bias, radius: radius)
+    }
+
     var device: MTLDevice? {
         didSet {
             if device != nil {
@@ -27,6 +31,31 @@ public class DirectionalLightShadow: LightShadow {
         didSet {
             if resolution.width != oldValue.width || resolution.height != oldValue.height {
                 _updateTexture = true
+                resolutionPublisher.send(self)
+            }
+        }
+    }
+
+    public var strength: Float = 1.0 {
+        didSet {
+            if strength != oldValue {
+                dataPublisher.send(self)
+            }
+        }
+    }
+
+    public var radius: Float = 1.0 {
+        didSet {
+            if radius != oldValue {
+                dataPublisher.send(self)
+            }
+        }
+    }
+
+    public var bias: Float = 0.00001 {
+        didSet {
+            if bias != oldValue {
+                dataPublisher.send(self)
             }
         }
     }
@@ -47,15 +76,17 @@ public class DirectionalLightShadow: LightShadow {
         }
     }
 
-    public var texture: MTLTexture? {
+    @Published public var texture: MTLTexture? {
         didSet {
-            publisher.send(self)
+            texturePublisher.send(self)
         }
     }
 
     var _updateTexture = true
 
-    public let publisher = PassthroughSubject<LightShadow, Never>()
+    public let texturePublisher = PassthroughSubject<LightShadow, Never>()
+    public let resolutionPublisher = PassthroughSubject<LightShadow, Never>()
+    public let dataPublisher = PassthroughSubject<LightShadow, Never>()
 
     init(label: String) {
         self.label = label

@@ -169,7 +169,26 @@ class LightingSource {
         guard LightingSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("Light.metal") {
+        if let url = getPipelinesSatinUrl("LightData.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class ShadowDataSource {
+    static let shared = ShadowDataSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard ShadowDataSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinUrl("ShadowData.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {

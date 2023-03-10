@@ -107,7 +107,7 @@ open class Shader {
     public var castShadow = false {
         didSet {
             if oldValue != castShadow {
-                pipelineNeedsUpdate = true
+                shadowPipelineNeedsUpdate = castShadow
             }
         }
     }
@@ -119,6 +119,7 @@ open class Shader {
         didSet {
             if oldValue != vertexDescriptor {
                 pipelineNeedsUpdate = true
+                shadowPipelineNeedsUpdate = castShadow
             }
         }
     }
@@ -137,9 +138,12 @@ open class Shader {
         didSet {
             if libraryNeedsUpdate {
                 pipelineNeedsUpdate = true
+                shadowPipelineNeedsUpdate = castShadow
             }
         }
     }
+
+    var shadowPipelineNeedsUpdate = false
 
     var pipelineNeedsUpdate = true {
         didSet {
@@ -162,7 +166,7 @@ open class Shader {
     public var shadowFunctionName = "shaderShadowVertex" {
         didSet {
             if oldValue != shadowFunctionName {
-                pipelineNeedsUpdate = true
+                shadowPipelineNeedsUpdate = castShadow
             }
         }
     }
@@ -201,13 +205,15 @@ open class Shader {
 
     func setup() {
         setupLibrary()
-        setupPipeline()
+        updatePipeline()
+        updateShadowPipeline()
         setupParameters()
     }
 
     func update() {
         updateLibrary()
         updatePipeline()
+        updateShadowPipeline()
         updateParameters()
     }
 
@@ -220,6 +226,12 @@ open class Shader {
     func updatePipeline() {
         if pipelineNeedsUpdate {
             setupPipeline()
+        }
+    }
+
+    func updateShadowPipeline() {
+        if shadowPipelineNeedsUpdate {
+            setupShadowPipeline()
         }
     }
 
@@ -240,13 +252,17 @@ open class Shader {
               let library = library,
               let vertexFunction = library.makeFunction(name: vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return }
-
         createPipeline(context, vertexFunction, fragmentFunction)
-        if castShadow {
-            createShadowPipeline(context, library.makeFunction(name: shadowFunctionName) ?? vertexFunction)
-        }
-
         pipelineNeedsUpdate = false
+    }
+
+    func setupShadowPipeline() {
+        guard let context = context,
+              let library = library,
+              let vertexFunction = library.makeFunction(name: shadowFunctionName) ?? library.makeFunction(name: vertexFunctionName)
+        else { return }
+        createShadowPipeline(context, vertexFunction)
+        shadowPipelineNeedsUpdate = false
     }
 
     func createPipeline(_ context: Context, _ vertexFunction: MTLFunction, _ fragmentFunction: MTLFunction) {
@@ -289,7 +305,7 @@ open class Shader {
         pipelineStateDescriptor.label = label + " Shadow"
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = nil
-        pipelineStateDescriptor.sampleCount = context.sampleCount
+        pipelineStateDescriptor.sampleCount = 1
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
 
@@ -347,8 +363,14 @@ open class Shader {
         clone.label = label
         clone.libraryURL = libraryURL
         clone.library = library
-        clone.pipeline = pipeline
+
         clone.pipelineReflection = pipelineReflection
+        clone.pipeline = pipeline
+        clone.error = error
+
+        clone.shadowPipelineReflection = shadowPipelineReflection
+        clone.shadowPipeline = shadowPipeline
+        clone.shadowError = shadowError
 
         clone.parameters = parameters.clone()
 
