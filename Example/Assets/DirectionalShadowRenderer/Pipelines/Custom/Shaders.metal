@@ -11,7 +11,6 @@ vertex VertexData customVertex
 )
 {
     VertexData out;
-
 #if INSTANCING
     out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;
     out.normal = instanceUniforms[instanceID].normalMatrix * in.normal;
@@ -19,11 +18,8 @@ vertex VertexData customVertex
     out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
     out.normal = vertexUniforms.normalMatrix * in.normal;
 #endif
-
     out.uv = in.uv;
-
     // inject shadow vertex calc
-    
     return out;
 }
 
