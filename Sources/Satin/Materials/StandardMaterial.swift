@@ -98,7 +98,6 @@ open class StandardMaterial: Material {
         try super.init(from: decoder)
         lighting = true
         blending = .disabled
-        initalizeParameters()
     }
 
     public required init() {
