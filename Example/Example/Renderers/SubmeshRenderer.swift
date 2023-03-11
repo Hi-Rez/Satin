@@ -21,7 +21,19 @@ class SubmeshRenderer: BaseRenderer {
 
     var scene = Object("Scene")
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    lazy var camera = PerspectiveCamera(position: .init(0.0, 0.0, 150.0), near: 0.01, far: 1000.0, fov: 45)
+    lazy var camera: PerspectiveCamera = {
+        let pos = simd_make_float3(125.0, 125.0, 125.0)
+        camera  = PerspectiveCamera(position: pos, near: 0.01, far: 1000.0, fov: 45)
+        camera.orientation = simd_quatf(from: [0, 0, 1], to: simd_normalize(pos))
+
+        let forward = simd_normalize(camera.forwardDirection)
+        let worldUp = Satin.worldUpDirection
+        let right = -simd_normalize(simd_cross(forward, worldUp))
+        let angle = acos(simd_dot(simd_normalize(camera.rightDirection), right))
+
+        camera.orientation = simd_quatf(angle: angle, axis: forward) * camera.orientation
+        return camera
+    }()
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
 
@@ -47,11 +59,10 @@ class SubmeshRenderer: BaseRenderer {
         setupBRDF()
 //        }
 
-        loadUSD(url: modelsURL.appendingPathComponent("chair_swan.usdz"))
+        let model = loadUSD(url: modelsURL.appendingPathComponent("chair_swan.usdz"))
+        let sceneBounds = scene.worldBounds
 
-        let sceneCenter = scene.worldBounds.center
-        camera.position = simd_make_float3(sceneCenter.x, sceneCenter.y, 150.0)
-        camera.lookAt(sceneCenter)
+        model.position.y -= sceneBounds.size.y * 0.5
 
         let light = DirectionalLight(color: .one, intensity: 2.0)
         light.position = .init(repeating: 5.0)
@@ -78,7 +89,7 @@ class SubmeshRenderer: BaseRenderer {
         renderer.resize(size)
     }
 
-    func loadUSD(url: URL) {
+    func loadUSD(url: URL) -> Object {
         let asset = MDLAsset(
             url: url,
             vertexDescriptor: SatinModelIOVertexDescriptor,
@@ -94,6 +105,8 @@ class SubmeshRenderer: BaseRenderer {
         }
         loadChildren(model, object.children.objects)
         scene.add(model)
+
+        return model
     }
 
     lazy var textureLoader = MTKTextureLoader(device: device)
