@@ -31,13 +31,13 @@ open class StandardMaterial: Material {
         }
     }
 
-    public var metallic: Float = 1.0 {
+    public var metallic: Float = 0.0 {
         didSet {
             set("Metallic", metallic)
         }
     }
 
-    public var roughness: Float = 1.0 {
+    public var roughness: Float = 0.0 {
         didSet {
             set("Roughness", roughness)
         }
@@ -110,7 +110,7 @@ open class StandardMaterial: Material {
     override open func updateShaderDefines() {
         super.updateShaderDefines()
         guard let shader = shader as? PBRShader else { return }
-        shader.maps = Set(maps.keys)
+        shader.maps = Set(maps.filter{ $0.value != nil }.keys)
     }
 
     override open func createShader() -> Shader {

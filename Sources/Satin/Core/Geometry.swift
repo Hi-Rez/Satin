@@ -104,10 +104,15 @@ open class Geometry: Codable {
             } else {
                 vertexBuffers.removeValue(forKey: VertexBufferIndex.Vertices)
             }
+            _updateVertexBuffer = false
         }
     }
 
-    public var indexBuffer: MTLBuffer?
+    public var indexBuffer: MTLBuffer? {
+        didSet {
+            _updateIndexBuffer = false
+        }
+    }
 
     public init() {}
 
@@ -153,8 +158,7 @@ open class Geometry: Codable {
     }
 
     func setup() {
-        setupVertexBuffer()
-        setupIndexBuffer()
+        update()
     }
 
     public func update() {
@@ -167,8 +171,7 @@ open class Geometry: Codable {
     }
 
     func setupVertexBuffer() {
-        guard _updateVertexBuffer, let context = context else { return }
-        let device = context.device
+        guard let device = context?.device else { return }
         if !vertexData.isEmpty {
             let stride = MemoryLayout<Vertex>.stride
             let verticesSize = vertexData.count * stride
@@ -181,12 +184,10 @@ open class Geometry: Codable {
         } else {
             vertexBuffer = nil
         }
-        _updateVertexBuffer = false
     }
 
     func setupIndexBuffer() {
-        guard _updateIndexBuffer, let context = context else { return }
-        let device = context.device
+        guard let device = context?.device else { return }
         if !indexData.isEmpty {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
             indexBuffer = device.makeBuffer(bytes: indexData, length: indicesSize, options: [])
@@ -194,7 +195,6 @@ open class Geometry: Codable {
         } else {
             indexBuffer = nil
         }
-        _updateIndexBuffer = false
     }
 
     func setupBVH() {
@@ -229,10 +229,18 @@ open class Geometry: Codable {
             data.vertexData = vtxPtr.baseAddress!
         }
 
+        if vertexBuffer != nil {
+            _updateVertexBuffer = false
+        }
+
         indexData.withUnsafeMutableBufferPointer { indPtr in
             let raw = UnsafeRawBufferPointer(indPtr)
             let ptr = raw.bindMemory(to: TriangleIndices.self)
             data.indexData = UnsafeMutablePointer(mutating: ptr.baseAddress!)
+        }
+
+        if indexBuffer != nil {
+            _updateIndexBuffer = false
         }
 
         return data

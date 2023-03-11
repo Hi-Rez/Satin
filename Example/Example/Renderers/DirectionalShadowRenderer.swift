@@ -81,7 +81,7 @@ class DirectionalShadowRenderer: BaseRenderer {
 
         mesh.label = "Main"
         mesh.castShadow = true
-        mesh.receiveShadow = false
+        mesh.receiveShadow = true
 
         baseMesh.label = "Base"
         baseMesh.position.y = -0.75

@@ -284,9 +284,11 @@ open class Renderer {
 
         for object in objectList {
             if let renderable = object as? Renderable {
-                renderable.material?.maxLights = maxLights
-                if renderable.receiveShadow {
-                    renderable.material?.shadowCount = shadowCount
+                for material in renderable.materials {
+                    material.maxLights = maxLights
+                    if renderable.receiveShadow {
+                        material.shadowCount = shadowCount
+                    }
                 }
             }
 
@@ -326,31 +328,33 @@ open class Renderer {
     func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
         renderEncoder.pushDebugGroup(renderable.label)
 
-        if let material = renderable.material {
-            if material.lighting, let lightBuffer = lightDataBuffer {
-                renderEncoder.setFragmentBuffer(
-                    lightBuffer.buffer,
-                    offset: lightBuffer.offset,
-                    index: FragmentBufferIndex.Lighting.rawValue
+        let materials = renderable.materials
+        let lighting = materials.filter{ $0.lighting }
+        let receiveShadow = materials.filter{ $0.receiveShadow }
+
+        if !lighting.isEmpty, let lightBuffer = lightDataBuffer {
+            renderEncoder.setFragmentBuffer(
+                lightBuffer.buffer,
+                offset: lightBuffer.offset,
+                index: FragmentBufferIndex.Lighting.rawValue
+            )
+        }
+
+        if !receiveShadow.isEmpty {
+            if let shadowBuffer = shadowMatricesBuffer {
+                renderEncoder.setVertexBuffer(
+                    shadowBuffer.buffer,
+                    offset: shadowBuffer.offset,
+                    index: VertexBufferIndex.ShadowMatrices.rawValue
                 )
             }
 
-            if material.receiveShadow {
-                if let shadowBuffer = shadowMatricesBuffer {
-                    renderEncoder.setVertexBuffer(
-                        shadowBuffer.buffer,
-                        offset: shadowBuffer.offset,
-                        index: VertexBufferIndex.ShadowMatrices.rawValue
-                    )
-                }
-
-                if let shadowArgumentBuffer = shadowArgumentBuffer {
-                    renderEncoder.setFragmentBuffer(
-                        shadowArgumentBuffer,
-                        offset: 0,
-                        index: FragmentBufferIndex.Shadows.rawValue
-                    )
-                }
+            if let shadowArgumentBuffer = shadowArgumentBuffer {
+                renderEncoder.setFragmentBuffer(
+                    shadowArgumentBuffer,
+                    offset: 0,
+                    index: FragmentBufferIndex.Shadows.rawValue
+                )
             }
         }
 

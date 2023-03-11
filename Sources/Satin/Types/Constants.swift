@@ -215,34 +215,46 @@ public enum FragmentTextureIndex: Int {
     case Custom14 = 14
     case Custom15 = 15
     case Custom16 = 16
-    case Shadow0 = 17
-    case Shadow1 = 18
-    case Shadow2 = 19
-    case Shadow3 = 20
-    case Shadow4 = 21
-    case Shadow5 = 22
-    case Shadow6 = 23
-    case Shadow7 = 24
+    case Custom17 = 17
+    case Custom18 = 18
+    case Custom19 = 19
+    case Custom20 = 20
+    case Custom21 = 21
+    case Custom22 = 22
+    case Shadow0 = 23
+    case Shadow1 = 24
+    case Shadow2 = 25
+    case Shadow3 = 26
+    case Shadow4 = 27
+    case Shadow5 = 28
+    case Shadow6 = 29
+    case Shadow7 = 30
 }
 
 public enum PBRTexture: Int {
     case baseColor = 0
-    case metallic = 1
-    case roughness = 2
-    case normal = 3
-    case emissive = 4
-    case specular = 5
-    case sheen = 6
-    case anisotropy = 7
-    case anisotropyAngle = 8
-    case bump = 9
-    case displacement = 10
-    case alpha = 11
-    case transmission = 12
-    case ambientOcculsion = 13
-    case reflection = 14
-    case irradiance = 15
-    case brdf = 16
+    case subsurface = 1
+    case metallic = 2
+    case roughness = 3
+    case normal = 4
+    case emissive = 5
+    case specular = 6
+    case specularTint = 7
+    case sheen = 8
+    case sheenTint = 9
+    case clearcoat = 10
+    case clearcoatRoughness = 11
+    case anisotropic = 12
+    case anisotropicAngle = 13
+    case bump = 14
+    case displacement = 15
+    case alpha = 16
+    case ior = 17
+    case transmission = 18
+    case ambientOcclusion = 19
+    case reflection = 20
+    case irradiance = 21
+    case brdf = 22
 
     public var shaderDefine: String {
         switch self {
@@ -260,10 +272,10 @@ public enum PBRTexture: Int {
             return "SPECULAR_MAP"
         case .sheen:
             return "SHEEN_MAP"
-        case .anisotropy:
-            return "ANISOTROPY_MAP"
-        case .anisotropyAngle:
-            return "ANISOTROPY_ANGLE_MAP"
+        case .anisotropic:
+            return "ANISOTROPIC_MAP"
+        case .anisotropicAngle:
+            return "ANISOTROPIC_ANGLE_MAP"
         case .bump:
             return "BUMP_MAP"
         case .displacement:
@@ -272,14 +284,26 @@ public enum PBRTexture: Int {
             return "ALPHA_MAP"
         case .transmission:
             return "TRANSMISSION_MAP"
-        case .ambientOcculsion:
-            return "AMBIENT_OCCULSION_MAP"
+        case .ambientOcclusion:
+            return "AMBIENT_OCCLUSION_MAP"
         case .reflection:
             return "REFLECTION_MAP"
         case .irradiance:
             return "IRRADIANCE_MAP"
         case .brdf:
             return "BRDF_MAP"
+        case .subsurface:
+            return "SUBSURFACE_MAP"
+        case .specularTint:
+            return "SPECULAR_TINT_MAP"
+        case .sheenTint:
+            return "SHEEN_TINT_MAP"
+        case .clearcoat:
+            return "CLEARCOAT_MAP"
+        case .clearcoatRoughness:
+            return "CLEARCOAT_ROUGHNESS_MAP"
+        case .ior:
+            return "IOR_MAP"
         }
     }
 
@@ -308,10 +332,10 @@ public enum PBRTexture: Int {
             return "specularMap"
         case .sheen:
             return "sheenMap"
-        case .anisotropy:
-            return "anisotropyMap"
-        case .anisotropyAngle:
-            return "anisotropyAngleMap"
+        case .anisotropic:
+            return "anisotropicMap"
+        case .anisotropicAngle:
+            return "anisotropicAngleMap"
         case .bump:
             return "bumpMap"
         case .displacement:
@@ -320,7 +344,7 @@ public enum PBRTexture: Int {
             return "alphaMap"
         case .transmission:
             return "transmissionMap"
-        case .ambientOcculsion:
+        case .ambientOcclusion:
             return "ambientOcclusionMap"
         case .reflection:
             return "reflectionMap"
@@ -328,6 +352,18 @@ public enum PBRTexture: Int {
             return "irradianceMap"
         case .brdf:
             return "brdfMap"
+        case .subsurface:
+            return "subsurfaceMap"
+        case .specularTint:
+            return "specularMap"
+        case .sheenTint:
+            return "sheenTintMap"
+        case .clearcoat:
+            return "clearcoatMap"
+        case .clearcoatRoughness:
+            return "clearcoatRoughnessMap"
+        case .ior:
+            return "iorMap"
         }
     }
 
@@ -347,10 +383,10 @@ public enum PBRTexture: Int {
             return "PBRTextureSpecular"
         case .sheen:
             return "PBRTextureSheen"
-        case .anisotropy:
-            return "PBRTextureAnisotropy"
-        case .anisotropyAngle:
-            return "PBRTextureAnisotropyAngle"
+        case .anisotropic:
+            return "PBRTextureAnisotropic"
+        case .anisotropicAngle:
+            return "PBRTextureAnisotropicAngle"
         case .bump:
             return "PBRTextureBump"
         case .displacement:
@@ -359,14 +395,26 @@ public enum PBRTexture: Int {
             return "PBRTextureAlpha"
         case .transmission:
             return "PBRTextureTransmission"
-        case .ambientOcculsion:
-            return "PBRTextureAmbientOcculsion"
+        case .ambientOcclusion:
+            return "PBRTextureAmbientOcclusion"
         case .reflection:
             return "PBRTextureReflection"
         case .irradiance:
             return "PBRTextureIrradiance"
         case .brdf:
             return "PBRTextureBRDF"
+        case .subsurface:
+            return "PBRTextureSubsurface"
+        case .specularTint:
+            return "PBRTextureSpecularTint"
+        case .sheenTint:
+            return "PBRTextureSheenTint"
+        case .clearcoat:
+            return "PBRTextureClearcoat"
+        case .clearcoatRoughness:
+            return "PBRTextureClearcoatRoughness"
+        case .ior:
+            return "PBRTextureIor"
         }
     }
 }

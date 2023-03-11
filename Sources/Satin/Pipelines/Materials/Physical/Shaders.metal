@@ -7,6 +7,7 @@ typedef struct {
     float roughness;          // slider,0.0,1.0,0.25
     float metallic;           // slider,0.0,1.0,0.0
     float anisotropic;        // slider,-1.0,1.0,0.0
+    float anisotropicAngle;   // slider,-1.0,1.0,0.0
     float specular;           // slider,0.0,1.0,0.5
     float specularTint;       // slider,0.0,1.0,0.0
     float clearcoat;          // slider,0.0,1.0,0.0

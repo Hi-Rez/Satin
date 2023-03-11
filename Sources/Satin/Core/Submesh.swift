@@ -35,22 +35,40 @@ open class Submesh {
         }
     }
 
-    public init(indexData: [UInt32], indexBuffer: MTLBuffer? = nil, indexBufferOffset: Int = 0) {
+    weak var parent: Mesh!
+    var material: Material?
+
+    public init(
+        indexData: [UInt32],
+        indexBuffer: MTLBuffer? = nil,
+        indexBufferOffset: Int = 0,
+        material: Material? = nil
+    ) {
         self.indexData = indexData
         self.indexBuffer = indexBuffer
         self.indexBufferOffset = indexBufferOffset
+        self.material = material
     }
 
-    weak var parent: Mesh!
-
-    func setup() {
+    private func setup() {
         if indexBuffer == nil {
             setupIndexBuffer()
         }
+        setupMaterial()
     }
 
-    func setupIndexBuffer() {
+    func update() {
+        material?.update()
+    }
+
+    private func setupMaterial() {
+        guard let context = context, let material = material else { return }
+        material.context = context
+    }
+
+    private func setupIndexBuffer() {
         guard let context = context else { return }
+        print("setting up index buffer")
         let device = context.device
         if !indexData.isEmpty {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])

@@ -16,12 +16,22 @@ open class Mesh: Object, Renderable, Intersectable {
     
     public var receiveShadow: Bool = false {
         didSet {
-            material?.receiveShadow = receiveShadow
+            if receiveShadow != oldValue {
+                material?.receiveShadow = receiveShadow
+                for submesh in submeshes {
+                    submesh.material?.receiveShadow = receiveShadow
+                }
+            }
         }
     }
     public var castShadow: Bool = false {
         didSet {
-            material?.castShadow = castShadow
+            if castShadow != oldValue {
+                material?.castShadow = castShadow
+                for submesh in submeshes {
+                    submesh.material?.castShadow = castShadow
+                }
+            }
         }
     }
 
@@ -29,10 +39,17 @@ open class Mesh: Object, Renderable, Intersectable {
     public var cullMode: MTLCullMode = .back
 
     public var drawable: Bool {
-        if instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil, material?.pipeline != nil {
+        guard instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil else { return false }
+
+        if submeshes.isEmpty, let material = material, material.pipeline != nil {
             return true
         }
-        return false
+        else if let submesh = submeshes.first, let material = submesh.material, material.pipeline != nil {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     public var instanceCount = 1
@@ -63,6 +80,19 @@ open class Mesh: Object, Renderable, Intersectable {
                 setupMaterial()
             }
         }
+    }
+
+    open var materials: [Material] {
+        var allMaterials = [Material]()
+        if let material = material {
+            allMaterials.append(material)
+        }
+        for submesh in submeshes {
+            if let material = submesh.material {
+                allMaterials.append(material)
+            }
+        }
+        return allMaterials
     }
 
     internal var geometrySubscriber: AnyCancellable?
@@ -161,6 +191,9 @@ open class Mesh: Object, Renderable, Intersectable {
     override open func update() {
         geometry.update()
         material?.update()
+        for submesh in submeshes {
+            submesh.update()
+        }
         super.update()
     }
 
@@ -175,7 +208,6 @@ open class Mesh: Object, Renderable, Intersectable {
 
     open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         bindDrawingStates(renderEncoder, shadow: shadow)
-        bindMaterial(renderEncoder, shadow: shadow)
         bindGeometry(renderEncoder)
         bindUniforms(renderEncoder)
     }
@@ -197,21 +229,19 @@ open class Mesh: Object, Renderable, Intersectable {
 
     open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         renderEncoder.setFrontFacing(geometry.windingOrder)
-//        renderEncoder.setCullMode(shadow ? .front : cullMode)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
     }
 
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int, shadow: Bool) {
-        guard drawable else { return }
-
         preDraw?(renderEncoder)
-
         bind(renderEncoder, shadow: shadow)
 
         if !submeshes.isEmpty {
-            for submesh in submeshes {
-                if submesh.visible, let indexBuffer = submesh.indexBuffer {
+            for submesh in submeshes where submesh.visible {
+                if let indexBuffer = submesh.indexBuffer, let material = submesh.material
+                {
+                    material.bind(renderEncoder, shadow: shadow)
                     renderEncoder.drawIndexedPrimitives(
                         type: geometry.primitiveType,
                         indexCount: submesh.indexCount,
@@ -222,22 +252,25 @@ open class Mesh: Object, Renderable, Intersectable {
                     )
                 }
             }
-        } else if let indexBuffer = geometry.indexBuffer {
-            renderEncoder.drawIndexedPrimitives(
-                type: geometry.primitiveType,
-                indexCount: geometry.indexData.count,
-                indexType: geometry.indexType,
-                indexBuffer: indexBuffer,
-                indexBufferOffset: 0,
-                instanceCount: instanceCount
-            )
         } else {
-            renderEncoder.drawPrimitives(
-                type: geometry.primitiveType,
-                vertexStart: 0,
-                vertexCount: geometry.vertexData.count,
-                instanceCount: instanceCount
-            )
+            bindMaterial(renderEncoder, shadow: shadow)
+            if let indexBuffer = geometry.indexBuffer {
+                renderEncoder.drawIndexedPrimitives(
+                    type: geometry.primitiveType,
+                    indexCount: geometry.indexData.count,
+                    indexType: geometry.indexType,
+                    indexBuffer: indexBuffer,
+                    indexBufferOffset: 0,
+                    instanceCount: instanceCount
+                )
+            } else {
+                renderEncoder.drawPrimitives(
+                    type: geometry.primitiveType,
+                    vertexStart: 0,
+                    vertexCount: geometry.vertexData.count,
+                    instanceCount: instanceCount
+                )
+            }
         }
     }
 

@@ -13,8 +13,9 @@ open class PhysicalShader: PBRShader {
         var results = super.defines
         results["HAS_CLEARCOAT"] = "true"
         results["HAS_SUBSURFACE"] = "true"
-        results["HAS_SPECULAR"] = "true"
+        results["HAS_SPECULAR_TINT"] = "true"
         results["HAS_SHEEN"] = "true"
+        results["HAS_SHEEN_TINT"] = "true"
         results["HAS_TRANSMISSION"] = "true"
         results["HAS_ANISOTROPIC"] = "true"
         return results

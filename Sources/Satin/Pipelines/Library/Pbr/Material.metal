@@ -8,11 +8,12 @@ struct Material {
     float metallic;
     float roughness;
     float specular;
-#if defined(HAS_SPECULAR)
+#if defined(HAS_SPECULAR_TINT)
     float specularTint;
 #endif
 #if defined(HAS_ANISOTROPIC)
     float anisotropic;
+    float anisotropicAngle;
 #endif
     float alpha;
 #if defined(HAS_CLEARCOAT)

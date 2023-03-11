@@ -25,3 +25,4 @@
 #else
     pixel.normal = normalize(in.normal);
 #endif
+

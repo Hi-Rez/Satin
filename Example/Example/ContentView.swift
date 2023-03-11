@@ -140,6 +140,11 @@ struct ContentView: View {
                     NavigationLink(destination: ShippingShadersRendererView()) {
                         Label("Shipping Shaders", systemImage: "shippingbox")
                     }
+
+                    NavigationLink(destination: SubmeshRendererView()) {
+                        Label("Submeshes", systemImage: "soccerball")
+                    }
+
                     NavigationLink(destination: SuperShapesRendererView()) {
                         Label("Super Shapes", systemImage: "seal")
                     }
@@ -154,6 +159,8 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Satin Examples")
+
+//            SubmeshRendererView()
         }
     }
 }

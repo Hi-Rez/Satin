@@ -90,6 +90,7 @@ open class DirectionalLight: Object, Light {
 
     func setupShadow() {
         guard castShadow, let directionalShadow = shadow as? DirectionalLightShadow, let context = context else { return }
+        print("here")
         directionalShadow.device = context.device
         directionalShadow.update(light: self)
     }

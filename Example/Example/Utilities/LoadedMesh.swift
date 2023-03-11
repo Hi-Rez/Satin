@@ -96,6 +96,14 @@ class LoadedMesh: Object, Renderable {
 
     var url: URL?
     var material: Material?
+    var materials: [Material] {
+        var allMaterials = [Material]()
+        if let material = material {
+            allMaterials.append(material)
+        }
+        return allMaterials
+    }
+    
     var cullMode: MTLCullMode = .back
     var windingOrder: MTLWinding = .counterClockwise
     var triangleFillMode: MTLTriangleFillMode = .fill
