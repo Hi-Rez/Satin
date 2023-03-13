@@ -285,7 +285,9 @@ open class Renderer {
         for object in objectList {
             if let renderable = object as? Renderable {
                 for material in renderable.materials {
-                    material.maxLights = maxLights
+                    if material.lighting {
+                        material.maxLights = maxLights
+                    }
                     if renderable.receiveShadow {
                         material.shadowCount = shadowCount
                     }
@@ -329,8 +331,8 @@ open class Renderer {
         renderEncoder.pushDebugGroup(renderable.label)
 
         let materials = renderable.materials
-        let lighting = materials.filter{ $0.lighting }
-        let receiveShadow = materials.filter{ $0.receiveShadow }
+        let lighting = materials.filter { $0.lighting }
+        let receiveShadow = materials.filter { $0.receiveShadow }
 
         if !lighting.isEmpty, let lightBuffer = lightDataBuffer {
             renderEncoder.setFragmentBuffer(
@@ -370,7 +372,7 @@ open class Renderer {
         self.size = size
     }
 
-    func updateViewport() {
+    private func updateViewport() {
         viewport = MTLViewport(
             originX: 0.0,
             originY: 0.0,
@@ -392,7 +394,7 @@ open class Renderer {
 
     // MARK: - Textures
 
-    func setupDepthTexture() {
+    private func setupDepthTexture() {
         guard updateDepthTexture else { return }
 
         let sampleCount = context.sampleCount
@@ -415,7 +417,7 @@ open class Renderer {
         }
     }
 
-    func setupStencilTexture() {
+    private func setupStencilTexture() {
         guard updateStencilTexture else { return }
 
         let sampleCount = context.sampleCount
@@ -438,7 +440,7 @@ open class Renderer {
         }
     }
 
-    func setupColorTexture() {
+    private func setupColorTexture() {
         guard updateColorTexture else { return }
 
         let sampleCount = context.sampleCount
@@ -463,12 +465,12 @@ open class Renderer {
 
     // MARK: - Lights
 
-    func updateLights() {
+    private func updateLights() {
         setupLightDataBuffer()
         updateLightDataBuffer()
     }
 
-    func setupLightDataBuffer() {
+    private func setupLightDataBuffer() {
         guard lightList.count != lightDataBuffer?.count else { return }
         lightDataSubscriptions.removeAll(keepingCapacity: true)
 
@@ -490,7 +492,7 @@ open class Renderer {
         }
     }
 
-    func updateLightDataBuffer() {
+    private func updateLightDataBuffer() {
         guard let lightBuffer = lightDataBuffer, _updateLightDataBuffer else { return }
 
         lightBuffer.update(data: lightList.map { $0.data })
@@ -500,14 +502,14 @@ open class Renderer {
 
     // MARK: - Shadows
 
-    func updateShadows() {
+    private func updateShadows() {
         setupShadows()
         updateShadowMatrices()
-        updateShadowStrengths()
+        updateShadowData()
         updateShadowTextures()
     }
 
-    func setupShadows() {
+    private func setupShadows() {
         guard shadowList.count != shadowMatricesBuffer?.count else { return }
 
         shadowMatricesSubscriptions.removeAll(keepingCapacity: true)
@@ -554,7 +556,8 @@ open class Renderer {
                 let shadowDataBuffer = StructBuffer<ShadowData>.init(
                     device: context.device,
                     count: shadowList.count,
-                    label: "Shadow Data Buffer")
+                    label: "Shadow Data Buffer"
+                )
 
                 self.shadowArgumentBuffer = shadowArgumentBuffer
                 self.shadowArgumentEncoder = shadowArgumentEncoder
@@ -582,7 +585,7 @@ open class Renderer {
         }
     }
 
-    func updateShadowMatrices() {
+    private func updateShadowMatrices() {
         guard let shadowMatricesBuffer = shadowMatricesBuffer,
               _updateShadowMatrices else { return }
 
@@ -591,7 +594,7 @@ open class Renderer {
         _updateShadowMatrices = false
     }
 
-    func updateShadowStrengths() {
+    private func updateShadowData() {
         guard let shadowArgumentEncoder = shadowArgumentEncoder,
               let shadowDataBuffer = shadowDataBuffer,
               _updateShadowData else { return }
@@ -606,7 +609,7 @@ open class Renderer {
         _updateShadowData = false
     }
 
-    func updateShadowTextures() {
+    private func updateShadowTextures() {
         guard let shadowArgumentEncoder = shadowArgumentEncoder,
               _updateShadowTextures else { return }
 

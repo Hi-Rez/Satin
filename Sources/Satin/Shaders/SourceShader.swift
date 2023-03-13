@@ -114,6 +114,22 @@ open class SourceShader: Shader {
         return results
     }
 
+    public var live = false {
+        didSet {
+            compiler.watch = live
+        }
+    }
+
+    private lazy var compiler: MetalFileCompiler = {
+        let compiler = MetalFileCompiler(watch: live)
+        compiler.onUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.shaderSource = nil
+            self.sourceNeedsUpdate = true
+        }
+        return compiler
+    }()
+
     public required init(_ label: String, _ pipelineURL: URL, _ vertexFunctionName: String? = nil, _ fragmentFunctionName: String? = nil) {
         self.pipelineURL = pipelineURL
         super.init(label, vertexFunctionName, fragmentFunctionName, nil)
@@ -172,7 +188,7 @@ open class SourceShader: Shader {
 
         if let pipelineURL = pipelineURL {
             do {
-                result = try MetalFileCompiler(watch: false).parse(pipelineURL)
+                result = try compiler.parse(pipelineURL)
                 error = nil
             } catch {
                 self.error = error
@@ -203,7 +219,6 @@ open class SourceShader: Shader {
 
             injectDefines(source: &source, defines: defines)
             injectConstants(source: &source)
-
 
             injectShadowData(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
             injectShadowBuffer(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)

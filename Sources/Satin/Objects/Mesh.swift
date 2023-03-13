@@ -8,13 +8,12 @@
 
 import Combine
 import Metal
-import MetalPerformanceShaders
 import simd
 
 open class Mesh: Object, Renderable, Intersectable {
     public var renderOrder = 0
-    
-    public var receiveShadow: Bool = false {
+
+    public var receiveShadow = false {
         didSet {
             if receiveShadow != oldValue {
                 material?.receiveShadow = receiveShadow
@@ -24,7 +23,8 @@ open class Mesh: Object, Renderable, Intersectable {
             }
         }
     }
-    public var castShadow: Bool = false {
+
+    public var castShadow = false {
         didSet {
             if castShadow != oldValue {
                 material?.castShadow = castShadow
@@ -43,11 +43,9 @@ open class Mesh: Object, Renderable, Intersectable {
 
         if submeshes.isEmpty, let material = material, material.pipeline != nil {
             return true
-        }
-        else if let submesh = submeshes.first, let material = submesh.material, material.pipeline != nil {
+        } else if let submesh = submeshes.first, let material = submesh.material, material.pipeline != nil {
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
@@ -227,7 +225,7 @@ open class Mesh: Object, Renderable, Intersectable {
         material?.bind(renderEncoder, shadow: shadow)
     }
 
-    open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+    open func bindDrawingStates(_ renderEncoder: MTLRenderCommandEncoder, shadow _: Bool) {
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
@@ -239,8 +237,7 @@ open class Mesh: Object, Renderable, Intersectable {
 
         if !submeshes.isEmpty {
             for submesh in submeshes where submesh.visible {
-                if let indexBuffer = submesh.indexBuffer, let material = submesh.material
-                {
+                if let indexBuffer = submesh.indexBuffer, let material = submesh.material {
                     material.bind(renderEncoder, shadow: shadow)
                     renderEncoder.drawIndexedPrimitives(
                         type: geometry.primitiveType,

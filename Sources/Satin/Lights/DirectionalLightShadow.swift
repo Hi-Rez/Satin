@@ -128,7 +128,7 @@ public class DirectionalLightShadow: LightShadow {
         }
     }
 
-    func setupTexture() {
+    private func setupTexture() {
         guard let device = device, _updateTexture, pixelFormat != .invalid, resolution.width > 1, resolution.height > 1 else { return }
 
         let descriptor = MTLTextureDescriptor

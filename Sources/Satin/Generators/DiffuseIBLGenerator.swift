@@ -44,14 +44,11 @@ public class DiffuseIBLGenerator {
             for face in 0 ..< 6 {
                 compute.face = UInt32(face)
                 compute.sourceTexture = sourceTexture
-                compute.textureDescriptors = [
-                    MTLTextureDescriptor.texture2DDescriptor(
-                        pixelFormat: destinationTexture.pixelFormat,
-                        width: size,
-                        height: size,
-                        mipmapped: false
-                    ),
-                ]
+                let desc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: destinationTexture.pixelFormat, width: size, height: size, mipmapped: false)
+                desc.usage = [.shaderRead, .shaderWrite]
+                desc.storageMode = .private
+                desc.allowGPUOptimizedContents = true
+                compute.textureDescriptors = [desc]
 
                 commandBuffer.label = "\(compute.label) Compute Command Buffer"
                 compute.update(commandBuffer)

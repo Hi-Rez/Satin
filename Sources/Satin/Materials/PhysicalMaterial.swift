@@ -391,7 +391,7 @@ public extension PhysicalMaterial {
                         .origin: MTKTextureLoader.Origin.flippedVertically,
                     ]
                 ) {
-                    setTexture(texture, type: .clearcoatRoughness)
+                    setTexture(texture, type: .clearcoatGloss)
                 }
             } else if property.type == .float {
                 clearcoatRoughness = 1.0 - property.floatValue

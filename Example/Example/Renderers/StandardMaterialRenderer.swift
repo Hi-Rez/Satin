@@ -22,7 +22,7 @@ class StandardMaterialRenderer: BaseRenderer {
     var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
-    lazy var scene = Object("Scene", [skybox])
+    lazy var scene = Scene("Scene", [skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 6.0], near: 0.01, far: 1000.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
@@ -52,16 +52,7 @@ class StandardMaterialRenderer: BaseRenderer {
     }
 
     override func setup() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.loadHdri()
-            if let commandBuffer = self.commandQueue.makeCommandBuffer() {
-                self.setupCubemap(commandBuffer)
-                self.setupDiffuseIBL(commandBuffer)
-                self.setupSpecularIBL(commandBuffer)
-                self.setupBRDF(commandBuffer)
-                commandBuffer.commit()
-            }
-        }
+        loadHdri()
         setupTextures()
         setupLights()
         setupScene()
@@ -180,7 +171,7 @@ class StandardMaterialRenderer: BaseRenderer {
                 let texture = try loader.newTexture(URL: url, options: [
                     MTKTextureLoader.Option.SRGB: false,
                     MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically,
-                    MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.shared.rawValue),
+                    MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue),
                 ])
                 standardMaterial.setTexture(texture, type: type)
             }
@@ -193,60 +184,7 @@ class StandardMaterialRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        hdriTexture = loadHDR(device, texturesURL.appendingPathComponent(filename))
-    }
-
-    func setupCubemap(_ commandBuffer: MTLCommandBuffer) {
-        if let hdriTexture = hdriTexture, let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true) {
-            CubemapGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: hdriTexture, destinationTexture: texture)
-
-            cubemapTexture = texture
-            skyboxMaterial.texture = texture
-        }
-    }
-
-    func setupDiffuseIBL(_ commandBuffer: MTLCommandBuffer) {
-        if let cubemapTexture = cubemapTexture,
-           let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 64, mipmapped: false)
-        {
-            DiffuseIBLGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-
-            diffuseIBLTexture = texture
-            texture.label = "Diffuse IBL"
-
-            standardMaterial.setTexture(texture, type: .irradiance)
-        }
-    }
-
-    func setupSpecularIBL(_ commandBuffer: MTLCommandBuffer) {
-        if let cubemapTexture = cubemapTexture,
-           let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true)
-        {
-            SpecularIBLGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-
-            specularIBLTexture = texture
-            texture.label = "Specular IBL"
-
-            standardMaterial.setTexture(specularIBLTexture, type: .reflection)
-        }
-    }
-
-    func setupBRDF(_ commandBuffer: MTLCommandBuffer) {
-        brdfTexture = BrdfGenerator(device: device, size: 512)
-            .encode(commandBuffer: commandBuffer)
-
-        standardMaterial.setTexture(brdfTexture, type: .brdf)
-    }
-
-    func createCubemapTexture(pixelFormat: MTLPixelFormat, size: Int, mipmapped: Bool) -> MTLTexture?
-    {
-        let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: pixelFormat, size: size, mipmapped: mipmapped)
-        let texture = device.makeTexture(descriptor: desc)
-        texture?.label = "Cubemap"
-        return texture
+        scene.environment = loadHDR(device, texturesURL.appendingPathComponent(filename))
     }
 
     // MARK: - Vertex Generics

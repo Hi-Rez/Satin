@@ -159,8 +159,6 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Satin Examples")
-
-//            SubmeshRendererView()
         }
     }
 }

@@ -22,10 +22,24 @@ extension MetalFileCompilerError: LocalizedError {
 }
 
 open class MetalFileCompiler {
-    var watch: Bool
-    var files: [URL] = []
-    var watchers: [FileWatcher] = []
+    public var watch: Bool {
+        didSet {
+            if watch != oldValue {
+                for watcher in watchers {
+                    if watch {
+                        watcher.watch()
+                    } else {
+                        watcher.unwatch()
+                    }
+                }
+            }
+        }
+    }
+
     public var onUpdate: (() -> Void)?
+
+    private var files: [URL] = []
+    private var watchers: [FileWatcher] = []
 
     public init(watch: Bool = true) {
         self.watch = watch
@@ -79,14 +93,15 @@ open class MetalFileCompiler {
                 }
             }
 
-            if watch {
-                let watcher = FileWatcher(filePath: fileURLResolved.path, timeInterval: 0.25)
-                    { [weak self] in
-                        guard let self = self else { return }
-                        self.onUpdate?()
-                    }
-                watchers.append(watcher)
+            let watcher = FileWatcher(
+                filePath: fileURLResolved.path,
+                timeInterval: 0.25,
+                active: watch
+            ) { [weak self] in
+                guard let self = self else { return }
+                self.onUpdate?()
             }
+            watchers.append(watcher)
             files.append(fileURLResolved)
 
             let pattern = #"^#include\s+\"(.*)\"\n"#

@@ -221,14 +221,16 @@ public enum FragmentTextureIndex: Int {
     case Custom20 = 20
     case Custom21 = 21
     case Custom22 = 22
-    case Shadow0 = 23
-    case Shadow1 = 24
-    case Shadow2 = 25
-    case Shadow3 = 26
-    case Shadow4 = 27
-    case Shadow5 = 28
-    case Shadow6 = 29
-    case Shadow7 = 30
+    case Custom23 = 23
+    case Custom24 = 24
+    case Shadow0 = 25
+    case Shadow1 = 26
+    case Shadow2 = 27
+    case Shadow3 = 28
+    case Shadow4 = 29
+    case Shadow5 = 30
+    case Shadow6 = 31
+    case Shadow7 = 32
 }
 
 public enum PBRTexture: Int {
@@ -244,17 +246,18 @@ public enum PBRTexture: Int {
     case sheenTint = 9
     case clearcoat = 10
     case clearcoatRoughness = 11
-    case anisotropic = 12
-    case anisotropicAngle = 13
-    case bump = 14
-    case displacement = 15
-    case alpha = 16
-    case ior = 17
-    case transmission = 18
-    case ambientOcclusion = 19
-    case reflection = 20
-    case irradiance = 21
-    case brdf = 22
+    case clearcoatGloss = 12
+    case anisotropic = 13
+    case anisotropicAngle = 14
+    case bump = 15
+    case displacement = 16
+    case alpha = 17
+    case ior = 18
+    case transmission = 19
+    case ambientOcclusion = 20
+    case reflection = 21
+    case irradiance = 22
+    case brdf = 23
 
     public var shaderDefine: String {
         switch self {
@@ -302,6 +305,8 @@ public enum PBRTexture: Int {
             return "CLEARCOAT_MAP"
         case .clearcoatRoughness:
             return "CLEARCOAT_ROUGHNESS_MAP"
+        case .clearcoatGloss:
+            return "CLEARCOAT_GLOSS_MAP"
         case .ior:
             return "IOR_MAP"
         }
@@ -362,6 +367,8 @@ public enum PBRTexture: Int {
             return "clearcoatMap"
         case .clearcoatRoughness:
             return "clearcoatRoughnessMap"
+        case .clearcoatGloss:
+            return "clearcoatGlossMap"
         case .ior:
             return "iorMap"
         }
@@ -413,6 +420,8 @@ public enum PBRTexture: Int {
             return "PBRTextureClearcoat"
         case .clearcoatRoughness:
             return "PBRTextureClearcoatRoughness"
+        case .clearcoatGloss:
+            return "PBRTextureGlossRoughness"
         case .ior:
             return "PBRTextureIor"
         }

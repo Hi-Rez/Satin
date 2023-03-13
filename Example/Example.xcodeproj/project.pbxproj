@@ -96,6 +96,7 @@
 		E1E7685328ADB23B005D75AB /* FlockingRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */; };
 		E1EB6DE829690C5B0029E4FC /* EnhancedPBRRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE729690C5B0029E4FC /* EnhancedPBRRenderer.swift */; };
 		E1EB6DEA29690DD90029E4FC /* EnhancedPBRRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */; };
+		E1F22D1D29BD71FA0011CEAB /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F22D1C29BD71FA0011CEAB /* Timing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -190,6 +191,7 @@
 		E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchingRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32324BAA91F00563923 /* TextRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32724BAA93300563923 /* Renderer3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer3D.swift; sourceTree = "<group>"; };
+		E1F22D1C29BD71FA0011CEAB /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
 		E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferComputeRenderer.swift; sourceTree = "<group>"; };
 		E1FABFFC2527E698008569F7 /* ExportGeometryRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportGeometryRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -316,6 +318,7 @@
 				E17D2C1126BBB7DF005A136A /* AudioInput.swift */,
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E1772A972981D320005FE7B2 /* MeshShadowRenderer.swift */,
+				E1F22D1C29BD71FA0011CEAB /* Timing.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -554,6 +557,7 @@
 				E17A55B328A6C394008F1DDB /* ExtrudedTextRenderer.swift in Sources */,
 				E1E767CF28A6D41B005D75AB /* ExportGeometryRendererView.swift in Sources */,
 				E1D714D428A6BADA00B517B6 /* ExampleApp.swift in Sources */,
+				E1F22D1D29BD71FA0011CEAB /* Timing.swift in Sources */,
 				E1E767BF28A6D2A2005D75AB /* Renderer3DView.swift in Sources */,
 				E1E767CD28A6D41B005D75AB /* CameraControllerRendererView.swift in Sources */,
 				E1EB6DE829690C5B0029E4FC /* EnhancedPBRRenderer.swift in Sources */,

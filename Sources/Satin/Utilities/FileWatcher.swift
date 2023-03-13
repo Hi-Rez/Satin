@@ -25,7 +25,7 @@ open class FileWatcher {
     public var onUpdate: (() -> Void)?
     public weak var delegate: FileWatcherDelegate?
 
-    public init(filePath: String, timeInterval: TimeInterval = 1.0, onUpdate: (() -> Void)? = nil) {
+    public init(filePath: String, timeInterval: TimeInterval = 1.0, active: Bool = true, onUpdate: (() -> Void)? = nil) {
         self.filePath = filePath
         self.timeInterval = timeInterval
         self.onUpdate = onUpdate
@@ -36,7 +36,9 @@ open class FileWatcher {
             } catch {
                 print("FileWatcher Error: \(error)")
             }
-            watch()
+            if active {
+                watch()
+            }
         } else {
             print("File: \(filePath) does not exist")
         }

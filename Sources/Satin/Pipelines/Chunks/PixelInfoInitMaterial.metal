@@ -45,6 +45,8 @@
 
     #if defined(CLEARCOAT_ROUGHNESS_MAP)
         pixel.material.clearcoatRoughness = clearcoatRoughnessMap.sample(pbrLinearSampler, in.texcoords).r;
+    #elseif defined(CLEARCOAT_GLOSS_MAP)
+        pixel.material.clearcoatRoughness = 1.0 - clearcoatGlossMap.sample(pbrLinearSampler, in.texcoords).r;
     #else
         pixel.material.clearcoatRoughness = uniforms.clearcoatRoughness;
     #endif

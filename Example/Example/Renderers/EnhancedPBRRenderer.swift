@@ -11,7 +11,7 @@ import Metal
 import MetalKit
 import Satin
 
-class EnhancedPBRRenderer: BaseRenderer {
+class EnhancedPBRRenderer: BaseRenderer, MaterialDelegate {
     // MARK: - 3D Scene
 
     class CustomShader: PBRShader {
@@ -43,7 +43,9 @@ class EnhancedPBRRenderer: BaseRenderer {
         }
 
         override func createShader() -> Shader {
-            return CustomShader(label, pipelineURL)
+            let shader = CustomShader(label, pipelineURL)
+            shader.live = true
+            return shader
         }
     }
 
@@ -53,7 +55,7 @@ class EnhancedPBRRenderer: BaseRenderer {
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
 
-    lazy var scene = Object("Scene", [mesh, skybox])
+    lazy var scene = Scene("Scene", [mesh, skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera = PerspectiveCamera(position: [0.0, 0.0, 40.0], near: 0.001, far: 1000.0)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
@@ -61,6 +63,7 @@ class EnhancedPBRRenderer: BaseRenderer {
 
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
+        mat.delegate = self
         mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
         mat.set("Emissive Color", [1.0, 1.0, 1.0, 0.0])
         return mat
@@ -83,13 +86,6 @@ class EnhancedPBRRenderer: BaseRenderer {
     lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
     lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
 
-    // Textures
-    var hdriTexture: MTLTexture?
-    var cubemapTexture: MTLTexture?
-    var diffuseIBLTexture: MTLTexture?
-    var specularIBLTexture: MTLTexture?
-    var brdfTexture: MTLTexture?
-
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
@@ -99,13 +95,7 @@ class EnhancedPBRRenderer: BaseRenderer {
 
     override func setup() {
         setupLights()
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.loadHdri()
-            self.setupCubemap()
-            self.setupDiffuseIBL()
-            self.setupSpecularIBL()
-            self.setupBRDF()
-        }
+        loadHdri()
     }
 
     func setupLights() {
@@ -133,70 +123,7 @@ class EnhancedPBRRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        hdriTexture = loadHDR(device, texturesURL.appendingPathComponent(filename))
-    }
-
-    func setupCubemap() {
-        if let hdriTexture = hdriTexture, let commandBuffer = commandQueue.makeCommandBuffer(), let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true) {
-            CubemapGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: hdriTexture, destinationTexture: texture)
-            commandBuffer.commit()
-            commandBuffer.waitUntilCompleted()
-            cubemapTexture = texture
-            skyboxMaterial.texture = texture
-        }
-    }
-
-    func setupDiffuseIBL() {
-        if let cubemapTexture = cubemapTexture,
-           let commandBuffer = commandQueue.makeCommandBuffer(),
-           let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 64, mipmapped: false)
-        {
-            DiffuseIBLGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-
-            commandBuffer.commit()
-            commandBuffer.waitUntilCompleted()
-
-            diffuseIBLTexture = texture
-            customMaterial.setTexture(diffuseIBLTexture, type: .irradiance)
-            texture.label = "Diffuse IBL"
-        }
-    }
-
-    func setupSpecularIBL() {
-        if let cubemapTexture = cubemapTexture,
-           let commandBuffer = commandQueue.makeCommandBuffer(),
-           let texture = createCubemapTexture(pixelFormat: .rgba16Float, size: 512, mipmapped: true)
-        {
-            SpecularIBLGenerator(device: device)
-                .encode(commandBuffer: commandBuffer, sourceTexture: cubemapTexture, destinationTexture: texture)
-
-            commandBuffer.commit()
-            commandBuffer.waitUntilCompleted()
-
-            specularIBLTexture = texture
-            customMaterial.setTexture(specularIBLTexture, type: .reflection)
-            texture.label = "Specular IBL"
-        }
-    }
-
-    func setupBRDF() {
-        if let commandBuffer = commandQueue.makeCommandBuffer() {
-            brdfTexture = BrdfGenerator(device: device, size: 512)
-                .encode(commandBuffer: commandBuffer)
-            customMaterial.setTexture(brdfTexture, type: .brdf)
-            commandBuffer.commit()
-            commandBuffer.waitUntilCompleted()
-        }
-    }
-
-    func createCubemapTexture(pixelFormat: MTLPixelFormat, size: Int, mipmapped: Bool) -> MTLTexture?
-    {
-        let desc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: pixelFormat, size: size, mipmapped: mipmapped)
-        let texture = device.makeTexture(descriptor: desc)
-        texture?.label = "Cubemap"
-        return texture
+        scene.environment = loadHDR(device, texturesURL.appendingPathComponent(filename))
     }
 
     override func update() {
@@ -216,5 +143,9 @@ class EnhancedPBRRenderer: BaseRenderer {
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
+    }
+
+    func updated(material: Satin.Material) {
+        print("updated material: \(material.label)")
     }
 }
