@@ -198,6 +198,7 @@ open class Geometry: Codable {
     }
 
     func setupBVH() {
+        print("setting up BVH")
         _bvh = createBVH(getGeometryData(), false)
         _updateBVH = false
     }

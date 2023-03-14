@@ -207,7 +207,7 @@ open class Renderer {
         // render objects that cast shadows into the depth textures
         if !shadowCasters.isEmpty, !shadowReceivers.isEmpty {
             for light in lightList where light.castShadow {
-                light.shadow.draw(commandBuffer: commandBuffer, renderables: renderList)
+                light.shadow.draw(commandBuffer: commandBuffer, renderables: shadowCasters)
             }
         }
 

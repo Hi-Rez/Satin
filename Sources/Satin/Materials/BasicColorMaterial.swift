@@ -10,6 +10,16 @@ import Metal
 import simd
 
 open class BasicColorMaterial: Material {
+    public var color: simd_float4 {
+        set {
+            set("Color", newValue)
+        }
+        get {
+            let param = parameters.get("Color") as! Float4Parameter
+            return param.value
+        }
+    }
+
     public init(_ color: simd_float4 = simd_float4(repeating: 1.0), _ blending: Blending = .alpha) {
         super.init()
         self.blending = blending
