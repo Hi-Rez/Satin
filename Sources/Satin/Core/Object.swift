@@ -454,8 +454,8 @@ open class Object: Codable, ObservableObject {
         parent?.remove(self)
     }
 
-    open func removeAll() {
-        children = []
+    open func removeAll(keepingCapacity: Bool = false) {
+        children.removeAll(keepingCapacity: keepingCapacity)
     }
 
     // MARK: - Recursive Scene Graph Functions
