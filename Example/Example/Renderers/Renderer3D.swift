@@ -35,7 +35,7 @@ class Renderer3D: BaseRenderer {
     }
 
     override func setup() {
-        // Setup things here
+        renderer.compile(scene: scene, camera: camera)
     }
 
     override func update() {

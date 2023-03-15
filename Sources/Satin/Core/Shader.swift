@@ -124,7 +124,7 @@ open class Shader {
         }
     }
 
-    weak var context: Context? {
+    public var context: Context? {
         didSet {
             if oldValue != context {
                 setup()

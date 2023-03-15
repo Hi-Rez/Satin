@@ -211,6 +211,15 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - Local Bounds
 
+    public var updateLocalBounds = true {
+        didSet {
+            if updateLocalBounds {
+                _updateLocalBounds = true
+                updateLocalBounds = false
+            }
+        }
+    }
+
     var _updateLocalBounds = true {
         didSet {
             if _updateLocalBounds {
@@ -229,6 +238,15 @@ open class Object: Codable, ObservableObject {
     }
 
     // MARK: - World Bounds
+
+    public var updateWorldBounds = true {
+        didSet {
+            if updateWorldBounds {
+                _updateWorldBounds = true
+                updateWorldBounds = false
+            }
+        }
+    }
 
     var _updateWorldBounds = true {
         didSet {

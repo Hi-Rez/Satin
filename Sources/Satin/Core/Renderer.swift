@@ -619,4 +619,12 @@ open class Renderer {
 
         _updateShadowTextures = false
     }
+
+    // MARK: - Compile
+
+    // MARK: - Internal Update
+
+    public func compile(scene: Object, camera: Camera) {
+        update(scene: scene, camera: camera)
+    }
 }
