@@ -16,22 +16,22 @@ open class PostProcessor {
         }
     }
 
-    public var context: Context!
-    public lazy var scene = Object("Scene", [mesh])
-    public var mesh = Mesh(geometry: QuadGeometry(), material: nil)
+    public var context: Context
+    public var scene: Object
+    public var mesh: Mesh
     public var camera = OrthographicCamera(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
 
-    public lazy var renderer: Renderer = {
-        let renderer = Renderer(context: context)
-        renderer.setClearColor([1, 1, 1, 0])
-        return renderer
-    }()
+    public var renderer: Renderer
 
     public init(context: Context, material: Material?) {
         self.context = context
-        mesh.material = material
+        renderer = Renderer(context: context)
+        renderer.setClearColor([1, 1, 1, 0])
         renderer.label = label + " Processor"
-        mesh.label = label + " Mesh"
+
+        mesh = Mesh(geometry: QuadGeometry(), material: material)
+        scene = Object("Scene", [mesh])
+        renderer.compile(scene: scene, camera: camera)
     }
 
     open func draw(renderPassDescriptor: MTLRenderPassDescriptor,

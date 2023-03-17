@@ -18,7 +18,7 @@ open class VertexUniformBuffer {
 
     public init(device: MTLDevice) {
         let length = alignedSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.storageModeShared]) else { fatalError("Couldn't not create Vertex Uniform Buffer") }
+        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.cpuCacheModeWriteCombined]) else { fatalError("Couldn't not create Vertex Uniform Buffer") }
         self.buffer = buffer
         self.buffer.label = "Vertex Uniforms"
         uniforms = UnsafeMutableRawPointer(buffer.contents()).bindMemory(to: VertexUniforms.self, capacity: 1)

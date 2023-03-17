@@ -25,18 +25,12 @@ class DirectionalShadowRenderer: BaseRenderer {
     lazy var lightHelperMesh0 = Mesh(geometry: lightHelperGeo, material: lightHelperMat)
     lazy var lightHelperMesh1 = Mesh(geometry: lightHelperGeo, material: lightHelperMat)
 
-    var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: StandardMaterial(baseColor: [1.0, 0.0, 0.0, 1.0], metallic: 0.0, roughness: 0.2))
+    var baseMesh = Mesh(geometry: BoxGeometry(size: (1.25, 0.125, 1.25), res: 5), material: StandardMaterial(baseColor: [1.0, 1.0, 0.0, 1.0], metallic: 0.0, roughness: 0.2))
+    var mesh = Mesh(geometry: TorusGeometry(radius: (0.1, 0.5)), material: StandardMaterial(baseColor: [1, 0, 1, 1], metallic: 1.0, roughness: 0.25, specular: 1.0, emissiveColor: .zero))
+    var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: ShadowMaterial())
 
-    lazy var mainGeometry: Geometry = {
-        let geo = TorusGeometry(radius: (0.1, 0.5))
-        return geo
-    }()
-
-    lazy var mesh = Mesh(geometry: mainGeometry, material: StandardMaterial())
-    lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 8.0, plane: .zx), material: ShadowMaterial())
-
-    var light0 = DirectionalLight(color: [1.0, 0.0, 1.0], intensity: 2.0)
-    var light1 = DirectionalLight(color: [0.0, 1.0, 1.0], intensity: 2.0)
+    var light0 = DirectionalLight(color: [1.0, 1.0, 1.0], intensity: 2.0)
+    var light1 = DirectionalLight(color: [1.0, 1.0, 1.0], intensity: 2.0)
 
     lazy var scene = Object("Scene", [light0, light1, floorMesh, baseMesh, mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -51,7 +45,7 @@ class DirectionalShadowRenderer: BaseRenderer {
     }
 
     override func setup() {
-        renderer.clearColor = .init(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
+        renderer.clearColor = .init(red: 0.125, green: 0.125, blue: 0.0, alpha: 1.0)
 
         light0.position.y = 5.0
         light0.castShadow = true
@@ -102,7 +96,6 @@ class DirectionalShadowRenderer: BaseRenderer {
         var theta = Float(time)
         let radius: Float = 5.0
 
-
         mesh.orientation = simd_quatf(angle: theta, axis: Satin.worldUpDirection)
         mesh.orientation *= simd_quatf(angle: theta, axis: Satin.worldRightDirection)
 
@@ -129,47 +122,5 @@ class DirectionalShadowRenderer: BaseRenderer {
     override func resize(_ size: (width: Float, height: Float)) {
         camera.aspect = size.width / size.height
         renderer.resize(size)
-    }
-
-    #if os(macOS)
-
-    override func keyDown(with event: NSEvent) {
-        if event.characters == "e" {
-            openEditor()
-        }
-    }
-
-    func openEditor() {
-        if let editorURL = UserDefaults.standard.url(forKey: "Editor") {
-            openEditor(at: editorURL)
-        } else {
-            let openPanel = NSOpenPanel()
-            openPanel.canChooseFiles = true
-            openPanel.allowsMultipleSelection = false
-            openPanel.canCreateDirectories = false
-            openPanel.begin(completionHandler: { [unowned self] (result: NSApplication.ModalResponse) in
-                if result == .OK {
-                    if let editorUrl = openPanel.url {
-                        UserDefaults.standard.set(editorUrl, forKey: "Editor")
-                        self.openEditor(at: editorUrl)
-                    }
-                }
-                openPanel.close()
-            })
-        }
-    }
-
-    func openEditor(at editorURL: URL) {
-        do {
-            try NSWorkspace.shared.open([assetsURL], withApplicationAt: editorURL, options: [], configuration: [:])
-        } catch {
-            print(error)
-        }
-    }
-
-    #endif
-
-    func getTime() -> CFAbsoluteTime {
-        return CFAbsoluteTimeGetCurrent()
     }
 }

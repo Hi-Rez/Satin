@@ -11,6 +11,30 @@ import Metal
 import simd
 
 public class InstancedMesh: Mesh {
+
+    public override var drawable: Bool {
+        if let drawCount = drawCount {
+            if drawCount > 0 {
+                return super.drawable
+            }
+            else {
+                return false
+            }
+        }
+        else {
+            return super.drawable
+        }
+    }
+
+    public var drawCount: Int? {
+        didSet {
+            if let drawCount = drawCount, drawCount > instanceCount {
+                instanceCount = drawCount
+                print("maxed out instances, adding more: \(instanceCount)")
+            }
+        }
+    }
+
     override public var instanceCount: Int {
         didSet {
             if instanceCount != oldValue {
@@ -149,6 +173,15 @@ public class InstancedMesh: Mesh {
     override public func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool = false) {
         guard instanceMatrixBuffer != nil, instanceMatricesUniforms.count >= instanceCount else { return }
         super.draw(renderEncoder: renderEncoder, shadow: shadow)
+    }
+
+    override public func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int, shadow: Bool) {
+        if let drawCount = drawCount {
+            super.draw(renderEncoder: renderEncoder, instanceCount: min(drawCount, instanceCount), shadow: shadow)
+        }
+        else {
+            super.draw(renderEncoder: renderEncoder, instanceCount: instanceCount, shadow: shadow)
+        }
     }
 
     // MARK: - Intersections

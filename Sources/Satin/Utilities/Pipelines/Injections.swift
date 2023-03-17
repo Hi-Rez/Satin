@@ -207,7 +207,7 @@ func injectInstancingArgs(source: inout String, instancing: Bool) {
     let injection =
         """
         \tuint instanceID [[instance_id]],
-        \tconstant InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],\n
+        \tconst device InstanceMatrixUniforms *instanceUniforms [[buffer(VertexBufferInstanceMatrixUniforms)]],\n
         """
     source = source.replacingOccurrences(of: "// inject instancing args\n", with: instancing ? injection : "")
 }

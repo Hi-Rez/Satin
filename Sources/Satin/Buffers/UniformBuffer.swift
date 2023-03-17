@@ -15,7 +15,7 @@ open class UniformBuffer: Buffer {
     public var offset = 0
     public var alignedSize = 0
 
-    public init(device: MTLDevice, parameters: ParameterGroup, options: MTLResourceOptions = [.storageModeShared]) {
+    public init(device: MTLDevice, parameters: ParameterGroup, options: MTLResourceOptions = [.cpuCacheModeWriteCombined]) {
         super.init()
         self.parameters = parameters
         alignedSize = ((parameters.size + 255) / 256) * 256

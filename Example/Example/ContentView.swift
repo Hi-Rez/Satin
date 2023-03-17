@@ -25,6 +25,11 @@ struct ContentView: View {
                     NavigationLink(destination: ARRendererView()) {
                         Label("AR", systemImage: "arkit")
                     }
+
+                    NavigationLink(destination: ARDrawingRendererView()) {
+                        Label("AR Drawing", systemImage: "scribble.variable")
+                    }
+
                     #elseif os(macOS)
                     NavigationLink(destination: AudioInputRendererView()) {
                         Label("Audio Input", systemImage: "mic")

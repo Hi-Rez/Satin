@@ -8,7 +8,7 @@
 
 import Foundation
 
-func getTime() -> CFAbsoluteTime {
+public func getTime() -> CFAbsoluteTime {
     CFAbsoluteTimeGetCurrent()
 }
 

@@ -17,7 +17,7 @@ open class InstanceMatrixUniformBuffer {
     public init(device: MTLDevice, count: Int) {
         self.count = count
         let length = alignedSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.storageModeShared]) else { fatalError("Couldn't not create Instance Matrix Uniform Buffer") }
+        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.cpuCacheModeWriteCombined]) else { fatalError("Couldn't not create Instance Matrix Uniform Buffer") }
         self.buffer = buffer
         self.buffer.label = "Instance Matrix Uniforms"
     }

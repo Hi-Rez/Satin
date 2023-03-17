@@ -18,7 +18,7 @@ open class StructBuffer<T> {
     public init(device: MTLDevice, count: Int, label: String = "Struct Buffer") {
         self.count = count
         let length = alignedSize * Satin.maxBuffersInFlight
-        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.storageModeShared]) else { fatalError("Couldn't not create \(label)") }
+        guard let buffer = device.makeBuffer(length: length, options: [MTLResourceOptions.cpuCacheModeWriteCombined]) else { fatalError("Couldn't not create \(label)") }
         self.buffer = buffer
         self.buffer.label = label
     }
