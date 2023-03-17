@@ -15,7 +15,6 @@ struct ARDrawingRendererView: View {
     @State var clear: Bool = false
 
     var body: some View {
-        let _ = Self._printChanges()
         ForgeView(renderer: ARDrawingRenderer(clear: $clear))
             .ignoresSafeArea()
             .navigationTitle("AR Drawing")

@@ -24,11 +24,11 @@ fragment half4 postFragment
     const int2 grainCell = int2(in.position.xy/grainSize);
     const float3 noiseUV = float3(grainUV, time);
     const float2 noiseOffset = float2(random(noiseUV, 123 + grainCell.x), random(noiseUV, 234 + grainCell.y));
+    const float3 guv = float3(fract(grainUV + noiseOffset), cameraGrainIntensity);
 
     constexpr sampler s = sampler( filter::linear );
-    constexpr sampler g = sampler( filter::linear, mip_filter::linear, address::repeat );
 
-    float4 grain = grainTex.sample(g, float3(grainUV + noiseOffset, cameraGrainIntensity));
+    float4 grain = grainTex.sample(s, guv);
     float4 content = contextTex.sample(s, uv);
     content.rgb += mix(0.0, grain.rgb, content.a);
 

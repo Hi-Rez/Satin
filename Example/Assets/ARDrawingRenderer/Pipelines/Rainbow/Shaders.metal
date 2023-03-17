@@ -32,6 +32,6 @@ fragment float4 rainbowFragment
     constant RainbowUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]]
 )
 {
-    const float uv = in.id/2000.0 + uniforms.time * 0.0;
+    const float uv = in.id/1000.0 + uniforms.time * 0.5;
     return float4(iridescence(uv), 1.0);
 }

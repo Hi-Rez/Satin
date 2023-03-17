@@ -402,8 +402,6 @@ open class Renderer {
     private func setupDepthTexture() {
         guard updateDepthTexture, context.depthPixelFormat != .invalid, size.width > 1, size.height > 1 else { return }
 
-        print("setup depth texture")
-
         let descriptor = MTLTextureDescriptor()
         descriptor.pixelFormat = context.depthPixelFormat
         descriptor.width = Int(size.width)
@@ -423,8 +421,6 @@ open class Renderer {
     private func setupStencilTexture() {
         guard updateStencilTexture, context.stencilPixelFormat != .invalid, size.width > 1, size.height > 1 else { return }
 
-        print("setup stencil texture")
-
         let descriptor = MTLTextureDescriptor()
         descriptor.pixelFormat = context.stencilPixelFormat
         descriptor.width = Int(size.width)
@@ -443,8 +439,6 @@ open class Renderer {
 
     private func setupColorTexture() {
         guard updateColorTexture, context.colorPixelFormat != .invalid, size.width > 1, size.height > 1 else { return }
-
-        print("setup color texture")
 
         let descriptor = MTLTextureDescriptor()
         descriptor.pixelFormat = context.colorPixelFormat
