@@ -128,8 +128,4 @@ class LiveCodeRenderer: BaseRenderer {
     }
 
     #endif
-
-    func getTime() -> CFAbsoluteTime {
-        return CFAbsoluteTimeGetCurrent()
-    }
 }

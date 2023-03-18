@@ -12,20 +12,14 @@ import Metal
 open class Shader {
     // MARK: - Main Pipeline
 
-    var pipelineOptions: MTLPipelineOption {
-        [.argumentInfo, .bufferTypeInfo]
-    }
-
+    public internal(set) var pipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
     public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var error: Error?
 
     // MARK: - Shadow Pipeline
 
-    var shadowPipelineOptions: MTLPipelineOption {
-        [.argumentInfo, .bufferTypeInfo]
-    }
-
+    public internal(set) var shadowPipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
     public internal(set) var shadowPipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var shadowPipeline: MTLRenderPipelineState?
     public internal(set) var shadowError: Error?
@@ -100,7 +94,7 @@ open class Shader {
     // MARK: - Lighting
 
     public var lighting = false
-    public var maxLights: Int = 0
+    public var maxLights = 0
 
     // MARK: - Shadows
 
@@ -113,7 +107,7 @@ open class Shader {
     }
 
     public var receiveShadow = false
-    public var shadowCount: Int = 0
+    public var shadowCount = 0
 
     public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
         didSet {
@@ -132,7 +126,7 @@ open class Shader {
         }
     }
 
-    var label = "Shader"
+    public private(set) var label = "Shader"
 
     var libraryNeedsUpdate = true {
         didSet {
@@ -193,12 +187,12 @@ open class Shader {
         _ label: String,
         _ vertexFunctionName: String? = nil,
         _ fragmentFunctionName: String? = nil,
-        _ shadowFunctionName: String? = nil,
+        _: String? = nil,
         _ libraryURL: URL? = nil
     ) {
         self.label = label
         self.vertexFunctionName = vertexFunctionName ?? label.camelCase + "Vertex"
-        self.shadowFunctionName = vertexFunctionName ?? label.camelCase + "ShadowVertex"
+        shadowFunctionName = vertexFunctionName ?? label.camelCase + "ShadowVertex"
         self.fragmentFunctionName = fragmentFunctionName ?? label.camelCase + "Fragment"
         self.libraryURL = libraryURL
     }
@@ -248,28 +242,43 @@ open class Shader {
     }
 
     func setupPipeline() {
-        guard let context = context,
-              let library = library,
-              let vertexFunction = library.makeFunction(name: vertexFunctionName),
-              let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return }
-        createPipeline(context, vertexFunction, fragmentFunction)
+        guard let context = context, let library = library else { return }
+        do {
+            pipeline = try createPipeline(context, library)
+            error = nil
+        } catch {
+            self.error = error
+            print("\(label) Shader: \(error.localizedDescription)")
+            pipeline = nil
+        }
         pipelineNeedsUpdate = false
     }
 
     func setupShadowPipeline() {
-        guard let context = context,
-              let library = library,
-              let vertexFunction = library.makeFunction(name: shadowFunctionName) ?? library.makeFunction(name: vertexFunctionName)
-        else { return }
-        createShadowPipeline(context, vertexFunction)
+        guard let context = context, let library = library else { return }
+
+        do {
+            shadowPipeline = try createShadowPipeline(context, library)
+            shadowError = nil
+        } catch {
+            shadowError = error
+            print("\(label) Shadow Shader: \(error.localizedDescription)")
+            shadowPipeline = nil
+        }
+
         shadowPipelineNeedsUpdate = false
     }
 
-    func createPipeline(_ context: Context, _ vertexFunction: MTLFunction, _ fragmentFunction: MTLFunction) {
+    open func createPipeline(_ context: Context, _ library: MTLLibrary) throws -> MTLRenderPipelineState? {
+        guard let vertexFunction = library.makeFunction(name: vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: fragmentFunctionName) else { return nil }
+
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.label = label
+
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = fragmentFunction
+
         pipelineStateDescriptor.sampleCount = context.sampleCount
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
@@ -286,41 +295,32 @@ open class Shader {
             colorAttachment.alphaBlendOperation = alphaBlendOperation
         }
 
-        do {
-            pipeline = try context.device.makeRenderPipelineState(
-                descriptor: pipelineStateDescriptor,
-                options: pipelineOptions,
-                reflection: &pipelineReflection
-            )
-            error = nil
-        } catch {
-            self.error = error
-            print("\(label) Shader: \(error.localizedDescription)")
-            pipeline = nil
-        }
+        return try context.device.makeRenderPipelineState(
+            descriptor: pipelineStateDescriptor,
+            options: pipelineOptions,
+            reflection: &pipelineReflection
+        )
     }
 
-    func createShadowPipeline(_ context: Context, _ vertexFunction: MTLFunction) {
+    open func createShadowPipeline(_ context: Context, _ library: MTLLibrary) throws -> MTLRenderPipelineState? {
+        guard let vertexFunction = library.makeFunction(name: shadowFunctionName) ??
+            library.makeFunction(name: vertexFunctionName) else { return nil }
+
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.label = label + " Shadow"
+
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = nil
+
         pipelineStateDescriptor.sampleCount = 1
         pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
 
-        do {
-            shadowPipeline = try context.device.makeRenderPipelineState(
-                descriptor: pipelineStateDescriptor,
-                options: shadowPipelineOptions,
-                reflection: &shadowPipelineReflection
-            )
-            shadowError = nil
-        } catch {
-            shadowError = error
-            print("\(label) Shadow Shader: \(error.localizedDescription)")
-            shadowPipeline = nil
-        }
+        return try context.device.makeRenderPipelineState(
+            descriptor: pipelineStateDescriptor,
+            options: shadowPipelineOptions,
+            reflection: &shadowPipelineReflection
+        )
     }
 
     func setupParameters() {

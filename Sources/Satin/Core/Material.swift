@@ -423,10 +423,13 @@ open class Material: Codable, ParameterGroupDelegate {
         renderEncoder.setRenderPipelineState(pipeline)
     }
 
-    open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder) {
+    open func bindUniforms(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         guard let uniforms = uniforms else { return }
+        // TO DO: Should only bind this if it actually uses it, likewise for the Fragment
         renderEncoder.setVertexBuffer(uniforms.buffer, offset: uniforms.offset, index: VertexBufferIndex.MaterialUniforms.rawValue)
-        renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+        if !shadow {
+            renderEncoder.setFragmentBuffer(uniforms.buffer, offset: uniforms.offset, index: FragmentBufferIndex.MaterialUniforms.rawValue)
+        }
     }
 
     open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
@@ -439,7 +442,7 @@ open class Material: Codable, ParameterGroupDelegate {
 
     open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         bindPipeline(renderEncoder, shadow: shadow)
-        bindUniforms(renderEncoder)
+        bindUniforms(renderEncoder, shadow: shadow)
         bindDepthStencilState(renderEncoder)
         onBind?(renderEncoder)
     }

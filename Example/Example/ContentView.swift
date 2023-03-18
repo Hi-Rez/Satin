@@ -97,6 +97,12 @@ struct ContentView: View {
                         Label("Matcap", systemImage: "graduationcap")
                     }
 
+                    if let device = MTLCreateSystemDefaultDevice(), device.supportsFamily(MTLGPUFamily.mac2) || device.supportsFamily(MTLGPUFamily.apple8) {
+                        NavigationLink(destination: MeshShaderRendererView()) {
+                            Label("Mesh Shader", systemImage: "circle.hexagongrid.fill")
+                        }
+                    }
+
                     NavigationLink(destination: LoadObjRendererView()) {
                         Label("Obj Loading", systemImage: "arrow.down.doc")
                     }

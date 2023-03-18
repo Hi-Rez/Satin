@@ -279,7 +279,6 @@ open class SourceShader: Shader {
             fatalError("Source Shader improperly constructed")
         }
 
-        clone.label = label
         clone.libraryURL = libraryURL
         clone.library = library
         clone.pipelineURL = pipelineURL
