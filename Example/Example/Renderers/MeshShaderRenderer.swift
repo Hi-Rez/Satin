@@ -254,12 +254,11 @@ private class CustomMesh: Object, Renderable {
             index: MeshBufferIndex.VertexUniforms.rawValue
         )
 
-        let maxTotalThreadsPerMeshThreadgroup = material.pipeline!.maxTotalThreadsPerThreadgroup
-        let instances = geometry.indexData.count
+        let instances = geometry.indexData.count / 3
 
         renderEncoder.drawMeshThreadgroups(
             MTLSizeMake(instances, 1, 1),
-            threadsPerObjectThreadgroup: MTLSizeMake(5, 1, 1),
+            threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1),
             threadsPerMeshThreadgroup: MTLSizeMake(36, 1, 1)
         )
     }

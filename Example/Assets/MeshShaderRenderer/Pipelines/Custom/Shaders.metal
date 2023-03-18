@@ -40,14 +40,14 @@ using TriangleMeshType = metal::mesh<
     metal::topology::triangle
 >;
 
-[[object, max_total_threads_per_threadgroup( 5 ), max_total_threadgroups_per_mesh_grid( kIndexCount )]]
+[[object, max_total_threads_per_threadgroup( 1 ), max_total_threadgroups_per_mesh_grid( kIndexCount )]]
 void customObject
 (
     object_data Payload &payload [[payload]],
     mesh_grid_properties mgp,
 
-    uint3 gid [[threadgroup_position_in_grid]],
-    uint lane [[thread_index_in_threadgroup]],
+    uint32_t gid [[threadgroup_position_in_grid]],
+    uint32_t lane [[thread_index_in_threadgroup]],
 
     constant Vertex *vertices [[buffer( ObjectBufferVertices )]],
     constant uint32_t *indices [[buffer( ObjectBufferIndicies )]],
@@ -59,9 +59,8 @@ void customObject
     const float size = 0.5 * uniforms.size;
     float height = uniforms.height;
 
-    const uint gridOffset = gid.z * (32 * 32) + gid.y * 32 + gid.x;
     // Calculate center of the face
-    const uint i = gridOffset * 3;
+    const uint i = gid * 3;
     const uint i0 = indices[i + 0];
     const uint i1 = indices[i + 1];
     const uint i2 = indices[i + 2];
