@@ -20,8 +20,8 @@ class CameraControllerRenderer: BaseRenderer {
         let material = BasicColorMaterial(simd_make_float4(1.0, 1.0, 1.0, 1.0))
         let intervals = 5
         let intervalsf = Float(intervals)
-        let geometryX = CapsuleGeometry(size: (0.0125, intervalsf), axis: .x)
-        let geometryZ = CapsuleGeometry(size: (0.0125, intervalsf), axis: .z)
+        let geometryX = CapsuleGeometry(size: (0.005, intervalsf), axis: .x)
+        let geometryZ = CapsuleGeometry(size: (0.005, intervalsf), axis: .z)
         for i in 0 ... intervals {
             let fi = Float(i)
             let meshX = Mesh(geometry: geometryX, material: material)
@@ -39,27 +39,16 @@ class CameraControllerRenderer: BaseRenderer {
     lazy var axisMesh: Object = {
         let object = Object()
         let intervals = 5
-        let intervalsf = Float(intervals) * 0.5
-        let size = (Float(0.0125), intervalsf)
+        let intervalsf = Float(intervals)
+        let size = (Float(0.005), intervalsf)
         object.add(Mesh(geometry: CapsuleGeometry(size: size, axis: .x), material: BasicColorMaterial(simd_make_float4(1.0, 0.0, 0.0, 1.0))))
         object.add(Mesh(geometry: CapsuleGeometry(size: size, axis: .y), material: BasicColorMaterial(simd_make_float4(0.0, 1.0, 0.0, 1.0))))
         object.add(Mesh(geometry: CapsuleGeometry(size: size, axis: .z), material: BasicColorMaterial(simd_make_float4(0.0, 0.0, 1.0, 1.0))))
         return object
     }()
 
-    lazy var targetMesh: Mesh = {
-        let mesh = Mesh(geometry: BoxGeometry(size: 1.0), material: NormalColorMaterial())
-        mesh.label = "Target"
-        return mesh
-    }()
-
-    lazy var scene: Object = {
-        let scene = Object()
-        scene.add(grid)
-        scene.add(axisMesh)
-        return scene
-    }()
-
+    lazy var targetMesh = Mesh(geometry: BoxGeometry(size: 1.0), material: NormalColorMaterial())
+    lazy var scene = Object("Scene", [grid, axisMesh])
     lazy var context: Context = .init(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
 
     lazy var camera: PerspectiveCamera = {
@@ -79,7 +68,6 @@ class CameraControllerRenderer: BaseRenderer {
     }()
 
     lazy var cameraController: PerspectiveCameraController = .init(camera: camera, view: mtkView)
-
     lazy var renderer: Satin.Renderer = .init(context: context)
 
     override func setupMtkView(_ metalKitView: MTKView) {
@@ -90,12 +78,13 @@ class CameraControllerRenderer: BaseRenderer {
 
     override func setup() {
         scene.add(cameraController.target)
-        scene.add(targetMesh)
+        cameraController.target.add(targetMesh)
+        scene.attach(targetMesh)
     }
 
     override func update() {
-        targetMesh.position = cameraController.target.position
         cameraController.update()
+        targetMesh.orientation = cameraController.target.orientation.inverse
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

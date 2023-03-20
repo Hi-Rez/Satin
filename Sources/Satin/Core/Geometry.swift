@@ -20,7 +20,6 @@ open class Geometry: Codable {
         didSet {
             if primitiveType != oldValue, primitiveType != .triangle {
                 if let bvh = _bvh {
-                    print("changing primitive type from geometry")
                     freeBVH(bvh)
                 }
                 _bvh = nil
@@ -56,11 +55,12 @@ open class Geometry: Codable {
 
     public var context: Context? {
         didSet {
+            guard let context = context, context != oldValue else { return }
             setup()
         }
     }
 
-    var _updateVertexBuffer = true {
+    private var _updateVertexBuffer = true {
         didSet {
             if _updateVertexBuffer {
                 _updateBounds = true
@@ -68,7 +68,7 @@ open class Geometry: Codable {
         }
     }
 
-    var _updateIndexBuffer = true {
+    private var _updateIndexBuffer = true {
         didSet {
             if _updateIndexBuffer {
                 _updateBounds = true
@@ -76,10 +76,10 @@ open class Geometry: Codable {
         }
     }
 
-    var _updateBVH = true
-    var _bvh: BVH?
+    private var _updateBVH = true
+    private var _bvh: BVH?
 
-    var _updateBounds = true {
+    private var _updateBounds = true {
         didSet {
             if _updateBounds {
                 _updateBVH = true
@@ -87,7 +87,7 @@ open class Geometry: Codable {
         }
     }
 
-    var _bounds = createBounds()
+    private var _bounds = createBounds()
     public var bounds: Bounds {
         if _updateBounds {
             _bounds = computeBounds()
@@ -96,7 +96,8 @@ open class Geometry: Codable {
         return _bounds
     }
 
-    public private(set) var vertexBuffers: [VertexBufferIndex: MTLBuffer] = [:]
+    public private(set) var vertexBuffers: [VertexBufferIndex: MTLBuffer?] = [:]
+    
     public var vertexBuffer: MTLBuffer? {
         didSet {
             if let vertexBuffer = vertexBuffer {
@@ -157,11 +158,11 @@ open class Geometry: Codable {
         try container.encode(indexData, forKey: .indexData)
     }
 
-    func setup() {
+    open func setup() {
         update()
     }
 
-    public func update() {
+    open func update() {
         if _updateVertexBuffer {
             setupVertexBuffer()
         }
@@ -170,7 +171,7 @@ open class Geometry: Codable {
         }
     }
 
-    func setupVertexBuffer() {
+    private func setupVertexBuffer() {
         guard let device = context?.device else { return }
         if !vertexData.isEmpty {
             let stride = MemoryLayout<Vertex>.stride
@@ -186,7 +187,7 @@ open class Geometry: Codable {
         }
     }
 
-    func setupIndexBuffer() {
+    private func setupIndexBuffer() {
         guard let device = context?.device else { return }
         if !indexData.isEmpty {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
@@ -197,7 +198,7 @@ open class Geometry: Codable {
         }
     }
 
-    func setupBVH() {
+    private func setupBVH() {
         _bvh = createBVH(getGeometryData(), false)
         _updateBVH = false
     }
@@ -277,8 +278,8 @@ open class Geometry: Codable {
         }
     }
 
-    func computeBounds() -> Bounds {
-        if let bvh = bvh, let node = bvh.getNode(index: 0) {
+    open func computeBounds() -> Bounds {
+        if primitiveType == .triangle, let bvh = bvh, let node = bvh.getNode(index: 0) {
             return node.aabb
         }
         return computeBoundsFromVertices(&vertexData, Int32(vertexData.count))
