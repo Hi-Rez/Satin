@@ -31,7 +31,6 @@ fileprivate class ARPlaneContainer: Object {
 
         let mat = material.clone()
         mat.set("Color", [Float.random(in: 0 ... 1), Float.random(in: 0 ... 1), Float.random(in: 0 ... 1), 0.25])
-        mat.depthWriteEnabled = false
 
         mesh = Mesh(geometry: geometry, material: mat)
         meshWireframe = Mesh(geometry: geometry, material: mat)
@@ -72,7 +71,12 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
 
     var session: ARSession!
 
-    let planeMaterial = BasicColorMaterial(.one, .additive)
+    lazy var planeMaterial: Satin.Material = {
+        let material = BasicColorMaterial(.one, .additive)
+        material.depthWriteEnabled = false
+        return material
+    }()
+
     fileprivate var planesMap: [ARAnchor: ARPlaneContainer] = [:]
 
     // MARK: - 3D
