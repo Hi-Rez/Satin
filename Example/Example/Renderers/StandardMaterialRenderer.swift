@@ -15,12 +15,9 @@ import Forge
 import Satin
 
 class StandardMaterialRenderer: BaseRenderer {
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
-    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+
+    override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
+    override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
     lazy var scene = Scene("Scene", [skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)

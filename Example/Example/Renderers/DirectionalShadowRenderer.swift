@@ -15,10 +15,6 @@ import Satin
 class DirectionalShadowRenderer: BaseRenderer {
     class CustomMaterial: LiveMaterial {}
 
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     let lightHelperGeo = BoxGeometry(size: (0.1, 0.1, 0.5))
     let lightHelperMat = BasicDiffuseMaterial(0.7)
 

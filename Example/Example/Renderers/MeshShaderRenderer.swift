@@ -13,11 +13,6 @@ import Forge
 import Satin
 
 class MeshShaderRenderer: BaseRenderer {
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     var geometry = IcoSphereGeometry(radius: 1.0, res: 4)
     lazy var mesh = Mesh(geometry: geometry, material: BasicDiffuseMaterial(0.7))
     lazy fileprivate var meshNormals = CustomMesh(geometry: geometry, material: CustomMaterial(pipelinesURL: pipelinesURL))

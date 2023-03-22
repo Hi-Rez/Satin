@@ -16,8 +16,7 @@ class ExtrudedTextRenderer: BaseRenderer {
     var scene = Object()
     var mesh: Mesh!
 
-    var camera = PerspectiveCamera(position: [0.0, 0.0, 30.0], near: 0.001, far: 100.0, fov: 60.0)
-
+    lazy var camera = PerspectiveCamera(position: [15.0, 20.0, 40.0], near: 10.0, far: 60.0, fov: 60)
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
@@ -38,7 +37,7 @@ class ExtrudedTextRenderer: BaseRenderer {
             text: input,
             fontName: "Helvetica",
             fontSize: 8,
-            distance: 1,
+            distance: 8,
             bounds: CGSize(width: -1, height: -1),
             pivot: simd_make_float2(0, 0),
             textAlignment: .left,
@@ -46,10 +45,11 @@ class ExtrudedTextRenderer: BaseRenderer {
         )
 
         let mat = DepthMaterial()
-        mat.set("Near", 10.0)
-        mat.set("Far", 40.0)
         mat.set("Invert", true)
         mesh = Mesh(geometry: geo, material: mat)
+
+        camera.lookAt(mesh.worldBounds.center)
+
         scene.add(mesh)
     }
 

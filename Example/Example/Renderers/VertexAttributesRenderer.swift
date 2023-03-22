@@ -22,11 +22,7 @@ class VertexAttributesRenderer: BaseRenderer {
 
     class CustomMaterial: SourceMaterial {}
 
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+    override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
     var camera = PerspectiveCamera(position: [0.0, 0.0, 4.0], near: 0.001, far: 100.0)
     lazy var scene = Object("Scene", [intersectionMesh])

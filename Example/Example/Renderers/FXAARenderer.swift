@@ -15,10 +15,6 @@ import Satin
 class FXAARenderer: BaseRenderer {
     class FxaaMaterial: SourceMaterial {}
 
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     // MARK: Render to Texture
 
     var renderTexture: MTLTexture!

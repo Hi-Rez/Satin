@@ -12,12 +12,6 @@ import MetalKit
 import Forge
 import Satin
 
-class BaseRenderer: Forge.Renderer {
-    deinit {
-        print("deinit: \(String(describing: type(of: self)))")
-    }
-}
-
 class Renderer2D: BaseRenderer {
     var context: Context!
 

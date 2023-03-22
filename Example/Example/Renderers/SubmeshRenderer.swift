@@ -13,11 +13,8 @@ import Forge
 import Satin
 
 class SubmeshRenderer: BaseRenderer {
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
-    var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
+    override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+    override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
 
     var scene = Scene("Scene")
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)

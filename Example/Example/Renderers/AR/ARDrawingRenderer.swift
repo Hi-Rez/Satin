@@ -18,12 +18,6 @@ import Satin
 class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     class RainbowMaterial: SourceMaterial {}
 
-    // MARK: - Paths
-
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     // MARK: - Post Processor
 
     var postProcessor: ARPostProcessor!
@@ -152,10 +146,6 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Updates
 
     func updateDrawing() {
-        if clear.wrappedValue {
-            mesh.drawCount = 0
-            clear.wrappedValue = false
-        }
         if touchDown, let currentFrame = session.currentFrame {
             add(simd_mul(currentFrame.camera.transform, translationMatrixf(0, 0, -0.2)))
         }

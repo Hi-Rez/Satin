@@ -18,10 +18,6 @@ class BufferComputeRenderer: BaseRenderer {
     class SpriteMaterial: SourceMaterial {}
     class ChromaMaterial: SourceMaterial {}
 
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     lazy var particleSystem = ParticleComputeSystem(device: device, pipelinesURL: pipelinesURL, count: 8192)
 
     lazy var spriteMaterial: SpriteMaterial = {

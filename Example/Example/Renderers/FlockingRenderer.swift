@@ -18,12 +18,6 @@ class FlockingRenderer: BaseRenderer {
     class InstanceMaterial: SourceMaterial {}
     class SpriteMaterial: SourceMaterial {}
 
-    // MARK: - Paths
-
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
-
     lazy var startTime = CFAbsoluteTimeGetCurrent()
 
     // MARK: - Controls

@@ -13,7 +13,7 @@ struct RayMarchingRendererView: View {
     var body: some View {
         ForgeView(renderer: RayMarchingRenderer())
             .ignoresSafeArea()
-            .navigationTitle("Post Processing")
+            .navigationTitle("Ray Marching")
     }
 }
 

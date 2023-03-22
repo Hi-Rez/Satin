@@ -16,6 +16,9 @@
 		E11325D228AEB0770049CACC /* SuperShapesRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11325D128AEB0770049CACC /* SuperShapesRendererView.swift */; };
 		E13687282900BBEC00FFF43F /* InstancedMeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13687272900BBEC00FFF43F /* InstancedMeshRenderer.swift */; };
 		E136872A2900BEEC00FFF43F /* InstancedMeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */; };
+		E152371B29CBA0F700D96D46 /* ARPlanesRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */; };
+		E152371D29CBA11B00D96D46 /* ARPlaneRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */; };
+		E152371F29CBA22B00D96D46 /* BaseRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371E29CBA22B00D96D46 /* BaseRenderer.swift */; };
 		E1707F6F29BAB0A000A934A0 /* DirectionalShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */; };
 		E1707F7129BAB0B100A934A0 /* DirectionalShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */; };
 		E1707F7429BBAFE100A934A0 /* SubmeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7329BBAFE100A934A0 /* SubmeshRenderer.swift */; };
@@ -119,6 +122,9 @@
 		E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstancedMeshRendererView.swift; sourceTree = "<group>"; };
 		E144281D28120C1B006D9CD1 /* LoadedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadedMesh.swift; sourceTree = "<group>"; };
 		E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControllerRenderer.swift; sourceTree = "<group>"; };
+		E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlanesRenderer.swift; sourceTree = "<group>"; };
+		E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneRendererView.swift; sourceTree = "<group>"; };
+		E152371E29CBA22B00D96D46 /* BaseRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRenderer.swift; sourceTree = "<group>"; };
 		E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexAttributesRenderer.swift; sourceTree = "<group>"; };
 		E1653F152684F4D50012C97F /* SatinSceneKitARRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatinSceneKitARRenderer.swift; sourceTree = "<group>"; };
 		E168FC76248ECCA2004B8407 /* PBRRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBRRenderer.swift; sourceTree = "<group>"; };
@@ -238,8 +244,8 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
-				E1F4314E29C2592A00200E72 /* ARDrawingRenderer.swift */,
-				E129CCB5252009CC009B237A /* ARRenderer.swift */,
+				E152372029CBA8DA00D96D46 /* AR */,
+				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
 				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
@@ -266,7 +272,6 @@
 				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,
 				E17B986E2451488100216411 /* Renderer2D.swift */,
 				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
-				E1653F152684F4D50012C97F /* SatinSceneKitARRenderer.swift */,
 				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E18A1ED8291EF89800A71453 /* StandardMaterialRenderer.swift */,
@@ -292,6 +297,28 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E152372029CBA8DA00D96D46 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				E1653F152684F4D50012C97F /* SatinSceneKitARRenderer.swift */,
+				E1F4314E29C2592A00200E72 /* ARDrawingRenderer.swift */,
+				E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */,
+				E129CCB5252009CC009B237A /* ARRenderer.swift */,
+			);
+			path = AR;
+			sourceTree = "<group>";
+		};
+		E152372129CBBA4600D96D46 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				E1E7680E28A73265005D75AB /* SatinSceneKitARRendererView.swift */,
+				E1F4315429C260D100200E72 /* ARDrawingRendererView.swift */,
+				E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */,
+				E1E767DA28A6DA31005D75AB /* ARRendererView.swift */,
+			);
+			path = AR;
 			sourceTree = "<group>";
 		};
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
@@ -348,43 +375,41 @@
 		E1E767C028A6D313005D75AB /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E1F4315429C260D100200E72 /* ARDrawingRendererView.swift */,
-				E1E767DA28A6DA31005D75AB /* ARRendererView.swift */,
-				E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */,
+				E152372129CBBA4600D96D46 /* AR */,
 				E1E7681028A73661005D75AB /* AudioInputRendererView.swift */,
 				E1E767D528A6D7D9005D75AB /* BufferComputeRendererView.swift */,
 				E1E767C528A6D41B005D75AB /* CameraControllerRendererView.swift */,
 				E1E767DF28A6E7DD005D75AB /* CubemapRendererView.swift */,
 				E1E767C428A6D41B005D75AB /* CustomGeometryRendererView.swift */,
 				E1E767C628A6D41B005D75AB /* DepthRendererView.swift */,
+				E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */,
+				E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */,
 				E1E767C728A6D41B005D75AB /* ExportGeometryRendererView.swift */,
 				E1E767C328A6D41B005D75AB /* ExtrudedTextRendererView.swift */,
 				E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */,
 				E1E767FD28A6FCBC005D75AB /* FXAARendererView.swift */,
+				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
 				E11325CA28ADC5730049CACC /* InstancingRendererView.swift */,
 				E1E767F628A6FA4C005D75AB /* LiveCodeRendererView.swift */,
 				E1E767ED28A6EC44005D75AB /* LoadObjRendererView.swift */,
 				E1E767EA28A6EA0B005D75AB /* MatcapRendererView.swift */,
+				E10E2FD729C5092700C4EAFF /* MeshShaderRendererView.swift */,
+				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
 				E1E767C928A6D41B005D75AB /* OctasphereRendererView.swift */,
 				E1E7680228A72E50005D75AB /* PBRRendererView.swift */,
-				E1EB6DE929690DD90029E4FC /* EnhancedPBRRendererView.swift */,
 				E1E767F128A6F43C005D75AB /* PostProcessingRendererView.swift */,
+				E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */,
 				E1E767F428A6F805005D75AB /* RayMarchingRendererView.swift */,
 				E1E767C128A6D341005D75AB /* Renderer2DView.swift */,
 				E1E767BE28A6D2A2005D75AB /* Renderer3DView.swift */,
-				E1E7680E28A73265005D75AB /* SatinSceneKitARRendererView.swift */,
 				E1E767FA28A6FB83005D75AB /* SatinSceneKitRendererView.swift */,
 				E1E767CA28A6D41B005D75AB /* ShippingRendererView.swift */,
+				E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */,
+				E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */,
 				E11325D128AEB0770049CACC /* SuperShapesRendererView.swift */,
 				E1E767C828A6D41B005D75AB /* TextRendererView.swift */,
 				E1E7680028A70000005D75AB /* TextureComputeRendererView.swift */,
 				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
-				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
-				E18A1EDA291EFB1D00A71453 /* StandardMaterialRendererView.swift */,
-				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
-				E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */,
-				E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */,
-				E10E2FD729C5092700C4EAFF /* MeshShaderRendererView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -506,6 +531,7 @@
 				E1EB6DEA29690DD90029E4FC /* EnhancedPBRRendererView.swift in Sources */,
 				E17A55AF28A6C201008F1DDB /* Renderer3D.swift in Sources */,
 				E17A55BC28A6C9C3008F1DDB /* CustomGeometryRenderer.swift in Sources */,
+				E152371F29CBA22B00D96D46 /* BaseRenderer.swift in Sources */,
 				E1E767E228A6E84A005D75AB /* TorusKnotGenerator.c in Sources */,
 				E17A55BB28A6C928008F1DDB /* ExportGeometryRenderer.swift in Sources */,
 				E136872A2900BEEC00FFF43F /* InstancedMeshRendererView.swift in Sources */,
@@ -537,6 +563,7 @@
 				E17A55B128A6C2B2008F1DDB /* TextRenderer.swift in Sources */,
 				E1E767EC28A6EA5C005D75AB /* MatcapRenderer.swift in Sources */,
 				E17A55B728A6C587008F1DDB /* DepthMaterialRenderer.swift in Sources */,
+				E152371B29CBA0F700D96D46 /* ARPlanesRenderer.swift in Sources */,
 				E1E767DB28A6DA31005D75AB /* ARRendererView.swift in Sources */,
 				E17A55B228A6C30B008F1DDB /* OctasphereRenderer.swift in Sources */,
 				E1E7681328A736BB005D75AB /* AudioInput.swift in Sources */,
@@ -548,6 +575,7 @@
 				E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */,
 				E1E767FC28A6FCA9005D75AB /* FXAARenderer.swift in Sources */,
 				E1E767CB28A6D41B005D75AB /* ExtrudedTextRendererView.swift in Sources */,
+				E152371D29CBA11B00D96D46 /* ARPlaneRendererView.swift in Sources */,
 				E1E767F828A6FA73005D75AB /* LiveCodeRenderer.swift in Sources */,
 				E1707F7129BAB0B100A934A0 /* DirectionalShadowRenderer.swift in Sources */,
 				E1E7680428A72E66005D75AB /* PBRRenderer.swift in Sources */,
@@ -623,6 +651,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -678,6 +707,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -715,7 +745,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
@@ -759,7 +789,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;

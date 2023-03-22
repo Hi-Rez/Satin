@@ -18,18 +18,6 @@ class PostProcessingRenderer: BaseRenderer {
 
     class PostMaterial: SourceMaterial {}
 
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-
     var renderTexture: MTLTexture?
     var material = BasicDiffuseMaterial(0.7)
     var geometry = IcoSphereGeometry(radius: 1.0, res: 0)

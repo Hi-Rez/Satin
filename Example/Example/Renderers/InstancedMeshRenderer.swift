@@ -14,13 +14,6 @@ import Forge
 import Satin
 
 class InstancedMeshRenderer: BaseRenderer {
-    // MARK: - Paths
-
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
-    var modelsURL: URL { rendererAssetsURL.appendingPathComponent("Models") }
-
     // MARK: - Satin
 
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)

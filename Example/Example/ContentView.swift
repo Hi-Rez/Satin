@@ -30,6 +30,10 @@ struct ContentView: View {
                         Label("AR Drawing", systemImage: "scribble.variable")
                     }
 
+                    NavigationLink(destination: ARPlanesRendererView()) {
+                        Label("AR Planes", systemImage: "squareshape")
+                    }
+
                     #elseif os(macOS)
                     NavigationLink(destination: AudioInputRendererView()) {
                         Label("Audio Input", systemImage: "mic")

@@ -74,7 +74,6 @@ class ARRenderer: BaseRenderer {
     }
 
     override func cleanup() {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
         session.pause()
     }
 

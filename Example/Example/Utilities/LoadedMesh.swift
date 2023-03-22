@@ -88,9 +88,6 @@ class LoadedMesh: Object, Renderable {
         return false
     }
 
-    public var uniformBufferIndex = 0
-    public var uniformBufferOffset = 0
-
     var uniforms: VertexUniformBuffer?
     var geometryPublisher = PassthroughSubject<Intersectable, Never>()
 

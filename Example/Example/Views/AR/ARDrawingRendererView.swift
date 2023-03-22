@@ -12,7 +12,7 @@ import Forge
 import SwiftUI
 
 struct ARDrawingRendererView: View {
-    @State var clear: Bool = false
+    @State var clear = false
 
     var body: some View {
         ForgeView(renderer: ARDrawingRenderer(clear: $clear))
@@ -36,7 +36,6 @@ struct ARDrawingRendererView: View {
                         })
                         .padding(16)
                     }
-
                 }
             }
     }

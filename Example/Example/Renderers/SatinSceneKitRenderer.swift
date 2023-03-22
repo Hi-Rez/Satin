@@ -14,10 +14,7 @@ import Forge
 import Satin
 
 class SatinSceneKitRenderer: BaseRenderer {
-    var assetsURL: URL { Bundle.main.resourceURL!.appendingPathComponent("Assets") }
-    var sharedAssetsURL: URL { assetsURL.appendingPathComponent("Shared") }
-    var rendererAssetsURL: URL { assetsURL.appendingPathComponent(String(describing: type(of: self))) }
-    var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+    override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
     lazy var cameraNode: SCNNode = {
         let node = SCNNode()

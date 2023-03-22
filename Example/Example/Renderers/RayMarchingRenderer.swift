@@ -39,18 +39,6 @@ class RayMarchingRenderer: BaseRenderer {
         }
     }
 
-    var assetsURL: URL {
-        Bundle.main.resourceURL!.appendingPathComponent("Assets")
-    }
-
-    var rendererAssetsURL: URL {
-        assetsURL.appendingPathComponent(String(describing: type(of: self)))
-    }
-
-    var pipelinesURL: URL {
-        rendererAssetsURL.appendingPathComponent("Pipelines")
-    }
-
     var mesh = Mesh(geometry: BoxGeometry(size: 2.0), material: BasicDiffuseMaterial(0.7))
     var camera = PerspectiveCamera(position: [0.0, 0.0, 5.0], near: 0.001, far: 100.0, fov: 45)
 
