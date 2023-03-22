@@ -247,12 +247,13 @@ open class Geometry: Codable {
         return data
     }
 
-    public func unroll() {
+    public func unroll() -> Geometry {
         var data = getGeometryData()
         var unrolled = GeometryData()
         unrollGeometryData(&unrolled, &data)
         setFrom(&unrolled)
         freeGeometryData(&unrolled)
+        return self
     }
 
     public func computeNormals() {
