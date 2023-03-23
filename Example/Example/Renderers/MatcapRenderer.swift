@@ -13,6 +13,7 @@ import Satin
 
 class MatcapRenderer: BaseRenderer {
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+    override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
 
     var scene = Object("Scene")
 
@@ -23,9 +24,7 @@ class MatcapRenderer: BaseRenderer {
         do {
             return try loader.newTexture(URL: self.texturesURL.appendingPathComponent(fileName), options: [
                 MTKTextureLoader.Option.SRGB: false,
-                MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically,
-                MTKTextureLoader.Option.allocateMipmaps: true,
-                MTKTextureLoader.Option.generateMipmaps: true,
+                MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically
             ])
         } catch {
             print(error)

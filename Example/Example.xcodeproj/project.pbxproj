@@ -19,6 +19,11 @@
 		E152371B29CBA0F700D96D46 /* ARPlanesRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */; };
 		E152371D29CBA11B00D96D46 /* ARPlaneRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */; };
 		E152371F29CBA22B00D96D46 /* BaseRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152371E29CBA22B00D96D46 /* BaseRenderer.swift */; };
+		E152372329CBD07400D96D46 /* ARContactShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152372229CBD07400D96D46 /* ARContactShadowRenderer.swift */; };
+		E152372529CBD0A700D96D46 /* ARContactShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152372429CBD0A700D96D46 /* ARContactShadowRendererView.swift */; };
+		E152372829CBDF4E00D96D46 /* ObjectShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152372729CBDF4E00D96D46 /* ObjectShadowRenderer.swift */; };
+		E152372A29CC21FF00D96D46 /* ContactShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152372929CC21FF00D96D46 /* ContactShadowRenderer.swift */; };
+		E152372C29CC223600D96D46 /* ContactShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E152372B29CC223600D96D46 /* ContactShadowRendererView.swift */; };
 		E1707F6F29BAB0A000A934A0 /* DirectionalShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */; };
 		E1707F7129BAB0B100A934A0 /* DirectionalShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */; };
 		E1707F7429BBAFE100A934A0 /* SubmeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7329BBAFE100A934A0 /* SubmeshRenderer.swift */; };
@@ -125,6 +130,11 @@
 		E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlanesRenderer.swift; sourceTree = "<group>"; };
 		E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneRendererView.swift; sourceTree = "<group>"; };
 		E152371E29CBA22B00D96D46 /* BaseRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRenderer.swift; sourceTree = "<group>"; };
+		E152372229CBD07400D96D46 /* ARContactShadowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContactShadowRenderer.swift; sourceTree = "<group>"; };
+		E152372429CBD0A700D96D46 /* ARContactShadowRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContactShadowRendererView.swift; sourceTree = "<group>"; };
+		E152372729CBDF4E00D96D46 /* ObjectShadowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectShadowRenderer.swift; sourceTree = "<group>"; };
+		E152372929CC21FF00D96D46 /* ContactShadowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactShadowRenderer.swift; sourceTree = "<group>"; };
+		E152372B29CC223600D96D46 /* ContactShadowRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactShadowRendererView.swift; sourceTree = "<group>"; };
 		E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexAttributesRenderer.swift; sourceTree = "<group>"; };
 		E1653F152684F4D50012C97F /* SatinSceneKitARRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SatinSceneKitARRenderer.swift; sourceTree = "<group>"; };
 		E168FC76248ECCA2004B8407 /* PBRRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBRRenderer.swift; sourceTree = "<group>"; };
@@ -245,10 +255,11 @@
 			isa = PBXGroup;
 			children = (
 				E152372029CBA8DA00D96D46 /* AR */,
-				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
+				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
 				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
+				E152372929CC21FF00D96D46 /* ContactShadowRenderer.swift */,
 				E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */,
 				E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */,
 				E11325C828ADC4520049CACC /* CustomInstancingRenderer.swift */,
@@ -306,6 +317,7 @@
 				E1F4314E29C2592A00200E72 /* ARDrawingRenderer.swift */,
 				E152371A29CBA0F700D96D46 /* ARPlanesRenderer.swift */,
 				E129CCB5252009CC009B237A /* ARRenderer.swift */,
+				E152372229CBD07400D96D46 /* ARContactShadowRenderer.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -317,6 +329,7 @@
 				E1F4315429C260D100200E72 /* ARDrawingRendererView.swift */,
 				E152371C29CBA11B00D96D46 /* ARPlaneRendererView.swift */,
 				E1E767DA28A6DA31005D75AB /* ARRendererView.swift */,
+				E152372429CBD0A700D96D46 /* ARContactShadowRendererView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -324,6 +337,7 @@
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E152372729CBDF4E00D96D46 /* ObjectShadowRenderer.swift */,
 				E1F4315829C39B2D00200E72 /* AR */,
 				E1CC099F2489797300B92285 /* IcosahedronGenerator.c */,
 				E11325CE28AEAEB50049CACC /* SuperShapeGenerator.c */,
@@ -379,6 +393,7 @@
 				E1E7681028A73661005D75AB /* AudioInputRendererView.swift */,
 				E1E767D528A6D7D9005D75AB /* BufferComputeRendererView.swift */,
 				E1E767C528A6D41B005D75AB /* CameraControllerRendererView.swift */,
+				E152372B29CC223600D96D46 /* ContactShadowRendererView.swift */,
 				E1E767DF28A6E7DD005D75AB /* CubemapRendererView.swift */,
 				E1E767C428A6D41B005D75AB /* CustomGeometryRendererView.swift */,
 				E1E767C628A6D41B005D75AB /* DepthRendererView.swift */,
@@ -541,6 +556,8 @@
 				E17A55A828A6C11E008F1DDB /* Renderer2D.swift in Sources */,
 				E18A1EDB291EFB1D00A71453 /* StandardMaterialRendererView.swift in Sources */,
 				E10E2FD829C5092700C4EAFF /* MeshShaderRendererView.swift in Sources */,
+				E152372A29CC21FF00D96D46 /* ContactShadowRenderer.swift in Sources */,
+				E152372329CBD07400D96D46 /* ARContactShadowRenderer.swift in Sources */,
 				E1E767EE28A6EC44005D75AB /* LoadObjRendererView.swift in Sources */,
 				E1E767F228A6F43C005D75AB /* PostProcessingRendererView.swift in Sources */,
 				E1E7680D28A73258005D75AB /* SatinSceneKitARRenderer.swift in Sources */,
@@ -576,10 +593,12 @@
 				E1E767FC28A6FCA9005D75AB /* FXAARenderer.swift in Sources */,
 				E1E767CB28A6D41B005D75AB /* ExtrudedTextRendererView.swift in Sources */,
 				E152371D29CBA11B00D96D46 /* ARPlaneRendererView.swift in Sources */,
+				E152372829CBDF4E00D96D46 /* ObjectShadowRenderer.swift in Sources */,
 				E1E767F828A6FA73005D75AB /* LiveCodeRenderer.swift in Sources */,
 				E1707F7129BAB0B100A934A0 /* DirectionalShadowRenderer.swift in Sources */,
 				E1E7680428A72E66005D75AB /* PBRRenderer.swift in Sources */,
 				E1E767D228A6D41B005D75AB /* ShippingRendererView.swift in Sources */,
+				E152372529CBD0A700D96D46 /* ARContactShadowRendererView.swift in Sources */,
 				E17A55BD28A6C9C6008F1DDB /* IcosahedronGenerator.c in Sources */,
 				E1E767E128A6E800005D75AB /* CubemapRenderer.swift in Sources */,
 				E1772A9A2981D35F005FE7B2 /* ProjectedShadowRendererView.swift in Sources */,
@@ -590,6 +609,7 @@
 				E1D714D428A6BADA00B517B6 /* ExampleApp.swift in Sources */,
 				E1F22D1D29BD71FA0011CEAB /* Timing.swift in Sources */,
 				E1E767BF28A6D2A2005D75AB /* Renderer3DView.swift in Sources */,
+				E152372C29CC223600D96D46 /* ContactShadowRendererView.swift in Sources */,
 				E1E767CD28A6D41B005D75AB /* CameraControllerRendererView.swift in Sources */,
 				E1EB6DE829690C5B0029E4FC /* EnhancedPBRRenderer.swift in Sources */,
 				E1E7680F28A73265005D75AB /* SatinSceneKitARRendererView.swift in Sources */,

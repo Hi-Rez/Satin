@@ -21,10 +21,18 @@ struct ContentView: View {
                     NavigationLink(destination: Renderer3DView()) {
                         Label("3D", systemImage: "cube")
                     }
-                    #if os(iOS)
+                }
+#if os(iOS)
+                Group {
+
+
                     NavigationLink(destination: ARRendererView()) {
                         Label("AR", systemImage: "arkit")
                     }
+
+//                    NavigationLink(destination: ARContactShadowRendererView()) {
+//                        Label("AR Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
+//                    }
 
                     NavigationLink(destination: ARDrawingRendererView()) {
                         Label("AR Drawing", systemImage: "scribble.variable")
@@ -33,8 +41,10 @@ struct ContentView: View {
                     NavigationLink(destination: ARPlanesRendererView()) {
                         Label("AR Planes", systemImage: "squareshape")
                     }
-
-                    #elseif os(macOS)
+                }
+#endif
+                Group {
+                    #if os(macOS)
                     NavigationLink(destination: AudioInputRendererView()) {
                         Label("Audio Input", systemImage: "mic")
                     }
@@ -45,6 +55,10 @@ struct ContentView: View {
 
                     NavigationLink(destination: CameraControllerRendererView()) {
                         Label("Camera Controller", systemImage: "camera.aperture")
+                    }
+
+                    NavigationLink(destination: ContactShadowRendererView()) {
+                        Label("Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
                     }
 
                     NavigationLink(destination: CubemapRendererView()) {
