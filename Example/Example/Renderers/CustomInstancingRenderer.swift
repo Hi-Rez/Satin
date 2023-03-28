@@ -17,10 +17,6 @@ class CustomInstancingRenderer: BaseRenderer {
 
     // MARK: - Paths
 
-
-
-    
-
     var dataBuffer: MTLBuffer?
 
     lazy var instanceMaterial: InstanceMaterial = {

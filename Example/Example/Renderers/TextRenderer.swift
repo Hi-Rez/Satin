@@ -46,6 +46,10 @@ class TextRenderer: BaseRenderer {
         setupText()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func setupText() {
         let input = "BLACK\nLIVES\nMATTER"
 

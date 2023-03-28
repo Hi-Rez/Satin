@@ -310,6 +310,28 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E14198C529D10A8500E486EE /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				E1CC099F2489797300B92285 /* IcosahedronGenerator.c */,
+				E11325CE28AEAEB50049CACC /* SuperShapeGenerator.c */,
+				E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */,
+				E1CC099E2489797300B92285 /* IcosahedronGenerator.h */,
+				E11325CF28AEAEB50049CACC /* SuperShapeGenerator.h */,
+				E192F05C24874CE700C7EE74 /* TorusKnotGenerator.h */,
+			);
+			path = Geometry;
+			sourceTree = "<group>";
+		};
+		E14198C629D10A9100E486EE /* Shadows */ = {
+			isa = PBXGroup;
+			children = (
+				E152372729CBDF4E00D96D46 /* ObjectShadowRenderer.swift */,
+				E1772A972981D320005FE7B2 /* MeshShadowRenderer.swift */,
+			);
+			path = Shadows;
+			sourceTree = "<group>";
+		};
 		E152372029CBA8DA00D96D46 /* AR */ = {
 			isa = PBXGroup;
 			children = (
@@ -337,15 +359,9 @@
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				E152372729CBDF4E00D96D46 /* ObjectShadowRenderer.swift */,
+				E14198C629D10A9100E486EE /* Shadows */,
+				E14198C529D10A8500E486EE /* Geometry */,
 				E1F4315829C39B2D00200E72 /* AR */,
-				E1CC099F2489797300B92285 /* IcosahedronGenerator.c */,
-				E11325CE28AEAEB50049CACC /* SuperShapeGenerator.c */,
-				E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */,
-				E1CC099E2489797300B92285 /* IcosahedronGenerator.h */,
-				E11325CF28AEAEB50049CACC /* SuperShapeGenerator.h */,
-				E192F05C24874CE700C7EE74 /* TorusKnotGenerator.h */,
-				E1772A972981D320005FE7B2 /* MeshShadowRenderer.swift */,
 				E17D2C1126BBB7DF005A136A /* AudioInput.swift */,
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E1F22D1C29BD71FA0011CEAB /* Timing.swift */,

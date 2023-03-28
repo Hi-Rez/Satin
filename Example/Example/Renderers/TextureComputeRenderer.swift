@@ -38,9 +38,9 @@ class TextureComputeRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
 
-    #if os(macOS) || os(iOS)
-    lazy var raycaster = Raycaster(device: device)
-    #endif
+//    #if os(macOS) || os(iOS)
+//    lazy var raycaster = Raycaster(device: device)
+//    #endif
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -54,6 +54,10 @@ class TextureComputeRenderer: BaseRenderer {
         mesh.material = BasicTextureMaterial(texture: textureCompute.texture.first)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+    
     override func update() {
         cameraController.update()
         textureCompute.set("Time", Float(getTime() - startTime))

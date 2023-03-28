@@ -49,6 +49,10 @@ class ExportGeometryRenderer: BaseRenderer {
         metalKitView.preferredFramesPerSecond = 60
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
     }

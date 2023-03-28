@@ -33,7 +33,7 @@ void pbrIndirectLighting(
     float3 Fs = (Ks * ggxLut.x + ggxLut.y);
     
     // Diffuse
-    radiance_d += Kd * irradianceMap.sample(pbrLinearSampler, N).rgb;
+    radiance_d += Kd * pixel.material.environmentIntensity * irradianceMap.sample(pbrLinearSampler, N).rgb;
 
     float3 R = reflect(-V, N);
 
@@ -50,7 +50,7 @@ void pbrIndirectLighting(
 #endif
 
     // Specular
-    float3 specularLight = getIBLRadiance(reflectionMap, R, roughness);
+    float3 specularLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, R, roughness);
     radiance_s = Fs * specularLight;
 
 #if defined(HAS_TRANSMISSION)
@@ -68,7 +68,7 @@ void pbrIndirectLighting(
     // refractionCoords /= 2.0;
 
     // Sample framebuffer to get pixel the refracted ray hits.
-    float3 transmittedLight = getIBLRadiance(reflectionMap, transmissionRay, applyIorToRoughness(roughness, ior));
+    float3 transmittedLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, transmissionRay, applyIorToRoughness(roughness, ior));
 
     float3 radiance_t = (1.0 - Fs) * transmittedLight * baseColor;
     radiance_d = mix(radiance_d, radiance_t, pixel.material.transmission);
@@ -80,7 +80,7 @@ void pbrIndirectLighting(
     float clearcoat = pixel.material.clearcoat;
     if (clearcoat > 0) {
         float clearcoatRoughness = pixel.material.clearcoatRoughness;
-        float3 clearcoatLight = getIBLRadiance(reflectionMap, R, clearcoatRoughness);
+        float3 clearcoatLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, R, clearcoatRoughness);
         float3 Kc = fresnelSchlickRoughness(NdotV, 0.04, clearcoatRoughness);
         float2 brdfClearcoat = brdfMap.sample(pbrLinearSampler, saturate(float2(NdotV, clearcoatRoughness))).rg;
         float3 Fcc = clearcoatLight * (Kc * brdfClearcoat.x + brdfClearcoat.y);

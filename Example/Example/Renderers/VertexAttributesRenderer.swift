@@ -47,6 +47,10 @@ class VertexAttributesRenderer: BaseRenderer {
         scene.add(loadedMesh)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
     }

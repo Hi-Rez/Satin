@@ -60,6 +60,10 @@ class FXAARenderer: BaseRenderer {
         metalKitView.preferredFramesPerSecond = 60
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         if updateRenderTexture {
             renderTexture = createTexture("Render Texture", context.colorPixelFormat)

@@ -28,10 +28,10 @@ class OctasphereRenderer: BaseRenderer {
         metalKitView.preferredFramesPerSecond = 60
     }
 
-    override func setup() {
-        // Setup things here
+    deinit {
+        cameraController.disable()
     }
-
+    
     override func update() {
         cameraController.update()
     }

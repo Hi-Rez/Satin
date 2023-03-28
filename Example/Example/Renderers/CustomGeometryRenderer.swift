@@ -64,6 +64,10 @@ class CustomGeometryRenderer: BaseRenderer {
         setupMesh()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func setupMesh() {
         mesh = Mesh(geometry: IcosahedronGeometry(size: 1.0, res: 4), material: NormalColorMaterial(true))
         mesh.label = "Icosahedron"

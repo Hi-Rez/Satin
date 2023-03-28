@@ -15,7 +15,20 @@ import Satin
 class LiveCodeRenderer: BaseRenderer {
     // Material names must not be the target name, i.e. LiveCodeMaterial won't work
 
-    class CustomMaterial: LiveMaterial {}
+    class CustomMaterial: LiveMaterial {
+        override init(pipelinesURL: URL) {
+            super.init(pipelinesURL: pipelinesURL)
+            self.blending = .alpha
+        }
+
+        required init(from decoder: Decoder) throws {
+            fatalError("init(from:) has not been implemented")
+        }
+
+        required init() {
+            fatalError("init() has not been implemented")
+        }
+    }
 
     var startTime: CFAbsoluteTime = 0.0
 

@@ -83,6 +83,10 @@ class DirectionalShadowRenderer: BaseRenderer {
         floorMesh.receiveShadow = true
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     lazy var startTime = getTime()
 
     override func update() {

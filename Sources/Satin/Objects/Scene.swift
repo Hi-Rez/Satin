@@ -11,6 +11,20 @@ import Metal
 import simd
 
 open class Scene: Object {
+    public var environmentIntensity: Float = 1.0 {
+        didSet {
+            self.traverse { object in
+                if let renderable = object as? Renderable {
+                    let materials = renderable.materials
+                    for material in materials {
+                        if let standardMaterial = material as? StandardMaterial {
+                            standardMaterial.environmentIntensity = environmentIntensity
+                        }
+                    }
+                }
+            }
+        }
+    }
     public var environment: MTLTexture? {
         didSet {
             if oldValue == nil {

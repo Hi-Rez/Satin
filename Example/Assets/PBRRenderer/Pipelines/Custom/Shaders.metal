@@ -8,6 +8,7 @@
 typedef struct {
     float4 baseColor; // color
     float4 emissiveColor; // color
+    float environmentIntensity; // slider,0.0,1.0,1.0
 } CustomUniforms;
 
 typedef struct {
@@ -63,6 +64,7 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pixel.material.specular = 0.5;
     pixel.material.ambientOcclusion = 1.0;
     pixel.material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
+    pixel.material.environmentIntensity = uniforms.environmentIntensity; 
     pixel.material.alpha = uniforms.baseColor.a;
 
     float4 outColor;

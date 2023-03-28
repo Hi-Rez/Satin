@@ -13,10 +13,10 @@ import Forge
 import Satin
 
 class Renderer2D: BaseRenderer {
-    var context: Context!
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
 
     var camera = OrthographicCamera()
-    var cameraController: OrthographicCameraController!
+    lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView)
 
     var scene = Object("Scene")
     var renderer: Satin.Renderer!
@@ -28,18 +28,8 @@ class Renderer2D: BaseRenderer {
     }
 
     override func setup() {
-        setupContext()
-        setupCameraController()
         setupScene()
         setupRenderer()
-    }
-
-    func setupContext() {
-        context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    }
-
-    func setupCameraController() {
-        cameraController = OrthographicCameraController(camera: camera, view: mtkView)
     }
 
     func setupScene() {

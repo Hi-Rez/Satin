@@ -74,6 +74,10 @@ class BufferComputeRenderer: BaseRenderer {
         startTime = CFAbsoluteTimeGetCurrent()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         if updateRenderTexture {
             renderTexture = createTexture("Render Texture", context.colorPixelFormat)

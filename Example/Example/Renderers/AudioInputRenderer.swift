@@ -37,7 +37,7 @@ class AudioInputRenderer: BaseRenderer {
 
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView)
+//    lazy var cameraController = OrthographicCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
 
     override func setupMtkView(_ metalKitView: MTKView) {
@@ -51,7 +51,7 @@ class AudioInputRenderer: BaseRenderer {
     }
 
     override func update() {
-        cameraController.update()
+//        cameraController.update()
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
@@ -65,7 +65,7 @@ class AudioInputRenderer: BaseRenderer {
     }
 
     override func resize(_ size: (width: Float, height: Float)) {
-        cameraController.resize(size)
+//        cameraController.resize(size)
         renderer.resize(size)
     }
 }

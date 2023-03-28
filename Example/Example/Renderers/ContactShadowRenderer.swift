@@ -132,6 +132,10 @@ class ContactShadowRenderer: BaseRenderer {
         renderer.setClearColor(.one)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     lazy var startTime = getTime()
     var theta: Float = 0
 

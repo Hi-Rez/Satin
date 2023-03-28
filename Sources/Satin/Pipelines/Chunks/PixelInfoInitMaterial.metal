@@ -28,6 +28,8 @@
     pixel.material.roughness = uniforms.roughness;
 #endif
 
+    pixel.material.environmentIntensity = uniforms.environmentIntensity; 
+
 #if defined(HAS_SUBSURFACE)
     #if defined(SUBSURFACE_MAP)
         pixel.material.subsurface = subsurfaceMap.sample(pbrLinearSampler, in.texcoords).r;

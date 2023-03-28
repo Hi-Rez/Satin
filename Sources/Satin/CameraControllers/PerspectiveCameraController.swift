@@ -2,24 +2,257 @@
 //  PerspectiveCameraController.swift
 //  Satin
 //
-//  Created by Reza Ali on 7/29/20.
+//  Created by Reza Ali on 03/26/23.
 //
 
+import Combine
 import MetalKit
 import simd
 
-open class PerspectiveCameraController: CameraController {
-    #if os(iOS)
-    var rotateGestureRecognizer: UIPanGestureRecognizer!
-    #endif
+public final class PerspectiveCameraController: CameraController, Codable {
+    public internal(set) var isEnabled = false
 
-    override private init() {
-        super.init()
+    public var camera: PerspectiveCamera {
+        willSet {
+            disable()
+        }
+        didSet {
+            enable()
+        }
     }
 
-    public required convenience init(from decoder: Decoder) throws {
-        self.init()
+    public var view: MTKView? {
+        willSet {
+            disable()
+        }
+        didSet {
+            enable()
+        }
+    }
+
+    private var oldState: CameraControllerState = .inactive
+    public internal(set) var state: CameraControllerState = .inactive {
+        didSet {
+            if oldValue == .inactive, state != .inactive, state != .tweening {
+                onStartPublisher.send(self)
+            } else if oldValue == .tweening, state == .inactive {
+                onEndPublisher.send(self)
+            }
+            oldState = oldValue
+        }
+    }
+
+    // Rotation
+    public var rotationDamping: Float = 0.9
+    public var rotationScalar: Float = 2.0
+
+    // Translation (Panning & Dolly)
+    public var translationDamping: Float = 0.9
+    public var translationScalar: Float = 0.5
+
+    // Zoom
+    public var zoomScalar: Float = 1.0
+    public var zoomDamping: Float = 0.9
+    public var minimumZoomDistance: Float = 1.0 {
+        didSet {
+            if minimumZoomDistance < 1.0 {
+                minimumZoomDistance = oldValue
+            }
+        }
+    }
+
+    // Roll
+    public var rollScalar: Float = 1.0
+    public var rollDamping: Float = 0.9
+
+    public var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
+    public var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
+
+    public var target = Object("Perspective Camera Controller Target")
+
+    public var mouseDeltaSensitivity: Float = 600.0
+    public var scrollDeltaSensitivity: Float = 600.0
+
+    // MARK: - Events
+
+    public let onStartPublisher = PassthroughSubject<PerspectiveCameraController, Never>()
+    public let onChangePublisher = PassthroughSubject<PerspectiveCameraController, Never>()
+    public let onEndPublisher = PassthroughSubject<PerspectiveCameraController, Never>()
+
+    // MARK: - Internal State & Event Handling
+
+    private var rotationAxis: simd_float3 = .zero
+    private var rotationAngle: Float = 0.0
+
+    private var translation: simd_float3 = .zero
+    private var zoom: Float = 0.0
+    private var roll: Float = 0.0
+
+    private var previousPosition: simd_float2 = .zero
+
+    private var deltaTime: Float = .zero
+    private lazy var previousTime: TimeInterval = getTime()
+
+#if os(macOS)
+
+    private var leftMouseDownHandler: Any?
+    private var leftMouseDraggedHandler: Any?
+    private var leftMouseUpHandler: Any?
+
+    private var rightMouseDownHandler: Any?
+    private var rightMouseDraggedHandler: Any?
+    private var rightMouseUpHandler: Any?
+
+    private var otherMouseDownHandler: Any?
+    private var otherMouseDraggedHandler: Any?
+    private var otherMouseUpHandler: Any?
+
+    private var scrollWheelHandler: Any?
+
+    private var magnification: Float = 1.0
+    private var magnifyGestureRecognizer: NSMagnificationGestureRecognizer!
+    private var rollGestureRecognizer: NSRotationGestureRecognizer!
+
+#elseif os(iOS)
+
+    private var rollRotation: Float = 0.0
+    private var rollGestureRecognizer: UIRotationGestureRecognizer!
+
+    private var panCurrentPoint: simd_float2 = .zero
+    private var panPreviousPoint: simd_float2 = .zero
+    private var panGestureRecognizer: UIPanGestureRecognizer!
+
+    private var rotateGestureRecognizer: UIPanGestureRecognizer!
+
+    private var pinchScale: Float = 1.0
+    private var pinchGestureRecognizer: UIPinchGestureRecognizer!
+
+    private var tapGestureRecognizer: UITapGestureRecognizer!
+
+#endif
+
+    // MARK: - Init
+
+    public init(camera: PerspectiveCamera, view: MTKView) {
+        self.camera = camera
+        self.view = view
+
+        defaultPosition = camera.position
+        defaultOrientation = camera.orientation
+
+        enable()
+    }
+
+    deinit {
+        disable()
+    }
+
+    // MARK: - Update
+
+
+    public func update() {
+        updateTime()
+
+        guard state == .tweening else { return }
+
+        var changed = false
+
+        changed = changed || tweenTranslation()
+        changed = changed || tweenZoom()
+        changed = changed || tweenRotation()
+        changed = changed || tweenRoll()
+
+        target.update()
+
+        if !changed { state = .inactive }
+    }
+
+    // MARK: - Enable
+
+    public func enable() {
+        guard !isEnabled else { return }
+
+        enableEvents()
+
+        halt()
+
+        target.orientation = camera.orientation
+        camera.position = [0, 0, simd_length(camera.worldPosition - target.worldPosition)]
+        camera.orientation = simd_quatf(matrix_identity_float4x4)
+        target.add(camera)
+
+        isEnabled = true
+    }
+
+    // MARK: - Disable
+
+    public func disable() {
+        guard isEnabled else { return }
+
+        disableEvents()
+
+        halt()
+
+        let cameraWorldMatrix = camera.worldMatrix
+        target.remove(camera)
+        camera.localMatrix = cameraWorldMatrix
+
+        isEnabled = false
+    }
+
+    // MARK: - Reset
+
+    public func reset() {
+        guard isEnabled else { return }
+
+        halt()
+
+        target.orientation = defaultOrientation
+        target.position = simd_float3(repeating: 0.0)
+
+        camera.orientation = simd_quatf(matrix_identity_float4x4)
+        camera.position = [0, 0, simd_length(defaultPosition)]
+
+        onStartPublisher.send(self)
+        onChangePublisher.send(self)
+        onEndPublisher.send(self)
+    }
+
+    // MARK: - Resize
+
+    public func resize(_ size: (width: Float, height: Float)) {
+        camera.aspect = size.width / size.height
+    }
+
+    // MARK: - Save & Load
+
+    public func save(url: URL) {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        do {
+            let payload: Data = try jsonEncoder.encode(self)
+            try payload.write(to: url)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    public func load(url: URL) {
+        do {
+            let data = try Data(contentsOf: url)
+            let loaded = try JSONDecoder().decode(PerspectiveCameraController.self, from: data)
+            target.setFrom(loaded.target)
+            camera.setFrom(loaded.camera)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    // MARK: - Codable
+
+    public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+
         camera = try values.decode(PerspectiveCamera.self, forKey: .camera)
         target = try values.decode(Object.self, forKey: .target)
         defaultPosition = try values.decode(simd_float3.self, forKey: .defaultPosition)
@@ -36,9 +269,9 @@ open class PerspectiveCameraController: CameraController {
         rollDamping = try values.decode(Float.self, forKey: .rollDamping)
     }
 
-    override open func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+
         try container.encode(camera, forKey: .camera)
         try container.encode(target, forKey: .target)
         try container.encode(defaultPosition, forKey: .defaultPosition)
@@ -62,7 +295,6 @@ open class PerspectiveCameraController: CameraController {
         case defaultOrientation
         case mouseDeltaSensitivity
         case scrollDeltaSensitivity
-        case modifierFlags
         case rotationDamping
         case rotationScalar
         case translationDamping
@@ -73,542 +305,512 @@ open class PerspectiveCameraController: CameraController {
         case rollDamping
     }
 
-    open var mouseDeltaSensitivity: Float = 600.0
-    open var scrollDeltaSensitivity: Float = 600.0
+    // MARK: - Camera Transform Updates
 
-    public var camera: PerspectiveCamera?
+    private func updateRotation() {
+        guard !rotationAxis.x.isNaN, !rotationAxis.y.isNaN, !rotationAxis.z.isNaN, !rotationAngle.isNaN else { return }
+        target.orientation *= simd_quatf(angle: rotationScalar * rotationAngle, axis: rotationAxis)
+        onChangePublisher.send(self)
+    }
 
-    // Rotation
-    open var rotationDamping: Float = 0.9
-    #if os(macOS)
-    open var rotationScalar: Float = 5.0
-    #elseif os(iOS)
-    open var rotationScalar: Float = 3.0
-    #elseif os(tvOS)
-    open var rotationScalar: Float = 3.0
-    #endif
+    private func tweenRotation() -> Bool {
+        guard oldState == .rotating, abs(rotationAngle) > 0.001 else { return false }
+        rotationAngle *= rotationDamping
+        updateRotation()
+        return true
+    }
 
-    var rotationAxis = simd_make_float3(1.0, 0.0, 0.0)
-    var rotationAngle: Float = 0.0
-    var rotationVelocity: Float = 0.0
+    private func updateRoll() {
+        guard !roll.isNaN else { return }
+        target.orientation = simd_mul(target.orientation, simd_quatf(angle: rollScalar * roll, axis: camera.forwardDirection))
+        onChangePublisher.send(self)
+    }
 
-    // Translation (Panning & Dolly)
-    open var translationDamping: Float = 0.9
-    #if os(macOS)
-    open var translationScalar: Float = 0.5
-    #elseif os(iOS)
-    open var translationScalar: Float = 0.5
-    #elseif os(tvOS)
-    open var translationScalar: Float = 0.5
-    #endif
-    var translationVelocity: simd_float3 = simd_make_float3(0.0)
+    private func tweenRoll() -> Bool {
+        guard oldState == .rolling, abs(roll) > 0.001 else { return false }
+        roll *= rollDamping
+        updateRoll()
+        return true
+    }
 
-    // Zoom
-    open var minimumZoomDistance: Float = 1.0 {
-        didSet {
-            if minimumZoomDistance < 1.0 {
-                minimumZoomDistance = oldValue
-            }
+    private func updateZoom() {
+        let targetDistance = simd_length(camera.worldPosition - target.position)
+
+        let zoomAmount = zoom * zoomScalar * (180.0 / camera.fov) * pow(targetDistance, 0.5)
+        let offset = simd_make_float3(camera.forwardDirection * zoomAmount)
+        let offsetDistance = simd_length(offset)
+
+        if (targetDistance + offsetDistance * sign(zoom)) > minimumZoomDistance {
+            camera.position += offset
+        } else {
+            zoom = 0.0
+        }
+        onChangePublisher.send(self)
+    }
+
+
+    private func tweenZoom() -> Bool {
+        guard oldState == .zooming, abs(zoom) > 0.001 else { return false }
+        zoom *= zoomDamping
+        updateZoom()
+        return true
+    }
+
+    private func updateTranslation() {
+        target.position = target.position + simd_make_float3(target.forwardDirection * translation.z)
+        target.position = target.position - simd_make_float3(target.rightDirection * translation.x)
+        target.position = target.position + simd_make_float3(target.upDirection * translation.y)
+        onChangePublisher.send(self)
+    }
+
+    private func tweenTranslation() -> Bool {
+        guard (oldState == .panning || oldState == .dollying), simd_length(translation) > 0.001 else { return false }
+        translation *= translationDamping
+        updateTranslation()
+        return true
+    }
+
+    private func pan(_ delta: simd_float2) {
+        guard let view = view else { return }
+
+        var pan = delta
+
+        let width = Float(view.frame.width)
+        let height = Float(view.frame.height)
+        let aspect = width / height
+        pan.x /= width
+        pan.y /= height
+
+        let ctd = simd_length(camera.worldPosition - target.position)
+        let imagePlaneHeight = 2.0 * ctd * tan(degToRad(camera.fov * 0.5))
+        let imagePlaneWidth = aspect * imagePlaneHeight
+
+        let up = pan.y * imagePlaneHeight
+        let right = pan.x * imagePlaneWidth
+
+        translation.x = right
+        translation.y = up
+        updateTranslation()
+    }
+
+    // MARK: - Helpers
+
+    private func halt() {
+        state = .inactive
+        rotationAngle = 0.0
+        translation = .zero
+        zoom = 0.0
+        roll = 0.0
+    }
+
+    private func normalizePoint(_ point: simd_float2, _ size: simd_float2) -> simd_float2 {
+        #if os(macOS)
+        return 2.0 * (point / size) - 1.0
+        #else
+        var result = point / size
+        result.y = 1.0 - result.y
+        return 2.0 * result - 1.0
+        #endif
+    }
+
+    private func getTrackBallAngleAxis(previousPosition: simd_float2, currentPosition: simd_float2, size: simd_float2) -> (angle: Float, axis: simd_float3)?
+    {
+        let previous = simd_normalize(trackBallPoint(previousPosition, size))
+        let current = simd_normalize(trackBallPoint(currentPosition, size))
+
+        let angle = acos(simd_dot(previous, current))
+        let axis = simd_normalize(-simd_cross(previous, current))
+
+        if !angle.isNaN, !axis.x.isNaN, !axis.y.isNaN, !axis.z.isNaN {
+            return (angle, axis)
+        }
+        return nil
+    }
+
+    private func trackBallPoint(_ point: simd_float2, _ size: simd_float2) -> simd_float3 {
+        let pt = normalizePoint(point, size) * size * 0.5
+
+        let radius = 0.5 * simd_max(size.x, size.y)
+        let radius2 = radius * radius
+        let radiusOverSqrt2 = radius / sqrt(2.0)
+
+        let xyLen = simd_length(pt)
+        if xyLen < radiusOverSqrt2 {
+            return simd_make_float3(pt.x, pt.y, sqrt(radius2 - xyLen * xyLen))
+        }
+        else {
+            return simd_make_float3(pt.x, pt.y, radius2 / (2.0 * xyLen))
         }
     }
 
-    open var zoomScalar: Float = 0.5
-    open var zoomDamping: Float = 0.9
-    var zoomVelocity: Float = 0.0
+    // MARK: - Events
 
-    // Roll
-    open var rollScalar: Float = 0.25
-    open var rollDamping: Float = 0.9
-    var rollVelocity: Float = 0.0
+    private func enableEvents() {
+        guard let view = view else { return }
 
-    open var defaultPosition: simd_float3 = simd_make_float3(0.0, 0.0, 1.0)
-    open var defaultOrientation: simd_quatf = simd_quaternion(matrix_identity_float4x4)
+        #if os(macOS)
 
-    var insideArcBall = false
-    var previouArcballPoint = simd_make_float3(0.0)
-    var currentArcballPoint = simd_make_float3(0.0)
+        leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .leftMouseDown,
+            handler: mouseDown
+        )
 
-    public var target = Object()
+        leftMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .leftMouseDragged,
+            handler: mouseDragged
+        )
 
-    public init(camera: PerspectiveCamera, view: MTKView, defaultPosition: simd_float3, defaultOrientation: simd_quatf) {
-        super.init(view: view)
+        leftMouseUpHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .leftMouseUp,
+            handler: mouseUp
+        )
 
-        self.camera = camera
+        rightMouseDownHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .rightMouseDown,
+            handler: rightMouseDown
+        )
 
-        self.defaultPosition = defaultPosition
-        self.defaultOrientation = defaultOrientation
+        rightMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .rightMouseDragged,
+            handler: rightMouseDragged
+        )
 
-        setup()
-    }
+        rightMouseUpHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .rightMouseUp,
+            handler: rightMouseUp
+        )
 
-    public init(camera: PerspectiveCamera, view: MTKView) {
-        super.init(view: view)
+        otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .otherMouseDown,
+            handler: otherMouseDown
+        )
 
-        self.camera = camera
+        otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .otherMouseDragged,
+            handler: otherMouseDragged
+        )
 
-        defaultPosition = camera.position
-        defaultOrientation = camera.orientation
+        otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .otherMouseUp,
+            handler: otherMouseUp
+        )
 
-        setup()
-    }
+        scrollWheelHandler = NSEvent.addLocalMonitorForEvents(
+            matching: .scrollWheel,
+            handler: scrollWheel
+        )
 
-    func setup() {
-        guard let camera = camera else { return }
-        camera.orientation = defaultOrientation
-        camera.position = defaultPosition
-        enable()
-    }
+        magnifyGestureRecognizer = NSMagnificationGestureRecognizer(target: self, action: #selector(magnifyGesture))
+        view.addGestureRecognizer(magnifyGestureRecognizer)
 
-    override func _enable(_ view: MTKView) {
-        super._enable(view)
+        rollGestureRecognizer = NSRotationGestureRecognizer(target: self, action: #selector(rollGesture))
+        view.addGestureRecognizer(rollGestureRecognizer)
 
-        halt()
+        #elseif os(iOS)
 
-        if let camera = camera {
-            target.orientation = camera.orientation
-            camera.position = [0, 0, simd_length(camera.worldPosition - target.worldPosition)]
-            camera.orientation = simd_quatf(matrix_identity_float4x4)
-            target.add(camera)
-        }
+        view.isMultipleTouchEnabled = true
 
-        #if os(iOS)
-        let allowedTouchTypes: [NSNumber] = [UITouch.TouchType.direct.rawValue as NSNumber]
+        let allowedTouchTypes = [UITouch.TouchType.direct.rawValue as NSNumber]
         rotateGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(rotateGesture))
         rotateGestureRecognizer.allowedTouchTypes = allowedTouchTypes
         rotateGestureRecognizer.minimumNumberOfTouches = 1
         rotateGestureRecognizer.maximumNumberOfTouches = 1
         view.addGestureRecognizer(rotateGestureRecognizer)
 
-        minimumPanningTouches = 2
-        maximumPanningTouches = 2
+        rollGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rollGesture))
+        rollGestureRecognizer.allowedTouchTypes = [UITouch.TouchType.direct.rawValue as NSNumber]
+        view.addGestureRecognizer(rollGestureRecognizer)
+
+        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
+        panGestureRecognizer.allowedTouchTypes = allowedTouchTypes
+        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.maximumNumberOfTouches = 2
+        view.addGestureRecognizer(panGestureRecognizer)
+
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+        tapGestureRecognizer.allowedTouchTypes = allowedTouchTypes
+        tapGestureRecognizer.numberOfTouchesRequired = 1
+        tapGestureRecognizer.numberOfTapsRequired = 2
+        view.addGestureRecognizer(tapGestureRecognizer)
+
+        pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
+        pinchGestureRecognizer.allowedTouchTypes = allowedTouchTypes
+        view.addGestureRecognizer(pinchGestureRecognizer)
+
         #endif
     }
 
-    override func _disable(_ view: MTKView) {
-        super._disable(view)
+    private func disableEvents() {
+        guard let view = view else { return }
 
-        halt()
+        #if os(macOS)
 
-        if let camera = camera {
-            let cameraWorldMatrix = camera.worldMatrix
-            target.remove(camera)
-            camera.localMatrix = cameraWorldMatrix
-        }
+        NSEvent.removeMonitor(leftMouseDownHandler!)
+        NSEvent.removeMonitor(leftMouseDraggedHandler!)
+        NSEvent.removeMonitor(leftMouseUpHandler!)
+        NSEvent.removeMonitor(rightMouseDownHandler!)
+        NSEvent.removeMonitor(rightMouseDraggedHandler!)
+        NSEvent.removeMonitor(rightMouseUpHandler!)
+        NSEvent.removeMonitor(otherMouseDownHandler!)
+        NSEvent.removeMonitor(otherMouseDraggedHandler!)
+        NSEvent.removeMonitor(otherMouseUpHandler!)
+        NSEvent.removeMonitor(scrollWheelHandler!)
 
-        #if os(iOS)
+        view.removeGestureRecognizer(magnifyGestureRecognizer)
+        view.removeGestureRecognizer(rollGestureRecognizer)
+
+        #elseif os(iOS)
+
         view.removeGestureRecognizer(rotateGestureRecognizer)
+        view.removeGestureRecognizer(rollGestureRecognizer)
+        view.removeGestureRecognizer(panGestureRecognizer)
+        view.removeGestureRecognizer(tapGestureRecognizer)
+        view.removeGestureRecognizer(pinchGestureRecognizer)
+
         #endif
     }
-
-    deinit {
-        camera = nil
-    }
-
-    // MARK: - Updates
-
-    override open func update() {
-        guard camera != nil else { return }
-
-        var changed = false
-        let changeLimit: Float = 0.001
-
-        target.update()
-
-        if length(translationVelocity) > changeLimit {
-            updatePosition()
-            translationVelocity *= translationDamping
-            changed = true
-        }
-
-        if abs(zoomVelocity) > changeLimit {
-            updateZoom()
-            zoomVelocity *= zoomDamping
-            changed = true
-        }
-
-        if abs(rotationVelocity) > changeLimit, length(rotationAxis) > 0.9 {
-            updateOrientation()
-            rotationVelocity *= rotationDamping
-            changed = true
-        }
-
-        if abs(rollVelocity) > changeLimit {
-            updateRoll()
-            rollVelocity *= rollDamping
-            changed = true
-        }
-
-        if changed == true, isTweening == false {
-            start()
-        } else if changed == true, isTweening == true {
-            change()
-        } else if changed == false, isTweening == true {
-            end()
-        }
-
-        isTweening = changed
-    }
-
-    // MARK: - Reset
-
-    func halt() {
-        state = .inactive
-        rotationVelocity = 0.0
-        translationVelocity = simd_make_float3(0.0)
-        zoomVelocity = 0.0
-        rollVelocity = 0.0
-    }
-
-    override open func reset() {
-        if enabled {
-            DispatchQueue.main.async { [unowned self] in
-                self.halt()
-
-                self.target.orientation = defaultOrientation
-                self.target.position = simd_float3(repeating: 0.0)
-
-                guard let camera = self.camera else { return }
-                camera.orientation = simd_quatf(matrix_identity_float4x4)
-                camera.position = [0, 0, simd_length(defaultPosition)]
-
-                start()
-                change()
-                end()
-            }
-        }
-    }
-
-    func updateOrientation() {
-        target.orientation = simd_mul(target.orientation, simd_quatf(angle: -rotationVelocity, axis: rotationAxis))
-    }
-
-    func updateRoll() {
-        guard let camera = camera else { return }
-        target.orientation = simd_mul(target.orientation, simd_quatf(angle: rollVelocity, axis: camera.forwardDirection))
-    }
-
-    func updateZoom() {
-        guard let camera = camera else { return }
-        let offset = simd_make_float3(camera.forwardDirection * zoomVelocity)
-        let offsetDistance = length(offset)
-        let targetDistance = length(camera.worldPosition - target.position)
-        if (targetDistance + offsetDistance * sign(zoomVelocity)) > minimumZoomDistance {
-            camera.position += offset
-        } else {
-            zoomVelocity *= 0.0
-        }
-    }
-
-    func updatePosition() {
-        target.position = target.position + simd_make_float3(target.forwardDirection * translationVelocity.z)
-        target.position = target.position - simd_make_float3(target.rightDirection * translationVelocity.x)
-        target.position = target.position + simd_make_float3(target.upDirection * translationVelocity.y)
-    }
-
-    override open func resize(_ size: (width: Float, height: Float)) {
-        if let camera = camera {
-            camera.aspect = size.width / size.height
-        }
-    }
-
-    #if os(macOS)
 
     // MARK: - Mouse
 
-    override open func mouseDown(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
+    #if os(macOS)
+
+    private func mouseDown(with event: NSEvent) -> NSEvent? {
+        guard let view = view else { return event }
+
         if event.clickCount == 2 {
             reset()
         } else {
-            let result = arcballPoint(view.convert(event.locationInWindow, from: nil), view.frame.size)
-            previouArcballPoint = result.point
-            insideArcBall = result.inside
+            previousPosition = view.convert(event.locationInWindow, from: nil).float2
             state = .rotating
         }
+
+        return event
     }
 
-    override open func mouseDragged(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
-        if state == .rotating {
-            let result = arcballPoint(view.convert(event.locationInWindow, from: nil), view.frame.size)
-            let point = result.point
-            let inside = result.inside
+    private func mouseDragged(with event: NSEvent) -> NSEvent? {
+        guard let view = view, state == .rotating else { return event }
 
-            if insideArcBall != inside {
-                previouArcballPoint = point
-            }
+        let currentPosition = view.convert(event.locationInWindow, from: nil).float2
+        defer { previousPosition = currentPosition }
 
-            insideArcBall = inside
-            currentArcballPoint = point
-
-            rotationAxis = normalize(cross(previouArcballPoint, currentArcballPoint))
-            rotationVelocity = rotationScalar * acos(dot(previouArcballPoint, currentArcballPoint))
-            previouArcballPoint = currentArcballPoint
-        } else {
-            mouseDown(with: event)
+        if let angleAxis = getTrackBallAngleAxis(
+            previousPosition: previousPosition,
+            currentPosition: currentPosition,
+            size: view.frame.size.float2
+        ) {
+            rotationAxis = angleAxis.axis
+            rotationAngle = angleAxis.angle
+            updateRotation()
         }
+
+        return event
     }
 
-    override open func mouseUp(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
-        state = .inactive
+    private func mouseUp(with event: NSEvent) -> NSEvent? {
+        guard state == .rotating else { return event }
+        state = .tweening
+        return event
     }
 
     // MARK: - Right Mouse
 
-    override open func rightMouseDown(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
-    }
-
-    override open func rightMouseDragged(with event: NSEvent) {
-        guard let view = view, event.window == view.window, let camera = camera else { return }
-        let dy = Float(event.deltaY) / mouseDeltaSensitivity
+    private func rightMouseDown(with event: NSEvent) -> NSEvent? {
         if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
             state = .dollying
-            translationVelocity.z -= dy * translationScalar
         } else {
             state = .zooming
-            zoomVelocity -= dy * zoomScalar * (180.0 / camera.fov)
         }
+        return event
     }
 
-    override open func rightMouseUp(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
-        state = .inactive
+    private func rightMouseDragged(with event: NSEvent) -> NSEvent? {
+        let dy = Float(event.deltaY) / mouseDeltaSensitivity
+        if state == .dollying {
+            translation.z = dy * translationScalar
+            updateTranslation()
+        } else if state == .zooming {
+            zoom = -dy
+            updateZoom()
+        }
+        return event
+    }
+
+    private func rightMouseUp(with event: NSEvent) -> NSEvent? {
+        state = .tweening
+        return event
     }
 
     // MARK: - Other Mouse
 
-    override open func otherMouseDown(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
+    private func otherMouseDown(with event: NSEvent) -> NSEvent? {
         state = .panning
+        return event
     }
 
-    override open func otherMouseDragged(with event: NSEvent) {
-        guard let view = view, event.window == view.window, let camera = camera else { return }
-        let dx = Float(event.deltaX) / mouseDeltaSensitivity
-        let dy = Float(event.deltaY) / mouseDeltaSensitivity
-        state = .panning
-        let cd = length(camera.worldPosition - target.position) / 10.0
-        translationVelocity.x += dx * translationScalar * cd
-        translationVelocity.y += dy * translationScalar * cd
+    private func otherMouseDragged(with event: NSEvent) -> NSEvent? {
+        pan(simd_make_float2(Float(event.deltaX), Float(event.deltaY)))
+        return event
     }
 
-    override open func otherMouseUp(with event: NSEvent) {
-        guard let view = view, event.window == view.window else { return }
-        state = .inactive
+    private func otherMouseUp(with event: NSEvent) -> NSEvent? {
+        state = .tweening
+        return event
     }
 
     // MARK: - Scroll Wheel
 
-    override open func scrollWheel(with event: NSEvent) {
-        guard let camera = camera, let view = view, event.window == view.window else { return }
-        if length(simd_float2(Float(event.deltaX), Float(event.deltaY))) < Float.ulpOfOne {
-            state = .inactive
-        } else if event.modifierFlags.contains(NSEvent.ModifierFlags.option) && (event.phase == .began || event.phase == .changed) {
-            if abs(event.deltaX) > abs(event.deltaY) {
-                state = .rolling
-                let sdx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
-                rollVelocity += sdx * rollScalar
-            } else {
-                state = .zooming
-                let sdy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-                zoomVelocity -= sdy * zoomScalar * (180.0 / camera.fov)
-            }
-        } else if event.phase == .began || event.phase == .changed {
-            state = .panning
-            let cd = length(camera.worldPosition - target.position) / 10.0
-            let dx = Float(event.scrollingDeltaX) / scrollDeltaSensitivity
-            let dy = Float(event.scrollingDeltaY) / scrollDeltaSensitivity
-            translationVelocity.x += dx * translationScalar * cd
-            translationVelocity.y += dy * translationScalar * cd
+    private func scrollWheel(with event: NSEvent) -> NSEvent? {
+        if event.phase == .began { state = .panning }
+
+        guard state == .panning else { return event }
+
+        if event.phase == .changed {
+            pan(simd_make_float2(Float(event.scrollingDeltaX), Float(event.scrollingDeltaY)))
+        } else if event.phase == .ended {
+            state = .tweening
         }
+
+        return event
     }
 
-    // MARK: - Gestures macOS
+    // MARK: - macOS Gestures
 
-    override open func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
-        guard let camera = camera else { return }
+    @objc private func magnifyGesture(_ gestureRecognizer: NSMagnificationGestureRecognizer) {
         let newMagnification = Float(gestureRecognizer.magnification)
+
         if gestureRecognizer.state == .began {
             state = .zooming
             magnification = newMagnification
-        } else if gestureRecognizer.state == .changed, state == .zooming {
+        }
+
+        guard state == .zooming else { return }
+
+        if gestureRecognizer.state == .changed {
             let velocity = newMagnification - magnification
-            zoomVelocity -= velocity * zoomScalar * (180.0 / camera.fov)
+            zoom = -velocity
             magnification = newMagnification
-        } else {
-            state = .inactive
+            updateZoom()
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
         }
     }
 
-    override open func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+    @objc private func rollGesture(_ gestureRecognizer: NSRotationGestureRecognizer) {
+        if gestureRecognizer.state == .began { state = .rolling }
+
+        guard state == .rolling else { return }
+
+        if gestureRecognizer.state == .changed {
+            roll = -Float(gestureRecognizer.rotation)
+            updateRoll()
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
+        }
+        gestureRecognizer.rotation = 0.0
+    }
+
+    #elseif os(iOS) // MARK: - iOS Gestures
+
+    @objc private func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        if gestureRecognizer.state == .ended { reset() }
+    }
+
+    @objc private func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .rolling
-        } else if gestureRecognizer.state == .changed, state == .rolling {
-            rollVelocity -= Float(gestureRecognizer.rotation) * rollScalar * 0.5
-            gestureRecognizer.rotation = 0.0
-        } else {
-            state = .inactive
+            rollRotation = Float(gestureRecognizer.rotation)
+        }
+
+        guard state == .rolling else { return }
+
+        if gestureRecognizer.state == .changed {
+            let newRotation = Float(gestureRecognizer.rotation)
+            roll = newRotation - rollRotation
+            updateRoll()
+            rollRotation = newRotation
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
         }
     }
 
-    #elseif os(iOS)
-
-    // MARK: - Gestures iOS
-
-    @objc override open func tapGesture(_ gestureRecognizer: UITapGestureRecognizer) {
-        if gestureRecognizer.state == .ended {
-            reset()
-        }
-    }
-
-    @objc override open func rollGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            state = .rolling
-        } else if gestureRecognizer.state == .changed, state == .rolling {
-            rollVelocity += Float(gestureRecognizer.rotation) * rollScalar * 0.5
-            gestureRecognizer.rotation = 0.0
-        } else {
-            state = .inactive
-        }
-    }
-
-    @objc open func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc private func rotateGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let view = view else { return }
-        if gestureRecognizer.numberOfTouches == gestureRecognizer.minimumNumberOfTouches {
-            if gestureRecognizer.state == .began {
-                state = .rotating
-                var centerPoint = CGPoint(x: 0.0, y: 0.0)
-                let numberOfTouches = CGFloat(gestureRecognizer.numberOfTouches)
-                for i in 0 ..< gestureRecognizer.numberOfTouches {
-                    let pt = gestureRecognizer.location(ofTouch: i, in: view)
-                    centerPoint.x += pt.x
-                    centerPoint.y += pt.y
-                }
-                centerPoint.x /= numberOfTouches
-                centerPoint.y /= numberOfTouches
 
-                let result = arcballPoint(centerPoint, view.frame.size)
-                previouArcballPoint = result.point
-                insideArcBall = result.inside
-            } else if gestureRecognizer.state == .changed {
-                if state == .rotating {
-                    var centerPoint = CGPoint(x: 0.0, y: 0.0)
-                    let numberOfTouches = CGFloat(gestureRecognizer.numberOfTouches)
-                    for i in 0 ..< gestureRecognizer.numberOfTouches {
-                        let pt = gestureRecognizer.location(ofTouch: i, in: view)
-                        centerPoint.x += pt.x
-                        centerPoint.y += pt.y
-                    }
-                    centerPoint.x /= numberOfTouches
-                    centerPoint.y /= numberOfTouches
+        if gestureRecognizer.state == .began {
+            state = .rotating
+            previousPosition = gestureRecognizer.location(in: view).float2
+        }
 
-                    let result = arcballPoint(centerPoint, view.frame.size)
-                    let point = result.point
-                    let inside = result.inside
+        guard state == .rotating else { return }
 
-                    if insideArcBall != inside {
-                        previouArcballPoint = point
-                    }
+        if gestureRecognizer.state == .changed {
+            let currentPosition = gestureRecognizer.location(in: view).float2
+            defer { previousPosition = currentPosition }
 
-                    insideArcBall = inside
-                    currentArcballPoint = point
-
-                    rotationAxis = normalize(cross(previouArcballPoint, currentArcballPoint))
-                    rotationVelocity = rotationScalar * acos(dot(previouArcballPoint, currentArcballPoint))
-                    previouArcballPoint = currentArcballPoint
-                } else {
-                    gestureRecognizer.state = .began
-                    rotateGesture(gestureRecognizer)
-                }
-            } else {
-                state = .inactive
+            if let angleAxis = getTrackBallAngleAxis(
+                previousPosition: previousPosition,
+                currentPosition: currentPosition,
+                size: view.frame.size.float2
+            ) {
+                rotationAxis = angleAxis.axis
+                rotationAngle = angleAxis.angle
+                updateRotation()
             }
-        } else {
-            state = .inactive
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
         }
     }
 
-    var panCurrentPoint = simd_float2(repeating: 0.0)
-    var panPreviousPoint = simd_float2(repeating: 0.0)
-
-    @objc override open func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        guard let camera = camera, let view = view else { return }
+    @objc private func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .panning
-            panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
-        } else if gestureRecognizer.state == .changed {
-            if state == .panning {
-                panCurrentPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
-                let delta = panCurrentPoint - panPreviousPoint
-                let cd = length(camera.worldPosition - target.position) / 10.0
-                translationVelocity.x += translationScalar * delta.x * cd
-                translationVelocity.y -= translationScalar * delta.y * cd
-                panPreviousPoint = panCurrentPoint
-            } else {
-                state = .panning
-                panPreviousPoint = normalizePoint(gestureRecognizer.translation(in: view), view.frame.size)
-            }
-        } else {
-            state = .inactive
+            let translation = gestureRecognizer.translation(in: view)
+            panPreviousPoint = simd_make_float2(Float(translation.x), Float(translation.y))
+        }
+
+        guard state == .panning else { return }
+        if gestureRecognizer.state == .changed {
+            let translation = gestureRecognizer.translation(in: view)
+            panCurrentPoint = simd_make_float2(Float(translation.x), Float(translation.y))
+            let delta = panCurrentPoint - panPreviousPoint
+            pan(delta)
+            panPreviousPoint = panCurrentPoint
+
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
         }
     }
 
-    @objc override open func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
-        guard let camera = camera else { return }
+    @objc private func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         if gestureRecognizer.state == .began {
             state = .zooming
             pinchScale = Float(gestureRecognizer.scale)
-        } else if gestureRecognizer.state == .changed, state == .zooming {
+        }
+
+        guard state == .zooming else { return }
+
+        if gestureRecognizer.state == .changed {
             let newScale = Float(gestureRecognizer.scale)
             let delta = pinchScale - newScale
-            zoomVelocity += delta * zoomScalar * (180.0 / camera.fov)
-            pinchScale = newScale
-        } else {
-            state = .inactive
+            if abs(delta) > 0.0 {
+                zoom = delta
+                updateZoom()
+                pinchScale = newScale
+            }
+        } else if gestureRecognizer.state == .ended {
+            state = .tweening
         }
     }
 
     #endif
 
-    // MARK: - Helpers
-
-    func normalizePoint(_ point: CGPoint, _ size: CGSize) -> simd_float2 {
-        #if os(macOS)
-        return 2.0 * simd_make_float2(Float(point.x / size.width), Float(point.y / size.height)) - 1.0
-        #else
-        return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
-        #endif
+    private func getTime() -> TimeInterval {
+        return CFAbsoluteTimeGetCurrent()
     }
 
-    func arcballPoint(_ point: CGPoint, _ size: CGSize) -> (inside: Bool, point: simd_float3) {
-        var inside = false
-        let pt = normalizePoint(point, size)
-        var result: simd_float3
-        let r = pt.x * pt.x + pt.y * pt.y
-        if r > 1.0 {
-            let s = 1.0 / sqrt(r)
-            result = s * simd_make_float3(pt)
-        } else {
-            result = simd_make_float3(pt.x, pt.y, sqrt(1.0 - r))
-            inside = true
-        }
-        return (inside: inside, point: result)
-    }
-
-    // MARK: - Load
-
-    override open func load(_ url: URL) {
-        do {
-            let data = try Data(contentsOf: url)
-            let loaded = try JSONDecoder().decode(PerspectiveCameraController.self, from: data)
-            target.setFrom(loaded.target)
-            if let camera = camera, let loadedCamera = loaded.camera {
-                camera.setFrom(loadedCamera)
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+    private func updateTime() {
+        let currentTime = getTime()
+        deltaTime = Float(currentTime - previousTime)
+        previousTime = currentTime
     }
 }

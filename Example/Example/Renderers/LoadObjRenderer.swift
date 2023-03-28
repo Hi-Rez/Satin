@@ -33,6 +33,10 @@ class LoadObjRenderer: BaseRenderer {
         loadOBJ(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"))
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func loadOBJ(url: URL) {
         let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.0))

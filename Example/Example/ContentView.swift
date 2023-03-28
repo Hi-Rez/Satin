@@ -22,10 +22,8 @@ struct ContentView: View {
                         Label("3D", systemImage: "cube")
                     }
                 }
-#if os(iOS)
+                #if os(iOS)
                 Group {
-
-
                     NavigationLink(destination: ARRendererView()) {
                         Label("AR", systemImage: "arkit")
                     }
@@ -42,7 +40,7 @@ struct ContentView: View {
                         Label("AR Planes", systemImage: "squareshape")
                     }
                 }
-#endif
+                #endif
                 Group {
                     #if os(macOS)
                     NavigationLink(destination: AudioInputRendererView()) {
@@ -157,11 +155,11 @@ struct ContentView: View {
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
-#if os(iOS)
+                    #if os(iOS)
                     NavigationLink(destination: SatinSceneKitARRendererView()) {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
-#endif
+                    #endif
                     NavigationLink(destination: StandardMaterialRendererView()) {
                         Label("Standard PBR Material", systemImage: "flame")
                     }

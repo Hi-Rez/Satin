@@ -62,6 +62,10 @@ class PostProcessingRenderer: BaseRenderer {
         metalKitView.preferredFramesPerSecond = 60
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         if size.x != Int(mtkView.drawableSize.width) || size.y != Int(mtkView.drawableSize.height) {
             renderTexture = createTexture("Render Texture", Int(mtkView.drawableSize.width), Int(mtkView.drawableSize.height), colorPixelFormat, context.device)

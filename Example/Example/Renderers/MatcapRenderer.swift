@@ -52,6 +52,10 @@ class MatcapRenderer: BaseRenderer {
         loadKnot()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func loadModel() {
         let asset = MDLAsset(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"), vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
 

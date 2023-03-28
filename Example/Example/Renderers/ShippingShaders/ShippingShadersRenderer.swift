@@ -40,6 +40,10 @@ class ShippingShadersRenderer: BaseRenderer {
         shippingMaterial.set("Absolute", false)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
     }

@@ -100,6 +100,7 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
+        metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.backgroundColor = .black
         metalKitView.preferredFramesPerSecond = 120
     }

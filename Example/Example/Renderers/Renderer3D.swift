@@ -24,7 +24,7 @@ class Renderer3D: BaseRenderer {
 
     lazy var scene = Object("Scene", [mesh, intersectionMesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
-    lazy var camera = PerspectiveCamera(position: .init(0.0, 0.0, 5.0), near: 0.01, far: 100.0, fov: 30)
+    lazy var camera = PerspectiveCamera(position: .init(repeating: 5.0), near: 0.01, far: 100.0, fov: 30)
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
 
@@ -35,7 +35,12 @@ class Renderer3D: BaseRenderer {
     }
 
     override func setup() {
+        camera.lookAt(.zero)
         renderer.compile(scene: scene, camera: camera)
+    }
+
+   deinit {
+        cameraController.disable()
     }
 
     override func update() {
@@ -73,8 +78,8 @@ class Renderer3D: BaseRenderer {
     func intersect(coordinate: simd_float2) {
         let results = raycast(camera: camera, coordinate: coordinate, object: scene)
         if let result = results.first {
-            print(result.object.label)
-            print(result.position)
+//            print(result.object.label)
+//            print(result.position)
             intersectionMesh.position = result.position
             intersectionMesh.visible = true
         }

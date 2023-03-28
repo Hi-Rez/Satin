@@ -55,6 +55,13 @@ class CubemapRenderer: BaseRenderer {
 
     var cubeTexture: MTLTexture!
 
+    override func setupMtkView(_ metalKitView: MTKView) {
+        metalKitView.sampleCount = 1
+        metalKitView.depthStencilPixelFormat = .depth32Float
+        metalKitView.preferredFramesPerSecond = 60
+        metalKitView.colorPixelFormat = .bgra8Unorm
+    }
+    
     override func setup() {
         let url = texturesURL.appendingPathComponent("Cubemap")
         cubeTexture = makeCubeTexture(
@@ -75,11 +82,8 @@ class CubemapRenderer: BaseRenderer {
         }
     }
 
-    override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.sampleCount = 1
-        metalKitView.depthStencilPixelFormat = .depth32Float
-        metalKitView.preferredFramesPerSecond = 60
-        metalKitView.colorPixelFormat = .bgra8Unorm
+    deinit {
+        cameraController.disable()
     }
 
     override func update() {

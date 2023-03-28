@@ -31,6 +31,10 @@ class ExtrudedTextRenderer: BaseRenderer {
         setupText()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func setupText() {
         let input = "stay hungry\nstay foolish"
         let geo = ExtrudedTextGeometry(

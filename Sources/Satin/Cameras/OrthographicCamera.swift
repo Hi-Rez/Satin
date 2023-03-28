@@ -23,6 +23,13 @@ open class OrthographicCamera: Camera {
         }
     }
 
+    override public var orientation: simd_quatf {
+        didSet {
+            updateViewMatrix = true
+            updateWorldMatrix = true
+        }
+    }
+
     public var left: Float = -1.0 {
         didSet {
             updateProjectionMatrix = true

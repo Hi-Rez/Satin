@@ -84,6 +84,10 @@ class PBRRenderer: BaseRenderer {
         setupLights()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func setupLights() {
         let dist: Float = 12.0
         let positions = [

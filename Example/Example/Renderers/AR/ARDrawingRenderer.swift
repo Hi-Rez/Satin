@@ -90,6 +90,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Update
 
     override func update() {
+
         updateDrawing()
         updateMaterial()
     }
@@ -146,7 +147,10 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Updates
 
     func updateDrawing() {
-        if touchDown, let currentFrame = session.currentFrame {
+        if clear.wrappedValue {
+            mesh.drawCount = 0
+            clear.wrappedValue = false
+        }else if touchDown, let currentFrame = session.currentFrame {
             add(simd_mul(currentFrame.camera.transform, translationMatrixf(0, 0, -0.2)))
         }
     }

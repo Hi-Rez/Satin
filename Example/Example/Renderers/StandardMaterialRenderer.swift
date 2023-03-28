@@ -55,6 +55,10 @@ class StandardMaterialRenderer: BaseRenderer {
         setupScene()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
     }

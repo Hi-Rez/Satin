@@ -6,6 +6,7 @@ typedef struct {
     float roughness;            // slider,0.0,1.0,0.0
     float metallic;             // slider,0.0,1.0,0.0
     float specular;             // slider,0.0,1.0,0.5
+    float environmentIntensity; // slider,0.0,1.0,1.0
 } StandardUniforms;
 
 typedef struct {
@@ -33,8 +34,7 @@ vertex CustomVertexData standardVertex
 #endif
 
     CustomVertexData out;
-    out.position =
-        vertexUniforms.viewProjectionMatrix * modelMatrix * in.position;
+    out.position = vertexUniforms.viewProjectionMatrix * modelMatrix * in.position;
     out.texcoords = in.uv;
     out.normal = normalMatrix * in.normal;
     out.worldPosition = (modelMatrix * in.position).xyz;

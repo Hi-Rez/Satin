@@ -82,6 +82,10 @@ class CameraControllerRenderer: BaseRenderer {
         scene.attach(targetMesh)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
         targetMesh.orientation = cameraController.target.orientation.inverse

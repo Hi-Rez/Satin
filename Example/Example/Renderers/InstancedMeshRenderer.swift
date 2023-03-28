@@ -41,6 +41,10 @@ class InstancedMeshRenderer: BaseRenderer {
         setupCamera()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+    
     func setupScene() {
         guard let geo = loadOBJ(url: modelsURL.appendingPathComponent("spot_triangulated.obj")) else { return }
         instancedMesh = InstancedMesh(geometry: geo, material: BasicDiffuseMaterial(0.1), count: dim * dim * dim)

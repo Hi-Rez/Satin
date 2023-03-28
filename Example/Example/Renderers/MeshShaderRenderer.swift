@@ -38,6 +38,10 @@ class MeshShaderRenderer: BaseRenderer {
         renderer.compile(scene: scene, camera: camera)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         meshNormals.material?.set("Time", Float(getTime() - startTime))
         cameraController.update()

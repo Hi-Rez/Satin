@@ -10,40 +10,39 @@ import Foundation
 import Metal
 import simd
 
-open class UniformBuffer: Buffer {
-    public var index: Int = -1
-    public var offset = 0
-    public var alignedSize = 0
+open class UniformBuffer {
+    public private(set) var parameters: ParameterGroup
+    public private(set) var buffer: MTLBuffer!
+    public private(set) var index: Int = -1
+    public private(set) var offset = 0
 
     public init(device: MTLDevice, parameters: ParameterGroup, options: MTLResourceOptions = [.cpuCacheModeWriteCombined]) {
-        super.init()
         self.parameters = parameters
-        alignedSize = ((parameters.size + 255) / 256) * 256
-        setupBuffer(device: device, count: maxBuffersInFlight, options: options)
+
+        let length = alignedSize * Satin.maxBuffersInFlight
+
+        guard let buffer = device.makeBuffer(length: length, options: options) else { fatalError("Unable to create Uniform Buffer") }
+        buffer.label = parameters.label
+        self.buffer = buffer
+
         update()
     }
 
-    override func setupBuffer(device: MTLDevice, count: Int, options: MTLResourceOptions) {
-        guard alignedSize > 0, let buffer = device.makeBuffer(length: alignedSize * count, options: options) else { fatalError("Unable to create Uniform Buffer") }
-        buffer.label = parameters.label
-        self.buffer = buffer
-    }
-
-    override public func update(_: Int = 0) {
-        updateOffset()
-        updateBuffer()
+    public func update() {
+        index = (index + 1) % maxBuffersInFlight
+        offset = alignedSize * index
+        (buffer.contents() + offset).copyMemory(from: parameters.data, byteCount: parameters.size)
     }
 
     public func reset() {
         index = -1
     }
 
-    func updateOffset() {
-        index = (index + 1) % maxBuffersInFlight
-        offset = alignedSize * index
+    private var alignedSize: Int {
+        align(size: parameters.size)
     }
 
-    func updateBuffer() {
-        update(UnsafeMutableRawPointer(buffer.contents() + offset))
+    private func align(size: Int) -> Int {
+        return ((size + 255) / 256) * 256
     }
 }

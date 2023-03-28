@@ -43,6 +43,12 @@ open class StandardMaterial: Material {
         }
     }
 
+    public var environmentIntensity: Float = 1.0 {
+        didSet {
+            set("Environment Intensity", environmentIntensity)
+        }
+    }
+
     private var maps: [PBRTexture: MTLTexture?] = [:] {
         didSet {
             if oldValue.keys != maps.keys, let shader = shader as? PBRShader {
@@ -92,6 +98,7 @@ open class StandardMaterial: Material {
         set("Specular", specular)
         set("Metallic", metallic)
         set("Roughness", roughness)
+        set("Environment Intensity", environmentIntensity)
     }
 
     public required init(from decoder: Decoder) throws {

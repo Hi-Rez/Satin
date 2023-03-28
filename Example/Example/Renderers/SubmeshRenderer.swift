@@ -36,15 +36,13 @@ class SubmeshRenderer: BaseRenderer {
     lazy var renderer = Satin.Renderer(context: context)
 
     override func setupMtkView(_ metalKitView: MTKView) {
-        metalKitView.sampleCount = 4
+        metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }
 
     override func setup() {
         start("Setup")
-
-        renderer.setClearColor(.one)
 
         start("Loading HDRI")
         loadHdri()
@@ -69,6 +67,10 @@ class SubmeshRenderer: BaseRenderer {
         scene.add(light)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+    
     override func update() {
         cameraController.update()
     }

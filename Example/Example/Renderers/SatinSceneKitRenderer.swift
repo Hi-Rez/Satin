@@ -67,6 +67,10 @@ class SatinSceneKitRenderer: BaseRenderer {
         setupScene()
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     func setupScene() {
         do {
             let scene = try SCNScene(

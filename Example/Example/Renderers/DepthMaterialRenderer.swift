@@ -135,6 +135,10 @@ class DepthMaterialRenderer: BaseRenderer {
 //        scene.add(boundingBoxes)
     }
 
+    deinit {
+        cameraController.disable()
+    }
+
     override func update() {
         cameraController.update()
     }

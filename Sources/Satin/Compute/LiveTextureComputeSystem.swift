@@ -61,7 +61,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
     }
 
     override open func setup() {
-        self.label = prefixLabel + " Texture Compute Encoder"
+        label = prefixLabel + " Texture Compute Encoder"
         super.setup()
         setupCompiler()
         setupPipelines()
@@ -142,12 +142,30 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
 
     open func setupPipelines(_ library: MTLLibrary) {
         do {
-            resetPipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Reset")
-            updatePipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Update")
+            resetPipeline = try createResetPipeline(library: library, kernel: "\(prefixLabel.camelCase)Reset")
+            updatePipeline = try createUpdatePipeline(library: library, kernel: "\(prefixLabel.camelCase)Update")
             reset()
         } catch {
             print("\(prefixLabel) TextureComputeError: Failed to setup Pipelines - \(error.localizedDescription)")
         }
+    }
+
+    open func createResetPipeline(library: MTLLibrary, kernel: String) throws -> MTLComputePipelineState? {
+        guard let kernelFunction = library.makeFunction(name: kernel) else { return nil }
+        let descriptor = MTLComputePipelineDescriptor()
+        descriptor.computeFunction = kernelFunction
+        descriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+        let result = try device.makeComputePipelineState(descriptor: descriptor, options: [])
+        return result.0
+    }
+
+    open func createUpdatePipeline(library: MTLLibrary, kernel: String) throws -> MTLComputePipelineState? {
+        guard let kernelFunction = library.makeFunction(name: kernel) else { return nil }
+        let descriptor = MTLComputePipelineDescriptor()
+        descriptor.computeFunction = kernelFunction
+        descriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+        let result = try device.makeComputePipelineState(descriptor: descriptor, options: [])
+        return result.0
     }
 
     func updateSize() {
