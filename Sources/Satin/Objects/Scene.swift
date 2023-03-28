@@ -13,7 +13,7 @@ import simd
 open class Scene: Object {
     public var environmentIntensity: Float = 1.0 {
         didSet {
-            self.traverse { object in
+            traverse { object in
                 if let renderable = object as? Renderable {
                     let materials = renderable.materials
                     for material in materials {
@@ -25,6 +25,7 @@ open class Scene: Object {
             }
         }
     }
+
     public var environment: MTLTexture? {
         didSet {
             if oldValue == nil {

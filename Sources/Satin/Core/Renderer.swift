@@ -278,14 +278,9 @@ open class Renderer {
         }
     }
 
-    public func draw(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera) {
-        update(scene: scene, camera: camera)
-        encode(renderEncoder: renderEncoder, scene: scene, camera: camera)
-    }
-
     // MARK: - Internal Update
 
-    func update(scene: Object, camera: Camera) {
+    private func update(scene: Object, camera: Camera) {
         onUpdate?()
 
         objectList.removeAll(keepingCapacity: true)
@@ -300,12 +295,12 @@ open class Renderer {
 
         updateLists(object: scene)
 
-        updateScene()
+        updateScene(camera: camera)
         updateLights()
         updateShadows()
     }
 
-    func updateLists(object: Object, visible: Bool = true) {
+    private func updateLists(object: Object, visible: Bool = true) {
         objectList.append(object)
 
         let isVisible = visible && object.visible
@@ -332,7 +327,7 @@ open class Renderer {
         }
     }
 
-    func updateScene() {
+    private func updateScene(camera: Camera) {
         let maxLights = lightList.count
         let shadowCount = shadowList.count
 
@@ -347,6 +342,9 @@ open class Renderer {
                     }
                 }
             }
+            else {
+                object.update(camera: camera, viewport: _viewport)
+            }
 
             object.context = context
             object.update()
@@ -355,7 +353,7 @@ open class Renderer {
 
     // MARK: - Internal Encoding
 
-    func encode(renderEncoder: MTLRenderCommandEncoder, scene _: Object, camera: Camera) {
+    private func encode(renderEncoder: MTLRenderCommandEncoder, scene _: Object, camera: Camera) {
         renderEncoder.pushDebugGroup(label + " Pass")
         preDraw?(renderEncoder)
 
@@ -381,7 +379,7 @@ open class Renderer {
         renderEncoder.popDebugGroup()
     }
 
-    func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
+    private func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
         renderEncoder.pushDebugGroup(renderable.label)
 
         let materials = renderable.materials
