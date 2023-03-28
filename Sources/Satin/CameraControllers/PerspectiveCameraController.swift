@@ -208,7 +208,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
         halt()
 
         target.orientation = defaultOrientation
-        target.position = simd_float3(repeating: 0.0)
+        target.position = .zero
 
         camera.orientation = simd_quatf(matrix_identity_float4x4)
         camera.position = [0, 0, simd_length(defaultPosition)]
@@ -404,13 +404,13 @@ public final class PerspectiveCameraController: CameraController, Codable {
     }
 
     private func normalizePoint(_ point: simd_float2, _ size: simd_float2) -> simd_float2 {
-        #if os(macOS)
+#if os(macOS)
         return 2.0 * (point / size) - 1.0
-        #else
+#else
         var result = point / size
         result.y = 1.0 - result.y
         return 2.0 * result - 1.0
-        #endif
+#endif
     }
 
     private func getTrackBallAngleAxis(previousPosition: simd_float2, currentPosition: simd_float2, size: simd_float2) -> (angle: Float, axis: simd_float3)?
@@ -448,7 +448,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     private func enableEvents() {
         guard let view = view else { return }
 
-        #if os(macOS)
+#if os(macOS)
 
         leftMouseDownHandler = NSEvent.addLocalMonitorForEvents(
             matching: .leftMouseDown,
@@ -506,7 +506,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
         rollGestureRecognizer = NSRotationGestureRecognizer(target: self, action: #selector(rollGesture))
         view.addGestureRecognizer(rollGestureRecognizer)
 
-        #elseif os(iOS)
+#elseif os(iOS)
 
         view.isMultipleTouchEnabled = true
 
@@ -537,13 +537,13 @@ public final class PerspectiveCameraController: CameraController, Codable {
         pinchGestureRecognizer.allowedTouchTypes = allowedTouchTypes
         view.addGestureRecognizer(pinchGestureRecognizer)
 
-        #endif
+#endif
     }
 
     private func disableEvents() {
         guard let view = view else { return }
 
-        #if os(macOS)
+#if os(macOS)
 
         NSEvent.removeMonitor(leftMouseDownHandler!)
         NSEvent.removeMonitor(leftMouseDraggedHandler!)
@@ -559,7 +559,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
         view.removeGestureRecognizer(magnifyGestureRecognizer)
         view.removeGestureRecognizer(rollGestureRecognizer)
 
-        #elseif os(iOS)
+#elseif os(iOS)
 
         view.removeGestureRecognizer(rotateGestureRecognizer)
         view.removeGestureRecognizer(rollGestureRecognizer)
@@ -567,15 +567,15 @@ public final class PerspectiveCameraController: CameraController, Codable {
         view.removeGestureRecognizer(tapGestureRecognizer)
         view.removeGestureRecognizer(pinchGestureRecognizer)
 
-        #endif
+#endif
     }
 
     // MARK: - Mouse
 
-    #if os(macOS)
+#if os(macOS)
 
     private func mouseDown(with event: NSEvent) -> NSEvent? {
-        guard let view = view else { return event }
+        guard let view = view, event.window == view.window else { return event }
 
         if event.clickCount == 2 {
             reset()
@@ -588,7 +588,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     }
 
     private func mouseDragged(with event: NSEvent) -> NSEvent? {
-        guard let view = view, state == .rotating else { return event }
+        guard let view = view, event.window == view.window, state == .rotating else { return event }
 
         let currentPosition = view.convert(event.locationInWindow, from: nil).float2
         defer { previousPosition = currentPosition }
@@ -607,7 +607,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     }
 
     private func mouseUp(with event: NSEvent) -> NSEvent? {
-        guard state == .rotating else { return event }
+        guard let view = view, event.window == view.window, state == .rotating else { return event }
         state = .tweening
         return event
     }
@@ -615,6 +615,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     // MARK: - Right Mouse
 
     private func rightMouseDown(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window else { return event }
         if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
             state = .dollying
         } else {
@@ -624,6 +625,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     }
 
     private func rightMouseDragged(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, (state == .zooming || state == .dollying) else { return event }
         let dy = Float(event.deltaY) / mouseDeltaSensitivity
         if state == .dollying {
             translation.z = dy * translationScalar
@@ -636,6 +638,7 @@ public final class PerspectiveCameraController: CameraController, Codable {
     }
 
     private func rightMouseUp(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, (state == .zooming || state == .dollying) else { return event }
         state = .tweening
         return event
     }
@@ -643,16 +646,19 @@ public final class PerspectiveCameraController: CameraController, Codable {
     // MARK: - Other Mouse
 
     private func otherMouseDown(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window else { return event }
         state = .panning
         return event
     }
 
     private func otherMouseDragged(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, state == .panning else { return event }
         pan(simd_make_float2(Float(event.deltaX), Float(event.deltaY)))
         return event
     }
 
     private func otherMouseUp(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, state == .panning else { return event }
         state = .tweening
         return event
     }
@@ -660,6 +666,8 @@ public final class PerspectiveCameraController: CameraController, Codable {
     // MARK: - Scroll Wheel
 
     private func scrollWheel(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window else { return event }
+        
         if event.phase == .began { state = .panning }
 
         guard state == .panning else { return event }

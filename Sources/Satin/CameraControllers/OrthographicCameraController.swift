@@ -319,17 +319,17 @@ public final class OrthographicCameraController: CameraController, Codable {
 
         otherMouseDownHandler = NSEvent.addLocalMonitorForEvents(
             matching: .otherMouseDown,
-            handler: otherMouseDown
+            handler: mouseDown
         )
 
         otherMouseDraggedHandler = NSEvent.addLocalMonitorForEvents(
             matching: .otherMouseDragged,
-            handler: otherMouseDragged
+            handler: mouseDragged
         )
 
         otherMouseUpHandler = NSEvent.addLocalMonitorForEvents(
             matching: .otherMouseUp,
-            handler: otherMouseUp
+            handler: mouseUp
         )
 
         scrollWheelHandler = NSEvent.addLocalMonitorForEvents(
@@ -405,6 +405,8 @@ public final class OrthographicCameraController: CameraController, Codable {
     // MARK: - Mouse
 
     private func mouseDown(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window else { return event }
+
         if event.clickCount == 2 {
             reset()
         } else {
@@ -415,30 +417,13 @@ public final class OrthographicCameraController: CameraController, Codable {
     }
 
     private func mouseDragged(with event: NSEvent) -> NSEvent? {
-        guard let view = view, state == .panning else { return event }
+        guard let view = view, event.window == view.window, state == .panning else { return event }
         pan(Float(event.deltaX / view.frame.size.width), Float(event.deltaY / view.frame.size.height))
         return event
     }
 
     private func mouseUp(with event: NSEvent) -> NSEvent? {
-        state = .inactive
-        return event
-    }
-
-    // MARK: - Other Mouse
-
-    private func otherMouseDown(with event: NSEvent) -> NSEvent? {
-        state = .panning
-        return event
-    }
-
-    private func otherMouseDragged(with event: NSEvent) -> NSEvent? {
-        guard let view = view, state == .panning else { return event }
-        pan(Float(event.deltaX / view.frame.size.width), Float(event.deltaY / view.frame.size.height))
-        return event
-    }
-
-    private func otherMouseUp(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, state == .panning else { return event }
         state = .inactive
         return event
     }
@@ -446,17 +431,19 @@ public final class OrthographicCameraController: CameraController, Codable {
     // MARK: - Right Mouse
 
     private func rightMouseDown(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window else { return event }
         state = .zooming
         return event
     }
 
     private func rightMouseDragged(with event: NSEvent) -> NSEvent? {
-        guard let view = view, state == .zooming else { return event }
+        guard let view = view, event.window == view.window, state == .zooming else { return event }
         zoom(Float(-event.deltaY / view.frame.size.height))
         return event
     }
 
     private func rightMouseUp(with event: NSEvent) -> NSEvent? {
+        guard let view = view, event.window == view.window, state == .zooming else { return event }
         state = .inactive
         return event
     }
@@ -464,7 +451,7 @@ public final class OrthographicCameraController: CameraController, Codable {
     // MARK: - Scroll Wheel
 
     private func scrollWheel(with event: NSEvent) -> NSEvent? {
-        guard let view = view else { return event }
+        guard let view = view, event.window == view.window else { return event }
 
         if event.phase == .began {
             state = .panning
