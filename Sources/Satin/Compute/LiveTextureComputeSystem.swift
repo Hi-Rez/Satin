@@ -103,7 +103,7 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
             return source
         } else {
             do {
-                guard let satinURL = getPipelinesSatinUrl() else { return nil }
+                guard let satinURL = getPipelinesSatinURL() else { return nil }
                 let includesURL = satinURL.appendingPathComponent("Includes.metal")
 
                 var source = try compiler.parse(includesURL)

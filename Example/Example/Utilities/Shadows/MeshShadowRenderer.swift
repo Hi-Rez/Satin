@@ -70,15 +70,7 @@ class MeshShadowRenderer {
         subscription = mesh.transformPublisher.sink { [weak self] object in
             self?.update = true
             self?.shadowMesh.worldMatrix = object.worldMatrix
-
-            let alpha = remap(
-                input: object.worldPosition.y,
-                inputMin: 0,
-                inputMax: 3.0,
-                outputMin: 1.0,
-                outputMax: 0.0
-            )
-
+            let alpha = remap(object.worldPosition.y, 0, 3.0, 1.0, 0.0)
             self?.shadowMesh.material?.set("Color", [0.0, 0.0, 0.0, alpha])
         }
     }

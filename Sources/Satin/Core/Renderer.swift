@@ -99,7 +99,7 @@ open class Renderer {
 
     private var shadowCasters = [Renderable]()
     private var shadowReceivers = [Renderable]()
-    private var shadowList = [LightShadow]()
+    private var shadowList = [Shadow]()
     private var _updateShadowMatrices = false
     private var shadowMatricesBuffer: StructBuffer<simd_float4x4>?
     private var shadowMatricesSubscriptions = Set<AnyCancellable>()

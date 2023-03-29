@@ -158,7 +158,7 @@ class StandardMaterialRenderer: BaseRenderer {
 
     func setupTextures() {
         let baseURL = modelsURL.appendingPathComponent("Suzanne")
-        let maps: [PBRTexture: URL] = [
+        let maps: [PBRTextureIndex: URL] = [
             .baseColor: baseURL.appendingPathComponent("albedo.png"),
             .ambientOcclusion: baseURL.appendingPathComponent("ao.png"),
             .metallic: baseURL.appendingPathComponent("metallic.png"),

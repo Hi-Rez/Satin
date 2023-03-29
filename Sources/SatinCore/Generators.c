@@ -10,7 +10,7 @@
 
 #include "Generators.h"
 #include "Geometry.h"
-#include "Helpers.h"
+#include "Conversions.h"
 #include "Transforms.h"
 
 GeometryData generateBoxGeometryData(float width, float height, float depth, float centerX,
@@ -344,8 +344,7 @@ GeometryData generateCapsuleGeometryData(float radius, float height, int angular
             vtx[vertexIndex++] =
                 (Vertex) { .position = position,
                            .normal = normal,
-                           .uv = simd_make_float2(pf / phif,
-                                                  map(y, 0.0, radius, vPerCap + vPerCyl, 1.0)) };
+                           .uv = simd_make_float2(pf / phif, remap(y, 0.0, radius, vPerCap + vPerCyl, 1.0)) };
 
             if (p != phi && t != theta) {
 
@@ -398,7 +397,7 @@ GeometryData generateCapsuleGeometryData(float radius, float height, int angular
             vtx[vertexIndex++] =
                 (Vertex) { .position = position,
                            .normal = normal,
-                           .uv = simd_make_float2(pf / phif, map(y, -radius, 0, 0.0, vPerCap)) };
+                           .uv = simd_make_float2(pf / phif, remap(y, -radius, 0, 0.0, vPerCap)) };
 
             if (p != phi && t != theta) {
                 const int index = verticesPerCap + p + t * perLoop;
@@ -444,7 +443,7 @@ GeometryData generateCapsuleGeometryData(float radius, float height, int angular
             vtx[vertexIndex++] = (Vertex) {
                 .position = position,
                 .normal = normal,
-                .uv = simd_make_float2(pf / phif, map(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl))
+                .uv = simd_make_float2(pf / phif, remap(sf, 0.0, slicesf, vPerCap, vPerCap + vPerCyl))
             };
 
             if (s != slices && p != phi) {
@@ -1436,7 +1435,7 @@ GeometryData generateSquircleGeometryData(float size, float p, int angularResolu
 
     for (int r = 0; r <= radial; r++) {
         const float k = r / (float)radial;
-        const float radius = map(r, 0.0, radial, 0.0, rad);
+        const float radius = remap(r, 0.0, radial, 0.0, rad);
 
         for (int a = 0; a <= angular; a++) {
             const float t = a / (float)angular;
@@ -1818,7 +1817,7 @@ GeometryData generateTubeGeometryData(float radius, float height, float startAng
 
         for (int a = 0; a <= angular; a++) {
             const float af = (float)a;
-            const float angle = map(af / angularf, 0.0, 1.0, start, end);
+            const float angle = remap(af / angularf, 0.0, 1.0, start, end);
             const float x = cos(angle);
             const float z = sin(angle);
 

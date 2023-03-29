@@ -49,7 +49,7 @@ open class StandardMaterial: Material {
         }
     }
 
-    private var maps: [PBRTexture: MTLTexture?] = [:] {
+    private var maps: [PBRTextureIndex: MTLTexture?] = [:] {
         didSet {
             if oldValue.keys != maps.keys, let shader = shader as? PBRShader {
                 shader.maps = Set(maps.keys)
@@ -57,7 +57,7 @@ open class StandardMaterial: Material {
         }
     }
 
-    public func setTexture(_ texture: MTLTexture?, type: PBRTexture) {
+    public func setTexture(_ texture: MTLTexture?, type: PBRTextureIndex) {
         if let texture = texture {
             maps[type] = texture
         } else {
@@ -70,7 +70,7 @@ open class StandardMaterial: Material {
                 roughness: Float,
                 specular: Float = 0.5,
                 emissiveColor: simd_float4 = .zero,
-                maps: [PBRTexture: MTLTexture?] = [:])
+                maps: [PBRTextureIndex: MTLTexture?] = [:])
     {
         super.init()
         self.baseColor = baseColor
@@ -84,7 +84,7 @@ open class StandardMaterial: Material {
         initalizeParameters()
     }
 
-    public init(maps: [PBRTexture: MTLTexture?] = [:]) {
+    public init(maps: [PBRTextureIndex: MTLTexture?] = [:]) {
         super.init()
         self.maps = maps
         lighting = true
@@ -121,7 +121,7 @@ open class StandardMaterial: Material {
     }
 
     override open func createShader() -> Shader {
-        return StandardShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+        return StandardShader(label, getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal"))
     }
 
     override open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {

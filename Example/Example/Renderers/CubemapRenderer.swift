@@ -64,7 +64,7 @@ class CubemapRenderer: BaseRenderer {
     
     override func setup() {
         let url = texturesURL.appendingPathComponent("Cubemap")
-        cubeTexture = makeCubeTexture(
+        cubeTexture = loadCubemap(
             device,
             [
                 url.appendingPathComponent("px.png"),

@@ -111,7 +111,7 @@ open class PhysicalMaterial: StandardMaterial {
                 transmission: Float = .zero,
                 thickness: Float = 0.0,
                 ior: Float = 1.5,
-                maps: [PBRTexture: MTLTexture?] = [:])
+                maps: [PBRTextureIndex: MTLTexture?] = [:])
     {
         super.init(baseColor: baseColor, metallic: metallic, roughness: roughness, specular: specular, emissiveColor: emissiveColor, maps: maps)
 
@@ -145,7 +145,7 @@ open class PhysicalMaterial: StandardMaterial {
     }
 
     override open func createShader() -> Shader {
-        return PhysicalShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+        return PhysicalShader(label, getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal"))
     }
 }
 

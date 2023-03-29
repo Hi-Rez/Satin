@@ -1,11 +1,12 @@
 //
-//  ParameterParser.swift
+//  Parsers.swift
 //  Satin
 //
 //  Created by Reza Ali on 11/3/19.
 //
 
 import Foundation
+import Metal
 import simd
 
 public func parseStruct(source: String, key: String) -> ParameterGroup? {
@@ -16,6 +17,7 @@ public func parseStruct(source: String, key: String) -> ParameterGroup? {
     return nil
 }
 
+
 public func parseParameters(source: String, key: String) -> ParameterGroup? {
     if let structSource = _parseStruct(source: source, key: key), let params = parseParameters(source: structSource) {
         params.label = key
@@ -24,7 +26,37 @@ public func parseParameters(source: String, key: String) -> ParameterGroup? {
     return nil
 }
 
-public func findStructName(_ key: String, _ source: String) -> String? {
+public func parseParameters(bufferStruct: MTLStructType) -> ParameterGroup {
+    let params = ParameterGroup()
+    for member in bufferStruct.members {
+        let name = member.name.titleCase
+        switch member.dataType {
+            case .float:
+                params.append(FloatParameter(name, .zero))
+            case .float2:
+                params.append(Float2Parameter(name, .zero))
+            case .float3:
+                params.append(Float3Parameter(name, .zero))
+            case .float4:
+                params.append(Float4Parameter(name, .zero))
+            case .int:
+                params.append(IntParameter(name, .zero))
+            case .int2:
+                params.append(Int2Parameter(name, .zero))
+            case .int3:
+                params.append(Int3Parameter(name, .zero))
+            case .int4:
+                params.append(Int4Parameter(name, .zero))
+            case .bool:
+                params.append(BoolParameter(name, false))
+            default:
+                break
+        }
+    }
+    return params
+}
+
+func findStructName(_ key: String, _ source: String) -> String? {
     do {
         var pattern = #".?(constant|device) +?(\w*) +?&?\*?"#
         pattern += key

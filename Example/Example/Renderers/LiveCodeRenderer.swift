@@ -56,7 +56,7 @@ class LiveCodeRenderer: BaseRenderer {
     }
 
     func copySatinCore() {
-        if let satinCore = getPipelinesSatinUrl() {
+        if let satinCore = getPipelinesSatinURL() {
             do {
                 try FileManager.default.copyItem(at: satinCore, to: assetsURL.appendingPathComponent("Satin"))
             } catch {
@@ -66,7 +66,7 @@ class LiveCodeRenderer: BaseRenderer {
     }
 
     func copySatinLibrary() {
-        if let satinLibrary = Satin.getPipelinesLibraryUrl() {
+        if let satinLibrary = Satin.getPipelinesLibraryURL() {
             do {
                 try FileManager.default.copyItem(at: satinLibrary, to: assetsURL.appendingPathComponent("Library"))
             } catch {

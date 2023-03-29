@@ -37,8 +37,8 @@ GeometryData generateSuperShapeGeometryData(float r1, float a1, float b1, float 
     int triIndex = 0;
     const float halfPi = M_PI * 0.5;
     for (int j = 0; j <= resTheta; j++) {
-        const float v = map(j, 0, resTheta, 0.0, 1.0);
-        const float theta = map(j, 0, resTheta, -M_PI, M_PI);
+        const float v = remap(j, 0, resTheta, 0.0, 1.0);
+        const float theta = remap(j, 0, resTheta, -M_PI, M_PI);
         const float _r1 = superShape(theta, a1, b1, m1, n11, n21, n31);
 
         const float cosTheta = cos(theta);
@@ -48,8 +48,8 @@ GeometryData generateSuperShapeGeometryData(float r1, float a1, float b1, float 
 
             const int index = j * (resTheta + 1) + i;
 
-            const float u = map(i, 0, resPhi, 0.0, 1.0);
-            const float phi = map(i, 0, resPhi, -halfPi, halfPi);
+            const float u = remap(i, 0, resPhi, 0.0, 1.0);
+            const float phi = remap(i, 0, resPhi, -halfPi, halfPi);
             const float _r2 = superShape(phi, a2, b2, m2, n12, n22, n32);
 
             const float cosPhi = cos(phi);

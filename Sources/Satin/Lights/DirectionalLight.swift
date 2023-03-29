@@ -43,7 +43,7 @@ open class DirectionalLight: Object, Light {
             setupShadow()
         }
     }
-    public lazy var shadow: LightShadow = DirectionalLightShadow(label: label)
+    public lazy var shadow: Shadow = DirectionalLightShadow(label: label)
 
     public let publisher = PassthroughSubject<Light, Never>()
     private var transformSubscriber: AnyCancellable?

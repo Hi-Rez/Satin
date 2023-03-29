@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import Metal
 
-public protocol LightShadow {
+public protocol Shadow {
     var label: String { get set }
     var texture: MTLTexture? { get }
     var data: ShadowData { get }
@@ -24,7 +24,7 @@ public protocol LightShadow {
     func update(light: Object)
     func draw(commandBuffer: MTLCommandBuffer, renderables: [Renderable])
 
-    var texturePublisher: PassthroughSubject<LightShadow, Never> { get }
-    var resolutionPublisher: PassthroughSubject<LightShadow, Never> { get }
-    var dataPublisher: PassthroughSubject<LightShadow, Never> { get }
+    var texturePublisher: PassthroughSubject<Shadow, Never> { get }
+    var resolutionPublisher: PassthroughSubject<Shadow, Never> { get }
+    var dataPublisher: PassthroughSubject<Shadow, Never> { get }
 }

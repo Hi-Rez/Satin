@@ -16,7 +16,7 @@ class RenderableTests: XCTestCase {
         let label = "BasicColor"
         let shader = SourceShader(
             label,
-            getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal")
+            getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal")
         )
         
         measure {

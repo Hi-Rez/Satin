@@ -10,7 +10,7 @@ import Combine
 import Foundation
 import Metal
 
-public class DirectionalLightShadow: LightShadow {
+public class DirectionalLightShadow: Shadow {
     public var label: String
 
     public var data: ShadowData {
@@ -84,9 +84,9 @@ public class DirectionalLightShadow: LightShadow {
 
     var _updateTexture = true
 
-    public let texturePublisher = PassthroughSubject<LightShadow, Never>()
-    public let resolutionPublisher = PassthroughSubject<LightShadow, Never>()
-    public let dataPublisher = PassthroughSubject<LightShadow, Never>()
+    public let texturePublisher = PassthroughSubject<Shadow, Never>()
+    public let resolutionPublisher = PassthroughSubject<Shadow, Never>()
+    public let dataPublisher = PassthroughSubject<Shadow, Never>()
 
     init(label: String) {
         self.label = label

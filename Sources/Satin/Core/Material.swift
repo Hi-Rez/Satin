@@ -345,7 +345,7 @@ open class Material: Codable, ParameterGroupDelegate {
     }
 
     open func createShader() -> Shader {
-        return SourceShader(label, getPipelinesMaterialsUrl(label)!.appendingPathComponent("Shaders.metal"))
+        return SourceShader(label, getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal"))
     }
 
     open func cloneShader(_ shader: Shader) -> Shader {

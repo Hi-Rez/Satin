@@ -18,7 +18,7 @@ public protocol Light {
     var intensity: Float { get set }
 
     var castShadow: Bool { get }
-    var shadow: LightShadow { get }
+    var shadow: Shadow { get }
 
     var publisher: PassthroughSubject<Light, Never> { get }
 }

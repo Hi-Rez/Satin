@@ -18,7 +18,7 @@ import Accelerate
 import CoreGraphics
 import ImageIO
 
-public func makeCubeTexture(_ device: MTLDevice, _ urls: [URL], _ mipmapped: Bool = true, _ pixelFormat: MTLPixelFormat = .rgba8Unorm) -> MTLTexture? {
+public func loadCubemap(_ device: MTLDevice, _ urls: [URL], _ mipmapped: Bool = true, _ pixelFormat: MTLPixelFormat = .rgba8Unorm) -> MTLTexture? {
     assert(urls.count == 6, "Please provide 6 images to create a cube texture")
 
     guard let cgImage = loadImage(url: urls.first!) else { fatalError("Failed to create cgImage") }

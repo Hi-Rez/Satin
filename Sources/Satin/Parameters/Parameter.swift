@@ -40,7 +40,7 @@ public protocol ValueParameter: Parameter {
     var value: ValueType { get set }
 }
 
-public protocol ValueMinMaxParameter: ValueParameter {
+public protocol ValueParameterWithMinMax: ValueParameter {
     var min: ValueType { get set }
     var max: ValueType { get set }
 }
@@ -61,12 +61,14 @@ public enum ControlType: String, Codable {
 }
 
 public enum ParameterType: String, Codable {
-    case float, float2, float3, float4, bool, int, int2, int3, int4, double, string, packedfloat3, uint32, float4x4, float3x3, float2x2, generic
+    case bool, uint32, int, int2, int3, int4, float, float2, float3, float4, double, string, packedfloat3, float2x2, float3x3, float4x4, generic
 
     var metatype: Parameter.Type {
         switch self {
         case .bool:
             return BoolParameter.self
+        case .uint32:
+            return UInt32Parameter.self
         case .int:
             return IntParameter.self
         case .int2:
@@ -89,8 +91,8 @@ public enum ParameterType: String, Codable {
             return StringParameter.self
         case .packedfloat3:
             return PackedFloat3Parameter.self
-        case .uint32:
-            return UInt32Parameter.self
+        case .float2x2:
+            return Float2x2Parameter.self
         case .float3x3:
             return Float3x3Parameter.self
         case .float4x4:

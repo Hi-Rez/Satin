@@ -209,7 +209,7 @@ open class SourceShader: Shader {
     open func modifyShaderSource(source _: inout String) {}
 
     open func setupSource() {
-        guard let includesURL = getPipelinesSatinUrl("Includes.metal"),
+        guard let includesURL = getPipelinesSatinURL("Includes.metal"),
               let compiledShaderSource = shaderSource ?? setupShaderSource()
         else { return }
 

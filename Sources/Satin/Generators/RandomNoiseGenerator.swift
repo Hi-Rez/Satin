@@ -15,7 +15,7 @@ public class RandomNoiseGenerator {
             super.init(
                 device: device,
                 textureDescriptors: [textureDescriptor],
-                pipelinesURL: getPipelinesComputeUrl()!
+                pipelinesURL: getPipelinesComputeURL()!
             )
         }
     }

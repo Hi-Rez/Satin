@@ -105,7 +105,7 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
             return source
         } else {
             do {
-                guard let satinURL = getPipelinesSatinUrl() else { return nil }
+                guard let satinURL = getPipelinesSatinURL() else { return nil }
                 let includesURL = satinURL.appendingPathComponent("Includes.metal")
 
                 var source = try compiler.parse(includesURL)
@@ -146,14 +146,32 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         return nil
     }
 
-    func setupPipelines(_ library: MTLLibrary) {
+    open func setupPipelines(_ library: MTLLibrary) {
         do {
-            resetPipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Reset")
-            updatePipeline = try makeComputePipeline(library: library, kernel: "\(prefixLabel.camelCase)Update")
+            resetPipeline = try createResetPipeline(library: library, kernel: "\(prefixLabel.camelCase)Reset")
+            updatePipeline = try createUpdatePipeline(library: library, kernel: "\(prefixLabel.camelCase)Update")
             reset()
         } catch {
             print("\(prefixLabel) BufferComputeError: \(error.localizedDescription)")
         }
+    }
+
+    open func createResetPipeline(library: MTLLibrary, kernel: String) throws -> MTLComputePipelineState? {
+        guard let kernelFunction = library.makeFunction(name: kernel) else { return nil }
+        let descriptor = MTLComputePipelineDescriptor()
+        descriptor.computeFunction = kernelFunction
+        descriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+        let result = try device.makeComputePipelineState(descriptor: descriptor, options: [])
+        return result.0
+    }
+
+    open func createUpdatePipeline(library: MTLLibrary, kernel: String) throws -> MTLComputePipelineState? {
+        guard let kernelFunction = library.makeFunction(name: kernel) else { return nil }
+        let descriptor = MTLComputePipelineDescriptor()
+        descriptor.computeFunction = kernelFunction
+        descriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+        let result = try device.makeComputePipelineState(descriptor: descriptor, options: [])
+        return result.0
     }
 
     func updateSize() {

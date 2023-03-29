@@ -9,7 +9,7 @@
 import Foundation
 
 open class PBRShader: SourceShader {
-    open var maps = Set<PBRTexture>() {
+    open var maps = Set<PBRTextureIndex>() {
         didSet {
             if oldValue != maps {
                 sourceNeedsUpdate = true

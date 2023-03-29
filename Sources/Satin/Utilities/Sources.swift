@@ -15,7 +15,7 @@ class PassThroughVertexPipelineSource {
         guard PassThroughVertexPipelineSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesCommonUrl("VertexShader.metal") {
+        if let url = getPipelinesCommonURL("VertexShader.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -34,7 +34,7 @@ class PassThroughShadowPipelineSource {
         guard PassThroughShadowPipelineSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesCommonUrl("ShadowShader.metal") {
+        if let url = getPipelinesCommonURL("ShadowShader.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -53,7 +53,7 @@ class ShadowFunctionSource {
         guard ShadowFunctionSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesLibraryUrl("Shadow.metal") {
+        if let url = getPipelinesLibraryURL("Shadow.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -64,8 +64,6 @@ class ShadowFunctionSource {
     }
 }
 
-
-
 class ConstantsSource {
     static let shared = ConstantsSource()
     private static var sharedSource: String?
@@ -74,7 +72,7 @@ class ConstantsSource {
         guard ConstantsSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("Constants.metal") {
+        if let url = getPipelinesSatinURL("Constants.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -93,7 +91,7 @@ class VertexSource {
         guard VertexSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("Vertex.metal") {
+        if let url = getPipelinesSatinURL("Vertex.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -112,7 +110,7 @@ class VertexDataSource {
         guard VertexDataSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("VertexData.metal") {
+        if let url = getPipelinesSatinURL("VertexData.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -131,7 +129,7 @@ class VertexUniformsSource {
         guard VertexUniformsSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("VertexUniforms.metal") {
+        if let url = getPipelinesSatinURL("VertexUniforms.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -150,7 +148,7 @@ class InstanceMatrixUniformsSource {
         guard InstanceMatrixUniformsSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("InstanceMatrixUniforms.metal") {
+        if let url = getPipelinesSatinURL("InstanceMatrixUniforms.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -169,7 +167,7 @@ class LightingSource {
         guard LightingSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("LightData.metal") {
+        if let url = getPipelinesSatinURL("LightData.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -188,7 +186,7 @@ class ShadowDataSource {
         guard ShadowDataSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("ShadowData.metal") {
+        if let url = getPipelinesSatinURL("ShadowData.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -207,7 +205,7 @@ class InstancingArgsSource {
         guard InstancingArgsSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("InstancingArgs.metal") {
+        if let url = getPipelinesSatinURL("InstancingArgs.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {
@@ -226,7 +224,7 @@ class TextureArgsSource {
         guard TextureArgsSource.sharedSource == nil else {
             return sharedSource
         }
-        if let url = getPipelinesSatinUrl("TextureArgs.metal") {
+        if let url = getPipelinesSatinURL("TextureArgs.metal") {
             do {
                 sharedSource = try MetalFileCompiler(watch: false).parse(url)
             } catch {

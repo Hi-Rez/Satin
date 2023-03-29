@@ -7,11 +7,11 @@
 
 import Foundation
 
-public enum MetalSourceCompilerError: Error {
+enum MetalSourceCompilerError: Error {
     case includeCompileError(_ fileURL: URL)
 }
 
-public func compileMetalSource(_ source: String) throws -> String {
+func compileMetalSource(_ source: String) throws -> String {
     var result = source
 
     let pattern = #"^#include\s+\"(.*)\"\n"#
@@ -21,7 +21,10 @@ public func compileMetalSource(_ source: String) throws -> String {
 
     while !matches.isEmpty {
         let match = matches[0]
-        if match.numberOfRanges == 2, let r0 = Range(match.range(at: 0), in: result), let r1 = Range(match.range(at: 1), in: result), let satinPipelinesUrl = getPipelinesUrl()
+        if match.numberOfRanges == 2,
+           let r0 = Range(match.range(at: 0), in: result),
+           let r1 = Range(match.range(at: 1), in: result),
+           let satinPipelinesUrl = getPipelinesURL()
         {
             let includeURL = URL(fileURLWithPath: String(result[r1]), relativeTo: satinPipelinesUrl)
             do {

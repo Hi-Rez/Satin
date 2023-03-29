@@ -65,7 +65,7 @@ public enum FragmentTextureIndex: Int {
     case Shadow7 = 32
 }
 
-public enum PBRTexture: Int {
+public enum PBRTextureIndex: Int {
     case baseColor = 0
     case subsurface = 1
     case metallic = 2

@@ -16,7 +16,7 @@ public class SpecularIBLGenerator {
         var sourceTexture: MTLTexture?
 
         init(device: MTLDevice) {
-            super.init(device: device, textureDescriptors: [], pipelinesURL: getPipelinesComputeUrl()!)
+            super.init(device: device, textureDescriptors: [], pipelinesURL: getPipelinesComputeURL()!)
         }
 
         override func bind(_ computeEncoder: MTLComputeCommandEncoder) -> Int {

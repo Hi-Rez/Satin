@@ -25,7 +25,7 @@ class CameraControllerRenderer: BaseRenderer {
         for i in 0 ... intervals {
             let fi = Float(i)
             let meshX = Mesh(geometry: geometryX, material: material)
-            let offset = map(fi, 0.0, Float(intervals), -intervalsf * 0.5, intervalsf * 0.5)
+            let offset = remap(fi, 0.0, Float(intervals), -intervalsf * 0.5, intervalsf * 0.5)
             meshX.position = [0.0, 0.0, offset]
             object.add(meshX)
 
