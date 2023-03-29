@@ -40,14 +40,6 @@ Satin is mostly Swift based, however when performing expensive CPU operations, S
   ]
 ```
 
-### CocoaPods
-
-[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate `Satin` into your Xcode project using CocoaPods, specify it in your `Podfile`:
-
-```ruby
-pod 'Satin'
-```
-
 # Features :clipboard:
 
 - [x] Tons of examples that show how to use the API (2D, 3D, Raycasting, Compute, Exporting, Live Coding, AR, etc).

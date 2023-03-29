@@ -12,6 +12,7 @@ DerivedData/
 /Packages
 
 DerivedData/
+.swiftpm
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 
 ## Bundler
