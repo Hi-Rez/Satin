@@ -28,9 +28,9 @@ struct ContentView: View {
                         Label("AR", systemImage: "arkit")
                     }
 
-//                    NavigationLink(destination: ARContactShadowRendererView()) {
-//                        Label("AR Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
-//                    }
+                    NavigationLink(destination: ARContactShadowRendererView()) {
+                        Label("AR Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
+                    }
 
                     NavigationLink(destination: ARDrawingRendererView()) {
                         Label("AR Drawing", systemImage: "scribble.variable")

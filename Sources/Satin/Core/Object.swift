@@ -396,7 +396,7 @@ open class Object: Codable, ObservableObject {
         onUpdate?()
     }
 
-    open func update(camera _: Camera, viewport _: simd_float4) {}
+    open func update(camera: Camera, viewport: simd_float4) {}
 
     // MARK: - Inserting, Adding, Attaching & Removing
 

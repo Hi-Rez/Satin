@@ -63,6 +63,8 @@ class ShadowPostProcessor: PostProcessor {
 class ObjectShadowRenderer {
     private var context: Context
     private var object: Object
+    private var container: Object
+    private var scene: Object
     private var catcher: Mesh
 
     var resolution: Int {
@@ -98,6 +100,8 @@ class ObjectShadowRenderer {
 
     init(context: Context,
          object: Object,
+         container: Object,
+         scene: Object,
          catcher: Mesh,
          resolution: Int = 512,
          padding: Float = 0.175,
@@ -108,6 +112,8 @@ class ObjectShadowRenderer {
     {
         self.context = context
         self.object = object
+        self.container = container
+        self.scene = scene
         self.catcher = catcher
         self.resolution = resolution
         self.padding = padding
@@ -117,6 +123,8 @@ class ObjectShadowRenderer {
         self.color = color
 
         renderer = Satin.Renderer(context: context)
+        renderer.label = "Object Shadow Renderer"
+
         processor = ShadowPostProcessor(context: Context(context.device, 1, .rgba32Float))
         camera = OrthographicCamera()
 
@@ -133,21 +141,39 @@ class ObjectShadowRenderer {
     public func update(commandBuffer: MTLCommandBuffer) {
         update()
 
+
+        let finalScene = Object("Shadow Scene")
+
+        let lights = getLights(scene, true, true)
+        let renderables = getRenderables(object, true, false)
+
+        for light in lights {
+            if let object = light as? Object {
+                finalScene.attach(object)
+            }
+        }
+
+        for renderable in renderables {
+            if let object = renderable as? Object {
+                finalScene.attach(object)
+            }
+        }
+
         let rpd = MTLRenderPassDescriptor()
         rpd.renderTargetWidth = resolution
         rpd.renderTargetHeight = resolution
         renderer.draw(
             renderPassDescriptor: rpd,
             commandBuffer: commandBuffer,
-            scene: object,
+            scene: finalScene,
             camera: camera
         )
 
-        if var shadowTexture = texture {
+        if var texture = texture {
             let srpd = MTLRenderPassDescriptor()
             srpd.renderTargetWidth = resolution
             srpd.renderTargetHeight = resolution
-            srpd.colorAttachments[0].texture = shadowTexture
+            srpd.colorAttachments[0].texture = texture
             processor.colorTexture = renderer.colorTexture
             processor.depthTexture = renderer.depthTexture
             processor.mesh.material?.set("Near Far", [camera.near, camera.far])
@@ -155,11 +181,11 @@ class ObjectShadowRenderer {
             processor.draw(renderPassDescriptor: srpd, commandBuffer: commandBuffer)
 
             if let blurFilter = blurFilter {
-                blurFilter.encode(commandBuffer: commandBuffer, inPlaceTexture: &shadowTexture)
+                blurFilter.encode(commandBuffer: commandBuffer, inPlaceTexture: &texture)
             }
 
             if let material = catcher.material as? BasicTextureMaterial {
-                material.texture = shadowTexture
+                material.texture = texture
             }
         }
     }
@@ -176,8 +202,10 @@ class ObjectShadowRenderer {
         let objectCenter = objectBounds.center
         let size = max(objectSize.x, objectSize.z)
 
-        camera.position = [objectCenter.x, 0.0, objectCenter.z]
-        camera.orientation = simd_quatf(angle: Float.pi * 0.5, axis: Satin.worldRightDirection)
+        camera.position = objectCenter
+        camera.position.y = container.position.y
+        camera.orientation = container.orientation
+        camera.orientation *= simd_quatf(angle: Float.pi * 0.5, axis: Satin.worldRightDirection)
         camera.update(
             left: -size * 0.5 - padding,
             right: size * 0.5 + padding,
@@ -187,9 +215,7 @@ class ObjectShadowRenderer {
             far: far
         )
 
-        catcher.scale = .init(repeating: size + padding)
-        catcher.position.x = objectCenter.x
-        catcher.position.z = objectCenter.z
+        catcher.scale = .init(repeating: size + padding * 2.0)
     }
 
     private func updateTexture() {
@@ -200,6 +226,7 @@ class ObjectShadowRenderer {
             height: resolution,
             pixelFormat: .rgba32Float
         )
+
         _updateTexture = false
     }
 

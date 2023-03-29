@@ -118,7 +118,13 @@ class ContactShadowRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer = Satin.Renderer(context: context)
 
-    lazy var shadowRenderer = ObjectShadowRenderer(context: context, object: spheres, catcher: floorMesh)
+    lazy var shadowRenderer = ObjectShadowRenderer(
+        context: context,
+        object: spheres,
+        container: scene,
+        scene: scene,
+        catcher: floorMesh
+    )
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1

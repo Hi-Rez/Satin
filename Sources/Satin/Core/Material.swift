@@ -171,7 +171,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var shadowCount: Int = 0 {
+    public var shadowCount = 0 {
         didSet {
             if oldValue != shadowCount {
                 shaderDefinesNeedsUpdate = true
@@ -179,7 +179,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public var maxLights: Int = 0 {
+    public var maxLights = 0 {
         didSet {
             if oldValue != maxLights {
                 shaderDefinesNeedsUpdate = true
@@ -378,7 +378,7 @@ open class Material: Codable, ParameterGroupDelegate {
 
     open func update(camera _: Camera) {}
 
-    open func update(_ commandBuffer: MTLCommandBuffer) {
+    open func update(_: MTLCommandBuffer) {
         updateDepth()
         updateShader()
         updateUniforms()
@@ -502,7 +502,7 @@ open class Material: Codable, ParameterGroupDelegate {
         shader.maxLights = maxLights
         shader.shadowCount = shadowCount
         shader.receiveShadow = receiveShadow
-        shader.castShadow = castShadow        
+        shader.castShadow = castShadow
     }
 
     public func set(_ name: String, _ value: [Float]) {
