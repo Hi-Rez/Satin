@@ -212,10 +212,10 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    var uniformsNeedsUpdate = false
-    var shaderNeedsUpdate = false
+    private var uniformsNeedsUpdate = false
+    private var shaderNeedsUpdate = false
 
-    var shaderDefinesNeedsUpdate = false {
+    private var shaderDefinesNeedsUpdate = false {
         didSet {
             if shaderDefinesNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -223,7 +223,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    var shaderBlendingNeedsUpdate = false {
+    private var shaderBlendingNeedsUpdate = false {
         didSet {
             if shaderBlendingNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -231,7 +231,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    var shaderVertexDescriptorNeedsUpdate = false {
+    private var shaderVertexDescriptorNeedsUpdate = false {
         didSet {
             if shaderVertexDescriptorNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -239,7 +239,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    var depthNeedsUpdate = false
+    private var depthNeedsUpdate = false
 
     public var depthBias: DepthBias?
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
@@ -323,7 +323,7 @@ open class Material: Codable, ParameterGroupDelegate {
         try container.encode(parameters, forKey: .parameters)
     }
 
-    func setupParametersSubscriber() {
+    private func setupParametersSubscriber() {
         guard let shader = shader else { return }
         parametersSubscriber?.cancel()
         parametersSubscriber = shader.parametersPublisher.sink(receiveValue: updateParameters)
@@ -477,7 +477,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    func updateShaderBlending() {
+    private func updateShaderBlending() {
         guard let shader = shader else { return }
         shader.blending = blending
         shader.sourceRGBBlendFactor = sourceRGBBlendFactor
@@ -489,7 +489,7 @@ open class Material: Codable, ParameterGroupDelegate {
         shaderBlendingNeedsUpdate = false
     }
 
-    func updateShaderVertexDescriptor() {
+    private func updateShaderVertexDescriptor() {
         guard let shader = shader else { return }
         shader.vertexDescriptor = vertexDescriptor
         shaderVertexDescriptorNeedsUpdate = false
