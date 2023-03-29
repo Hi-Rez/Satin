@@ -27,14 +27,14 @@ class ARPerspectiveCamera: PerspectiveCamera {
         fatalError("init(from:) has not been implemented")
     }
 
-    override func update() {
+    override func update(_ commandBuffer: MTLCommandBuffer) {
         guard let frame = session.currentFrame,
               let orientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else { return }
 
         viewMatrix = frame.camera.viewMatrix(for: orientation)
         projectionMatrix = frame.camera.projectionMatrix(for: orientation, viewportSize: mtkView.drawableSize, zNear: CGFloat(near), zFar: CGFloat(far))
 
-        super.update()
+        super.update(commandBuffer)
     }
 }
 #endif
