@@ -188,7 +188,6 @@ Here is a longer description of what Satin provides.
 
 ### Protocols
 
-- ``Intersectable``
 - ``Renderable``
 
 ### Uniforms
@@ -332,7 +331,6 @@ Here is a longer description of what Satin provides.
 
 - ``getMeshes(_:_:_:)``
 - ``getRenderables(_:_:_:)``
-- ``getIntersectables(_:_:_:)``
 - ``getLights(_:_:_:)``
 
 ### Intersection Functions

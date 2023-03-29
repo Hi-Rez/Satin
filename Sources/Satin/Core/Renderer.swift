@@ -142,7 +142,7 @@ open class Renderer {
 
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, scene: Object, camera: Camera)
     {
-        update(scene: scene, camera: camera)
+        update(commandBuffer: commandBuffer, scene: scene, camera: camera)
 
         // render objects that cast shadows into the depth textures
         if !shadowCasters.isEmpty, !shadowReceivers.isEmpty {
@@ -280,7 +280,7 @@ open class Renderer {
 
     // MARK: - Internal Update
 
-    private func update(scene: Object, camera: Camera) {
+    private func update(commandBuffer: MTLCommandBuffer, scene: Object, camera: Camera) {
         onUpdate?()
 
         objectList.removeAll(keepingCapacity: true)
@@ -291,11 +291,11 @@ open class Renderer {
         shadowCasters.removeAll(keepingCapacity: true)
         shadowReceivers.removeAll(keepingCapacity: true)
 
-        camera.update() // FIXME: - traverse children and make sure you update everything
+        camera.update(commandBuffer) // FIXME: - traverse children and make sure you update everything
 
         updateLists(object: scene)
 
-        updateScene(camera: camera)
+        updateScene(commandBuffer: commandBuffer, camera: camera)
         updateLights()
         updateShadows()
     }
@@ -327,7 +327,7 @@ open class Renderer {
         }
     }
 
-    private func updateScene(camera: Camera) {
+    private func updateScene(commandBuffer: MTLCommandBuffer, camera: Camera) {
         let maxLights = lightList.count
         let shadowCount = shadowList.count
 
@@ -341,13 +341,12 @@ open class Renderer {
                         material.shadowCount = shadowCount
                     }
                 }
-            }
-            else {
+            } else {
                 object.update(camera: camera, viewport: _viewport)
             }
 
             object.context = context
-            object.update()
+            object.update(commandBuffer)
         }
     }
 
@@ -729,6 +728,10 @@ open class Renderer {
     // MARK: - Internal Update
 
     public func compile(scene: Object, camera: Camera) {
-        update(scene: scene, camera: camera)
+        guard let commandQueue = context.device.makeCommandQueue(),
+              let commandBuffer = commandQueue.makeCommandBuffer()
+        else { return }
+        update(commandBuffer: commandBuffer, scene: scene, camera: camera)
+        commandBuffer.commit()
     }
 }

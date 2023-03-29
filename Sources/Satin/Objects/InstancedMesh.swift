@@ -115,7 +115,7 @@ public class InstancedMesh: Mesh {
         setupInstanceBuffer()
     }
 
-    override public func update() {
+    override public func update(_ commandBuffer: MTLCommandBuffer) {
         if _updateInstanceMatricesUniforms {
             updateInstanceMatricesUniforms()
         }
@@ -128,7 +128,7 @@ public class InstancedMesh: Mesh {
             updateInstanceBuffer()
         }
 
-        super.update()
+        super.update(commandBuffer)
     }
 
     override open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {

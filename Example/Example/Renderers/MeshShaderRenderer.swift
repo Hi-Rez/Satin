@@ -214,9 +214,9 @@ private class CustomMesh: Object, Renderable {
 
     // MARK: - Update
 
-    override func update() {
-        material?.update()
-        super.update()
+    override func update(_ commandBuffer: MTLCommandBuffer) {
+        material?.update(commandBuffer)
+        super.update(commandBuffer)
     }
 
     override func update(camera: Camera, viewport: simd_float4) {

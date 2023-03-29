@@ -162,8 +162,6 @@ public final class PerspectiveCameraController: CameraController, Codable {
         changed = changed || tweenRotation()
         changed = changed || tweenRoll()
 
-        target.update()
-
         if !changed { state = .inactive }
     }
 

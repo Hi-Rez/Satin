@@ -57,8 +57,8 @@ open class Submesh {
         setupMaterial()
     }
 
-    func update() {
-        material?.update()
+    func update(_ commandBuffer: MTLCommandBuffer) {
+        material?.update(commandBuffer)
     }
 
     private func setupMaterial() {
@@ -68,7 +68,6 @@ open class Submesh {
 
     private func setupIndexBuffer() {
         guard let context = context else { return }
-        print("setting up index buffer")
         let device = context.device
         if !indexData.isEmpty {
             let indicesSize = indexData.count * MemoryLayout.size(ofValue: indexData[0])
@@ -77,82 +76,5 @@ open class Submesh {
         } else {
             indexBuffer = nil
         }
-    }
-}
-
-extension Submesh: Intersectable {
-    public var geometryPublisher: PassthroughSubject<Intersectable, Never> {
-        parent.geometryPublisher
-    }
-
-    public var vertexStride: Int {
-        parent.vertexStride
-    }
-
-    public var cullMode: MTLCullMode {
-        parent.cullMode
-    }
-
-    public var windingOrder: MTLWinding {
-        parent.windingOrder
-    }
-
-    public var vertexBuffer: MTLBuffer? {
-        parent.vertexBuffer
-    }
-
-    public var vertexCount: Int {
-        parent.vertexCount
-    }
-
-    public var intersectable: Bool {
-        indexBuffer != nil
-    }
-
-    public var intersectionBounds: Bounds {
-        parent.intersectionBounds
-    }
-
-    public var worldMatrix: matrix_float4x4 {
-        parent.worldMatrix
-    }
-
-    public func intersects(ray: Ray) -> Bool {
-        parent.intersects(ray: ray)
-    }
-
-    public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
-        let index = Int(primitiveIndex) * 3
-
-        let i0 = Int(indexData[index])
-        let i1 = Int(indexData[index + 1])
-        let i2 = Int(indexData[index + 2])
-
-        let a: Vertex = parent.geometry.vertexData[i0]
-        let b: Vertex = parent.geometry.vertexData[i1]
-        let c: Vertex = parent.geometry.vertexData[i2]
-
-        let u: Float = barycentricCoordinate.x
-        let v: Float = barycentricCoordinate.y
-        let w: Float = 1.0 - u - v
-
-        let aUv = a.uv * u
-        let bUv = b.uv * v
-        let cUv = c.uv * w
-
-        let aNormal = (parent.normalMatrix * a.normal) * u
-        let bNormal = (parent.normalMatrix * b.normal) * v
-        let cNormal = (parent.normalMatrix * c.normal) * w
-
-        return RaycastResult(
-            barycentricCoordinates: simd_make_float3(u, v, w),
-            distance: distance,
-            normal: normalize(simd_make_float3(aNormal + bNormal + cNormal)),
-            position: ray.at(distance),
-            uv: simd_make_float2(aUv + bUv + cUv),
-            primitiveIndex: primitiveIndex,
-            object: parent,
-            submesh: self
-        )
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Reza Ali on 1/10/22.
 //
 
+import Metal
 import CoreText
 import Foundation
 import simd
@@ -290,7 +291,7 @@ open class TextGeometry: Geometry {
         self.lineSpacing = lineSpacing
         ctFont = CTFontCreateWithName(fontName as CFString, CGFloat(fontSize), nil)
         super.init()
-        update()
+        updateData()
     }
 
     public required init(from decoder: Decoder) throws {
@@ -333,12 +334,16 @@ open class TextGeometry: Geometry {
         case fontSize
     }
 
-    override public func update() {
+    override public func update(_ commandBuffer: MTLCommandBuffer) {
+        updateData()
+        super.update(commandBuffer)
+    }
+
+    private func updateData() {
         if needsSetup {
             setupData()
             needsSetup = false
         }
-        super.update()
     }
 
     var angleLimit: Float = degToRad(7.5)

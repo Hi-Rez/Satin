@@ -54,19 +54,3 @@ public func getLights(_ object: Object, _ recursive: Bool, _ invisible: Bool) ->
     }
     return results
 }
-
-public func getIntersectables(_ object: Object, _ recursive: Bool, _ invisible: Bool) -> [Intersectable] {
-    var results: [Intersectable] = []
-    if invisible || object.visible {
-        if let intersectable = object as? Intersectable, intersectable.intersectable {
-            results.append(intersectable)
-        }
-
-        if recursive {
-            for child in object.children {
-                results.append(contentsOf: getIntersectables(child, recursive, invisible))
-            }
-        }
-    }
-    return results
-}

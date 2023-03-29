@@ -159,10 +159,15 @@ open class Geometry: Codable {
     }
 
     open func setup() {
-        update()
+        updateBuffers()
     }
 
-    open func update() {
+    open func update(_ commandBuffer: MTLCommandBuffer) {
+        updateBuffers()
+    }
+
+    private func updateBuffers()
+    {
         if _updateVertexBuffer {
             setupVertexBuffer()
         }

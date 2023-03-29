@@ -10,7 +10,7 @@ import Combine
 import Metal
 import simd
 
-open class Mesh: Object, Renderable, Intersectable {
+open class Mesh: Object, Renderable {
     public var renderOrder = 0
 
     public var receiveShadow = false {
@@ -51,9 +51,6 @@ open class Mesh: Object, Renderable, Intersectable {
     }
 
     public var instanceCount = 1
-    open var intersectable: Bool {
-        geometry.vertexBuffer != nil && instanceCount > 0
-    }
 
     var uniforms: VertexUniformBuffer?
 
@@ -62,15 +59,11 @@ open class Mesh: Object, Renderable, Intersectable {
     open var geometry: Geometry {
         didSet {
             if geometry != oldValue {
-                geometryPublisher.send(self)
-                setupGeometrySubscriber()
                 setupGeometry()
                 _updateLocalBounds = true
             }
         }
     }
-
-    public let geometryPublisher = PassthroughSubject<Intersectable, Never>()
 
     open var material: Material? {
         didSet {
@@ -101,7 +94,6 @@ open class Mesh: Object, Renderable, Intersectable {
         self.geometry = geometry
         self.material = material
         super.init()
-        setupGeometrySubscriber()
     }
 
     // MARK: - CodingKeys
@@ -150,15 +142,6 @@ open class Mesh: Object, Renderable, Intersectable {
         setupUniforms()
     }
 
-    internal func setupGeometrySubscriber() {
-        geometrySubscriber?.cancel()
-        geometrySubscriber = geometry.publisher.sink { [weak self] _ in
-            guard let self = self else { return }
-            self.geometryPublisher.send(self)
-            self._updateLocalBounds = true
-        }
-    }
-
     internal func cleanupGeometrySubscriber() {
         geometrySubscriber?.cancel()
         geometrySubscriber = nil
@@ -186,13 +169,13 @@ open class Mesh: Object, Renderable, Intersectable {
         uniforms = VertexUniformBuffer(device: context.device)
     }
 
-    override open func update() {
-        geometry.update()
-        material?.update()
+    override open func update(_ commandBuffer: MTLCommandBuffer) {
+        geometry.update(commandBuffer)
+        material?.update(commandBuffer)
         for submesh in submeshes {
-            submesh.update()
+            submesh.update(commandBuffer)
         }
-        super.update()
+        super.update(commandBuffer)
     }
 
     override open func update(camera: Camera, viewport: simd_float4) {
@@ -335,82 +318,5 @@ open class Mesh: Object, Renderable, Intersectable {
         }
 
         intersections.sort { $0.distance < $1.distance }
-    }
-
-    // MARK: - Intersectable
-
-    public var vertexStride: Int {
-        MemoryLayout<Vertex>.stride
-    }
-
-    public var windingOrder: MTLWinding {
-        geometry.windingOrder
-    }
-
-    public var vertexBuffer: MTLBuffer? {
-        geometry.vertexBuffer
-    }
-
-    public var vertexCount: Int {
-        geometry.vertexData.count
-    }
-
-    public var indexBuffer: MTLBuffer? {
-        geometry.indexBuffer
-    }
-
-    public var indexCount: Int {
-        geometry.indexData.count
-    }
-
-    public var intersectionBounds: Bounds {
-        geometry.bounds
-    }
-
-    public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
-        let index = Int(primitiveIndex) * 3
-
-        var i0 = 0
-        var i1 = 0
-        var i2 = 0
-
-        if geometry.indexData.count > 0 {
-            i0 = Int(geometry.indexData[index])
-            i1 = Int(geometry.indexData[index + 1])
-            i2 = Int(geometry.indexData[index + 2])
-        } else {
-            i0 = index
-            i1 = index + 1
-            i2 = index + 2
-        }
-
-        guard i0 < vertexCount, i1 < vertexCount, i2 < vertexCount else { return nil }
-
-        let a: Vertex = geometry.vertexData[i0]
-        let b: Vertex = geometry.vertexData[i1]
-        let c: Vertex = geometry.vertexData[i2]
-
-        let u: Float = barycentricCoordinate.x
-        let v: Float = barycentricCoordinate.y
-        let w: Float = 1.0 - u - v
-
-        let aUv = a.uv * u
-        let bUv = b.uv * v
-        let cUv = c.uv * w
-
-        let aNormal = (normalMatrix * a.normal) * u
-        let bNormal = (normalMatrix * b.normal) * v
-        let cNormal = (normalMatrix * c.normal) * w
-
-        return RaycastResult(
-            barycentricCoordinates: simd_make_float3(u, v, w),
-            distance: distance,
-            normal: simd_normalize(simd_make_float3(aNormal + bNormal + cNormal)),
-            position: ray.at(distance),
-            uv: simd_make_float2(aUv + bUv + cUv),
-            primitiveIndex: primitiveIndex,
-            object: self,
-            submesh: nil
-        )
     }
 }

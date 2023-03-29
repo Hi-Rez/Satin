@@ -77,19 +77,11 @@ class LoadedMesh: Object, Renderable {
     public var castShadow: Bool = false
 
     public var drawable: Bool {
-        if
-            uniforms != nil,
-            vertexBuffer != nil,
-            let material = material,
-            let _ = material.pipeline
-        {
-            return true
-        }
-        return false
+        guard uniforms != nil, vertexBuffer != nil, material?.pipeline != nil else { return false }
+        return true
     }
 
     var uniforms: VertexUniformBuffer?
-    var geometryPublisher = PassthroughSubject<Intersectable, Never>()
 
     var url: URL?
     var material: Material?
@@ -105,25 +97,11 @@ class LoadedMesh: Object, Renderable {
     var windingOrder: MTLWinding = .counterClockwise
     var triangleFillMode: MTLTriangleFillMode = .fill
 
-    var indexBuffer: MTLBuffer? {
-        didSet {
-            geometryPublisher.send(self)
-        }
-    }
-
+    var indexBuffer: MTLBuffer?
     var indexCount = 0
     var indexBitDepth: MDLIndexBitDepth = .uInt32
-    var vertexBuffer: MTLBuffer? {
-        didSet {
-            geometryPublisher.send(self)
-        }
-    }
-
-    var genericsBuffer: MTLBuffer? {
-        didSet {
-            geometryPublisher.send(self)
-        }
-    }
+    var vertexBuffer: MTLBuffer?
+    var genericsBuffer: MTLBuffer?
 
     var vertexCount = 0
 
@@ -195,9 +173,9 @@ class LoadedMesh: Object, Renderable {
 
     // MARK: - Update
 
-    override func update() {
-        material?.update()
-        super.update()
+    override func update(_ commandBuffer: MTLCommandBuffer) {
+        material?.update(commandBuffer)
+        super.update(commandBuffer)
     }
 
     override func update(camera: Camera, viewport: simd_float4) {
@@ -264,72 +242,5 @@ class LoadedMesh: Object, Renderable {
             vertexPtr += 1
         }
         return bounds
-    }
-}
-
-extension LoadedMesh: Intersectable {
-    var intersectable: Bool {
-        vertexBuffer != nil
-    }
-
-    var intersectionBounds: Bounds {
-        geometryBounds
-    }
-
-    var vertexStride: Int {
-        MemoryLayout<Vertex>.stride
-    }
-
-    public func getRaycastResult(ray: Ray, distance: Float, primitiveIndex: UInt32, barycentricCoordinate: simd_float2) -> RaycastResult? {
-        let index = Int(primitiveIndex) * 3
-
-        var i0 = 0
-        var i1 = 0
-        var i2 = 0
-
-        if let indexBuffer = indexBuffer {
-            var indexPtr = indexBuffer.contents().bindMemory(to: UInt32.self, capacity: indexCount)
-            indexPtr = indexPtr.advanced(by: index)
-            i0 = Int(indexPtr.pointee)
-            indexPtr += 1
-            i1 = Int(indexPtr.pointee)
-            indexPtr += 1
-            i2 = Int(indexPtr.pointee)
-        } else {
-            i0 = index
-            i1 = index + 1
-            i2 = index + 2
-        }
-
-        guard i0 < vertexCount, i1 < vertexCount, i2 < vertexCount else { return nil }
-
-        let vertexPtr = vertexBuffer!.contents().bindMemory(to: Vertex.self, capacity: vertexCount).advanced(by: i0)
-
-        let a: Vertex = (vertexPtr + i0).pointee
-        let b: Vertex = (vertexPtr + i1).pointee
-        let c: Vertex = (vertexPtr + i2).pointee
-
-        let u: Float = barycentricCoordinate.x
-        let v: Float = barycentricCoordinate.y
-        let w: Float = 1.0 - u - v
-
-        let aUv = a.uv * u
-        let bUv = b.uv * v
-        let cUv = c.uv * w
-
-        let aNormal = worldMatrix * simd_make_float4(a.normal) * u
-        let bNormal = worldMatrix * simd_make_float4(b.normal) * v
-        let cNormal = worldMatrix * simd_make_float4(c.normal) * w
-
-        return RaycastResult(
-            barycentricCoordinates: simd_make_float3(u, v, w),
-            distance: distance,
-            normal: simd_normalize(simd_make_float3(aNormal + bNormal + cNormal)),
-            position: ray.at(distance),
-            uv: simd_make_float2(aUv + bUv + cUv),
-            primitiveIndex: primitiveIndex,
-            object: self,
-            submesh: nil
-        )
     }
 }

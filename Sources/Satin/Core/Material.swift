@@ -378,7 +378,7 @@ open class Material: Codable, ParameterGroupDelegate {
 
     open func update(camera _: Camera) {}
 
-    open func update() {
+    open func update(_ commandBuffer: MTLCommandBuffer) {
         updateDepth()
         updateShader()
         updateUniforms()

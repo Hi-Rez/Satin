@@ -6,6 +6,7 @@
 //  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
+import Metal
 import Combine
 import Foundation
 import simd
@@ -391,7 +392,7 @@ open class Object: Codable, ObservableObject {
         return result
     }
 
-    open func update() {
+    open func update(_ commandBuffer: MTLCommandBuffer) {
         onUpdate?()
     }
 
