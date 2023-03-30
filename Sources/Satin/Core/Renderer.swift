@@ -33,8 +33,13 @@ open class Renderer {
         didSet {
             if oldValue.width != size.width || oldValue.height != size.height {
                 updateViewport()
+
                 updateColorTexture = true
+                updateColorMultisampleTexture = true
+
                 updateDepthTexture = true
+                updateDepthMultisampleTexture = true
+
                 updateStencilTexture = true
             }
         }
