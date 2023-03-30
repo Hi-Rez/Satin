@@ -28,6 +28,6 @@ open class PBRShader: SourceShader {
 
     override open func modifyShaderSource(source: inout String) {
         super.modifyShaderSource(source: &source)
-        injectTexturesArgs(source: &source, maps: maps)
+        injectPBRTexturesArgs(source: &source, maps: maps)
     }
 }

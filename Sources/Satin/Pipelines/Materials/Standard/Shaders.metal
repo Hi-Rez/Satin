@@ -1,12 +1,7 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-    float4 baseColor;           // color,1,1,1,1
-    float4 emissiveColor;       // color,0,0,0,1
-    float roughness;            // slider,0.0,1.0,0.0
-    float metallic;             // slider,0.0,1.0,0.0
-    float specular;             // slider,0.0,1.0,0.5
-    float environmentIntensity; // slider,0.0,1.0,1.0
+#include "Chunks/PbrUniforms.metal"
 } StandardUniforms;
 
 typedef struct {

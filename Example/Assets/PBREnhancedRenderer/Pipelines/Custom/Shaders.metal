@@ -1,22 +1,7 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-    float4 baseColor;           // color,1,1,1,1
-    float4 emissiveColor;       // color,0,0,0,0
-    float subsurface;           // slider,0.0,1.0,0.0
-    float roughness;            // slider,0.0,1.0,0.25
-    float metallic;             // slider,0.0,1.0,0.0
-    float anisotropic;          // slider,-1.0,1.0,0.0
-    float specular;             // slider,0.0,1.0,0.5
-    float specularTint;         // slider,0.0,1.0,0.0
-    float clearcoat;            // slider,0.0,1.0,0.0
-    float clearcoatRoughness;   // slider,0.0,1.0,0.0
-    float sheen;                // slider,0.0,1.0,0.0
-    float sheenTint;            // slider,0.0,1.0,0.0
-    float transmission;         // slider,0.0,1.0,0.0
-    float thickness;            // slider,0.0,5.0,0.0
-    float ior;                  // slider,1.0,3.0,1.5
-    float environmentIntensity; // slider,0.0,1.0,1.0
+#include "Chunks/PbrUniforms.metal"
 } CustomUniforms;
 
 typedef struct {

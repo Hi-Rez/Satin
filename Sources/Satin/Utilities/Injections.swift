@@ -187,9 +187,9 @@ func injectPassThroughVertex(label: String, source: inout String) {
     }
 }
 
-// MARK: - Textures
+// MARK: - PBR
 
-func injectTexturesArgs(source: inout String, maps: Set<PBRTextureIndex>) {
+func injectPBRTexturesArgs(source: inout String, maps: Set<PBRTextureIndex>) {
     var injection = ""
     for map in maps {
         injection += "\t\(map.textureType)<float> \(map.textureName) [[texture(\(map.textureIndex))]],\n"

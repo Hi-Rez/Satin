@@ -6,9 +6,7 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-    float4 baseColor; // color
-    float4 emissiveColor; // color
-    float environmentIntensity; // slider,0.0,1.0,1.0
+#include "Chunks/PbrUniforms.metal"
 } CustomUniforms;
 
 typedef struct {

@@ -14,6 +14,7 @@ struct ContactShadowRendererView: View {
         ForgeView(renderer: ContactShadowRenderer())
             .ignoresSafeArea()
             .navigationTitle("Contact Shadow")
+            .preferredColorScheme(.light)
     }
 }
 

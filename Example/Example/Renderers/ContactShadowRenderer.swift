@@ -33,7 +33,7 @@ class ContactShadowRenderer: BaseRenderer {
     // MARK: - 3D Scene
 
     lazy var spheres: Object = {
-        let geometry = IcoSphereGeometry(radius: 0.5, res: 4)
+        let geometry = RoundedBoxGeometry(size: (1, 1, 1), radius: 0.25, res: 3)
         let geometrySize = geometry.bounds.size
 
         let material = MatCapMaterial(texture: matcapTexture)
@@ -41,7 +41,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere0.position.y += 0.5
         sphere0.onUpdate = { [weak self, weak sphere0] in
             if let self = self, let sphere = sphere0 {
-                sphere0?.position.y = sin(-0.25 * self.theta + 0.34 * Float.pi)
+                sphere0?.position.y = 0.01 + sin(-0.25 * self.theta + 0.34 * Float.pi)
+                sphere.orientation = simd_quatf(angle: 0.33 * self.theta, axis: [0, 1, 0])
             }
         }
 
@@ -52,6 +53,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere1.onUpdate = { [weak self, weak sphere1] in
             if let self = self, let sphere = sphere1 {
                 sphere.position.y = 0.25 * sin(0.75 * self.theta + 0.4938 * Float.pi)
+                sphere.orientation = simd_quatf(angle: 0.5 * self.theta, axis: simd_normalize(.one))
+                sphere.orientation *= simd_quatf(angle: -0.25 * self.theta, axis: [0.0, 1.0, 0.0])
             }
         }
 
@@ -63,6 +66,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere2.onUpdate = { [weak self, weak sphere2] in
             if let self = self, let sphere = sphere2 {
                 sphere.position.y = 0.75 * sin(1.25 * self.theta + 0.83475 * Float.pi)
+                sphere.orientation = simd_quatf(angle: -0.25 * self.theta, axis: [1, 0, 0])
+                sphere.orientation *= simd_quatf(angle: 0.75 * self.theta, axis: simd_normalize([1, 0, 1]))
             }
         }
 
@@ -74,6 +79,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere3.onUpdate = { [weak self, weak sphere3] in
             if let self = self, let sphere = sphere3 {
                 sphere.position.y = 0.66 * sin(-0.66 * self.theta + 0.12475 * Float.pi)
+                sphere.orientation = simd_quatf(angle: -self.theta, axis: simd_normalize([1, 0, 1]))
+                sphere.orientation *= simd_quatf(angle: self.theta * 0.5, axis: [0, 0, 1])
             }
         }
 
@@ -85,6 +92,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere4.onUpdate = { [weak self, weak sphere4] in
             if let self = self, let sphere = sphere4 {
                 sphere.position.y = 0.348957 * sin(-0.234 * self.theta + 0.66 * Float.pi)
+                sphere.orientation = simd_quatf(angle: -self.theta * 0.5, axis: simd_normalize([1, 1, 0]))
+                sphere.orientation *= simd_quatf(angle: self.theta * 0.25, axis: simd_normalize([0, 1, 0]))
             }
         }
 
@@ -96,6 +105,8 @@ class ContactShadowRenderer: BaseRenderer {
         sphere5.onUpdate = { [weak self, weak sphere5] in
             if let self = self, let sphere = sphere5 {
                 sphere.position.y = 0.33 * sin(0.124 * self.theta + 0.7 * Float.pi)
+                sphere.orientation = simd_quatf(angle: self.theta * 0.5, axis: simd_normalize([0, 1, 1]))
+                sphere.orientation *= simd_quatf(angle: -self.theta * 0.25, axis: simd_normalize([1, 0, 0]))
             }
         }
 
@@ -104,9 +115,10 @@ class ContactShadowRenderer: BaseRenderer {
         return spheres
     }()
 
-    lazy var scene = Object("Scene", [spheres, floorMesh])
-    var floorMaterial = BasicTextureMaterial(texture: nil)
-    lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 1.0, plane: .zx), material: floorMaterial)
+    lazy var spheresContainer = Object("Spheres Container", [spheres, floorMesh])
+
+    lazy var scene = Object("Scene", [spheresContainer])
+    lazy var floorMesh = Mesh(geometry: PlaneGeometry(size: 1.0, plane: .zx), material: BasicTextureMaterial())
 
     lazy var camera: PerspectiveCamera = {
         var camera = PerspectiveCamera(position: [20, 20, 20], near: 0.01, far: 100.0, fov: 10)
@@ -121,9 +133,10 @@ class ContactShadowRenderer: BaseRenderer {
     lazy var shadowRenderer = ObjectShadowRenderer(
         context: context,
         object: spheres,
-        container: scene,
+        container: spheresContainer,
         scene: scene,
-        catcher: floorMesh
+        catcher: floorMesh,
+        padding: 0.25
     )
 
     override func setupMtkView(_ metalKitView: MTKView) {

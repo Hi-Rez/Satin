@@ -215,6 +215,8 @@ class ObjectShadowRenderer {
             far: far
         )
 
+        catcher.worldPosition = objectCenter
+        catcher.position.y = .zero
         catcher.scale = .init(repeating: size + padding * 2.0)
     }
 

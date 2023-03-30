@@ -36,6 +36,10 @@ public func getPipelinesChunksURL() -> URL? {
     return getPipelinesURL("Chunks")
 }
 
+public func getPipelinesChunksURL(_ path: String) -> URL? {
+    return getPipelinesChunksURL()?.appendingPathComponent(path)
+}
+
 public func getPipelinesLibraryURL(_ path: String) -> URL? {
     return getPipelinesLibraryURL()?.appendingPathComponent(path)
 }

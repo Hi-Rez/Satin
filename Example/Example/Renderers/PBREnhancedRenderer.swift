@@ -11,7 +11,7 @@ import Metal
 import MetalKit
 import Satin
 
-class EnhancedPBRRenderer: BaseRenderer, MaterialDelegate {
+class PBREnhancedRenderer: BaseRenderer, MaterialDelegate {
     // MARK: - 3D Scene
 
     class CustomShader: PBRShader {

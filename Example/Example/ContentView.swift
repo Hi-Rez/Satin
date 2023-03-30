@@ -135,8 +135,12 @@ struct ContentView: View {
                         Label("PBR", systemImage: "eye")
                     }
 
-                    NavigationLink(destination: EnhancedPBRRendererView()) {
-                        Label("PBR Enhanced", systemImage: "party.popper")
+                    NavigationLink(destination: PBREnhancedRendererView()) {
+                        Label("PBR Physical Material", systemImage: "party.popper")
+                    }
+
+                    NavigationLink(destination: PBRStandardMaterialRendererView()) {
+                        Label("PBR Standard Material", systemImage: "flame")
                     }
 
                     NavigationLink(destination: PostProcessingRendererView()) {
@@ -146,12 +150,12 @@ struct ContentView: View {
                     NavigationLink(destination: ProjectedShadowRendererView()) {
                         Label("Projected Shadow", systemImage: "shadow")
                     }
-
+                }
+                Group {
                     NavigationLink(destination: RayMarchingRendererView()) {
                         Label("Ray Marching", systemImage: "camera.metering.multispot")
                     }
-                }
-                Group {
+
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
@@ -160,9 +164,6 @@ struct ContentView: View {
                         Label("Satin + SceneKit + AR", systemImage: "arkit")
                     }
                     #endif
-                    NavigationLink(destination: StandardMaterialRendererView()) {
-                        Label("Standard PBR Material", systemImage: "flame")
-                    }
 
                     NavigationLink(destination: ShippingShadersRendererView()) {
                         Label("Shipping Shaders", systemImage: "shippingbox")

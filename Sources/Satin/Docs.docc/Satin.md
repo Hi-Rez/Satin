@@ -245,6 +245,7 @@ Here is a longer description of what Satin provides.
 - ``getPipelinesLibraryURL()``
 - ``getPipelinesLibraryURL(_:)``
 - ``getPipelinesChunksURL()``
+- ``getPipelinesChunksURL(_:)``
 - ``getPipelinesSatinURL()``
 - ``getPipelinesSatinURL(_:)``
 - ``getPipelinesCommonURL()``

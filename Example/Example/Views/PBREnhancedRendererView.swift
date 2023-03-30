@@ -9,16 +9,16 @@
 import Forge
 import SwiftUI
 
-struct EnhancedPBRRendererView: View {
+struct PBREnhancedRendererView: View {
     var body: some View {
-        ForgeView(renderer: EnhancedPBRRenderer())
+        ForgeView(renderer: PBREnhancedRenderer())
             .ignoresSafeArea()
-            .navigationTitle("Enhanced PBR")
+            .navigationTitle("PBR Physical Material")
     }
 }
 
-struct EnhancedPBRRendererView_Previews: PreviewProvider {
+struct PBREnhancedRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        EnhancedPBRRendererView()
+        PBREnhancedRendererView()
     }
 }

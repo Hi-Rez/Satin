@@ -14,6 +14,7 @@ struct ProjectedShadowRendererView: View {
         ForgeView(renderer: ProjectedShadowRenderer())
             .ignoresSafeArea()
             .navigationTitle("Projected Shadow")
+            .preferredColorScheme(.light)
     }
 }
 

@@ -15,14 +15,8 @@ open class PhysicalShader: PBRShader {
         results["HAS_SUBSURFACE"] = "true"
         results["HAS_SPECULAR_TINT"] = "true"
         results["HAS_SHEEN"] = "true"
-        results["HAS_SHEEN_TINT"] = "true"
         results["HAS_TRANSMISSION"] = "true"
         results["HAS_ANISOTROPIC"] = "true"
         return results
-    }
-
-    override open func modifyShaderSource(source: inout String) {
-        super.modifyShaderSource(source: &source)
-        injectTexturesArgs(source: &source, maps: maps)
     }
 }

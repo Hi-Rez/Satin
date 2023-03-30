@@ -9,16 +9,16 @@
 import Forge
 import SwiftUI
 
-struct StandardMaterialRendererView: View {
+struct PBRStandardMaterialRendererView: View {
     var body: some View {
-        ForgeView(renderer: StandardMaterialRenderer())
+        ForgeView(renderer: PBRStandardMaterialRenderer())
             .ignoresSafeArea()
-            .navigationTitle("Standard PBR Material")
+            .navigationTitle("PBR Standard Material")
     }
 }
 
-struct StandardMaterialRendererView_Previews: PreviewProvider {
+struct PBRStandardMaterialRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        StandardMaterialRendererView()
+        PBRStandardMaterialRendererView()
     }
 }

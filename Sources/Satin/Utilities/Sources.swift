@@ -215,22 +215,3 @@ class InstancingArgsSource {
         return sharedSource
     }
 }
-
-class TextureArgsSource {
-    static let shared = TextureArgsSource()
-    private static var sharedSource: String?
-
-    class func get() -> String? {
-        guard TextureArgsSource.sharedSource == nil else {
-            return sharedSource
-        }
-        if let url = getPipelinesSatinURL("TextureArgs.metal") {
-            do {
-                sharedSource = try MetalFileCompiler(watch: false).parse(url)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return sharedSource
-    }
-}

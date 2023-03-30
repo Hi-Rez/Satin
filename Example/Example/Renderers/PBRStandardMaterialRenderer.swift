@@ -14,7 +14,7 @@ import MetalKit
 import Forge
 import Satin
 
-class StandardMaterialRenderer: BaseRenderer {
+class PBRStandardMaterialRenderer: BaseRenderer {
 
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
