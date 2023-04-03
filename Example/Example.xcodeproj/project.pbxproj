@@ -161,7 +161,6 @@
 		E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctasphereRenderer.swift; sourceTree = "<group>"; };
 		E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtrudedTextRenderer.swift; sourceTree = "<group>"; };
 		E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRStandardMaterialRendererView.swift; sourceTree = "<group>"; };
-		E18E2C0229DA493E0045B7DC /* Forge */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Forge; path = ../../Forge; sourceTree = "<group>"; };
 		E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubemapRenderer.swift; sourceTree = "<group>"; };
 		E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCodeRenderer.swift; sourceTree = "<group>"; };
 		E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcapRenderer.swift; sourceTree = "<group>"; };
@@ -317,7 +316,6 @@
 			isa = PBXGroup;
 			children = (
 				E10CC20327F128ED00E04B2B /* Satin */,
-				E18E2C0229DA493E0045B7DC /* Forge */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
