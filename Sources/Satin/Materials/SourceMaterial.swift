@@ -14,6 +14,13 @@ open class SourceMaterial: Material {
     }
 
     public var pipelineURL: URL
+    public var live: Bool = false {
+        didSet {
+            if let shader = shader as? SourceShader {
+                shader.live = live
+            }
+        }
+    }
 
     public var source: String? {
         if let shader = shader as? SourceShader {
@@ -22,13 +29,15 @@ open class SourceMaterial: Material {
         return nil
     }
 
-    public init(pipelineURL: URL) {
+    public init(pipelineURL: URL, live: Bool = false) {
         self.pipelineURL = pipelineURL
+        self.live = live
         super.init()
     }
 
-    public init(pipelinesURL: URL) {
+    public init(pipelinesURL: URL, live: Bool = false) {
         pipelineURL = pipelinesURL
+        self.live = live
         super.init()
         if pipelinesURL.pathExtension != "metal" {
             pipelineURL = pipelinesURL
@@ -38,7 +47,9 @@ open class SourceMaterial: Material {
     }
 
     override open func createShader() -> Shader {
-        return SourceShader(label, pipelineURL)
+        let shader = SourceShader(label, pipelineURL)
+        shader.live = live
+        return shader
     }
 
     public required init(from decoder: Decoder) throws {
@@ -55,5 +66,12 @@ open class SourceMaterial: Material {
 
     public required init() {
         fatalError("Please specify a pipeline url to use SourceMaterial")
+    }
+
+    override public func clone() -> Material {
+        let clone = SourceMaterial(pipelineURL: pipelineURL, live: live)
+        clone.isClone = true
+        cloneProperties(clone: clone)
+        return clone
     }
 }

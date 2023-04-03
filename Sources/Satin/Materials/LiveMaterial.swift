@@ -9,12 +9,12 @@
 import Metal
 
 open class LiveMaterial: SourceMaterial {
-    override public init(pipelineURL: URL) {
-        super.init(pipelineURL: pipelineURL)
+    public init(pipelineURL: URL) {
+        super.init(pipelineURL: pipelineURL, live: true)
     }
 
-    override public init(pipelinesURL: URL) {
-        super.init(pipelinesURL: pipelinesURL)
+    public init(pipelinesURL: URL) {
+        super.init(pipelinesURL: pipelinesURL, live: true)
     }
 
     override open func createShader() -> Shader {
