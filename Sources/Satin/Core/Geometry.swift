@@ -16,6 +16,10 @@ import simd
 open class Geometry: Codable {
     public var id: String = UUID().uuidString
 
+    open var vertexDescriptor: MTLVertexDescriptor {
+        SatinVertexDescriptor()
+    }
+
     public var primitiveType: MTLPrimitiveType = .triangle {
         didSet {
             if primitiveType != oldValue, primitiveType != .triangle {

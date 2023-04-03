@@ -7,6 +7,7 @@
 //
 
 import Forge
+import Foundation
 import Metal
 import MetalKit
 import Satin
@@ -15,14 +16,14 @@ class PBREnhancedRenderer: BaseRenderer, MaterialDelegate {
     // MARK: - 3D Scene
 
     class CustomShader: PBRShader {
-        override open var defines: [String: String] {
+        override open var defines: [String: NSObject] {
             var results = super.defines
-            results["HAS_CLEARCOAT"] = "true"
-            results["HAS_SUBSURFACE"] = "true"
-            results["HAS_SPECULAR_TINT"] = "true"
-            results["HAS_SHEEN"] = "true"
-            results["HAS_TRANSMISSION"] = "true"
-            results["HAS_ANISOTROPIC"] = "true"
+            results["HAS_CLEARCOAT"] = NSString(string: "true")
+            results["HAS_SUBSURFACE"] = NSString(string: "true")
+            results["HAS_SPECULAR_TINT"] = NSString(string: "true")
+            results["HAS_SHEEN"] = NSString(string: "true")
+            results["HAS_TRANSMISSION"] = NSString(string: "true")
+            results["HAS_ANISOTROPIC"] = NSString(string: "true")
             return results
         }
     }
@@ -49,7 +50,6 @@ class PBREnhancedRenderer: BaseRenderer, MaterialDelegate {
         }
     }
 
-    
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
 
     lazy var scene = Scene("Scene", [mesh, skybox])

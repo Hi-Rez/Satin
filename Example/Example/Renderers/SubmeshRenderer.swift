@@ -103,7 +103,7 @@ class SubmeshRenderer: BaseRenderer {
         start("Loading Asset")
         let asset = MDLAsset(
             url: url,
-            vertexDescriptor: SatinModelIOVertexDescriptor,
+            vertexDescriptor: SatinModelIOVertexDescriptor(),
             bufferAllocator: MTKMeshBufferAllocator(device: context.device)
         )
         end()

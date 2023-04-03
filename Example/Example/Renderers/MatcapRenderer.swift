@@ -57,7 +57,7 @@ class MatcapRenderer: BaseRenderer {
     }
 
     func loadModel() {
-        let asset = MDLAsset(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"), vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"), vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
 
         // MatCapMaterial inspired by @TheSpite
         // https://www.clicktorelease.com/code/spherical-normal-mapping/

@@ -105,7 +105,7 @@ class InstancedMeshRenderer: BaseRenderer {
     }
 
     func loadOBJ(url: URL) -> Geometry? {
-        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
 
         let geo = Geometry()
         let object0 = asset.object(at: 0)

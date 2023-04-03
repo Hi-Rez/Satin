@@ -181,6 +181,10 @@ struct ContentView: View {
                         Label("Text", systemImage: "textformat")
                     }
 
+                    NavigationLink(destination: TessellationRendererView()) {
+                        Label("Tessellation", systemImage: "square.split.2x2")
+                    }
+
                     NavigationLink(destination: TextureComputeRendererView()) {
                         Label("Texture Compute", systemImage: "photo.stack")
                     }

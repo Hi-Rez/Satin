@@ -38,7 +38,7 @@ class LoadObjRenderer: BaseRenderer {
     }
 
     func loadOBJ(url: URL) {
-        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         let mesh = Mesh(geometry: Geometry(), material: BasicDiffuseMaterial(0.0))
         mesh.label = "Suzanne"
 
@@ -61,7 +61,7 @@ class LoadObjRenderer: BaseRenderer {
     }
 
     func loadUSD(url: URL) {
-        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor, bufferAllocator: MTKMeshBufferAllocator(device: context.device))
+        let asset = MDLAsset(url: url, vertexDescriptor: SatinModelIOVertexDescriptor(), bufferAllocator: MTKMeshBufferAllocator(device: context.device))
         scene = Object()
         let object = asset.object(at: 0)
         print(object.name)

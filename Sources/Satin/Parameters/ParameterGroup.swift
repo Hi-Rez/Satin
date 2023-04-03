@@ -509,79 +509,79 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
     }
 
     public func set(_ name: String, _ value: Float) {
-        if let param = paramsMap[name], let p = param as? FloatParameter {
+        if let param = get(name), let p = param as? FloatParameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float2) {
-        if let param = paramsMap[name], let p = param as? Float2Parameter {
+        if let param = get(name), let p = param as? Float2Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float3) {
-        if let param = paramsMap[name], let p = param as? Float3Parameter {
+        if let param = get(name), let p = param as? Float3Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float4) {
-        if let param = paramsMap[name], let p = param as? Float4Parameter {
+        if let param = get(name), let p = param as? Float4Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float2x2) {
-        if let param = paramsMap[name], let p = param as? Float2x2Parameter {
+        if let param = get(name), let p = param as? Float2x2Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float3x3) {
-        if let param = paramsMap[name], let p = param as? Float3x3Parameter {
+        if let param = get(name), let p = param as? Float3x3Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_float4x4) {
-        if let param = paramsMap[name], let p = param as? Float4x4Parameter {
+        if let param = get(name), let p = param as? Float4x4Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: Int) {
-        if let param = paramsMap[name], let p = param as? IntParameter {
+        if let param = get(name), let p = param as? IntParameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_int2) {
-        if let param = paramsMap[name], let p = param as? Int2Parameter {
+        if let param = get(name), let p = param as? Int2Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_int3) {
-        if let param = paramsMap[name], let p = param as? Int3Parameter {
+        if let param = get(name), let p = param as? Int3Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: simd_int4) {
-        if let param = paramsMap[name], let p = param as? Int4Parameter {
+        if let param = get(name), let p = param as? Int4Parameter {
             p.value = value
         }
     }
 
     public func set(_ name: String, _ value: Bool) {
-        if let param = paramsMap[name], let p = param as? BoolParameter {
+        if let param = get(name), let p = param as? BoolParameter {
             p.value = value
         }
     }
 
     public func get(_ name: String) -> Parameter? {
-        return paramsMap[name]
+        return paramsMap[name] ?? paramsMap[name.titleCase]
     }
 
     public func updated(parameter: Parameter) {

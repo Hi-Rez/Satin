@@ -16,7 +16,7 @@ func injectConstants(source: inout String) {
 
 // MARK: - Defines
 
-func injectDefines(source: inout String, defines: [String: String]) {
+func injectDefines(source: inout String, defines: [String: NSObject]) {
     var injection = ""
     for define in defines { injection += "#define \(define.key) \(define.value)\n" }
     source = source.replacingOccurrences(of: "// inject defines\n", with: injection.isEmpty ? "\n" : injection + "\n")
@@ -26,7 +26,7 @@ func injectDefines(source: inout String, defines: [String: String]) {
 
 func injectVertex(source: inout String, vertexDescriptor: MTLVertexDescriptor) {
     var vertexSource: String?
-    if vertexDescriptor == SatinVertexDescriptor {
+    if vertexDescriptor == SatinVertexDescriptor() {
         vertexSource = VertexSource.get()
     } else {
         var vertexDataType: [String] = []

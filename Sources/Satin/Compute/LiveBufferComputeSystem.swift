@@ -24,10 +24,10 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         }
     }
 
-    open var defines: [String: String] {
-        var results = [String: String]()
+    open var defines: [String: NSObject] {
+        var results = [String: NSObject]()
         #if os(iOS)
-        results["MOBILE"] = "true"
+        results["MOBILE"] = NSString(string: "true")
         #endif
         return results
     }

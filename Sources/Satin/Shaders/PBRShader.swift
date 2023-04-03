@@ -17,12 +17,12 @@ open class PBRShader: SourceShader {
         }
     }
 
-    override open var defines: [String: String] {
+    override open var defines: [String: NSObject] {
         var results = super.defines
         if !maps.isEmpty {
-            results["HAS_MAPS"] = "true"
+            results["HAS_MAPS"] = NSString(string: "true")
         }
-        for map in maps { results[map.shaderDefine] = "true" }
+        for map in maps { results[map.shaderDefine] = NSString(string: "true") }
         return results
     }
 

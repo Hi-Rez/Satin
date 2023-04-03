@@ -12,15 +12,15 @@ import Metal
 open class Shader {
     // MARK: - Main Pipeline
 
-    public internal(set) var pipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
-    public internal(set) var pipelineReflection: MTLRenderPipelineReflection?
+    open var pipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
+    open var pipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var pipeline: MTLRenderPipelineState?
     public internal(set) var error: Error?
 
     // MARK: - Shadow Pipeline
 
-    public internal(set) var shadowPipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
-    public internal(set) var shadowPipelineReflection: MTLRenderPipelineReflection?
+    open var shadowPipelineOptions: MTLPipelineOption = [.argumentInfo, .bufferTypeInfo]
+    open var shadowPipelineReflection: MTLRenderPipelineReflection?
     public internal(set) var shadowPipeline: MTLRenderPipelineState?
     public internal(set) var shadowError: Error?
 
@@ -109,7 +109,7 @@ open class Shader {
     public var receiveShadow = false
     public var shadowCount = 0
 
-    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
+    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
         didSet {
             if oldValue != vertexDescriptor {
                 pipelineNeedsUpdate = true
@@ -276,11 +276,11 @@ open class Shader {
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.label = label
 
+        pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.vertexFunction = vertexFunction
         pipelineStateDescriptor.fragmentFunction = fragmentFunction
 
         pipelineStateDescriptor.sampleCount = context.sampleCount
-        pipelineStateDescriptor.vertexDescriptor = vertexDescriptor
         pipelineStateDescriptor.colorAttachments[0].pixelFormat = context.colorPixelFormat
         pipelineStateDescriptor.depthAttachmentPixelFormat = context.depthPixelFormat
         pipelineStateDescriptor.stencilAttachmentPixelFormat = context.stencilPixelFormat

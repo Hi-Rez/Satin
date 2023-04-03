@@ -18,7 +18,12 @@ class BaseRenderer: Forge.Renderer {
     var pipelinesURL: URL { rendererAssetsURL.appendingPathComponent("Pipelines") }
     var texturesURL: URL { rendererAssetsURL.appendingPathComponent("Textures") }
     var modelsURL: URL { rendererAssetsURL.appendingPathComponent("Models") }
-    
+
+    override func cleanup() {
+        super.cleanup()
+        print("cleanup: \(String(describing: type(of: self)))")
+    }
+
     deinit {
         print("deinit: \(String(describing: type(of: self)))")
     }

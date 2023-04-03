@@ -104,7 +104,7 @@ class ExportGeometryRenderer: BaseRenderer {
 
                 let submesh = MDLSubmesh(indexBuffer: mdlIndexBuffer, indexCount: geometry.indexData.count, indexType: .uInt32, geometryType: .triangles, material: nil)
 
-                let mesh = MDLMesh(vertexBuffer: mdlVertexBuffer, vertexCount: geometry.vertexData.count, descriptor: SatinModelIOVertexDescriptor, submeshes: [submesh])
+                let mesh = MDLMesh(vertexBuffer: mdlVertexBuffer, vertexCount: geometry.vertexData.count, descriptor: SatinModelIOVertexDescriptor(), submeshes: [submesh])
                 asset.add(mesh)
             }
         }

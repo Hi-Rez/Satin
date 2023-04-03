@@ -38,7 +38,7 @@ open class Material: Codable, ParameterGroupDelegate {
 
     public lazy var label: String = prefix
 
-    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor {
+    public var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor() {
         didSet {
             if oldValue != vertexDescriptor {
                 shaderVertexDescriptorNeedsUpdate = true
@@ -120,7 +120,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    public internal(set) var isClone = false
+    open var isClone = false
     public weak var delegate: MaterialDelegate?
 
     public var pipeline: MTLRenderPipelineState? {
@@ -637,7 +637,7 @@ open class Material: Codable, ParameterGroupDelegate {
         shader = nil
     }
 
-    public func clone() -> Material {
+    open func clone() -> Material {
         let clone: Material = type(of: self).init()
         clone.isClone = true
         cloneProperties(clone: clone)

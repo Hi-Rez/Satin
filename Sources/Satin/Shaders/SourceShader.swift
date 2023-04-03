@@ -75,11 +75,11 @@ open class SourceShader: Shader {
         }
     }
 
-    open var defines: [String: String] {
-        var results = [String: String]()
+    open var defines: [String: NSObject] {
+        var results = [String: NSObject]()
 
         #if os(iOS)
-        results["MOBILE"] = "true"
+        results["MOBILE"] = NSString(string: "true")
         #endif
 
         for attribute in VertexAttribute.allCases {
@@ -87,28 +87,28 @@ open class SourceShader: Shader {
             case .invalid:
                 continue
             default:
-                results[attribute.shaderDefine] = "true"
+                results[attribute.shaderDefine] = NSString(string: "true")
             }
         }
 
         if instancing {
-            results["INSTANCING"] = "true"
+            results["INSTANCING"] = NSString(string: "true")
         }
 
         if lighting {
-            results["LIGHTING"] = "true"
+            results["LIGHTING"] = NSString(string: "true")
         }
 
         if maxLights > -1 {
-            results["MAX_LIGHTS"] = "\(maxLights)"
+            results["MAX_LIGHTS"] = NSNumber(value: maxLights)
         }
 
         if receiveShadow {
-            results["HAS_SHADOWS"] = "true"
+            results["HAS_SHADOWS"] = NSString(string: "true")
         }
 
         if shadowCount > -1 {
-            results["SHADOW_COUNT"] = "\(shadowCount)"
+            results["SHADOW_COUNT"] = NSNumber(value: shadowCount)
         }
 
         return results
@@ -171,7 +171,9 @@ open class SourceShader: Shader {
     override func setupLibrary() {
         guard let context = context, let source = source else { return }
         do {
-            library = try context.device.makeLibrary(source: source, options: nil)
+            let compileOptions = MTLCompileOptions()
+            compileOptions.preprocessorMacros = defines
+            library = try context.device.makeLibrary(source: source, options: compileOptions)
             error = nil
         } catch {
             self.error = error
