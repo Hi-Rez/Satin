@@ -82,13 +82,13 @@ class ARRenderer: BaseRenderer {
             let anchor = ARAnchor(transform: simd_mul(currentFrame.camera.transform, translationMatrixf(0.0, 0.0, -0.25)))
             session.add(anchor: anchor)
 
-            let mesh = Mesh(geometry: boxGeometry, material: boxMaterial)
-            mesh.onUpdate = { [weak mesh, weak anchor] in
-                guard let mesh = mesh, let anchor = anchor else { return }
-                mesh.localMatrix = anchor.transform
+            let torusMesh = Mesh(geometry: boxGeometry, material: boxMaterial)
+            torusMesh.onUpdate = { [weak torusMesh, weak anchor] in
+                guard let torusMesh = torusMesh, let anchor = anchor else { return }
+                torusMesh.localMatrix = anchor.transform
             }
 
-            scene.add(mesh)
+            scene.add(torusMesh)
         }
     }
 }

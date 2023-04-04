@@ -106,7 +106,7 @@ open class SourceShader: Shader {
             results["LIGHTING"] = NSString(string: "true")
         }
 
-        if maxLights > -1 {
+        if maxLights > 0 {
             results["MAX_LIGHTS"] = NSNumber(value: maxLights)
         }
 
@@ -114,7 +114,7 @@ open class SourceShader: Shader {
             results["HAS_SHADOWS"] = NSString(string: "true")
         }
 
-        if shadowCount > -1 {
+        if shadowCount > 0 {
             results["SHADOW_COUNT"] = NSNumber(value: shadowCount)
         }
 

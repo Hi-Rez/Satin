@@ -12,6 +12,10 @@ fragment float4 shadowFragment
     float4 outColor = 0.0;
     // inject shadow fragment calc
     outColor = uniforms.color;
+#if defined(SHADOW_COUNT)
     outColor.a *= 1.0 - shadow;
+#else
+    outColor.a *= 0.0;
+#endif
     return outColor;
 }

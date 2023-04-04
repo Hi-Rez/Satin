@@ -11,9 +11,9 @@ import ARKit
 import Metal
 import MetalKit
 
-import SwiftUI
 import Forge
 import Satin
+import SwiftUI
 
 class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     class RainbowMaterial: SourceMaterial {}
@@ -29,8 +29,8 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - 3D
 
     lazy var material = RainbowMaterial(pipelinesURL: pipelinesURL)
-    lazy var mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.03, res: 3), material: material, count: 20000)
-    lazy var scene = Object("Scene", [mesh])
+    lazy var torusMesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.03, res: 3), material: material, count: 20000)
+    lazy var scene = Object("Scene", [torusMesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, .depth32Float)
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = {
@@ -81,7 +81,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Setup
 
     override func setup() {
-        mesh.drawCount = 0
+        torusMesh.drawCount = 0
         backgroundRenderer = ARBackgroundRenderer(context: Context(device, 1, colorPixelFormat), session: session)
         postProcessor = ARPostProcessor(context: Context(device, 1, colorPixelFormat), session: session)
         renderer.compile(scene: scene, camera: camera)
@@ -90,7 +90,6 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Update
 
     override func update() {
-
         updateDrawing()
         updateMaterial()
     }
@@ -148,17 +147,17 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     func updateDrawing() {
         if clear.wrappedValue {
-            mesh.drawCount = 0
+            torusMesh.drawCount = 0
             clear.wrappedValue = false
-        }else if touchDown, let currentFrame = session.currentFrame {
+        } else if touchDown, let currentFrame = session.currentFrame {
             add(simd_mul(currentFrame.camera.transform, translationMatrixf(0, 0, -0.2)))
         }
     }
 
     func add(_ transform: simd_float4x4) {
-        if let index = mesh.drawCount {
-            mesh.drawCount = index + 1
-            mesh.setMatrixAt(index: index, matrix: transform)
+        if let index = torusMesh.drawCount {
+            torusMesh.drawCount = index + 1
+            torusMesh.setMatrixAt(index: index, matrix: transform)
         }
     }
 
