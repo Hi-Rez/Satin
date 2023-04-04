@@ -131,8 +131,14 @@ struct ContentView: View {
                         Label("Octasphere", systemImage: "globe")
                     }
 
+                }
+                Group {
                     NavigationLink(destination: PBRRendererView()) {
                         Label("PBR", systemImage: "eye")
+                    }
+
+                    NavigationLink(destination: PBRCustomizationRendererView()) {
+                        Label("PBR Customization", systemImage: "gear")
                     }
 
                     NavigationLink(destination: PBREnhancedRendererView()) {
@@ -191,6 +197,7 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Satin Examples")
+            PBRCustomizationRendererView()
         }
     }
 }

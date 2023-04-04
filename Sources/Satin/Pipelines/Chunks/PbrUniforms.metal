@@ -27,3 +27,32 @@
     float thickness;            // slider,0.0,5.0,0.0
     float ior;                  // slider,1.0,3.0,1.5
 #endif
+    float3x3 baseColorTexcoordTransform;
+    float3x3 emissiveTexcoordTransform;
+    float3x3 roughnessTexcoordTransform;
+    float3x3 metallicTexcoordTransform;
+    float3x3 specularTexcoordTransform;
+    float3x3 normalTexcoordTransform;
+    float3x3 ambientOcclusionTexcoordTransform;
+#if defined(HAS_SPECULAR_TINT)
+    float3x3 specularTintTexcoordTransform;
+#endif
+#if defined(HAS_ANISOTROPIC)
+    float3x3 anisotropicTexcoordTransform;
+    float3x3 anisotropicAngleTexcoordTransform;
+#endif
+#if defined(HAS_CLEARCOAT)
+    float3x3 clearcoatTexcoordTransform;
+    float3x3 clearcoatRoughnessTexcoordTransform;
+#endif
+#if defined(HAS_SUBSURFACE)
+    float3x3 subsurfaceTexcoordTransform;
+#endif
+#if defined(HAS_SHEEN)
+    float3x3 sheenTexcoordTransform;
+    float3x3 sheenTintTexcoordTransform;
+#endif
+#if defined(HAS_TRANSMISSION)
+    float3x3 transmissionTexcoordTransform;
+    float3x3 iorTexcoordTransform;
+#endif

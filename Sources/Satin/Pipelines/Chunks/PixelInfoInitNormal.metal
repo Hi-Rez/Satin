@@ -1,5 +1,6 @@
 #if defined(NORMAL_MAP)
-    float3 mapNormal = normalMap.sample(normalSampler, in.texcoords).rgb * 2.0 - 1.0;
+    const float2 normalTexcoord = (uniforms.normalTexcoordTransform * float3(in.texcoords, 1.0)).xy;
+    float3 mapNormal = normalMap.sample(normalSampler, normalTexcoord).rgb * 2.0 - 1.0;
 
 #if defined(HAS_TANGENT) && defined(HAS_BITANGENT)
     const float3x3 TBN(in.tangent, in.bitangent, in.normal);

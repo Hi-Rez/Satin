@@ -89,6 +89,37 @@ open class StandardMaterial: Material {
         }
     }
 
+
+    public func setTexcoordTransform(_ transform: simd_float3x3, type: PBRTextureIndex) {
+        set(type.texcoordName.titleCase, transform)
+    }
+
+    public func setTexcoordTransform(offset: simd_float2, scale: simd_float2, rotation: Float, type: PBRTextureIndex) {
+        let ct = cos(rotation)
+        let st = sin(rotation)
+        
+        let rotateTransform = simd_float3x3(
+            simd_make_float3(ct, st, 0.0),
+            simd_make_float3(-st, ct, 0.0),
+            simd_make_float3(0.0, 0.0, 0.0)
+        )
+
+        let offsetTransform = simd_float3x3(
+            simd_make_float3( 1.0, 0.0, 0.0 ),
+            simd_make_float3( 0.0, 1.0, 0.0 ),
+            simd_make_float3( offset.x, offset.y, 0.0 )
+        )
+
+        let scaleTransform = simd_float3x3(
+            simd_make_float3( scale.x, 0.0, 0.0 ),
+            simd_make_float3( 0.0, scale.y, 0.0 ),
+            simd_make_float3( 0.0, 0.0, 0.0 )
+        )
+
+        let transform = rotateTransform * scaleTransform * offsetTransform
+        set(type.texcoordName.titleCase, transform)
+    }
+
     public init(baseColor: simd_float4,
                 metallic: Float,
                 roughness: Float,
@@ -123,6 +154,9 @@ open class StandardMaterial: Material {
         set("Metallic", metallic)
         set("Roughness", roughness)
         set("Environment Intensity", environmentIntensity)
+        for type in PBRTextureIndex.allTexcoordCases {
+            set(type.texcoordName.titleCase, matrix_identity_float3x3)
+        }
     }
 
     public required init(from decoder: Decoder) throws {

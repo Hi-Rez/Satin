@@ -5,7 +5,6 @@
 //  Created by Reza Ali on 6/7/20.
 //  Copyright © 2020 Hi-Rez. All rights reserved.
 //
-//  PBR Code from: https://learnopengl.com/PBR/
 //  Cube Map Texture from: https://hdrihaven.com/hdri/
 //
 

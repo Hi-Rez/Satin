@@ -58,7 +58,41 @@ public enum PBRTextureIndex: Int {
         return description + "Map"
     }
 
+    public var texcoordName: String {
+        switch self {
+            case .clearcoatGloss:
+                return PBRTextureIndex.clearcoatRoughness.texcoordName
+        default:
+            return description + "TexcoordTransform"
+        }
+    }
+
     public var textureIndex: String {
         return "PBRTexture" + Substring(description.prefix(1).uppercased()) + Substring(description.dropFirst())
+    }
+
+    public static var allTexcoordCases: [PBRTextureIndex] {
+        return [
+            .baseColor,
+            .subsurface,
+            .metallic,
+            .roughness,
+            .normal,
+            .emissive,
+            .specular,
+            .specularTint,
+            .sheen,
+            .sheenTint,
+            .clearcoat,
+            .clearcoatRoughness,
+            .anisotropic,
+            .anisotropicAngle,
+            .bump,
+            .displacement,
+            .alpha,
+            .ior,
+            .transmission,
+            .ambientOcclusion
+        ]
     }
 }

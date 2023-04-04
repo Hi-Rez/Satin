@@ -5,6 +5,8 @@
 //  Created by Reza Ali on 1/6/23.
 //  Copyright © 2023 Hi-Rez. All rights reserved.
 //
+//  Cube Map Texture from: https://hdrihaven.com/hdri/
+//
 
 import Forge
 import Foundation
