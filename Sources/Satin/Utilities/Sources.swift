@@ -83,6 +83,101 @@ class ConstantsSource {
     }
 }
 
+class ComputeConstantsSource {
+    static let shared = ComputeConstantsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard ComputeConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinURL("ComputeConstants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class MeshConstantsSource {
+    static let shared = MeshConstantsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard MeshConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinURL("MeshConstants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class VertexConstantsSource {
+    static let shared = VertexConstantsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard VertexConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinURL("VertexConstants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class FragmentConstantsSource {
+    static let shared = FragmentConstantsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard FragmentConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinURL("FragmentConstants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
+class PBRConstantsSource {
+    static let shared = PBRConstantsSource()
+    private static var sharedSource: String?
+
+    class func get() -> String? {
+        guard PBRConstantsSource.sharedSource == nil else {
+            return sharedSource
+        }
+        if let url = getPipelinesSatinURL("PBRConstants.metal") {
+            do {
+                sharedSource = try MetalFileCompiler(watch: false).parse(url)
+            } catch {
+                print(error)
+            }
+        }
+        return sharedSource
+    }
+}
+
 class VertexSource {
     static let shared = VertexSource()
     private static var sharedSource: String?

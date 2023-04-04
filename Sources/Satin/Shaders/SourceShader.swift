@@ -75,6 +75,13 @@ open class SourceShader: Shader {
         }
     }
 
+    open var constants: [String] {
+        [
+            "// inject vertex constants",
+            "// inject fragment constants"
+        ]
+    }
+
     open var defines: [String: NSObject] {
         var results = [String: NSObject]()
 
@@ -171,9 +178,10 @@ open class SourceShader: Shader {
     override func setupLibrary() {
         guard let context = context, let source = source else { return }
         do {
-            let compileOptions = MTLCompileOptions()
-            compileOptions.preprocessorMacros = defines
-            library = try context.device.makeLibrary(source: source, options: compileOptions)
+            // This slows it down...
+//            let compileOptions = MTLCompileOptions()
+//            compileOptions.preprocessorMacros = defines
+            library = try context.device.makeLibrary(source: source, options: nil)
             error = nil
         } catch {
             self.error = error
@@ -216,11 +224,13 @@ open class SourceShader: Shader {
         else { return }
 
         do {
-            // create boilerplate shader code
             var source = try MetalFileCompiler(watch: false).parse(includesURL)
 
             injectDefines(source: &source, defines: defines)
-            injectConstants(source: &source)
+            injectConstants(source: &source, constants: constants)
+
+            injectVertexConstants(source: &source)
+            injectFragmentConstants(source: &source)
 
             injectShadowData(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
             injectShadowBuffer(source: &source, receiveShadow: receiveShadow, shadowCount: shadowCount)
@@ -255,7 +265,7 @@ open class SourceShader: Shader {
             shaderSource = compiledShaderSource
 
             self.source = source
-
+            
             error = nil
         } catch {
             self.error = error

@@ -31,6 +31,12 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
         return results
     }
 
+    open var constants: [String] {
+        [
+            "// inject compute constants"
+        ]
+    }
+
     public init(device: MTLDevice,
                 textureDescriptors: [MTLTextureDescriptor],
                 pipelineURL: URL,
@@ -95,7 +101,8 @@ open class LiveTextureComputeSystem: TextureComputeSystem {
 
     open func inject(source: inout String) {
         injectDefines(source: &source, defines: defines)
-        injectConstants(source: &source)
+        injectConstants(source: &source, constants: constants)
+        injectComputeConstants(source: &source)
     }
 
     func compileSource() -> String? {

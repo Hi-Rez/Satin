@@ -8,10 +8,32 @@
 import Foundation
 import Metal
 
+public func injectComputeConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject compute constants\n", with: (ComputeConstantsSource.get() ?? "\n") + "\n")
+}
+
+public func injectMeshConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject mesh constants\n", with: (MeshConstantsSource.get() ?? "\n") + "\n")
+}
+
+public func injectVertexConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject vertex constants\n", with: (VertexConstantsSource.get() ?? "\n") + "\n")
+}
+
+public func injectFragmentConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject fragment constants\n", with: (FragmentConstantsSource.get() ?? "\n") + "\n")
+}
+
+public func injectPBRConstants(source: inout String) {
+    source = source.replacingOccurrences(of: "// inject pbr constants\n", with: (PBRConstantsSource.get() ?? "\n") + "\n")
+}
+
 // MARK: - Constants
 
-func injectConstants(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject constants\n", with: (ConstantsSource.get() ?? "\n") + "\n")
+func injectConstants(source: inout String, constants: [String]) {
+    var injection = ""
+    for constant in constants { injection += constant + "\n" }
+    source = source.replacingOccurrences(of: "// inject constants\n", with: injection.isEmpty ? "\n" : injection + "\n")
 }
 
 // MARK: - Defines
@@ -172,7 +194,7 @@ func injectVertexData(source: inout String) {
 }
 
 func injectVertexUniforms(source: inout String) {
-    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: VertexUniformsSource.get() ?? "\n")
+    source = source.replacingOccurrences(of: "// inject vertex uniforms\n", with: (VertexUniformsSource.get() ?? "\n") + "\n")
 }
 
 func injectPassThroughVertex(label: String, source: inout String) {
@@ -185,16 +207,6 @@ func injectPassThroughVertex(label: String, source: inout String) {
     } else {
         source = source.replacingOccurrences(of: "// inject vertex shader\n", with: "\n")
     }
-}
-
-// MARK: - PBR
-
-func injectPBRTexturesArgs(source: inout String, maps: Set<PBRTextureIndex>) {
-    var injection = ""
-    for map in maps {
-        injection += "\t\(map.textureType)<float> \(map.textureName) [[texture(\(map.textureIndex))]],\n"
-    }
-    source = source.replacingOccurrences(of: "// inject texture args\n", with: injection)
 }
 
 // MARK: - Instancing

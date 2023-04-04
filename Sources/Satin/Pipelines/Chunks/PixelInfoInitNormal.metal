@@ -1,11 +1,8 @@
 #if defined(NORMAL_MAP)
-    constexpr sampler normalSampler(filter::linear);
     float3 mapNormal = normalMap.sample(normalSampler, in.texcoords).rgb * 2.0 - 1.0;
 
-#if defined(HAS_TANGENT) && defined(HAS_HAS_BITANGENT)
-    // mapNormal.y = -mapNormal.y; // Flip normal map Y-axis if necessary
+#if defined(HAS_TANGENT) && defined(HAS_BITANGENT)
     const float3x3 TBN(in.tangent, in.bitangent, in.normal);
-    const float3 N = normalize(TBN * mapNormal);
     pixel.normal = normalize(TBN * mapNormal);
     
 #else

@@ -13,12 +13,29 @@ import QuartzCore
 import SatinCore
 import simd
 
+
+protocol Geo {
+    var id: String { get }
+    var context: Context? { get set }
+    var vertexDescriptor: MTLVertexDescriptor { get }
+    var primitiveType: MTLPrimitiveType { get }
+    var indexType: MTLIndexType? { get }
+    var publisher: PassthroughSubject<Geo, Never> { get }
+    var vertexData: [Any] { get set }
+    var inddexData: [Any] { get set }
+
+    func setup()
+    func update(_ commandBuffer: MTLCommandBuffer)
+
+    func intersects(ray: Ray) -> Bool
+    func intersect(ray: Ray, intersections: inout [IntersectionResult])
+    func computeBounds() -> Bounds
+}
+
 open class Geometry: Codable {
     public var id: String = UUID().uuidString
 
-    open var vertexDescriptor: MTLVertexDescriptor {
-        SatinVertexDescriptor()
-    }
+    open var vertexDescriptor: MTLVertexDescriptor = SatinVertexDescriptor()
 
     public var primitiveType: MTLPrimitiveType = .triangle {
         didSet {
@@ -101,7 +118,7 @@ open class Geometry: Codable {
     }
 
     public private(set) var vertexBuffers: [VertexBufferIndex: MTLBuffer?] = [:]
-    
+
     public var vertexBuffer: MTLBuffer? {
         didSet {
             if let vertexBuffer = vertexBuffer {
@@ -170,8 +187,7 @@ open class Geometry: Codable {
         updateBuffers()
     }
 
-    private func updateBuffers()
-    {
+    private func updateBuffers() {
         if _updateVertexBuffer {
             setupVertexBuffer()
         }
@@ -272,6 +288,7 @@ open class Geometry: Codable {
 
     public func setBuffer(_ buffer: MTLBuffer?, type: VertexBufferIndex) {
         vertexBuffers[type] = buffer
+        buffer?.label = type.label
     }
 
     public func transform(_ matrix: simd_float4x4) {

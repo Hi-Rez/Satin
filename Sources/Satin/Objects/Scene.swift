@@ -8,6 +8,7 @@
 
 import Combine
 import Metal
+import ModelIO
 import simd
 
 open class Scene: Object {

@@ -156,6 +156,7 @@ class SubmeshRenderer: BaseRenderer {
                             let indexDataPtr = mdlSubmesh.indexBuffer(asIndexType: .uInt32).map().bytes.bindMemory(to: UInt32.self, capacity: indexCount)
                             let indexData = Array(UnsafeBufferPointer(start: indexDataPtr, count: indexCount))
                             let submesh = Submesh(
+                                parent: mesh,
                                 indexData: indexData,
                                 indexBuffer: (mdlSubmesh.indexBuffer as! MTKMeshBuffer).buffer,
                                 material: PhysicalMaterial(material: mdlMaterial, textureLoader: textureLoader)
@@ -185,6 +186,6 @@ class SubmeshRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device, texturesURL.appendingPathComponent(filename))
+        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
     }
 }

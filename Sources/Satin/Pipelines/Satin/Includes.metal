@@ -5,6 +5,7 @@ using namespace metal;
 
 // inject defines
 // inject constants
+// inject lighting
 // inject shadow data
 // inject shadow buffer
 // inject shadow function
@@ -12,8 +13,5 @@ using namespace metal;
 // inject vertex data
 // inject vertex uniforms
 // inject instance matrix uniforms
-// inject lighting
-// inject structs
-// inject material structs
 // inject shadow shader
 // inject vertex shader

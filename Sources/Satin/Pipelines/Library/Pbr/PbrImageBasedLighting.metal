@@ -1,13 +1,10 @@
-#if defined(USE_IBL)
 float3 getIBLRadiance(texturecube<float> reflectionMap, float3 dir, float roughness)
 {
     const float levels = float(reflectionMap.get_num_mip_levels() - 1);
     const float mipLevel = roughness * levels;
-    return reflectionMap.sample(pbrMipSampler, dir, level(mipLevel)).rgb;
+    return reflectionMap.sample(reflectionSampler, dir, level(mipLevel)).rgb;
 }
-#endif
 
-#ifdef USE_IBL
 void pbrIndirectLighting(
     texturecube<float> irradianceMap,
     texturecube<float> reflectionMap,
@@ -29,11 +26,11 @@ void pbrIndirectLighting(
     float3 Ks = fresnelSchlickRoughness(NdotV, F0, roughness);
     float3 Kd = (baseColor * INV_PI) * (1.0 - Ks) * (1.0 - metallic);
     
-    float2 ggxLut = brdfMap.sample(pbrLinearSampler, saturate(float2(NdotV, roughness))).rg;
+    float2 ggxLut = brdfMap.sample(brdfSampler, saturate(float2(NdotV, roughness))).rg;
     float3 Fs = (Ks * ggxLut.x + ggxLut.y);
     
     // Diffuse
-    radiance_d += Kd * pixel.material.environmentIntensity * irradianceMap.sample(pbrLinearSampler, N).rgb;
+    radiance_d += Kd * pixel.material.environmentIntensity * irradianceMap.sample(irradianceSampler, N).rgb;
 
     float3 R = reflect(-V, N);
 
@@ -82,11 +79,10 @@ void pbrIndirectLighting(
         float clearcoatRoughness = pixel.material.clearcoatRoughness;
         float3 clearcoatLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, R, clearcoatRoughness);
         float3 Kc = fresnelSchlickRoughness(NdotV, 0.04, clearcoatRoughness);
-        float2 brdfClearcoat = brdfMap.sample(pbrLinearSampler, saturate(float2(NdotV, clearcoatRoughness))).rg;
+        float2 brdfClearcoat = brdfMap.sample(brdfSampler, saturate(float2(NdotV, clearcoatRoughness))).rg;
         float3 Fcc = clearcoatLight * (Kc * brdfClearcoat.x + brdfClearcoat.y);
         pixel.radiance += clearcoat * Fcc * pixel.material.ambientOcclusion;
     }
 #endif
 }
 
-#endif

@@ -120,8 +120,28 @@ typedef enum PBRTextureIndex {
     PBRTextureAmbientOcclusion = 13,
     PBRTextureReflection = 14,
     PBRTextureIrradiance = 15,
-    PBRTextureBRDF = 16
+    PBRTextureBrdf = 16
 } PBRTextureIndex;
+
+typedef enum PBRSamplerIndex {
+    PBRSamplerBaseColor = 0,
+    PBRSamplerMetallic = 1,
+    PBRSamplerRoughness = 2,
+    PBRSamplerNormal = 3,
+    PBRSamplerEmissive = 4,
+    PBRSamplerSpecular = 5,
+    PBRSamplerSheen = 6,
+    PBRSamplerAnisotropy = 7,
+    PBRSamplerAnisotropyAngle = 8,
+    PBRSamplerBump = 9,
+    PBRSamplerDisplacement = 10,
+    PBRSamplerAlpha = 11,
+    PBRSamplerAmbient = 12,
+    PBRSamplerAmbientOcclusion = 13,
+    PBRSamplerReflection = 14,
+    PBRSamplerIrradiance = 15,
+    PBRSamplerBrdf = 16
+} PBRSamplerIndex;
 
 typedef enum FragmentSamplerIndex {
     FragmentSamplerCustom0 = 0,

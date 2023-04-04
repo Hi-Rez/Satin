@@ -92,7 +92,11 @@ class LoadObjRenderer: BaseRenderer {
                             let indexCount = mdlSubmesh.indexCount
                             let indexDataPtr = mdlSubmesh.indexBuffer(asIndexType: .uInt32).map().bytes.bindMemory(to: UInt32.self, capacity: indexCount)
                             let indexData = Array(UnsafeBufferPointer(start: indexDataPtr, count: indexCount))
-                            let submesh = Submesh(indexData: indexData, indexBuffer: (mdlSubmesh.indexBuffer as! MTKMeshBuffer).buffer)
+                            let submesh = Submesh(
+                                parent: mesh,
+                                indexData: indexData,
+                                indexBuffer: (mdlSubmesh.indexBuffer as! MTKMeshBuffer).buffer
+                            )
                             submesh.label = mdlSubmesh.name
                             mesh.addSubmesh(submesh)
                         }

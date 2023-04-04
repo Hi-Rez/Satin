@@ -1,8 +1,3 @@
-#define IRRADIANCE_MAP true
-#define REFLECTION_MAP true
-#define BRDF_MAP true
-#define HAS_MAPS true
-
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
@@ -45,9 +40,7 @@ vertex CustomVertexData customVertex(Vertex in [[stage_in]],
 
 fragment float4 customFragment( CustomVertexData in [[stage_in]],
     // inject lighting args
-    texturecube<float> irradianceMap [[texture( PBRTextureIrradiance )]],
-    texturecube<float> reflectionMap [[texture( PBRTextureReflection )]],
-    texture2d<float> brdfMap [[texture( PBRTextureBRDF )]],
+#include "Chunks/PbrTextures.metal"
     constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
 #include "Chunks/PixelInfo.metal"

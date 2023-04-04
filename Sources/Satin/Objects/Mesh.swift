@@ -68,6 +68,7 @@ open class Mesh: Object, Renderable {
     open var material: Material? {
         didSet {
             if material != oldValue {
+                material?.vertexDescriptor = geometry.vertexDescriptor
                 setupMaterial()
             }
         }
@@ -88,11 +89,12 @@ open class Mesh: Object, Renderable {
 
     internal var geometrySubscriber: AnyCancellable?
 
-    public var submeshes: [Submesh] = []
+    public internal(set) var submeshes: [Submesh] = []
 
     public init(geometry: Geometry, material: Material?) {
         self.geometry = geometry
         self.material = material
+        material?.vertexDescriptor = geometry.vertexDescriptor
         super.init()
     }
 

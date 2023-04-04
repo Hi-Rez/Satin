@@ -7,11 +7,21 @@
 //
 
 import Foundation
+import Metal
+
 
 open class PBRShader: SourceShader {
-    open var maps = Set<PBRTextureIndex>() {
+    open var maps: [PBRTextureIndex: MTLTexture?] = [:] {
         didSet {
-            if oldValue != maps {
+            if oldValue.keys != maps.keys {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
+
+    open var samplers: [PBRTextureIndex: MTLSamplerDescriptor?] = [:] {
+        didSet {
+            if oldValue.keys != samplers.keys {
                 sourceNeedsUpdate = true
             }
         }
@@ -19,15 +29,23 @@ open class PBRShader: SourceShader {
 
     override open var defines: [String: NSObject] {
         var results = super.defines
-        if !maps.isEmpty {
-            results["HAS_MAPS"] = NSString(string: "true")
+        if !maps.isEmpty { results["HAS_MAPS"] = NSString(string: "true") }
+        for map in maps { results[map.key.shaderDefine] = NSString(string: "true") }
+        return results
+    }
+
+    override open var constants: [String] {
+        var results = super.constants
+        for (index, sampler) in samplers where sampler != nil {
+            results.append(sampler!.shaderInjection(index: index))
         }
-        for map in maps { results[map.shaderDefine] = NSString(string: "true") }
+        if !samplers.isEmpty { results.append("") }
+        results.append("// inject pbr constants")
         return results
     }
 
     override open func modifyShaderSource(source: inout String) {
         super.modifyShaderSource(source: &source)
-        injectPBRTexturesArgs(source: &source, maps: maps)
+        injectPBRConstants(source: &source)
     }
 }

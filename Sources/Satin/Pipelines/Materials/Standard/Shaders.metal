@@ -6,7 +6,7 @@ typedef struct {
 
 typedef struct {
     float4 position [[position]];
-    // inject shadow coords
+// inject shadow coords
     float3 normal;
     float2 texcoords;
     float3 worldPosition;
@@ -16,8 +16,8 @@ typedef struct {
 vertex CustomVertexData standardVertex
 (
     Vertex in [[stage_in]],
-    // inject instancing args
-    // inject shadow vertex args
+// inject instancing args
+// inject shadow vertex args
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]])
 {
 #if defined(INSTANCING)
@@ -43,21 +43,17 @@ vertex CustomVertexData standardVertex
 fragment float4 standardFragment
 (
     CustomVertexData in [[stage_in]],
-    // inject lighting args
-    // inject texture args
-    // inject shadow fragment args
+// inject lighting args
+// inject shadow fragment args
+#include "Chunks/PbrTextures.metal"
     constant StandardUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
 {
     float4 outColor;
-
 #include "Chunks/PixelInfoInit.metal"
 #include "Chunks/PbrInit.metal"
 #include "Chunks/PbrDirectLighting.metal"
 #include "Chunks/PbrInDirectLighting.metal"
-
 #include "Chunks/PbrTonemap.metal"
-
-    // inject shadow fragment calc
-
+// inject shadow fragment calc
     return outColor;
 }

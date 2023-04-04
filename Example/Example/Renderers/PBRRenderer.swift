@@ -113,7 +113,7 @@ class PBRRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device, texturesURL.appendingPathComponent(filename))
+        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
     }
 
     override func update() {

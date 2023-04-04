@@ -159,9 +159,7 @@ class TessellationComputeSystem<T>: Tessellator {
 
     func setupLibrary(_ source: String) -> MTLLibrary? {
         do {
-            let compileOptions = MTLCompileOptions()
-            compileOptions.preprocessorMacros = defines
-            return try device.makeLibrary(source: source, options: compileOptions)
+            return try device.makeLibrary(source: source, options: nil)
         } catch {
             print("\(prefixLabel)ComputeSystem: \(error.localizedDescription)")
         }

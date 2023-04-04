@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  VertexFunctionConstants.swift
 //  
 //
 //  Created by Reza Ali on 3/17/23.
@@ -25,6 +25,45 @@ public enum VertexBufferIndex: Int {
     case Custom8 = 14
     case Custom9 = 15
     case Custom10 = 16
+
+    public var label: String {
+        switch self {
+            case .Vertices:
+                return "Vertices"
+            case .Generics:
+                return "Generics"
+            case .VertexUniforms:
+                return "Uniforms"
+            case .InstanceMatrixUniforms:
+                return "InstanceUniforms"
+            case .MaterialUniforms:
+                return "MaterialUniforms"
+            case .ShadowMatrices:
+                return "ShadowMatrices"
+            case .Custom0:
+                return "Custom0"
+            case .Custom1:
+                return "Custom1"
+            case .Custom2:
+                return "Custom2"
+            case .Custom3:
+                return "Custom3"
+            case .Custom4:
+                return "Custom4"
+            case .Custom5:
+                return "Custom5"
+            case .Custom6:
+                return "Custom6"
+            case .Custom7:
+                return "Custom7"
+            case .Custom8:
+                return "Custom8"
+            case .Custom9:
+                return "Custom9"
+            case .Custom10:
+                return "Custom10"
+        }
+    }
 }
 
 public enum VertexTextureIndex: Int {

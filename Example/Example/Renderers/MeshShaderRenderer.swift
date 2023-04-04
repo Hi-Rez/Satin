@@ -69,6 +69,12 @@ private class CustomShader: SourceShader {
 
     var meshFunction: String?
 
+    override var constants: [String] {
+        var results = super.constants
+        results.append("// inject mesh constants")
+        return results
+    }
+
     init(_ label: String,
          _ pipelineURL: URL,
          _ objectFunctionName: String? = nil,
@@ -92,6 +98,11 @@ private class CustomShader: SourceShader {
         super.init(label, pipelineURL, vertexFunctionName, fragmentFunctionName)
         objectFunctionName = label.camelCase + "Object"
         meshFunctionName = label.camelCase + "Mesh"
+    }
+
+    override func modifyShaderSource(source: inout String) {
+        super.modifyShaderSource(source: &source)
+        injectMeshConstants(source: &source)
     }
 
     override func createPipeline(_ context: Context, _ library: MTLLibrary) throws -> MTLRenderPipelineState? {

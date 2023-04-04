@@ -503,6 +503,7 @@ open class Material: Codable, ParameterGroupDelegate {
         shader.shadowCount = shadowCount
         shader.receiveShadow = receiveShadow
         shader.castShadow = castShadow
+        shaderDefinesNeedsUpdate = false
     }
 
     public func set(_ name: String, _ value: [Float]) {

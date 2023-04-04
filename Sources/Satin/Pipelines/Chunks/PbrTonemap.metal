@@ -1,1 +1,1 @@
-outColor = float4(pbrTonemap(pixel), pixel.material.alpha); 
+    outColor = float4(pbrTonemap(pixel), pixel.material.alpha); 

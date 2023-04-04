@@ -110,7 +110,7 @@ public func loadImage(url: URL) -> CGImage? {
     #endif
 }
 
-public func loadHDR(_ device: MTLDevice, _ url: URL) -> MTLTexture? {
+public func loadHDR(device: MTLDevice, url: URL) -> MTLTexture? {
     let cfURLString = url.path as CFString
     guard let cfURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, cfURLString, CFURLPathStyle.cfurlposixPathStyle, false) else {
         fatalError("Failed to create CFURL from: \(url.path)")

@@ -3,4 +3,3 @@ typedef struct {
     float bias;
     float radius;
 } ShadowData;
-

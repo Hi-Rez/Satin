@@ -32,6 +32,13 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
         return results
     }
 
+    open var constants: [String] {
+        [
+            "// inject compute constants"
+        ]
+    }
+
+
     var prefixLabel: String {
         var prefix = String(describing: type(of: self)).replacingOccurrences(of: "BufferComputeSystem", with: "")
         prefix = prefix.replacingOccurrences(of: "ComputeSystem", with: "")
@@ -97,7 +104,8 @@ open class LiveBufferComputeSystem: BufferComputeSystem {
 
     open func inject(source: inout String) {
         injectDefines(source: &source, defines: defines)
-        injectConstants(source: &source)
+        injectConstants(source: &source, constants: constants)
+        injectComputeConstants(source: &source)
     }
 
     func compileSource() -> String? {

@@ -19,15 +19,12 @@ class TessellatedGeometry: Geometry {
     var controlPointIndexBuffer: MTLBuffer? { indexBuffer }
     var controlPointIndexType: MTLTessellationControlPointIndexType { indexData.isEmpty ? .none : .uint32 }
 
-    override var vertexDescriptor: MTLVertexDescriptor {
-        let vertexDescriptor = SatinVertexDescriptor()
-        vertexDescriptor.layouts[0].stepRate = 1
-        vertexDescriptor.layouts[0].stepFunction = .perPatchControlPoint
-        return vertexDescriptor
-    }
+
 
     public init(baseGeometry: Geometry) {
         super.init(primitiveType: baseGeometry.primitiveType, windingOrder: baseGeometry.windingOrder, indexType: baseGeometry.indexType)
+        self.vertexDescriptor.layouts[VertexBufferIndex.Vertices.rawValue].stepRate = 1
+        self.vertexDescriptor.layouts[VertexBufferIndex.Vertices.rawValue].stepFunction = .perPatchControlPoint
         self.vertexData = baseGeometry.vertexData
         self.indexData = baseGeometry.indexData
     }

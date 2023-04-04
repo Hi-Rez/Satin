@@ -52,7 +52,15 @@ open class StandardMaterial: Material {
     private var maps: [PBRTextureIndex: MTLTexture?] = [:] {
         didSet {
             if oldValue.keys != maps.keys, let shader = shader as? PBRShader {
-                shader.maps = Set(maps.keys)
+                shader.maps = maps
+            }
+        }
+    }
+
+    private var samplers: [PBRTextureIndex: MTLSamplerDescriptor?] = [:] {
+        didSet {
+            if oldValue.keys != samplers.keys, let shader = shader as? PBRShader {
+                shader.samplers = samplers
             }
         }
     }
@@ -60,8 +68,24 @@ open class StandardMaterial: Material {
     public func setTexture(_ texture: MTLTexture?, type: PBRTextureIndex) {
         if let texture = texture {
             maps[type] = texture
+            if samplers[type] == nil {
+                let sampler = MTLSamplerDescriptor()
+                sampler.minFilter = .linear
+                sampler.magFilter = .linear
+                sampler.mipFilter = .linear
+                setSampler(sampler, type: type)
+            }
         } else {
+            samplers.removeValue(forKey: type)
             maps.removeValue(forKey: type)
+        }
+    }
+
+    public func setSampler(_ sampler: MTLSamplerDescriptor?, type: PBRTextureIndex) {
+        if let sampler = sampler {
+            samplers[type] = sampler
+        } else {
+            samplers.removeValue(forKey: type)
         }
     }
 
@@ -117,7 +141,8 @@ open class StandardMaterial: Material {
     override open func updateShaderDefines() {
         super.updateShaderDefines()
         guard let shader = shader as? PBRShader else { return }
-        shader.maps = Set(maps.filter{ $0.value != nil }.keys)
+        shader.maps = maps.filter { $0.value != nil }
+        shader.samplers = samplers.filter { $0.value != nil }
     }
 
     override open func createShader() -> Shader {

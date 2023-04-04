@@ -35,19 +35,22 @@ open class Submesh {
         }
     }
 
-    weak var parent: Mesh!
+    unowned var parent: Mesh
     var material: Material?
 
     public init(
+        parent: Mesh,
         indexData: [UInt32],
         indexBuffer: MTLBuffer? = nil,
         indexBufferOffset: Int = 0,
         material: Material? = nil
     ) {
+        self.parent = parent
         self.indexData = indexData
         self.indexBuffer = indexBuffer
         self.indexBufferOffset = indexBufferOffset
         self.material = material
+        material?.vertexDescriptor = parent.geometry.vertexDescriptor
     }
 
     private func setup() {

@@ -34,13 +34,6 @@ class PBRStandardMaterialRenderer: BaseRenderer {
         return mesh
     }()
 
-    // Textures
-    var hdriTexture: MTLTexture?
-    var cubemapTexture: MTLTexture?
-    var diffuseIBLTexture: MTLTexture?
-    var specularIBLTexture: MTLTexture?
-    var brdfTexture: MTLTexture?
-
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
@@ -107,6 +100,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
 
     func setupScene() {
         let customVertexDescriptor = CustomModelIOVertexDescriptor()
+
         let asset = MDLAsset(
             url: modelsURL.appendingPathComponent("Suzanne").appendingPathComponent("Suzanne.obj"),
             vertexDescriptor: customVertexDescriptor,
@@ -185,7 +179,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device, texturesURL.appendingPathComponent(filename))
+        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
     }
 
     // MARK: - Vertex Generics

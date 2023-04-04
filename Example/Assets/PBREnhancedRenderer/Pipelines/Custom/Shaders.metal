@@ -77,10 +77,13 @@ void getTangentAndBitangent(float3 forward, float3 p, float2 uv, thread float3 &
     B = cross(forward, T);
 }
 
-fragment float4 customFragment(CustomVertexData in [[stage_in]],
-                                 // inject lighting args
-                                 // inject texture args
-                                 constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
+fragment float4 customFragment
+(
+    CustomVertexData in [[stage_in]],
+    // inject lighting args
+#include "Chunks/PbrTextures.metal"
+    constant CustomUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]]
+)
 {
 #include "Chunks/PixelInfo.metal"
 #include "Chunks/PixelInfoInitView.metal"
