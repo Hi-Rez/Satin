@@ -54,7 +54,7 @@ class ARPostProcessor: PostProcessor {
 
     public unowned var contentTexture: MTLTexture? {
         didSet {
-            if let material = torusMesh.material as? PostMaterial {
+            if let material = mesh.material as? PostMaterial {
                 material.contentTexture = contentTexture
             }
         }
@@ -71,7 +71,7 @@ class ARPostProcessor: PostProcessor {
 
     private func update() {
         guard let frame = session.currentFrame else { return }
-        if let material = torusMesh.material as? PostMaterial {
+        if let material = mesh.material as? PostMaterial {
             material.set("Camera Grain Intensity", frame.cameraGrainIntensity)
             material.cameraGrainTexture = frame.cameraGrainTexture
         }

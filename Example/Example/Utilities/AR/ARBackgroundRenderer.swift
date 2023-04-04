@@ -49,7 +49,7 @@ class ARBackgroundRenderer: PostProcessor {
     public init(context: Context, session: ARSession) {
         self.session = session
         super.init(context: context, material: BackgroundMaterial())
-        torusMesh.visible = false
+        mesh.visible = false
         renderer.setClearColor([0, 0, 0, 1])
         setupTextureCache()
         NotificationCenter.default.addObserver(self, selector: #selector(ARBackgroundRenderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -98,7 +98,7 @@ class ARBackgroundRenderer: PostProcessor {
             geo.vertexData[index].uv = simd_make_float2(Float(transformedCoord.x), Float(transformedCoord.y))
         }
 
-        torusMesh.geometry = geo
+        mesh.geometry = geo
     }
 
     override func resize(_ size: (width: Float, height: Float)) {
@@ -108,7 +108,7 @@ class ARBackgroundRenderer: PostProcessor {
     }
 
     func updateTextures(_ frame: ARFrame) {
-        if let material = torusMesh.material as? BackgroundMaterial, CVPixelBufferGetPlaneCount(frame.capturedImage) == 2 {
+        if let material = mesh.material as? BackgroundMaterial, CVPixelBufferGetPlaneCount(frame.capturedImage) == 2 {
             material.capturedImageTextureY = createTexture(
                 fromPixelBuffer: frame.capturedImage,
                 pixelFormat: .r8Unorm,
@@ -121,10 +121,10 @@ class ARBackgroundRenderer: PostProcessor {
                 planeIndex: 1
             )
 
-            torusMesh.visible = true
+            mesh.visible = true
         }
         else {
-            torusMesh.visible = false
+            mesh.visible = false
         }
     }
 
