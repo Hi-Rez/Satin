@@ -79,22 +79,6 @@ open class PhysicalMaterial: StandardMaterial {
         }
     }
 
-    override func initalizeParameters() {
-        super.initalizeParameters()
-        set("Subsurface", subsurface)
-        set("Anisotropic", anisotropic)
-        set("Specular Tint", specularTint)
-        set("Anisotropic", anisotropic)
-        set("Anisotropic Angle", anisotropicAngle)
-        set("Clearcoat", clearcoat)
-        set("Clearcoat Roughness", clearcoatRoughness)
-        set("Sheen", sheen)
-        set("Sheen Tint", sheenTint)
-        set("Transmission", transmission)
-        set("Thickness", thickness)
-        set("Ior", ior)
-    }
-
     public init(
         baseColor: simd_float4 = .one,
         metallic: Float = 1.0,
@@ -131,7 +115,7 @@ open class PhysicalMaterial: StandardMaterial {
 
         lighting = true
         blending = .disabled
-        initalizeParameters()
+        initalize()
     }
 
     public required init(from decoder: Decoder) throws {
@@ -142,7 +126,22 @@ open class PhysicalMaterial: StandardMaterial {
         super.init()
         lighting = true
         blending = .disabled
-        initalizeParameters()
+        initalize()
+    }
+
+    override func initalizeParameters() {
+        super.initalizeParameters()
+        set("Specular Tint", specularTint)
+        set("Anisotropic", anisotropic)
+        set("Anisotropic Angle", anisotropicAngle)
+        set("Clearcoat", clearcoat)
+        set("Clearcoat Roughness", clearcoatRoughness)
+        set("Subsurface", subsurface)
+        set("Sheen", sheen)
+        set("Sheen Tint", sheenTint)
+        set("Transmission", transmission)
+        set("Thickness", thickness)
+        set("Ior", ior)
     }
 
     override open func createShader() -> Shader {

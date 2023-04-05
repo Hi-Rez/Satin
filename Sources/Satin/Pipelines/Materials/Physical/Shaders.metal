@@ -28,7 +28,7 @@ vertex CustomVertexData physicalVertex
 // inject instancing args
 // inject shadow vertex args
     constant VertexUniforms &vertexUniforms [[buffer(VertexBufferVertexUniforms)]],
-    constant PhysicalUniforms &uniforms [[buffer(FragmentBufferMaterialUniforms)]])
+    constant PhysicalUniforms &uniforms [[buffer(VertexBufferMaterialUniforms)]])
 {
 #if defined(INSTANCING)
     const float3x3 normalMatrix = instanceUniforms[instanceID].normalMatrix;

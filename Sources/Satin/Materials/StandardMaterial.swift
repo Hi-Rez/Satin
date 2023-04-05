@@ -136,7 +136,7 @@ open class StandardMaterial: Material {
         self.maps = maps
         lighting = true
         blending = .disabled
-        initalizeParameters()
+        initalize()
     }
 
     public init(maps: [PBRTextureIndex: MTLTexture?] = [:]) {
@@ -144,19 +144,28 @@ open class StandardMaterial: Material {
         self.maps = maps
         lighting = true
         blending = .disabled
+        initalize()
+    }
+
+
+    func initalize() {
         initalizeParameters()
+        initalizeTexcoordParameters()
+    }
+
+    func initalizeTexcoordParameters() {
+        for type in PBRTextureIndex.allTexcoordCases {
+            set(type.texcoordName.titleCase, matrix_identity_float3x3)
+        }
     }
 
     func initalizeParameters() {
         set("Base Color", baseColor)
         set("Emissive Color", emissiveColor)
-        set("Specular", specular)
-        set("Metallic", metallic)
-        set("Roughness", roughness)
         set("Environment Intensity", environmentIntensity)
-        for type in PBRTextureIndex.allTexcoordCases {
-            set(type.texcoordName.titleCase, matrix_identity_float3x3)
-        }
+        set("Roughness", roughness)
+        set("Metallic", metallic)
+        set("Specular", specular)
     }
 
     public required init(from decoder: Decoder) throws {
@@ -169,7 +178,7 @@ open class StandardMaterial: Material {
         super.init()
         lighting = true
         blending = .disabled
-        initalizeParameters()
+        initalize()
     }
 
     override open func updateShaderDefines() {
