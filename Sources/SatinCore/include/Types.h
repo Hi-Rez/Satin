@@ -108,7 +108,6 @@ void deindexGeometryData(GeometryData *dest, GeometryData *src);
 void unrollGeometryData(GeometryData *dest, GeometryData *src);
 
 void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo,
-                                           TriangleFaceMap *destMap, TriangleFaceMap *srcMap,
-                                           uint32_t offset);
+                                           TriangleFaceMap *destMap, TriangleFaceMap *srcMap);
 
 #endif /* Types_h */
