@@ -66,8 +66,8 @@ typedef struct {
 
 typedef struct {
     Bounds aabb;
-    uint leftFirst;
-    uint triCount;
+    uint32_t leftFirst;
+    uint32_t triCount;
 } BVHNode;
 
 typedef struct {
@@ -76,12 +76,17 @@ typedef struct {
     simd_float3 *centroids;
     simd_float3 *positions;
     TriangleIndices *triangles;
-    uint *triIDs;
-    uint nodesUsed;
+    uint32_t *triIDs;
+    uint32_t nodesUsed;
     bool useSAH;
 } BVH;
 
-GeometryData createGeometryData(void);
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+GeometryData createGeometryData();
 void freeGeometryData(GeometryData *data);
 
 void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int end);
@@ -109,5 +114,9 @@ void unrollGeometryData(GeometryData *dest, GeometryData *src);
 
 void combineGeometryDataAndTriangleFaceMap(GeometryData *destGeo, GeometryData *srcGeo,
                                            TriangleFaceMap *destMap, TriangleFaceMap *srcMap);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Types_h */

@@ -21,8 +21,7 @@ void freeTriangleFaceMap(TriangleFaceMap *map) {
 }
 
 GeometryData createGeometryData() {
-    return (
-        GeometryData) { .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL };
+    return (GeometryData) { .vertexCount = 0, .vertexData = NULL, .indexCount = 0, .indexData = NULL };
 }
 
 void freeGeometryData(GeometryData *data) {
