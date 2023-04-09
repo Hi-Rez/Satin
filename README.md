@@ -10,7 +10,13 @@ Satin is a 3D graphics framework (inspired by threejs) that helps designers and 
 
 Satin makes simple graphics tasks fun and easy to accomplish quickly and complex graphics tasks easier to accomplish without having to write tons of boilerplate code. It does this by providing structure, opinions, and tons of helpful abstractions on Metal to help you get up and rendering / coding in a few minutes. Satin is mostly Swift based, however when performing expensive CPU operations, Satin uses SatinCore, which is written in C (for tasks like geometry generation, triangulation, bounds & computational geometry calculations, and more) to make sure things are as fast as possible.
 
-That being said, if you are looking for the most performant way to render things with Metal, please check out Metal-cpp [https://developer.apple.com/metal/cpp/] or Metal directly via Objective-C.
+That being said, if you are looking for the most performant way to render things with Metal, please check out [Metal-cpp](https://developer.apple.com/metal/cpp/) or Metal directly via Objective-C.
+
+# Sponsors :warning:
+
+Satin is in need of financial support from sponsors. If Satin is not publicly funded (~5k/month) by Summer 2023 the public project will be archived and will not receive any updates, bug fixes or support.
+
+A new private repository will be created and will only be accessible to paid clients / sponsors moving forward. This private repository will receive updates and new features as needed or when funded / requested by paid patrons.
 
 # Examples :sparkles:
 
@@ -182,13 +188,11 @@ struct ContentView: View {
 
 Be nice. There are no stupid questions.
 
-# Credits :sunglasses:
+# Credits :sweat_smile:
 
-Satin is a labor of love and is hand crafted to be fun to use, fast and friendly. Please consider supporting the project if you use Satin in your projects / apps / workflow / design process. Satin is owned and maintained by [Reza Ali](https://www.syedrezaali.com). You can follow me on Twitter at [@rezaali](https://twitter.com/RezaAli) or contact me via [email](mailto:reza@hi-rez.io) for project updates, releases and questions.
+Satin is a labor of love and is hand crafted to be fun to use, fast and friendly. Please consider supporting the project if you use Satin in your projects / apps / workflow / design process.
 
-# Support :warning:
-
-Satin is in desperate need of financial support from sponsors. If the project is not publicly funded (~5k/month) properly by Summer 2023 the public repo will be archived and will no longer receive any updates, bug fixes or support. A new private repository will be created and will only be accessible to paid corporate clients.
+Satin is owned and maintained by [Reza Ali](https://www.syedrezaali.com). You can follow me on Twitter at [@rezaali](https://twitter.com/RezaAli) or contact me via [email](mailto:reza@hi-rez.io) for project updates, releases and questions.
 
 # License :mortar_board:
 
