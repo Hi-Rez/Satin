@@ -49,6 +49,12 @@ open class StandardMaterial: Material {
         }
     }
 
+    public var gammaCorrection: Float = 1.0 {
+        didSet {
+            set("Gamma Correction", gammaCorrection)
+        }
+    }
+
     private var maps: [PBRTextureIndex: MTLTexture?] = [:] {
         didSet {
             if oldValue.keys != maps.keys, let shader = shader as? PBRShader {
@@ -61,6 +67,14 @@ open class StandardMaterial: Material {
         didSet {
             if oldValue.keys != samplers.keys, let shader = shader as? PBRShader {
                 shader.samplers = samplers
+            }
+        }
+    }
+
+    public var tonemapping: Tonemapping = .aces {
+        didSet {
+            if oldValue != tonemapping, let shader = shader as? PBRShader {
+                shader.tonemapping = tonemapping
             }
         }
     }
@@ -147,7 +161,6 @@ open class StandardMaterial: Material {
         initalize()
     }
 
-
     func initalize() {
         initalizeParameters()
         initalizeTexcoordParameters()
@@ -163,6 +176,7 @@ open class StandardMaterial: Material {
         set("Base Color", baseColor)
         set("Emissive Color", emissiveColor)
         set("Environment Intensity", environmentIntensity)
+        set("Gamma Correction", gammaCorrection)
         set("Roughness", roughness)
         set("Metallic", metallic)
         set("Specular", specular)
@@ -181,11 +195,12 @@ open class StandardMaterial: Material {
         initalize()
     }
 
-    override open func updateShaderDefines() {
-        super.updateShaderDefines()
-        guard let shader = shader as? PBRShader else { return }
-        shader.maps = maps.filter { $0.value != nil }
-        shader.samplers = samplers.filter { $0.value != nil }
+    override open func updateShaderProperties(_ shader: Shader) {
+        super.updateShaderProperties(shader)
+        guard let pbrShader = shader as? PBRShader else { return }
+        pbrShader.maps = maps.filter { $0.value != nil }
+        pbrShader.samplers = samplers.filter { $0.value != nil }
+        pbrShader.tonemapping = tonemapping
     }
 
     override open func createShader() -> Shader {

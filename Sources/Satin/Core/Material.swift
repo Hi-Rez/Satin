@@ -215,7 +215,7 @@ open class Material: Codable, ParameterGroupDelegate {
     private var uniformsNeedsUpdate = false
     private var shaderNeedsUpdate = false
 
-    private var shaderDefinesNeedsUpdate = false {
+    internal var shaderDefinesNeedsUpdate = true {
         didSet {
             if shaderDefinesNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -223,7 +223,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    private var shaderBlendingNeedsUpdate = false {
+    internal var shaderBlendingNeedsUpdate = true {
         didSet {
             if shaderBlendingNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -231,7 +231,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    private var shaderVertexDescriptorNeedsUpdate = false {
+    internal var shaderVertexDescriptorNeedsUpdate = true {
         didSet {
             if shaderVertexDescriptorNeedsUpdate {
                 shaderNeedsUpdate = true
@@ -362,9 +362,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
 
         if let shader = shader {
-            updateShaderBlending()
-            updateShaderVertexDescriptor()
-            updateShaderDefines()
+            updateShader(shader)
             shader.context = context
         }
         shaderNeedsUpdate = false
@@ -390,19 +388,27 @@ open class Material: Codable, ParameterGroupDelegate {
             setupShader()
         }
 
+        if let shader = shader {
+            updateShader(shader)
+            shader.update()
+        }
+    }
+
+    func updateShader(_ shader: Shader) {
         if shaderBlendingNeedsUpdate {
-            updateShaderBlending()
+            updateShaderBlending(shader)
+            shaderBlendingNeedsUpdate = false
         }
 
         if shaderVertexDescriptorNeedsUpdate {
-            updateShaderVertexDescriptor()
+            updateShaderVertexDescriptor(shader)
+            shaderVertexDescriptorNeedsUpdate = false
         }
 
         if shaderDefinesNeedsUpdate {
-            updateShaderDefines()
+            updateShaderProperties(shader)
+            shaderDefinesNeedsUpdate = false
         }
-
-        shader?.update()
     }
 
     open func updateDepth() {
@@ -477,8 +483,7 @@ open class Material: Codable, ParameterGroupDelegate {
         }
     }
 
-    private func updateShaderBlending() {
-        guard let shader = shader else { return }
+    private func updateShaderBlending(_ shader: Shader) {
         shader.blending = blending
         shader.sourceRGBBlendFactor = sourceRGBBlendFactor
         shader.sourceAlphaBlendFactor = sourceAlphaBlendFactor
@@ -486,24 +491,19 @@ open class Material: Codable, ParameterGroupDelegate {
         shader.destinationAlphaBlendFactor = destinationAlphaBlendFactor
         shader.rgbBlendOperation = rgbBlendOperation
         shader.alphaBlendOperation = alphaBlendOperation
-        shaderBlendingNeedsUpdate = false
     }
 
-    private func updateShaderVertexDescriptor() {
-        guard let shader = shader else { return }
+    private func updateShaderVertexDescriptor(_ shader: Shader) {
         shader.vertexDescriptor = vertexDescriptor
-        shaderVertexDescriptorNeedsUpdate = false
     }
 
-    open func updateShaderDefines() {
-        guard let shader = shader else { return }
+    open func updateShaderProperties(_ shader: Shader) {
         shader.instancing = instancing
         shader.lighting = lighting
         shader.maxLights = maxLights
         shader.shadowCount = shadowCount
         shader.receiveShadow = receiveShadow
         shader.castShadow = castShadow
-        shaderDefinesNeedsUpdate = false
     }
 
     public func set(_ name: String, _ value: [Float]) {

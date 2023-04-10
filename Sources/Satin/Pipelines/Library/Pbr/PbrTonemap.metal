@@ -1,7 +1,12 @@
 #include "../Gamma.metal"
-#include "../Tonemapping/Aces.metal"
+#include "../Tonemap.metal"
 
 float3 pbrTonemap(thread PixelInfo &pixel)
 {
-    return gamma(aces(pixel.radiance)); // HDR Tonemapping & Gamma Correction
+    float3 result = tonemap(pixel.radiance);
+#if defined(TONEMAPPING_UNREAL)
+    return result;
+#else
+    return mix(result, gamma(result), pixel.material.gammaCorrection);
+#endif
 }

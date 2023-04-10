@@ -6,7 +6,6 @@ float3 uncharted2Tonemap(float3 x)
     const float D = 0.20;
     const float E = 0.02;
     const float F = 0.30;
-    const float W = 11.2;
     return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
 }
 
@@ -27,7 +26,6 @@ float uncharted2Tonemap(float x)
     const float D = 0.20;
     const float E = 0.02;
     const float F = 0.30;
-    const float W = 11.2;
     return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
 }
 

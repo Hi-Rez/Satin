@@ -86,7 +86,7 @@ typedef struct {
 extern "C" {
 #endif
 
-GeometryData createGeometryData();
+GeometryData createGeometryData(void);
 void freeGeometryData(GeometryData *data);
 
 void copyGeometryVertexData(GeometryData *dest, GeometryData *src, int start, int end);

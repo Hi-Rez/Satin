@@ -123,6 +123,7 @@ fragment float4 customFragment
     material.thickness = in.thickness;
     material.ior = uniforms.ior;
     material.environmentIntensity = uniforms.environmentIntensity;
+    material.gammaCorrection = uniforms.gammaCorrection; 
 
     int row = int(in.xyz.y);
     float value = in.xyz.z;

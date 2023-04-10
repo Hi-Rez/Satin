@@ -9,6 +9,7 @@ struct Material {
     float roughness;
     float specular;
     float environmentIntensity;
+    float gammaCorrection; 
 #if defined(HAS_SPECULAR_TINT)
     float specularTint;
 #endif

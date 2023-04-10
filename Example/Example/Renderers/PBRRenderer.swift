@@ -49,8 +49,8 @@ class PBRRenderer: BaseRenderer {
     lazy var customMaterial: CustomMaterial = {
         let mat = CustomMaterial(pipelinesURL: pipelinesURL)
         mat.lighting = true
-        mat.set("Base Color", [1.0, 0.0, 0.0, 1.0])
-        mat.set("Emissive Color", [1.0, 1.0, 1.0, 0.0])
+        mat.set("Base Color", [1.0, 1.0, 1.0, 1.0])
+        mat.set("Emissive Color", [0.0, 0.0, 0.0, 0.0])
         return mat
     }()
 
@@ -68,7 +68,7 @@ class PBRRenderer: BaseRenderer {
         return mesh
     }()
 
-    lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
+    lazy var skyboxMaterial = SkyboxMaterial()
     lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
 
     override func setupMtkView(_ metalKitView: MTKView) {

@@ -27,7 +27,7 @@ class PBRCustomizationRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer: Satin.Renderer = .init(context: context)
 
-    lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
+    lazy var skyboxMaterial = SkyboxMaterial()
     lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
 
     override func setupMtkView(_ metalKitView: MTKView) {

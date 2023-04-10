@@ -33,7 +33,8 @@
     pixel.material.roughness = uniforms.roughness;
 #endif
 
-    pixel.material.environmentIntensity = uniforms.environmentIntensity; 
+    pixel.material.environmentIntensity = uniforms.environmentIntensity;
+    pixel.material.gammaCorrection = uniforms.gammaCorrection; 
 
 #if defined(HAS_SUBSURFACE)
     #if defined(SUBSURFACE_MAP)

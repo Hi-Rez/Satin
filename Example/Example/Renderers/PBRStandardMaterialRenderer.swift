@@ -27,7 +27,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
 
     lazy var standardMaterial = StandardMaterial()
 
-    lazy var skyboxMaterial = SkyboxMaterial(tonemapped: true, gammaCorrected: true)
+    lazy var skyboxMaterial = SkyboxMaterial()
     lazy var skybox: Mesh = {
         let mesh = Mesh(geometry: SkyboxGeometry(size: 250), material: skyboxMaterial)
         mesh.label = "Skybox"

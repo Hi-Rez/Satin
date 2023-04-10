@@ -9,7 +9,6 @@
 import Foundation
 import Metal
 
-
 open class PBRShader: SourceShader {
     open var maps: [PBRTextureIndex: MTLTexture?] = [:] {
         didSet {
@@ -27,10 +26,19 @@ open class PBRShader: SourceShader {
         }
     }
 
+    open var tonemapping: Tonemapping = .aces {
+        didSet {
+            if oldValue != tonemapping {
+                sourceNeedsUpdate = true
+            }
+        }
+    }
+
     override open var defines: [String: NSObject] {
         var results = super.defines
         if !maps.isEmpty { results["HAS_MAPS"] = NSString(string: "true") }
         for map in maps { results[map.key.shaderDefine] = NSString(string: "true") }
+        results[tonemapping.shaderDefine] = NSString(string: "true")
         return results
     }
 

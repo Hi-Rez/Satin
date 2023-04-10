@@ -16,13 +16,27 @@ open class SkyboxMaterial: BasicTextureMaterial {
         }
     }
 
-    public init(tonemapped: Bool = false, gammaCorrected: Bool = false) {
-        super.init()
-        depthWriteEnabled = false
-        initalizeParameters(tonemapped: tonemapped, gammaCorrected: gammaCorrected)
+    public var tonemapping: Tonemapping = .aces {
+        didSet {
+            if oldValue != tonemapping, let shader = shader as? SkyboxShader {
+                shader.tonemapping = tonemapping
+            }
+        }
     }
 
-    public init(texture: MTLTexture, sampler: MTLSamplerState? = nil, tonemapped: Bool = false, gammaCorrected: Bool = false) {
+    public var gammaCorrection: Float = 1.0 {
+        didSet {
+            set("Gamma Correction", gammaCorrection)
+        }
+    }
+
+    public init(tonemapping: Tonemapping = .aces, gammaCorrection: Float = 1.0) {
+        super.init()
+        depthWriteEnabled = false
+        initalizeParameters(tonemapping: tonemapping, gammaCorrection: gammaCorrection)
+    }
+
+    public init(texture: MTLTexture, sampler: MTLSamplerState? = nil, tonemapping: Tonemapping = .aces, gammaCorrection: Float = 1.0) {
         super.init()
         if texture.textureType != .typeCube {
             fatalError("SkyboxMaterial expects a Cube texture")
@@ -30,12 +44,12 @@ open class SkyboxMaterial: BasicTextureMaterial {
         self.texture = texture
         self.sampler = sampler
         depthWriteEnabled = false
-        initalizeParameters(tonemapped: tonemapped, gammaCorrected: gammaCorrected)
+        initalizeParameters(tonemapping: tonemapping, gammaCorrection: gammaCorrection)
     }
 
-    func initalizeParameters(tonemapped: Bool = false, gammaCorrected: Bool = false) {
-        set("Tone Mapped", tonemapped)
-        set("Gamma Corrected", gammaCorrected)
+    private func initalizeParameters(tonemapping: Tonemapping = .aces, gammaCorrection: Float = 1.0) {
+        self.tonemapping = tonemapping
+        self.gammaCorrection = gammaCorrection
     }
 
     public required init() {
@@ -58,5 +72,15 @@ open class SkyboxMaterial: BasicTextureMaterial {
         self.sampler = sampler
         depthWriteEnabled = false
         initalizeParameters()
+    }
+
+    override open func updateShaderProperties(_ shader: Shader) {
+        super.updateShaderProperties(shader)
+        guard let skyboxShader = shader as? SkyboxShader else { return }
+        skyboxShader.tonemapping = tonemapping
+    }
+
+    override open func createShader() -> Shader {
+        return SkyboxShader(label, getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal"))
     }
 }

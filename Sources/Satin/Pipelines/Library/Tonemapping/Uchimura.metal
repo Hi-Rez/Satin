@@ -4,8 +4,6 @@
 float3 uchimura(float3 x, float P, float a, float m, float l, float c, float b)
 {
     const float l0 = ((P - m) * l) / a;
-    const float L0 = m - m / a;
-    const float L1 = m + (1.0 - m) / a;
     const float S0 = m + l0;
     const float S1 = m + a * l0;
     const float C2 = (a * P) / (P - S1);
@@ -37,8 +35,6 @@ float3 uchimura(float3 x)
 float uchimura(float x, float P, float a, float m, float l, float c, float b)
 {
     const float l0 = ((P - m) * l) / a;
-    const float L0 = m - m / a;
-    const float L1 = m + (1.0 - m) / a;
     const float S0 = m + l0;
     const float S1 = m + a * l0;
     const float C2 = (a * P) / (P - S1);
