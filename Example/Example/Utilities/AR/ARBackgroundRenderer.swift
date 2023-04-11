@@ -149,4 +149,5 @@ class ARBackgroundRenderer: PostProcessor {
         return texture
     }
 }
+
 #endif

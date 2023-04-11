@@ -37,4 +37,5 @@ class ARPerspectiveCamera: PerspectiveCamera {
         super.update(commandBuffer)
     }
 }
+
 #endif
