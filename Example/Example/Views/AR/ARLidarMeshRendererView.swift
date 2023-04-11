@@ -6,4 +6,23 @@
 //  Copyright © 2023 Hi-Rez. All rights reserved.
 //
 
-import Foundation
+#if os(iOS)
+
+import Forge
+import SwiftUI
+
+struct ARLidarMeshRendererView: View {
+    var body: some View {
+        ForgeView(renderer: ARLidarMeshRenderer())
+            .ignoresSafeArea()
+            .navigationTitle("AR Lidar Mesh")
+    }
+}
+
+struct ARLidarMeshRendererView_Previews: PreviewProvider {
+    static var previews: some View {
+        ARLidarMeshRendererView()
+    }
+}
+
+#endif

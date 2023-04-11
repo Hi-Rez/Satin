@@ -36,6 +36,10 @@ struct ContentView: View {
                         Label("AR Drawing", systemImage: "scribble.variable")
                     }
 
+                    NavigationLink(destination: ARLidarMeshRendererView()) {
+                        Label("AR Lidar Mesh", systemImage: "point.3.filled.connected.trianglepath.dotted")
+                    }
+
                     NavigationLink(destination: ARPlanesRendererView()) {
                         Label("AR Planes", systemImage: "squareshape")
                     }

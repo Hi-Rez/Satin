@@ -1,5 +1,5 @@
 //
-//  ARLidarMeshShader.swift
+//  ARLidarMeshRenderer.swift
 //  Example
 //
 //  Created by Reza Ali on 4/10/23.
@@ -7,6 +7,7 @@
 //
 
 #if os(iOS)
+
 import ARKit
 import Metal
 import MetalKit
@@ -14,7 +15,19 @@ import MetalKit
 import Forge
 import Satin
 
-class ARLidarMeshShader: BaseRenderer {
+class ARLidarMeshRenderer: BaseRenderer {
+    class LidarMeshMaterial: SourceMaterial {}
+
+    lazy var material: LidarMeshMaterial = {
+        let material = LidarMeshMaterial(pipelinesURL: pipelinesURL)
+        material.blending = .alpha
+        material.set("Color", [0.0, 0.0, 0.0, 0.0])
+        material.vertexDescriptor = ARMeshVertexDescriptor()
+        return material
+    }()
+
+    var lidarMeshes: [UUID: ARMesh] = [:]
+
     var session: ARSession!
 
     let boxGeometry = BoxGeometry(size: (0.1, 0.1, 0.1))
@@ -37,7 +50,11 @@ class ARLidarMeshShader: BaseRenderer {
     override init() {
         super.init()
         session = ARSession()
-        session.run(ARWorldTrackingConfiguration())
+        session.delegate = self
+
+        let config = ARWorldTrackingConfiguration()
+        config.sceneReconstruction = .mesh
+        session.run(config)
     }
 
     override func setup() {
@@ -89,6 +106,32 @@ class ARLidarMeshShader: BaseRenderer {
             }
 
             scene.add(torusMesh)
+        }
+    }
+}
+
+extension ARLidarMeshRenderer: ARSessionDelegate {
+    // MARK: - ARSession Delegate
+
+    func session(_: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            if let meshAnchor = anchor as? ARMeshAnchor {
+                let id = anchor.identifier
+                if let lidarMesh = lidarMeshes[id] {
+                    lidarMesh.meshAnchor = meshAnchor
+                }
+            }
+        }
+    }
+
+    func session(_: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            if let meshAnchor = anchor as? ARMeshAnchor {
+                let id = anchor.identifier
+                let mesh = ARMesh(meshAnchor: meshAnchor, material: material)
+                lidarMeshes[id] = mesh
+                scene.add(mesh)
+            }
         }
     }
 }

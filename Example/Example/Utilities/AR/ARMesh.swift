@@ -52,7 +52,7 @@ class ARMesh: Object, Renderable {
 
     var cullMode: MTLCullMode = .back
     var windingOrder: MTLWinding = .counterClockwise
-    var triangleFillMode: MTLTriangleFillMode = .lines
+    var triangleFillMode: MTLTriangleFillMode = .fill
 
     var indexBuffer: MTLBuffer? {
         meshAnchor?.geometry.faces.buffer ?? nil

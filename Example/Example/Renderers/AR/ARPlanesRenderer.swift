@@ -23,7 +23,7 @@ fileprivate class ARPlaneContainer: Object {
     }
 
     var geometry = Geometry()
-    var torusMesh: Mesh
+    var planeMesh: Mesh
     var meshWireframe: Mesh
 
     init(label: String, anchor: ARPlaneAnchor, material: Satin.Material) {
@@ -32,12 +32,12 @@ fileprivate class ARPlaneContainer: Object {
         let mat = material.clone()
         mat.set("Color", [Float.random(in: 0 ... 1), Float.random(in: 0 ... 1), Float.random(in: 0 ... 1), 0.25])
 
-        torusMesh = Mesh(geometry: geometry, material: mat)
+        planeMesh = Mesh(geometry: geometry, material: mat)
         meshWireframe = Mesh(geometry: geometry, material: mat)
         meshWireframe.triangleFillMode = .lines
-        torusMesh.add(meshWireframe)
+        planeMesh.add(meshWireframe)
 
-        super.init(label, [torusMesh])
+        super.init(label, [planeMesh])
         updateAnchor()
     }
 
