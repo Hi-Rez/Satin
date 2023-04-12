@@ -20,7 +20,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     // MARK: - Post Processor
 
-    var postProcessor: ARPostProcessor!
+    var compositor: ARPostProcessor!
 
     // MARK: - AR
 
@@ -29,16 +29,16 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - 3D
 
     lazy var material = RainbowMaterial(pipelinesURL: pipelinesURL)
-    lazy var torusMesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.03, res: 3), material: material, count: 20000)
-    lazy var scene = Object("Scene", [torusMesh])
-    lazy var context = Context(device, sampleCount, colorPixelFormat, .depth32Float)
+    lazy var mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.03, res: 3), material: material, count: 20000)
+    lazy var scene = Object("Scene", [mesh])
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat)
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = {
         let renderer = Satin.Renderer(context: context)
         renderer.label = "Content Renderer"
         renderer.setClearColor(.zero)
-        renderer.colorLoadAction = .clear
-        renderer.depthStoreAction = .dontCare
+        renderer.colorLoadAction = .load
+        renderer.depthLoadAction = .load
         return renderer
     }()
 
@@ -51,7 +51,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     // MARK: - Background
 
-    var backgroundRenderer: ARBackgroundRenderer!
+    var backgroundRenderer: ARBackgroundDepthRenderer!
 
     // MARK: - Setup MTKView
 
@@ -60,6 +60,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
         metalKitView.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0)
         metalKitView.backgroundColor = .black
         metalKitView.preferredFramesPerSecond = 120
+        metalKitView.depthStencilPixelFormat = .depth32Float
     }
 
     // MARK: - Init
@@ -81,9 +82,15 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - Setup
 
     override func setup() {
-        torusMesh.drawCount = 0
-        backgroundRenderer = ARBackgroundRenderer(context: Context(device, 1, colorPixelFormat), session: session)
-        postProcessor = ARPostProcessor(context: Context(device, 1, colorPixelFormat), session: session)
+        mesh.drawCount = 0
+        backgroundRenderer = ARBackgroundDepthRenderer(
+            context: context,
+            session: session,
+            near: camera.near,
+            far: camera.far
+        )
+        
+        compositor = ARPostProcessor(context: Context(device, 1, colorPixelFormat), session: session)
         renderer.compile(scene: scene, camera: camera)
     }
 
@@ -105,17 +112,18 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
         )
 
         renderer.draw(
-            renderPassDescriptor: MTLRenderPassDescriptor(),
+            renderPassDescriptor: renderPassDescriptor,
             commandBuffer: commandBuffer,
             scene: scene,
             camera: camera
         )
 
-        postProcessor.contentTexture = renderer.colorTexture
-        postProcessor.draw(
-            renderPassDescriptor: renderPassDescriptor,
-            commandBuffer: commandBuffer
-        )
+//        compositor.contentTexture = renderPassDescriptor.colorAttachments[0].texture
+
+//        postProcessor.draw(
+//            renderPassDescriptor: renderPassDescriptor,
+//            commandBuffer: commandBuffer
+//        )
     }
 
     // MARK: - Resize
@@ -123,7 +131,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     override func resize(_ size: (width: Float, height: Float)) {
         renderer.resize(size)
         backgroundRenderer.resize(size)
-        postProcessor.resize(size)
+        compositor.resize(size)
     }
 
     // MARK: - Interactions
@@ -140,14 +148,17 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     func setupARSession() {
         session = ARSession()
-        session.run(ARWorldTrackingConfiguration())
+
+        let config = ARWorldTrackingConfiguration()
+        config.frameSemantics = [.smoothedSceneDepth]
+        session.run(config)
     }
 
     // MARK: - Updates
 
     func updateDrawing() {
         if clear.wrappedValue {
-            torusMesh.drawCount = 0
+            mesh.drawCount = 0
             clear.wrappedValue = false
         } else if touchDown, let currentFrame = session.currentFrame {
             add(simd_mul(currentFrame.camera.transform, translationMatrixf(0, 0, -0.2)))
@@ -155,9 +166,9 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     }
 
     func add(_ transform: simd_float4x4) {
-        if let index = torusMesh.drawCount {
-            torusMesh.drawCount = index + 1
-            torusMesh.setMatrixAt(index: index, matrix: transform)
+        if let index = mesh.drawCount {
+            mesh.drawCount = index + 1
+            mesh.setMatrixAt(index: index, matrix: transform)
         }
     }
 

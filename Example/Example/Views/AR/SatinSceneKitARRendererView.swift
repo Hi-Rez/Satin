@@ -1,5 +1,5 @@
 //
-//  SatinSceneKitARRendererView.swift
+//  ARSatinSceneKitRendererView.swift
 //  Example
 //
 //  Created by Reza Ali on 8/12/22.
@@ -11,17 +11,17 @@
 import Forge
 import SwiftUI
 
-struct SatinSceneKitARRendererView: View {
+struct ARSatinSceneKitRendererView: View {
     var body: some View {
-        ForgeView(renderer: SatinSceneKitARRenderer())
+        ForgeView(renderer: ARSatinSceneKitRenderer())
             .ignoresSafeArea()
-            .navigationTitle("Satin + SceneKit + AR")
+            .navigationTitle("AR + Satin + SceneKit")
     }
 }
 
-struct SatinSceneKitARRendererView_Previews: PreviewProvider {
+struct ARSatinSceneKitRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        SatinSceneKitARRendererView()
+        ARSatinSceneKitRendererView()
     }
 }
 

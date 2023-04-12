@@ -11,8 +11,8 @@ fragment half4 postFragment
 (
     VertexData in [[stage_in]],
     constant PostUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]],
-    texture2d<float> contextTex [[texture( FragmentTextureCustom0 )]],
-    texture3d<float> grainTex [[texture( FragmentTextureCustom1 )]]
+    texture2d<float, access::sample> contextTex [[texture( FragmentTextureCustom0 )]],
+    texture3d<float, access::sample> grainTex [[texture( FragmentTextureCustom1 )]]
 )
 {
     const float2 uv = in.uv;

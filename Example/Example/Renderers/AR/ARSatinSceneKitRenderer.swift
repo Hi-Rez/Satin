@@ -14,7 +14,7 @@ import MetalKit
 import Forge
 import Satin
 
-class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
+class ARSatinSceneKitRenderer: BaseRenderer, ARSessionDelegate {
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
     // MARK: - SceneKit
@@ -80,7 +80,7 @@ class SatinSceneKitARRenderer: BaseRenderer, ARSessionDelegate {
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
-        metalKitView.colorPixelFormat = .rgba16Float
+        metalKitView.colorPixelFormat = .bgra8Unorm
         metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
     }

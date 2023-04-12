@@ -23,25 +23,35 @@ struct ContentView: View {
                     }
                 }
                 #if os(iOS)
-                Group {
-                    NavigationLink(destination: ARRendererView()) {
-                        Label("AR", systemImage: "arkit")
-                    }
+                Section(header: Text("AR")) {
+                    Group {
+                        NavigationLink(destination: ARRendererView()) {
+                            Label("AR Hello World", systemImage: "arkit")
+                        }
 
-                    NavigationLink(destination: ARContactShadowRendererView()) {
-                        Label("AR Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
-                    }
+                        NavigationLink(destination: ARContactShadowRendererView()) {
+                            Label("AR Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
+                        }
 
-                    NavigationLink(destination: ARDrawingRendererView()) {
-                        Label("AR Drawing", systemImage: "scribble.variable")
-                    }
+                        NavigationLink(destination: ARDrawingRendererView()) {
+                            Label("AR Drawing", systemImage: "scribble.variable")
+                        }
 
-                    NavigationLink(destination: ARLidarMeshRendererView()) {
-                        Label("AR Lidar Mesh", systemImage: "point.3.filled.connected.trianglepath.dotted")
-                    }
+                        NavigationLink(destination: ARLidarMeshRendererView()) {
+                            Label("AR Lidar Mesh", systemImage: "point.3.filled.connected.trianglepath.dotted")
+                        }
 
-                    NavigationLink(destination: ARPlanesRendererView()) {
-                        Label("AR Planes", systemImage: "squareshape")
+                        NavigationLink(destination: ARPeopleOcclusionRendererView()) {
+                            Label("AR People Occlusion", systemImage: "person.2.fill")
+                        }
+
+                        NavigationLink(destination: ARPlanesRendererView()) {
+                            Label("AR Planes", systemImage: "squareshape")
+                        }
+
+                        NavigationLink(destination: ARSatinSceneKitRendererView()) {
+                            Label("AR + Satin + SceneKit", systemImage: "arkit")
+                        }
                     }
                 }
                 #endif
@@ -136,23 +146,27 @@ struct ContentView: View {
                     }
 
                 }
+                Section(header: Text("Physically Based Rendering")) {
+                    Group {
+                        NavigationLink(destination: PBRRendererView()) {
+                            Label("PBR", systemImage: "eye")
+                        }
+
+                        NavigationLink(destination: PBRCustomizationRendererView()) {
+                            Label("PBR Customization", systemImage: "gear")
+                        }
+
+                        NavigationLink(destination: PBREnhancedRendererView()) {
+                            Label("PBR Physical Material", systemImage: "party.popper")
+                        }
+
+                        NavigationLink(destination: PBRStandardMaterialRendererView()) {
+                            Label("PBR Standard Material", systemImage: "flame")
+                        }
+                    }
+                }
+
                 Group {
-                    NavigationLink(destination: PBRRendererView()) {
-                        Label("PBR", systemImage: "eye")
-                    }
-
-                    NavigationLink(destination: PBRCustomizationRendererView()) {
-                        Label("PBR Customization", systemImage: "gear")
-                    }
-
-                    NavigationLink(destination: PBREnhancedRendererView()) {
-                        Label("PBR Physical Material", systemImage: "party.popper")
-                    }
-
-                    NavigationLink(destination: PBRStandardMaterialRendererView()) {
-                        Label("PBR Standard Material", systemImage: "flame")
-                    }
-
                     NavigationLink(destination: PostProcessingRendererView()) {
                         Label("Post Processing", systemImage: "checkerboard.rectangle")
                     }
@@ -161,6 +175,7 @@ struct ContentView: View {
                         Label("Projected Shadow", systemImage: "shadow")
                     }
                 }
+
                 Group {
                     NavigationLink(destination: RayMarchingRendererView()) {
                         Label("Ray Marching", systemImage: "camera.metering.multispot")
@@ -169,11 +184,6 @@ struct ContentView: View {
                     NavigationLink(destination: SatinSceneKitRendererView()) {
                         Label("Satin + SceneKit", systemImage: "plus")
                     }
-                    #if os(iOS)
-                    NavigationLink(destination: SatinSceneKitARRendererView()) {
-                        Label("Satin + SceneKit + AR", systemImage: "arkit")
-                    }
-                    #endif
 
                     NavigationLink(destination: ShippingShadersRendererView()) {
                         Label("Shipping Shaders", systemImage: "shippingbox")

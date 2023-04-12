@@ -69,7 +69,7 @@ fileprivate class ARPlaneContainer: Object {
 class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - AR
 
-    var session: ARSession!
+    var session = ARSession()
 
     lazy var planeMaterial: Satin.Material = {
         let material = BasicColorMaterial(.one, .additive)
@@ -82,7 +82,7 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
     // MARK: - 3D
 
     lazy var scene = Object("Scene")
-    lazy var context = Context(device, sampleCount, colorPixelFormat, .depth32Float)
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat)
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = {
         let renderer = Satin.Renderer(context: context)
@@ -109,7 +109,11 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
 
     override init() {
         super.init()
-        setupARSession()
+
+        session.delegate = self
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        session.run(configuration)
     }
 
     // MARK: - Deinit
@@ -148,18 +152,6 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
     override func resize(_ size: (width: Float, height: Float)) {
         renderer.resize(size)
         backgroundRenderer.resize(size)
-    }
-
-    // MARK: - Setups
-
-    func setupARSession() {
-        session = ARSession()
-        session.delegate = self
-
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-
-        session.run(configuration)
     }
 
     // MARK: - ARSession Delegate

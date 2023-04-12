@@ -15,7 +15,7 @@ struct ARRendererView: View {
     var body: some View {
         ForgeView(renderer: ARRenderer())
             .ignoresSafeArea()
-            .navigationTitle("AR")
+            .navigationTitle("AR Hello World")
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #if os(iOS)
+
 import ARKit
 import Foundation
 import Metal
@@ -48,11 +49,14 @@ class ARBackgroundRenderer: PostProcessor {
 
     public init(context: Context, session: ARSession) {
         self.session = session
+
         super.init(context: context, material: BackgroundMaterial())
         mesh.visible = false
-        renderer.setClearColor([0, 0, 0, 1])
+        renderer.setClearColor(.zero)
         setupTextureCache()
+
         NotificationCenter.default.addObserver(self, selector: #selector(ARBackgroundRenderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+
         self.label = "AR Background Renderer"
     }
 
@@ -64,8 +68,9 @@ class ARBackgroundRenderer: PostProcessor {
         _updateGeometry = true
     }
 
-    private func update() {
+    internal func update() {
         guard let frame = session.currentFrame else { return }
+
         updateTextures(frame)
 
         if _updateGeometry {
@@ -122,8 +127,7 @@ class ARBackgroundRenderer: PostProcessor {
             )
 
             mesh.visible = true
-        }
-        else {
+        } else {
             mesh.visible = false
         }
     }
@@ -135,7 +139,7 @@ class ARBackgroundRenderer: PostProcessor {
         capturedImageTextureCache = textureCache
     }
 
-    private func createTexture(fromPixelBuffer pixelBuffer: CVPixelBuffer, pixelFormat: MTLPixelFormat, planeIndex: Int) -> CVMetalTexture? {
+    internal func createTexture(fromPixelBuffer pixelBuffer: CVPixelBuffer, pixelFormat: MTLPixelFormat, planeIndex: Int) -> CVMetalTexture? {
         let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, planeIndex)
         let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, planeIndex)
 

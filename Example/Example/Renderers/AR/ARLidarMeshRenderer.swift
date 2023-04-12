@@ -21,7 +21,7 @@ class ARLidarMeshRenderer: BaseRenderer {
     lazy var material: LidarMeshMaterial = {
         let material = LidarMeshMaterial(pipelinesURL: pipelinesURL)
         material.blending = .alpha
-        material.set("Color", [0.0, 0.0, 0.0, 0.0])
+        material.set("Color", [1.0, 1.0, 1.0, 0.25])
         material.vertexDescriptor = ARMeshVertexDescriptor()
         return material
     }()
@@ -29,9 +29,6 @@ class ARLidarMeshRenderer: BaseRenderer {
     var lidarMeshes: [UUID: ARMesh] = [:]
 
     var session: ARSession!
-
-    let boxGeometry = BoxGeometry(size: (0.1, 0.1, 0.1))
-    let boxMaterial = UvColorMaterial()
 
     var scene = Object("Scene")
 
@@ -59,9 +56,6 @@ class ARLidarMeshRenderer: BaseRenderer {
 
     override func setup() {
         renderer.colorLoadAction = .load
-
-        boxGeometry.context = context
-        boxMaterial.context = context
 
         backgroundRenderer = ARBackgroundRenderer(
             context: Context(device, 1, colorPixelFormat),
@@ -93,21 +87,6 @@ class ARLidarMeshRenderer: BaseRenderer {
     override func cleanup() {
         session.pause()
     }
-
-    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
-        if let currentFrame = session.currentFrame {
-            let anchor = ARAnchor(transform: simd_mul(currentFrame.camera.transform, translationMatrixf(0.0, 0.0, -0.25)))
-            session.add(anchor: anchor)
-
-            let torusMesh = Mesh(geometry: boxGeometry, material: boxMaterial)
-            torusMesh.onUpdate = { [weak torusMesh, weak anchor] in
-                guard let torusMesh = torusMesh, let anchor = anchor else { return }
-                torusMesh.localMatrix = anchor.transform
-            }
-
-            scene.add(torusMesh)
-        }
-    }
 }
 
 extension ARLidarMeshRenderer: ARSessionDelegate {
@@ -129,6 +108,7 @@ extension ARLidarMeshRenderer: ARSessionDelegate {
             if let meshAnchor = anchor as? ARMeshAnchor {
                 let id = anchor.identifier
                 let mesh = ARMesh(meshAnchor: meshAnchor, material: material)
+                mesh.triangleFillMode = .lines
                 lidarMeshes[id] = mesh
                 scene.add(mesh)
             }
