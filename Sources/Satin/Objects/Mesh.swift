@@ -11,6 +11,10 @@ import Metal
 import simd
 
 open class Mesh: Object, Renderable {
+    public var opaque: Bool {
+        material!.blending == .disabled
+    }
+
     public var renderOrder = 0
 
     public var receiveShadow = false {

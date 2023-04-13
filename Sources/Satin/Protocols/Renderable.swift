@@ -17,6 +17,9 @@ public protocol Renderable {
     var castShadow: Bool { get }
 
     var drawable: Bool { get }
+    var cullMode: MTLCullMode { get set }
+    var opaque: Bool { get }
+    
     var material: Material? { get set }
     var materials: [Material] { get }
 

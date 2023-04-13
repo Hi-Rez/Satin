@@ -374,8 +374,8 @@ open class Renderer {
                 renderEncoder.useResource(shadowDataBuffer.buffer, usage: .read, stages: .fragment)
             }
 
-            for renderable in renderables where renderable.drawable {
-                _encode(renderEncoder: renderEncoder, renderable: renderable, camera: camera)
+            for var renderable in renderables where renderable.drawable {
+                _encode(renderEncoder: renderEncoder, renderable: &renderable, camera: camera)
             }
         }
 
@@ -383,7 +383,7 @@ open class Renderer {
         renderEncoder.popDebugGroup()
     }
 
-    private func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: Renderable, camera: Camera) {
+    private func _encode(renderEncoder: MTLRenderCommandEncoder, renderable: inout Renderable, camera: Camera) {
         renderEncoder.pushDebugGroup(renderable.label)
 
         let materials = renderable.materials
@@ -417,7 +417,20 @@ open class Renderer {
         }
 
         renderable.update(camera: camera, viewport: _viewport)
-        renderable.draw(renderEncoder: renderEncoder, shadow: false)
+
+        if renderable.cullMode == .none, renderable.opaque == false {
+
+            renderable.cullMode = .front
+            renderable.draw(renderEncoder: renderEncoder, shadow: false)
+
+            renderable.cullMode = .back
+            renderable.draw(renderEncoder: renderEncoder, shadow: false)
+
+            renderable.cullMode = .none
+        }
+        else {
+            renderable.draw(renderEncoder: renderEncoder, shadow: false)
+        }
 
         renderEncoder.popDebugGroup()
     }
