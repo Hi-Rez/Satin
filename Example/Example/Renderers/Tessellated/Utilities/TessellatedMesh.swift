@@ -11,6 +11,10 @@ import Metal
 import Satin
 
 class TessellatedMesh: Object, Renderable {
+    var opaque: Bool {
+        material?.blending == .disabled
+    }
+    
     var cullMode: MTLCullMode = .back
     var windingOrder: MTLWinding = .counterClockwise
     var triangleFillMode: MTLTriangleFillMode = .fill

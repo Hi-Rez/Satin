@@ -72,6 +72,10 @@ func CustomModelIOVertexDescriptor() -> MDLVertexDescriptor {
 }
 
 class LoadedMesh: Object, Renderable {
+    public var opaque: Bool {
+        material?.blending == .disabled
+    }
+
     public var renderOrder = 0
     public var receiveShadow: Bool = false
     public var castShadow: Bool = false

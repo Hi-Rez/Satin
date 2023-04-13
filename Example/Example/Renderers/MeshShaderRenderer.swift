@@ -162,6 +162,10 @@ private class CustomMaterial: SourceMaterial {
 }
 
 private class CustomMesh: Object, Renderable {
+    var opaque: Bool {
+        material?.blending == .disabled
+    }
+
     var cullMode: MTLCullMode = .back
     var windingOrder: MTLWinding = .counterClockwise
     var triangleFillMode: MTLTriangleFillMode = .fill
