@@ -99,7 +99,7 @@ public class DirectionalLightShadow: Shadow {
 
     public func update(light: Object) {
         camera.position = light.worldPosition
-        camera.lookAt(light.worldPosition + light.worldForwardDirection, Satin.worldUpDirection)
+        camera.lookAt(target: light.worldPosition + light.worldForwardDirection, up: Satin.worldUpDirection)
     }
 
     public func draw(commandBuffer: MTLCommandBuffer, renderables: [Renderable]) {

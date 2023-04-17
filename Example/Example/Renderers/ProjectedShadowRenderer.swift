@@ -29,7 +29,7 @@ class ProjectedShadowRenderer: BaseRenderer {
 
     lazy var camera: PerspectiveCamera = {
         var camera = PerspectiveCamera(position: [4.0, 6.0, 4.0], near: 0.01, far: 1000.0)
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         return camera
     }()
 

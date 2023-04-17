@@ -122,7 +122,7 @@ class ContactShadowRenderer: BaseRenderer {
 
     lazy var camera: PerspectiveCamera = {
         var camera = PerspectiveCamera(position: [20, 20, 20], near: 0.01, far: 100.0, fov: 10)
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         return camera
     }()
 

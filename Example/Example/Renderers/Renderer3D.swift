@@ -35,7 +35,7 @@ class Renderer3D: BaseRenderer {
     }
 
     override func setup() {
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         renderer.compile(scene: scene, camera: camera)
     }
 

@@ -575,8 +575,13 @@ open class Object: Codable, ObservableObject {
 
     // MARK: - Look At
 
-    public func lookAt(_ center: simd_float3, _ up: simd_float3 = Satin.worldUpDirection) {
-        localMatrix = lookAtMatrix3f(position, center, up)
+    public func lookAt(target: simd_float3, up: simd_float3 = Satin.worldUpDirection, local: Bool = true) {
+        if local {
+            localMatrix = lookAtMatrix3f(position, target, up)
+        }
+        else {
+            worldMatrix = lookAtMatrix3f(worldPosition, target, up)
+        }
     }
 
     // MARK: - Intersections

@@ -39,7 +39,7 @@ class TessellationRenderer: BaseRenderer {
     }
 
     override func setup() {
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         renderer.compile(scene: scene, camera: camera)
 
         tessellator.setup(tessGeometry)

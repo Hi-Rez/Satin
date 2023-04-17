@@ -62,7 +62,7 @@ class PBRSubmeshRenderer: BaseRenderer {
         start("Light Setup")
         let light = DirectionalLight(color: .one, intensity: 2.0)
         light.position = .init(repeating: 5.0)
-        light.lookAt(scene.worldBounds.center)
+        light.lookAt(target: scene.worldBounds.center)
         end()
 
         scene.add(light)

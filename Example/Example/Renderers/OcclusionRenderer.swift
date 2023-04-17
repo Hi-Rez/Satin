@@ -51,7 +51,7 @@ class OcclusionRenderer: BaseRenderer {
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera: PerspectiveCamera = {
         let camera = PerspectiveCamera(position: .init(repeating: 8.0), near: 0.01, far: 1000.0, fov: 30)
-        camera.lookAt(.zero, Satin.worldUpDirection)
+        camera.lookAt(target: .zero, up: Satin.worldUpDirection)
         return camera
     }()
 

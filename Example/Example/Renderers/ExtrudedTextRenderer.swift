@@ -52,7 +52,7 @@ class ExtrudedTextRenderer: BaseRenderer {
         mat.set("Invert", true)
         mesh = Mesh(geometry: geo, material: mat)
 
-        camera.lookAt(mesh.worldBounds.center)
+        camera.lookAt(target: mesh.worldBounds.center)
 
         scene.add(mesh)
     }

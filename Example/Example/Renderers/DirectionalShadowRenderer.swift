@@ -89,7 +89,7 @@ class DirectionalShadowRenderer: BaseRenderer {
         light1.shadow.radius = 2
 
         // Setup things here
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         floorMesh.position.y = -1.0
 
         torusMesh.label = "Main"
@@ -127,11 +127,11 @@ class DirectionalShadowRenderer: BaseRenderer {
         torusMesh.orientation *= simd_quatf(angle: theta, axis: Satin.worldRightDirection)
 
         light0.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
-        light0.lookAt(.zero, Satin.worldUpDirection)
+        light0.lookAt(target: .zero, up: Satin.worldUpDirection)
 
         theta += .pi * 0.5
         light1.position = simd_make_float3(radius * sin(theta), 5.0, radius * cos(theta))
-        light1.lookAt(.zero, Satin.worldUpDirection)
+        light1.lookAt(target: .zero, up: Satin.worldUpDirection)
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

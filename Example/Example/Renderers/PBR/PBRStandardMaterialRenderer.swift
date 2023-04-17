@@ -91,7 +91,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
         for (index, position) in positions.enumerated() {
             let light = DirectionalLight(color: .one, intensity: 0.5)
             light.position = position
-            light.lookAt(.zero, ups[index])
+            light.lookAt(target: .zero, up: ups[index])
             scene.add(light)
         }
     }

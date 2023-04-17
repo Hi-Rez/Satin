@@ -38,7 +38,7 @@ class PBRCustomizationRenderer: BaseRenderer {
     }
 
     override func setup() {
-        camera.lookAt(.zero)
+        camera.lookAt(target: .zero)
         loadHdri()
         generateNoiseTexture()
     }

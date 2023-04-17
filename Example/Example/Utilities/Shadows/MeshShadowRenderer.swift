@@ -57,7 +57,7 @@ class MeshShadowRenderer {
             far: 100
         )
         camera.position = .init(0, 5, 0)
-        camera.lookAt(.zero, -Satin.worldForwardDirection)
+        camera.lookAt(target: .zero, up: -Satin.worldForwardDirection)
 
         width = Int(size.width)
         height = Int(size.height)

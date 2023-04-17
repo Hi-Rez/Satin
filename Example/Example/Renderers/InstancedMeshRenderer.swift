@@ -55,7 +55,7 @@ class InstancedMeshRenderer: BaseRenderer {
     }
 
     func setupCamera() {
-        cameraController.target.lookAt([5.0, 5.0, 5.0])
+        cameraController.target.lookAt(target: [5.0, 5.0, 5.0])
     }
 
     func updateInstances(_ time: Float) {
