@@ -412,9 +412,9 @@ open class Object: Codable, ObservableObject {
 
     open func add(_ child: Object, _ setParent: Bool = true) {
         guard children.firstIndex(of: child) == nil else { return }
-        child.removeFromParent()
 
         if setParent {
+            child.removeFromParent()
             child.parent = self
         }
 

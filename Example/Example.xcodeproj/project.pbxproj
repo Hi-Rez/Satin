@@ -290,7 +290,6 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
-				E152372029CBA8DA00D96D46 /* AR */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
@@ -312,19 +311,20 @@
 				E10E2FD529C508EC00C4EAFF /* MeshShaderRenderer.swift */,
 				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
 				E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */,
-				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
 				E1D62565269D21C8000094C1 /* PostProcessingRenderer.swift */,
 				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
 				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,
 				E17B986E2451488100216411 /* Renderer2D.swift */,
 				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
 				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
-				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E11325CC28AEADAA0049CACC /* SuperShapesRenderer.swift */,
-				E1BCF34129DA3E910076C163 /* Tessellated */,
 				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
+				E152372029CBA8DA00D96D46 /* AR */,
+				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
+				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
+				E1BCF34129DA3E910076C163 /* Tessellated */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -410,12 +410,12 @@
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				E14198C629D10A9100E486EE /* Shadows */,
-				E14198C529D10A8500E486EE /* Geometry */,
-				E1F4315829C39B2D00200E72 /* AR */,
 				E17D2C1126BBB7DF005A136A /* AudioInput.swift */,
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E1F22D1C29BD71FA0011CEAB /* Timing.swift */,
+				E1F4315829C39B2D00200E72 /* AR */,
+				E14198C529D10A8500E486EE /* Geometry */,
+				E14198C629D10A9100E486EE /* Shadows */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";

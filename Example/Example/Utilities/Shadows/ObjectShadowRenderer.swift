@@ -141,7 +141,6 @@ class ObjectShadowRenderer {
     public func update(commandBuffer: MTLCommandBuffer) {
         update()
 
-
         let finalScene = Object("Shadow Scene")
 
         let lights = getLights(scene, true, true)
