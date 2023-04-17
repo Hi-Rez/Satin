@@ -127,7 +127,7 @@ open class Object: Codable, ObservableObject {
             }
         }
         set {
-            position = simd_make_float3(newValue.columns.3)
+            position = newValue.translation
             let sx = newValue.columns.0
             let sy = newValue.columns.1
             let sz = newValue.columns.2
@@ -595,6 +595,64 @@ open class Object: Codable, ObservableObject {
         for child in children {
             child.intersect(ray: ray, intersections: &intersections, recursive: recursive, invisible: invisible)
         }
+    }
+
+    // MARK: - Conversion Utilities
+
+    /// Converts a position from the local space of the Object on which you called this method to the local space of a reference Object.
+    /// - Parameters:
+    ///   - position: The position given in the local space of the Object.
+    ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
+    /// - Returns: The position specified relative to referenceObject.
+    func convertPosition(position: simd_float3, to referenceObject: Object?) -> simd_float3 {
+        let worldSpacePosition = (self.worldMatrix * translationMatrix3f(position)).translation
+
+        if let referenceObject = referenceObject {
+            return (referenceObject.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).translation
+        } else {
+            return worldSpacePosition
+        }
+    }
+
+    /// Converts a position from the local space of a reference Object to the local space of the Object on which you called this method.
+    /// - Parameters:
+    ///   - position: The position specified relative to referenceObject.
+    ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
+    /// - Returns: The position given in the local space of the Object.
+    func convertPosition(_ position: simd_float3, from referenceObject: Object?) -> simd_float3 {
+        var worldSpacePosition = position
+        if let referenceObject = referenceObject {
+            worldSpacePosition = (referenceObject.worldMatrix * translationMatrix3f(position)).translation
+        }
+        return (self.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).translation
+    }
+
+    /// Converts a direction vector from the local space of the Object on which you called this method to the local space of a reference Object.
+    /// - Parameters:
+    ///   - direction: The direction vector given in the local space of the Object.
+    ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
+    /// - Returns: The direction vector specified relative to referenceObject.
+    func convert(direction: simd_float3, to referenceObject: Object?) -> simd_float3 {
+        let worldSpaceDirection = worldOrientation.act(direction)
+
+        if let referenceObject = referenceObject {
+            return referenceObject.worldOrientation.inverse.act(worldSpaceDirection)
+        } else {
+            return worldSpaceDirection
+        }
+    }
+
+    /// Converts a direction vector from the local space of a reference Object to the local space of the Object on which you called this method.
+    /// - Parameters:
+    ///   - direction: The direction vector specified relative to referenceObject.
+    ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
+    /// - Returns: The direction vector given in the local space of the Object.
+    func convert(direction: simd_float3, from referenceObject: Object?) -> simd_float3 {
+        var worldSpaceDirection = direction
+        if let referenceObject = referenceObject {
+            worldSpaceDirection = referenceObject.worldOrientation.act(direction)
+        }
+        return self.worldOrientation.inverse.act(worldSpaceDirection)
     }
 }
 

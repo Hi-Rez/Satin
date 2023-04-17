@@ -59,6 +59,11 @@ public extension simd_float4x4 {
         let transformedDirection = simd_make_float3(self * simd_make_float4(ray.direction))
         return Ray(origin: transformedOrigin, direction: simd_normalize(transformedDirection))
     }
+
+    var translation: simd_float3 {
+        simd_make_float3(self.columns.3)
+    }
+
 }
 
 extension simd_float3x3: Codable {
