@@ -6,9 +6,9 @@
 //  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
-import Metal
 import Combine
 import Foundation
+import Metal
 import simd
 
 open class Object: Codable, ObservableObject {
@@ -127,7 +127,7 @@ open class Object: Codable, ObservableObject {
             }
         }
         set {
-            position = newValue.translation
+            position = simd_make_float3(newValue.columns.3)
             let sx = newValue.columns.0
             let sy = newValue.columns.1
             let sz = newValue.columns.2
@@ -411,21 +411,23 @@ open class Object: Codable, ObservableObject {
     }
 
     open func add(_ child: Object, _ setParent: Bool = true) {
-        if !children.contains(where: { $0 === child }) {
-            if setParent {
-                child.parent = self
-            }
-            child.context = context
-            children.append(child)
-            childAddedPublisher.send(child)
+        guard children.firstIndex(of: child) == nil else { return }
+        child.removeFromParent()
 
-            childAddedSubscriptions[child] = child.childAddedPublisher.sink { [weak self] subchild in
-                self?.childAddedPublisher.send(subchild)
-            }
+        if setParent {
+            child.parent = self
+        }
 
-            childRemovedSubscriptions[child] = child.childRemovedPublisher.sink { [weak self] subchild in
-                self?.childRemovedPublisher.send(subchild)
-            }
+        child.context = context
+        children.append(child)
+        childAddedPublisher.send(child)
+
+        childAddedSubscriptions[child] = child.childAddedPublisher.sink { [weak self] subchild in
+            self?.childAddedPublisher.send(subchild)
+        }
+
+        childRemovedSubscriptions[child] = child.childRemovedPublisher.sink { [weak self] subchild in
+            self?.childRemovedPublisher.send(subchild)
         }
     }
 
@@ -440,15 +442,14 @@ open class Object: Codable, ObservableObject {
     }
 
     open func remove(_ child: Object) {
-        if let index = children.firstIndex(of: child) {
-            childRemovedPublisher.send(child)
-            if child.parent === self {
-                child.parent = nil
-            }
-            children.remove(at: index)
-            childAddedSubscriptions.removeValue(forKey: child)
-            childRemovedSubscriptions.removeValue(forKey: child)
+        guard let index = children.firstIndex(of: child) else { return }
+        childRemovedPublisher.send(child)
+        if child.parent === self {
+            child.parent = nil
         }
+        children.remove(at: index)
+        childAddedSubscriptions.removeValue(forKey: child)
+        childRemovedSubscriptions.removeValue(forKey: child)
     }
 
     open func removeFromParent() {
@@ -578,8 +579,7 @@ open class Object: Codable, ObservableObject {
     public func lookAt(target: simd_float3, up: simd_float3 = Satin.worldUpDirection, local: Bool = true) {
         if local {
             localMatrix = lookAtMatrix3f(position, target, up)
-        }
-        else {
+        } else {
             worldMatrix = lookAtMatrix3f(worldPosition, target, up)
         }
     }
@@ -605,10 +605,9 @@ open class Object: Codable, ObservableObject {
     ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
     /// - Returns: The position specified relative to referenceObject.
     func convertPosition(position: simd_float3, to referenceObject: Object?) -> simd_float3 {
-        let worldSpacePosition = (self.worldMatrix * translationMatrix3f(position)).translation
-
+        let worldSpacePosition = simd_make_float3((worldMatrix * translationMatrix3f(position)).columns.3)
         if let referenceObject = referenceObject {
-            return (referenceObject.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).translation
+            return simd_make_float3((referenceObject.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).columns.3)
         } else {
             return worldSpacePosition
         }
@@ -622,9 +621,9 @@ open class Object: Codable, ObservableObject {
     func convertPosition(_ position: simd_float3, from referenceObject: Object?) -> simd_float3 {
         var worldSpacePosition = position
         if let referenceObject = referenceObject {
-            worldSpacePosition = (referenceObject.worldMatrix * translationMatrix3f(position)).translation
+            worldSpacePosition = simd_make_float3((referenceObject.worldMatrix * translationMatrix3f(position)).columns.3)
         }
-        return (self.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).translation
+        return simd_make_float3((worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).columns.3)
     }
 
     /// Converts a direction vector from the local space of the Object on which you called this method to the local space of a reference Object.
@@ -652,7 +651,7 @@ open class Object: Codable, ObservableObject {
         if let referenceObject = referenceObject {
             worldSpaceDirection = referenceObject.worldOrientation.act(direction)
         }
-        return self.worldOrientation.inverse.act(worldSpaceDirection)
+        return worldOrientation.inverse.act(worldSpaceDirection)
     }
 }
 

@@ -68,28 +68,7 @@ open class Scene: Object {
         setupBrdfTexture(device: device, commandBuffer: cb3)
         cb3.commit()
         cb3.waitUntilCompleted()
-
         progress?.completedUnitCount += 1
-        DispatchQueue.main.async {
-            self.traverse { object in
-                self.updateObjectTextures(object)
-            }
-        }
-    }
-
-    open func updateObjectTextures(_ object: Object) {
-        if let renderable = object as? Renderable {
-            let materials = renderable.materials
-            for material in materials {
-                if let standardMaterial = material as? StandardMaterial {
-                    standardMaterial.setTexture(reflectionTexture, type: .reflection)
-                    standardMaterial.setTexture(irradianceTexture, type: .irradiance)
-                    standardMaterial.setTexture(brdfTexture, type: .brdf)
-                } else if let skyboxMaterial = material as? SkyboxMaterial {
-                    skyboxMaterial.texture = cubemapTexture
-                }
-            }
-        }
     }
 
     private func setupCubemapTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {

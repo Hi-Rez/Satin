@@ -290,7 +290,6 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
-				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
 				E152372029CBA8DA00D96D46 /* AR */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
@@ -313,6 +312,7 @@
 				E10E2FD529C508EC00C4EAFF /* MeshShaderRenderer.swift */,
 				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
 				E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */,
+				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
 				E1D62565269D21C8000094C1 /* PostProcessingRenderer.swift */,
 				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
 				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,

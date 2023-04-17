@@ -77,9 +77,8 @@ class CameraControllerRenderer: BaseRenderer {
     }
 
     override func setup() {
-        scene.add(cameraController.target)
+        scene.attach(cameraController.target)
         cameraController.target.add(targetMesh)
-        scene.attach(targetMesh)
     }
 
     deinit {
@@ -88,7 +87,7 @@ class CameraControllerRenderer: BaseRenderer {
 
     override func update() {
         cameraController.update()
-        targetMesh.orientation = cameraController.target.orientation.inverse
+        targetMesh.orientation = cameraController.camera.worldOrientation.inverse
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
