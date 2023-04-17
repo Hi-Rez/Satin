@@ -38,9 +38,12 @@ fragment float4 compositorFragment
 
     const float alphaSample = alphaTexture.sample(s, uv).r;
     const float dilatedDepthSample = dilatedDepthTexture.sample(s, uv);
+
     contentSample.rgb += mix(0.0, grain.rgb, contentSample.a);
 
     float4 color = mix(backgroundSample, contentSample, contentSample.a);
+
     color = mix(color, backgroundSample, step(contentDepthSample, dilatedDepthSample) * alphaSample);
+
     return color;
 }

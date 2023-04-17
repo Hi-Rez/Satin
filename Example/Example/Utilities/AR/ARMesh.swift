@@ -28,6 +28,10 @@ func ARMeshVertexDescriptor() -> MTLVertexDescriptor {
 }
 
 class ARMesh: Object, Renderable {
+    var opaque: Bool {
+        material?.blending == .disabled
+    }
+
     var receiveShadow: Bool { false }
     var castShadow: Bool { false }
 

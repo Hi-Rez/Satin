@@ -74,7 +74,7 @@ class CubemapRenderer: BaseRenderer {
                 url.appendingPathComponent("pz.png"),
                 url.appendingPathComponent("nz.png"),
             ],
-            true // <- generates mipmaps
+            false // <- generates mipmaps
         )
 
         if let texture = cubeTexture, let material = skybox.material as? SkyboxMaterial {

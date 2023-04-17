@@ -1,5 +1,5 @@
 //
-//  SubmeshRenderer.swift
+//  PBRSubmeshRenderer.swift
 //  Example
 //
 //  Created by Reza Ali on 3/10/23.
@@ -12,11 +12,12 @@ import MetalKit
 import Forge
 import Satin
 
-class SubmeshRenderer: BaseRenderer {
+class PBRSubmeshRenderer: BaseRenderer {
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
 
-    var scene = Scene("Scene")
+    var scene = Scene("Scene", [Mesh(geometry: SkyboxGeometry(size: 250), material: SkyboxMaterial())])
+
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
     lazy var camera: PerspectiveCamera = {
         let pos = simd_make_float3(125.0, 125.0, 125.0)
@@ -56,7 +57,7 @@ class SubmeshRenderer: BaseRenderer {
         let sceneBounds = scene.worldBounds
         end()
 
-        model.position.y -= sceneBounds.size.y * 0.5
+        model.position.y -= sceneBounds.size.y * 0.25
 
         start("Light Setup")
         let light = DirectionalLight(color: .one, intensity: 2.0)
@@ -186,6 +187,8 @@ class SubmeshRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
+        if let hdr = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename)) {
+            scene.setEnvironment(texture: hdr)
+        }
     }
 }

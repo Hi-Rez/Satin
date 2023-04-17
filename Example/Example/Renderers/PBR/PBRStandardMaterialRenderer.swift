@@ -179,7 +179,9 @@ class PBRStandardMaterialRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
+        if let hdr = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename)) {
+            scene.setEnvironment(texture: hdr)
+        }
     }
 
     // MARK: - Vertex Generics

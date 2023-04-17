@@ -26,7 +26,7 @@ fileprivate class ARPlaneContainer: Object {
     var planeMesh: Mesh
     var meshWireframe: Mesh
 
-    init(label: String, anchor: ARPlaneAnchor, material: Satin.Material) {
+    init(name: String, anchor: ARPlaneAnchor, material: Satin.Material) {
         self.anchor = anchor
 
         let mat = material.clone()
@@ -37,7 +37,7 @@ fileprivate class ARPlaneContainer: Object {
         meshWireframe.triangleFillMode = .lines
         planeMesh.add(meshWireframe)
 
-        super.init(label, [planeMesh])
+        super.init(name, [planeMesh])
         updateAnchor()
     }
 
@@ -167,7 +167,7 @@ class ARPlanesRenderer: BaseRenderer, ARSessionDelegate {
     func session(_: ARSession, didAdd anchors: [ARAnchor]) {
         for anchor in anchors {
             if planesMap[anchor] == nil, let planeAnchor = anchor as? ARPlaneAnchor {
-                let planeContainer = ARPlaneContainer(label: "\(planeAnchor.identifier)", anchor: planeAnchor, material: planeMaterial)
+                let planeContainer = ARPlaneContainer(name: "\(planeAnchor.identifier)", anchor: planeAnchor, material: planeMaterial)
                 planesMap[anchor] = planeContainer
                 scene.add(planeContainer)
             }

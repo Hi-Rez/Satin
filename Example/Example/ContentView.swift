@@ -14,17 +14,8 @@ struct ContentView: View {
         NavigationView {
             List {
                 Group {
-                    NavigationLink(destination: Renderer2DView()) {
-                        Label("2D", systemImage: "square")
-                    }
-
-                    NavigationLink(destination: Renderer3DView()) {
-                        Label("3D", systemImage: "cube")
-                    }
-                }
-                #if os(iOS)
-                Section(header: Text("AR")) {
-                    Group {
+#if os(iOS)
+                    Section(header: Text("AR")) {
                         NavigationLink(destination: ARRendererView()) {
                             Label("AR Hello World", systemImage: "arkit")
                         }
@@ -53,101 +44,148 @@ struct ContentView: View {
                             Label("AR + Satin + SceneKit", systemImage: "arkit")
                         }
                     }
-                }
-                #endif
-                Group {
-                    #if os(macOS)
-                    NavigationLink(destination: AudioInputRendererView()) {
-                        Label("Audio Input", systemImage: "mic")
-                    }
-                    #endif
-                    NavigationLink(destination: BufferComputeRendererView()) {
-                        Label("Buffer Compute", systemImage: "aqi.medium")
-                    }
+#endif
 
-                    NavigationLink(destination: CameraControllerRendererView()) {
-                        Label("Camera Controller", systemImage: "camera.aperture")
-                    }
+                    Section(header: Text("Basics")) {
+                        NavigationLink(destination: Renderer2DView()) {
+                            Label("2D", systemImage: "square")
+                        }
 
-                    NavigationLink(destination: ContactShadowRendererView()) {
-                        Label("Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
-                    }
+                        NavigationLink(destination: Renderer3DView()) {
+                            Label("3D", systemImage: "cube")
+                        }
 
-                    NavigationLink(destination: CubemapRendererView()) {
-                        Label("Cubemap", systemImage: "map")
-                    }
+                        NavigationLink(destination: InstancedMeshRendererView()) {
+                            Label("Instanced Mesh", systemImage: "circle.grid.2x2.fill")
+                        }
 
-                    NavigationLink(destination: CustomGeometryRendererView()) {
-                        Label("Custom Geometry", systemImage: "network")
-                    }
+                        NavigationLink(destination: CameraControllerRendererView()) {
+                            Label("Camera Controller", systemImage: "camera.aperture")
+                        }
 
-                    NavigationLink(destination: VertexAttributesRendererView()) {
-                        Label("Custom Vertex Attributes", systemImage: "asterisk.circle")
-                    }
-                }
-                Group {
-                    NavigationLink(destination: DepthMaterialRendererView()) {
-                        Label("Depth Material", systemImage: "rectangle.stack")
-                    }
+                        NavigationLink(destination: OcclusionRendererView()) {
+                            Label("Occlusion", systemImage: "moonphase.first.quarter.inverse")
+                        }
 
-                    NavigationLink(destination: DirectionalShadowRendererView()) {
-                        Label("Directional Shadow", systemImage: "shadow")
-                    }
-
-                    NavigationLink(destination: ExportGeometryRendererView()) {
-                        Label("Export Geometry", systemImage: "square.and.arrow.up")
-                    }
-
-                    NavigationLink(destination: ExtrudedTextRendererView()) {
-                        Label("Extruded Text", systemImage: "square.3.layers.3d.down.right")
-                    }
-
-                    NavigationLink(destination: FlockingRendererView()) {
-                        Label("Flocking Particles", systemImage: "bird")
-                    }
-
-                    NavigationLink(destination: FXAARendererView()) {
-                        Label("FXAA", systemImage: "squareshape.split.2x2.dotted")
-                    }
-
-                    NavigationLink(destination: CustomInstancingRendererView()) {
-                        Label("Custom Instancing", systemImage: "square.grid.3x3")
-                    }
-
-                    NavigationLink(destination: InstancedMeshRendererView()) {
-                        Label("Instanced Mesh", systemImage: "circle.grid.2x2.fill")
-                    }
-
-                    NavigationLink(destination: LiveCodeRendererView()) {
-                        Label("Live Code", systemImage: "doc.text")
-                    }
-                }
-                Group {
-                    NavigationLink(destination: MatcapRendererView()) {
-                        Label("Matcap", systemImage: "graduationcap")
-                    }
-
-                    if let device = MTLCreateSystemDefaultDevice(), device.supportsFamily(MTLGPUFamily.mac2) || device.supportsFamily(MTLGPUFamily.apple8) {
-                        NavigationLink(destination: MeshShaderRendererView()) {
-                            Label("Mesh Shader", systemImage: "circle.hexagongrid.fill")
+                        NavigationLink(destination: OctasphereRendererView()) {
+                            Label("Octasphere", systemImage: "globe")
                         }
                     }
 
-                    NavigationLink(destination: LoadObjRendererView()) {
-                        Label("Obj Loading", systemImage: "arrow.down.doc")
+                    Section(header: Text("Materials")) {
+                        NavigationLink(destination: CubemapRendererView()) {
+                            Label("Skybox Material", systemImage: "map")
+                        }
+
+                        NavigationLink(destination: MatcapRendererView()) {
+                            Label("Matcap Material", systemImage: "graduationcap")
+                        }
+
+                        NavigationLink(destination: DepthMaterialRendererView()) {
+                            Label("Depth Material", systemImage: "rectangle.stack")
+                        }
+
+                        NavigationLink(destination: LiveCodeRendererView()) {
+                            Label("Live Material", systemImage: "doc.text")
+                        }
                     }
 
-                    NavigationLink(destination: OcclusionRendererView()) {
-                        Label("Occlusion", systemImage: "moonphase.first.quarter.inverse")
+                    Section(header: Text("Geometry")) {
+                        NavigationLink(destination: TextRendererView()) {
+                            Label("Text", systemImage: "textformat")
+                        }
+
+                        NavigationLink(destination: ExtrudedTextRendererView()) {
+                            Label("Extruded Text", systemImage: "square.3.layers.3d.down.right")
+                        }
+
+                        NavigationLink(destination: SuperShapesRendererView()) {
+                            Label("Super Shapes", systemImage: "seal")
+                        }
+
+                        NavigationLink(destination: LoadObjRendererView()) {
+                            Label("Obj Loading", systemImage: "arrow.down.doc")
+                        }
+
+                        NavigationLink(destination: ExportGeometryRendererView()) {
+                            Label("Export Geometry", systemImage: "square.and.arrow.up")
+                        }
                     }
 
-                    NavigationLink(destination: OctasphereRendererView()) {
-                        Label("Octasphere", systemImage: "globe")
+                    Section(header: Text("Customization")) {
+                        NavigationLink(destination: CustomGeometryRendererView()) {
+                            Label("Custom Geometry", systemImage: "network")
+                        }
+
+                        NavigationLink(destination: CustomInstancingRendererView()) {
+                            Label("Custom Instancing", systemImage: "square.grid.3x3")
+                        }
+
+                        NavigationLink(destination: VertexAttributesRendererView()) {
+                            Label("Custom Vertex Attributes", systemImage: "asterisk.circle")
+                        }
                     }
 
+                    Section(header: Text("Compute")) {
+                        NavigationLink(destination: BufferComputeRendererView()) {
+                            Label("Buffer Compute", systemImage: "aqi.medium")
+                        }
+
+                        NavigationLink(destination: FlockingRendererView()) {
+                            Label("Flocking Particles", systemImage: "bird")
+                        }
+
+                        NavigationLink(destination: TextureComputeRendererView()) {
+                            Label("Texture Compute", systemImage: "photo.stack")
+                        }
+                    }
+
+                    Section(header: Text("Shadows")) {
+                        NavigationLink(destination: ContactShadowRendererView()) {
+                            Label("Contact Shadow", systemImage: "square.2.layers.3d.bottom.filled")
+                        }
+
+                        NavigationLink(destination: DirectionalShadowRendererView()) {
+                            Label("Directional Shadow", systemImage: "shadow")
+                        }
+
+                        NavigationLink(destination: ProjectedShadowRendererView()) {
+                            Label("Projected Shadow", systemImage: "shadow")
+                        }
+                    }
                 }
-                Section(header: Text("Physically Based Rendering")) {
-                    Group {
+
+                Group {
+                    Section(header: Text("Advanced")) {
+#if os(macOS)
+                        NavigationLink(destination: AudioInputRendererView()) {
+                            Label("Audio Input", systemImage: "mic")
+                        }
+#endif
+                        if let device = MTLCreateSystemDefaultDevice(), device.supportsFamily(MTLGPUFamily.mac2) || device.supportsFamily(MTLGPUFamily.apple8) {
+                            NavigationLink(destination: MeshShaderRendererView()) {
+                                Label("Mesh Shader", systemImage: "circle.hexagongrid.fill")
+                            }
+                        }
+
+                        NavigationLink(destination: RayMarchingRendererView()) {
+                            Label("Ray Marching", systemImage: "camera.metering.multispot")
+                        }
+
+                        NavigationLink(destination: SatinSceneKitRendererView()) {
+                            Label("Satin + SceneKit", systemImage: "plus")
+                        }
+
+                        NavigationLink(destination: ShippingShadersRendererView()) {
+                            Label("Shipping Shaders", systemImage: "shippingbox")
+                        }
+
+                        NavigationLink(destination: TessellationRendererView()) {
+                            Label("Tessellation", systemImage: "square.split.2x2")
+                        }
+                    }
+
+                    Section(header: Text("Physically Based Rendering")) {
                         NavigationLink(destination: PBRRendererView()) {
                             Label("PBR", systemImage: "eye")
                         }
@@ -163,54 +201,26 @@ struct ContentView: View {
                         NavigationLink(destination: PBRStandardMaterialRendererView()) {
                             Label("PBR Standard Material", systemImage: "flame")
                         }
-                    }
-                }
 
-                Group {
-                    NavigationLink(destination: PostProcessingRendererView()) {
-                        Label("Post Processing", systemImage: "checkerboard.rectangle")
+                        NavigationLink(destination: PBRSubmeshRendererView()) {
+                            Label("PBR Submeshes", systemImage: "soccerball")
+                        }
                     }
 
-                    NavigationLink(destination: ProjectedShadowRendererView()) {
-                        Label("Projected Shadow", systemImage: "shadow")
-                    }
-                }
+                    Section(header: Text("Post Processing")) {
+                        NavigationLink(destination: PostProcessingRendererView()) {
+                            Label("Post Processing", systemImage: "checkerboard.rectangle")
+                        }
 
-                Group {
-                    NavigationLink(destination: RayMarchingRendererView()) {
-                        Label("Ray Marching", systemImage: "camera.metering.multispot")
-                    }
-
-                    NavigationLink(destination: SatinSceneKitRendererView()) {
-                        Label("Satin + SceneKit", systemImage: "plus")
-                    }
-
-                    NavigationLink(destination: ShippingShadersRendererView()) {
-                        Label("Shipping Shaders", systemImage: "shippingbox")
-                    }
-
-                    NavigationLink(destination: SubmeshRendererView()) {
-                        Label("Submeshes", systemImage: "soccerball")
-                    }
-
-                    NavigationLink(destination: SuperShapesRendererView()) {
-                        Label("Super Shapes", systemImage: "seal")
-                    }
-
-                    NavigationLink(destination: TextRendererView()) {
-                        Label("Text", systemImage: "textformat")
-                    }
-
-                    NavigationLink(destination: TessellationRendererView()) {
-                        Label("Tessellation", systemImage: "square.split.2x2")
-                    }
-
-                    NavigationLink(destination: TextureComputeRendererView()) {
-                        Label("Texture Compute", systemImage: "photo.stack")
+                        NavigationLink(destination: FXAARendererView()) {
+                            Label("FXAA", systemImage: "squareshape.split.2x2.dotted")
+                        }
                     }
                 }
             }
             .navigationTitle("Satin Examples")
+
+            PBRStandardMaterialRendererView()
         }
     }
 }

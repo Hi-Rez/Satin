@@ -49,7 +49,9 @@ class PBRCustomizationRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
+        if let hdr = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename)) {
+            scene.setEnvironment(texture: hdr)
+        }
     }
 
     lazy var startTime = getTime()

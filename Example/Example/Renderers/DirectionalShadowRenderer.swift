@@ -56,7 +56,9 @@ class DirectionalShadowRenderer: BaseRenderer {
     override init() {
         super.init()
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device: MTLCreateSystemDefaultDevice()!, url: texturesURL.appendingPathComponent(filename))
+        if let hdr = loadHDR(device: MTLCreateSystemDefaultDevice()!, url: texturesURL.appendingPathComponent(filename)) {
+            scene.setEnvironment(texture: hdr)
+        }
     }
 
     override func setup() {

@@ -336,14 +336,41 @@ open class Renderer {
         let maxLights = lightList.count
         let shadowCount = shadowList.count
 
+        var environmentIntensity: Float = 1.0
+        var cubemapTexture: MTLTexture? = nil
+        var reflectionTexture: MTLTexture? = nil
+        var irradianceTexture: MTLTexture? = nil
+        var brdfTexture: MTLTexture? = nil
+
         for object in objectList {
+            if let scene = object as? Scene {
+                environmentIntensity = scene.environmentIntensity
+                cubemapTexture = scene.cubemapTexture
+                reflectionTexture = scene.reflectionTexture
+                irradianceTexture = scene.irradianceTexture
+                brdfTexture = scene.brdfTexture
+            }
+
             if let renderable = object as? Renderable {
                 for material in renderable.materials {
+
                     if material.lighting {
                         material.maxLights = maxLights
                     }
+
                     if renderable.receiveShadow {
                         material.shadowCount = shadowCount
+                    }
+
+                    if let pbrMaterial = material as? StandardMaterial {
+                        pbrMaterial.environmentIntensity = environmentIntensity
+                        pbrMaterial.setTexture(reflectionTexture, type: .reflection)
+                        pbrMaterial.setTexture(irradianceTexture, type: .irradiance)
+                        pbrMaterial.setTexture(brdfTexture, type: .brdf)
+                    }
+
+                    if let cubemapTexture = cubemapTexture, let skyboxMaterial = material as? SkyboxMaterial {
+                        skyboxMaterial.texture = cubemapTexture
                     }
                 }
             } else {

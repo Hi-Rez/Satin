@@ -68,8 +68,7 @@ class PBRRenderer: BaseRenderer {
         return mesh
     }()
 
-    lazy var skyboxMaterial = SkyboxMaterial()
-    lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: skyboxMaterial)
+    lazy var skybox = Mesh(geometry: SkyboxGeometry(size: 50), material: SkyboxMaterial())
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -112,7 +111,9 @@ class PBRRenderer: BaseRenderer {
 
     func loadHdri() {
         let filename = "brown_photostudio_02_2k.hdr"
-        scene.environment = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename))
+        if let hdr = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename)) {
+            scene.setEnvironment(texture: hdr)
+        }
     }
 
     override func update() {

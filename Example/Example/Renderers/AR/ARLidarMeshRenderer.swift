@@ -28,7 +28,7 @@ class ARLidarMeshRenderer: BaseRenderer {
 
     var lidarMeshes: [UUID: ARMesh] = [:]
 
-    var session: ARSession!
+    var session = ARSession()
 
     var scene = Object("Scene")
 
@@ -46,7 +46,6 @@ class ARLidarMeshRenderer: BaseRenderer {
 
     override init() {
         super.init()
-        session = ARSession()
         session.delegate = self
 
         let config = ARWorldTrackingConfiguration()

@@ -9,16 +9,16 @@
 import Forge
 import SwiftUI
 
-struct SubmeshRendererView: View {
+struct PBRSubmeshRendererView: View {
     var body: some View {
-        ForgeView(renderer: SubmeshRenderer())
+        ForgeView(renderer: PBRSubmeshRenderer())
             .ignoresSafeArea()
             .navigationTitle("Submeshes")
     }
 }
 
-struct SubmeshRendererView_Previews: PreviewProvider {
+struct PBRSubmeshRendererView_Previews: PreviewProvider {
     static var previews: some View {
-        SubmeshRendererView()
+        PBRSubmeshRendererView()
     }
 }
