@@ -82,6 +82,7 @@ open class StandardMaterial: Material {
     public func setTexture(_ texture: MTLTexture?, type: PBRTextureIndex) {
         if let texture = texture {
             maps[type] = texture
+            setTextureMultiplierUniformToOne(type: type)
             if samplers[type] == nil {
                 let sampler = MTLSamplerDescriptor()
                 sampler.minFilter = .linear
@@ -103,7 +104,6 @@ open class StandardMaterial: Material {
         }
     }
 
-
     public func setTexcoordTransform(_ transform: simd_float3x3, type: PBRTextureIndex) {
         set(type.texcoordName.titleCase, transform)
     }
@@ -111,7 +111,7 @@ open class StandardMaterial: Material {
     public func setTexcoordTransform(offset: simd_float2, scale: simd_float2, rotation: Float, type: PBRTextureIndex) {
         let ct = cos(rotation)
         let st = sin(rotation)
-        
+
         let rotateTransform = simd_float3x3(
             simd_make_float3(ct, st, 0.0),
             simd_make_float3(-st, ct, 0.0),
@@ -119,15 +119,15 @@ open class StandardMaterial: Material {
         )
 
         let offsetTransform = simd_float3x3(
-            simd_make_float3( 1.0, 0.0, 0.0 ),
-            simd_make_float3( 0.0, 1.0, 0.0 ),
-            simd_make_float3( offset.x, offset.y, 0.0 )
+            simd_make_float3(1.0, 0.0, 0.0),
+            simd_make_float3(0.0, 1.0, 0.0),
+            simd_make_float3(offset.x, offset.y, 0.0)
         )
 
         let scaleTransform = simd_float3x3(
-            simd_make_float3( scale.x, 0.0, 0.0 ),
-            simd_make_float3( 0.0, scale.y, 0.0 ),
-            simd_make_float3( 0.0, 0.0, 0.0 )
+            simd_make_float3(scale.x, 0.0, 0.0),
+            simd_make_float3(0.0, scale.y, 0.0),
+            simd_make_float3(0.0, 0.0, 0.0)
         )
 
         let transform = rotateTransform * scaleTransform * offsetTransform
@@ -217,6 +217,65 @@ open class StandardMaterial: Material {
     func bindMaps(_ renderEncoder: MTLRenderCommandEncoder) {
         for (index, texture) in maps where texture != nil {
             renderEncoder.setFragmentTexture(texture, index: index.rawValue)
+        }
+    }
+
+    /// This function is called when a valid PBR texture is set.
+    /// This allows users to scale the texture values by the uniform values.
+    /// When this function is called, the value is set to one to ensure
+    /// the texture values value aren't scaled to zero by the uniform
+    internal func setTextureMultiplierUniformToOne(type: PBRTextureIndex) {
+        switch type {
+            case .baseColor:
+                baseColor.x = 1.0
+                baseColor.y = 1.0
+                baseColor.z = 1.0
+            case .subsurface:
+                break
+            case .metallic:
+                metallic = 1.0
+            case .roughness:
+                roughness = 1.0
+            case .normal:
+                break
+            case .emissive:
+                emissiveColor = .one
+            case .specular:
+                specular = 1.0
+            case .specularTint:
+                break
+            case .sheen:
+                break
+            case .sheenTint:
+                break
+            case .clearcoat:
+                break
+            case .clearcoatRoughness:
+                break
+            case .clearcoatGloss:
+                break
+            case .anisotropic:
+                break
+            case .anisotropicAngle:
+                break
+            case .bump:
+                break
+            case .displacement:
+                break
+            case .alpha:
+                baseColor.w = 1.0
+            case .ior:
+                break
+            case .transmission:
+                break
+            case .ambientOcclusion:
+                break
+            case .reflection:
+                break
+            case .irradiance:
+                break
+            case .brdf:
+                break
         }
     }
 }

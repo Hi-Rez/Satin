@@ -1,6 +1,7 @@
 #if defined(BASE_COLOR_MAP)
     const float2 baseColorTexcoord = (uniforms.baseColorTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.baseColor = baseColorMap.sample(baseColorSampler, baseColorTexcoord).rgb;
+    pixel.material.baseColor *= uniforms.baseColor.rgb;
 #else
     pixel.material.baseColor = uniforms.baseColor.rgb;
 #endif
@@ -8,6 +9,7 @@
 #if defined(EMISSIVE_MAP)
     const float2 emissiveTexcoord = (uniforms.emissiveTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.emissiveColor = emissiveMap.sample(emissiveSampler, emissiveTexcoord).rgb;
+    pixel.material.emissiveColor *= uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
 #else
     pixel.material.emissiveColor = uniforms.emissiveColor.rgb * uniforms.emissiveColor.a;
 #endif
@@ -15,6 +17,7 @@
 #if defined(SPECULAR_MAP)
     const float2 specularTexcoord = (uniforms.specularTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.specular = specularMap.sample(specularSampler, specularTexcoord).r;
+    pixel.material.specular *= uniforms.specular;
 #else
     pixel.material.specular = uniforms.specular;
 #endif
@@ -22,6 +25,7 @@
 #if defined(METALLIC_MAP)
     const float2 metallicTexcoord = (uniforms.metallicTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.metallic = metallicMap.sample(metallicSampler, metallicTexcoord).r;
+    pixel.material.metallic *= uniforms.metallic;
 #else
     pixel.material.metallic = uniforms.metallic;
 #endif
@@ -29,6 +33,7 @@
 #if defined(ROUGHNESS_MAP)
     const float2 roughnessTexcoord = (uniforms.roughnessTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.roughness = roughnessMap.sample(roughnessSampler, roughnessTexcoord).r;
+    pixel.material.roughness *= uniforms.roughness;
 #else
     pixel.material.roughness = uniforms.roughness;
 #endif
@@ -40,6 +45,7 @@
     #if defined(SUBSURFACE_MAP)
         const float2 subsurfaceTexcoord = (uniforms.subsurfaceTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.subsurface = subsurfaceMap.sample(subsurfaceSampler, subsurfaceTexcoord).r;
+        pixel.material.subsurface *= uniforms.subsurface;
     #else
         pixel.material.subsurface = uniforms.subsurface;
     #endif
@@ -49,6 +55,7 @@
     #if defined(CLEARCOAT_MAP)
         const float2 clearcoatTexcoord = (uniforms.clearcoatTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.clearcoat = clearcoatMap.sample(clearcoatSampler, clearcoatTexcoord).r;
+        pixel.material.clearcoat *= uniforms.clearcoat;
     #else
         pixel.material.clearcoat = uniforms.clearcoat;
     #endif
@@ -56,9 +63,11 @@
     #if defined(CLEARCOAT_ROUGHNESS_MAP)
         const float2 clearcoatRoughnessTexcoord = (uniforms.clearcoatRoughnessTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.clearcoatRoughness = clearcoatRoughnessMap.sample(clearcoatRoughnessSampler, clearcoatRoughnessTexcoord).r;
+        pixel.material.clearcoatRoughness *= uniforms.clearcoatRoughness;
     #elseif defined(CLEARCOAT_GLOSS_MAP)
         const float2 clearcoatRoughnessTexcoord = (uniforms.clearcoatRoughnessTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.clearcoatRoughness = 1.0 - clearcoatGlossMap.sample(clearcoatGlossSampler, clearcoatRoughnessTexcoord).r;
+        pixel.material.clearcoatRoughness *= uniforms.clearcoatRoughness;
     #else
         pixel.material.clearcoatRoughness = uniforms.clearcoatRoughness;
     #endif
@@ -68,6 +77,7 @@
     #if defined(SPECULAR_TINT_MAP)
         const float2 specularTintTexcoord = (uniforms.specularTintTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.specularTint = specularTintMap.sample(specularTintSampler, specularTintTexcoord).r;
+        pixel.material.specularTint *= uniforms.specularTint;
     #else
         pixel.material.specularTint = uniforms.specularTint;
     #endif
@@ -77,6 +87,7 @@
     #if defined(SHEEN_MAP)
         const float2 sheenTexcoord = (uniforms.sheenTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.sheen = sheenMap.sample(sheenSampler, sheenTexcoord).r;
+        pixel.material.sheen *= uniforms.sheen;
     #else
         pixel.material.sheen = uniforms.sheen;
     #endif
@@ -84,6 +95,7 @@
     #if defined(SHEEN_TINT_MAP)
         const float2 sheenTintTexcoord = (uniforms.sheenTintTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.sheenTint = sheenTintMap.sample(sheenTintSampler, sheenTintTexcoord).r;
+        pixel.material.sheenTint *= uniforms.sheenTint;
     #else
         pixel.material.sheenTint = uniforms.sheenTint;
     #endif
@@ -100,12 +112,14 @@
     #if defined(ANISOTROPIC_MAP)
         const float2 anisotropicTexcoord = (uniforms.anisotropicTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.anisotropic = anisotropicMap.sample(anisotropicSampler, anisotropicTexcoord).r;
+        pixel.material.anisotropic *= uniforms.anisotropic;
     #else
         pixel.material.anisotropic = uniforms.anisotropic;
     #endif
     #if defined(ANISOTROPIC_ANGLE_MAP)
         const float2 anisotropicAngleTexcoord = (uniforms.anisotropicAngleTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.anisotropicAngle = anisotropicAngleMap.sample(anisotropicAngleSampler, anisotropicAngleTexcoord).r;
+        pixel.material.anisotropicAngle *= uniforms.anisotropicAngle;
     #else
         pixel.material.anisotropicAngle = uniforms.anisotropicAngle;
     #endif
@@ -114,6 +128,7 @@
 #if defined(ALPHA_MAP)
     const float2 alphaTexcoord = (uniforms.alphaTexcoordTransform * float3(in.texcoords, 1.0)).xy;
     pixel.material.alpha = alphaMap.sample(alphaSampler, alphaTexcoord).r;
+    pixel.material.alpha *= uniforms.baseColor.a;
 #else
     pixel.material.alpha = uniforms.baseColor.a;
 #endif
@@ -124,6 +139,7 @@
     #if defined(TRANSMISSION_MAP)
         const float2 transmissionTexcoord = (uniforms.transmissionTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.transmission = transmissionMap.sample(transmissionSampler, transmissionTexcoord).r;
+        pixel.material.transmission *= uniforms.transmission;
     #else
         pixel.material.transmission = uniforms.transmission;
     #endif
@@ -131,6 +147,7 @@
     #if defined(IOR_MAP)
         const float2 iorTexcoord = (uniforms.iorTexcoordTransform * float3(in.texcoords, 1.0)).xy;
         pixel.material.ior = iorMap.sample(iorSampler, iorTexcoord).r;
+        pixel.material.ior *= uniforms.ior;
     #else
         pixel.material.ior = uniforms.ior;
     #endif

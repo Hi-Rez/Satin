@@ -15,9 +15,14 @@ import Forge
 import Satin
 
 class PBRStandardMaterialRenderer: BaseRenderer {
-
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
+
+    lazy var skybox: Mesh = {
+        let mesh = Mesh(geometry: SkyboxGeometry(size: 250), material: SkyboxMaterial())
+        mesh.label = "Skybox"
+        return mesh
+    }()
 
     lazy var scene = Scene("Scene", [skybox])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat, stencilPixelFormat)
@@ -26,13 +31,6 @@ class PBRStandardMaterialRenderer: BaseRenderer {
     lazy var renderer: Satin.Renderer = .init(context: context)
 
     lazy var standardMaterial = StandardMaterial()
-
-    lazy var skyboxMaterial = SkyboxMaterial()
-    lazy var skybox: Mesh = {
-        let mesh = Mesh(geometry: SkyboxGeometry(size: 250), material: skyboxMaterial)
-        mesh.label = "Skybox"
-        return mesh
-    }()
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -178,8 +176,10 @@ class PBRStandardMaterialRenderer: BaseRenderer {
     // MARK: - Environment Textures
 
     func loadHdri() {
-        let filename = "brown_photostudio_02_2k.hdr"
-        if let hdr = loadHDR(device: device, url: texturesURL.appendingPathComponent(filename)) {
+        if let hdr = loadHDR(
+            device: device,
+            url: texturesURL.appendingPathComponent("brown_photostudio_02_2k.hdr")
+        ) {
             scene.setEnvironment(texture: hdr)
         }
     }

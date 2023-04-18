@@ -147,6 +147,61 @@ open class PhysicalMaterial: StandardMaterial {
     override open func createShader() -> Shader {
         return PhysicalShader(label, getPipelinesMaterialsURL(label)!.appendingPathComponent("Shaders.metal"))
     }
+
+    override internal func setTextureMultiplierUniformToOne(type: PBRTextureIndex) {
+        switch type {
+            case .baseColor:
+                baseColor.x = 1.0
+                baseColor.y = 1.0
+                baseColor.z = 1.0
+            case .subsurface:
+                subsurface = 1.0
+            case .metallic:
+                metallic = 1.0
+            case .roughness:
+                roughness = 1.0
+            case .normal:
+                break
+            case .emissive:
+                emissiveColor = .one
+            case .specular:
+                specular = 1.0
+            case .specularTint:
+                specularTint = 1.0
+            case .sheen:
+                sheen = 1.0
+            case .sheenTint:
+                sheenTint = 1.0
+            case .clearcoat:
+                clearcoat = 1.0
+            case .clearcoatRoughness:
+                clearcoatRoughness = 1.0
+            case .clearcoatGloss:
+                clearcoatRoughness = 1.0
+            case .anisotropic:
+                anisotropic = 1.0
+            case .anisotropicAngle:
+                anisotropicAngle = 1.0
+            case .bump:
+                break
+            case .displacement:
+                break
+            case .alpha:
+                baseColor.w = 1.0
+            case .ior:
+                ior = 1.0
+            case .transmission:
+                transmission = 1.0
+            case .ambientOcclusion:
+                break
+            case .reflection:
+                break
+            case .irradiance:
+                break
+            case .brdf:
+                break
+        }
+    }
 }
 
 public extension PhysicalMaterial {
@@ -447,8 +502,7 @@ public extension PhysicalMaterial {
                     .origin: MTKTextureLoader.Origin.flippedVertically,
                 ]
                 loadTexture(loader: textureLoader, mdlTexture: mdlTexture, options: options, target: .normal)
-            }
-            else if property.type == .color, let color = property.color, let rgba = color.components {
+            } else if property.type == .color, let color = property.color, let rgba = color.components {
                 print(simd_make_float4(Float(rgba[0]), Float(rgba[1]), Float(rgba[2]), Float(rgba[3])))
             } else if property.type == .float4 {
                 print(property.float4Value)
@@ -480,7 +534,8 @@ public extension PhysicalMaterial {
 
         if let property = material.property(with: .ambientOcclusion),
            property.type == .texture,
-           let mdlTexture = property.textureSamplerValue?.texture {
+           let mdlTexture = property.textureSamplerValue?.texture
+        {
             let options: [MTKTextureLoader.Option: Any] = [
                 .generateMipmaps: false,
                 .origin: MTKTextureLoader.Origin.flippedVertically,
@@ -513,8 +568,7 @@ public extension PhysicalMaterial {
         do {
             let texture = try loader.newTexture(texture: mdlTexture, options: options)
             setTexture(texture, type: target)
-        }
-        catch {
+        } catch {
             print(error.localizedDescription)
         }
     }
