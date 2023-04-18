@@ -33,42 +33,80 @@ open class Scene: Object {
         irradianceSize = irrandianceSize
         self.brdfSize = brdfSize
         DispatchQueue.global(qos: qos).async {
-            self.setupTextures(progress)
+            guard let environment = self.environment,
+                  let commandQueue = environment.device.makeCommandQueue() else { return }
+
+            let device = environment.device
+
+            progress?.completedUnitCount = 0
+            progress?.totalUnitCount = 4
+
+            if let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupCubemapTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
+
+            if let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
+
+            if let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
+
+            if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
         }
     }
 
-    private func setupTextures(_ progress: Progress?) {
-        guard let environment = environment,
-              let commandQueue = environment.device.makeCommandQueue(maxCommandBufferCount: 4),
-              let cb0 = commandQueue.makeCommandBuffer(),
-              let cb1 = commandQueue.makeCommandBuffer(),
-              let cb2 = commandQueue.makeCommandBuffer(),
-              let cb3 = commandQueue.makeCommandBuffer() else { return }
+    public func setEnvironmentCubemap(texture: MTLTexture,  qos: DispatchQoS.QoSClass = .background, reflectionSize: Int = 512, irrandianceSize: Int = 64, brdfSize: Int = 512, progress: Progress? = nil) {
+        cubemapTexture = texture
+        self.cubemapSize = texture.width
+        self.reflectionSize = reflectionSize
+        irradianceSize = irrandianceSize
+        self.brdfSize = brdfSize
+        DispatchQueue.global(qos: qos).async {
+            guard let environment = self.environment,
+                  let commandQueue = environment.device.makeCommandQueue() else { return }
 
-        let device = environment.device
+            let device = environment.device
 
-        progress?.completedUnitCount = 0
-        progress?.totalUnitCount = 4
+            progress?.completedUnitCount = 0
+            progress?.totalUnitCount = 3
 
-        setupCubemapTexture(device: device, commandBuffer: cb0)
-        cb0.commit()
-        cb0.waitUntilCompleted()
-        progress?.completedUnitCount += 1
+            if let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
 
-        setupIrradianceTexture(device: device, commandBuffer: cb1)
-        cb1.commit()
-        cb1.waitUntilCompleted()
-        progress?.completedUnitCount += 1
+            if let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
 
-        setupReflectionTexture(device: device, commandBuffer: cb2)
-        cb2.commit()
-        cb2.waitUntilCompleted()
-        progress?.completedUnitCount += 1
-
-        setupBrdfTexture(device: device, commandBuffer: cb3)
-        cb3.commit()
-        cb3.waitUntilCompleted()
-        progress?.completedUnitCount += 1
+            if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
+                self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.commit()
+                commandBuffer.waitUntilCompleted()
+            }
+            progress?.completedUnitCount += 1
+        }
     }
 
     private func setupCubemapTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
@@ -133,7 +171,7 @@ open class Scene: Object {
     }
 
     private func setupBrdfTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
-        brdfTexture = BrdfGenerator(device: device, size: 512)
+        brdfTexture = BrdfGenerator(device: device, size: brdfSize)
             .encode(commandBuffer: commandBuffer)
     }
 
