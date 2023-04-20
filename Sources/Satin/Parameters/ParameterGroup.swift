@@ -20,6 +20,8 @@ public protocol ParameterGroupDelegate: AnyObject {
 }
 
 open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, ObservableObject {
+    public let id: String = UUID().uuidString
+
     public var description: String {
         var dsc = "\(type(of: self)): \(label)\n"
         for param in params {
@@ -41,8 +43,6 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
 
     public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
-
-    public let publisher = PassthroughSubject<ParameterGroup, Never>()
 
     deinit {
         params = []
@@ -587,13 +587,12 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
     public func updated(parameter: Parameter) {
         objectWillChange.send()
         _updateData = true
-        publisher.send(self)
         delegate?.update(parameter: parameter, from: self)
     }
 }
 
 extension ParameterGroup: Equatable {
     public static func == (lhs: ParameterGroup, rhs: ParameterGroup) -> Bool {
-        return lhs.label == rhs.label
+        return lhs.id == rhs.id
     }
 }

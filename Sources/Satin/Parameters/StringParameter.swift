@@ -15,6 +15,14 @@ public class StringParameter: GenericParameter<String> {
 
     @Published public var options: [String] = []
 
+    override public var value: GenericParameter<String>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     private enum CodingKeys: String, CodingKey {
         case controlType
         case label

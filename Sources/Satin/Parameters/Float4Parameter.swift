@@ -14,6 +14,14 @@ public class Float4Parameter: GenericParameterWithMinMax<simd_float4> {
     override public var string: String { "float4" }
     override public var count: Int { 4 }
 
+    override public var value: GenericParameter<simd_float4>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     override public subscript<Float>(index: Int) -> Float {
         get {
             return value[index % count] as! Float

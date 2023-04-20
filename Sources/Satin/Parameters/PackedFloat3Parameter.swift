@@ -17,6 +17,14 @@ public class PackedFloat3Parameter: GenericParameterWithMinMax<simd_float3> {
     override public var stride: Int { return 12 }
     override public var alignment: Int { return 4 }
 
+    override public var value: GenericParameter<simd_float3>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     override public subscript<Float>(index: Int) -> Float {
         get {
             return value[index % count] as! Float

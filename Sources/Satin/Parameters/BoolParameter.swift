@@ -13,4 +13,12 @@ public class BoolParameter: GenericParameter<Bool> {
     override public var type: ParameterType { .bool }
     override public var string: String { "bool" }
     override public var count: Int { 1 }
+
+    override public var value: GenericParameter<Bool>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
 }

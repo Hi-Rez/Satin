@@ -13,6 +13,14 @@ public class Float3x3Parameter: GenericParameter<simd_float3x3> {
     override public var string: String { "float3x3" }
     override public var count: Int { 3 }
 
+    override public var value: GenericParameter<simd_float3x3>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     override public subscript<simd_float3>(index: Int) -> simd_float3 {
         get {
             return value[index % count] as! simd_float3

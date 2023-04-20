@@ -32,12 +32,7 @@ public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
         "Label: \(label) type: \(string) value: \(value)"
     }
 
-    @Published public var value: ValueType {
-        didSet {
-            objectWillChange.send()
-            delegate?.updated(parameter: self)
-        }
-    }
+    @Published public var value: ValueType
 
     public subscript<T>(_: Int) -> T {
         get {

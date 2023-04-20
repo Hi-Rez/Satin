@@ -17,6 +17,14 @@ public class IntParameter: GenericParameterWithMinMax<Int> {
     override public var stride: Int { return MemoryLayout<Int32>.stride }
     override public var alignment: Int { return MemoryLayout<Int32>.alignment }
 
+    override public var value: GenericParameter<Int>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     override public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }

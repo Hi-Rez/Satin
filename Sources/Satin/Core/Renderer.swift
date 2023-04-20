@@ -364,9 +364,15 @@ open class Renderer {
 
                     if let pbrMaterial = material as? StandardMaterial {
                         pbrMaterial.environmentIntensity = environmentIntensity
-                        pbrMaterial.setTexture(reflectionTexture, type: .reflection)
-                        pbrMaterial.setTexture(irradianceTexture, type: .irradiance)
-                        pbrMaterial.setTexture(brdfTexture, type: .brdf)
+                        if let reflectionTexture = reflectionTexture {
+                            pbrMaterial.setTexture(reflectionTexture, type: .reflection)
+                        }
+                        if let irradianceTexture = irradianceTexture {
+                            pbrMaterial.setTexture(irradianceTexture, type: .irradiance)
+                        }
+                        if let brdfTexture = brdfTexture {
+                            pbrMaterial.setTexture(brdfTexture, type: .brdf)
+                        }
                     }
 
                     if let cubemapTexture = cubemapTexture, let skyboxMaterial = material as? SkyboxMaterial {
@@ -384,7 +390,7 @@ open class Renderer {
 
     // MARK: - Internal Encoding
 
-    private func encode(renderEncoder: MTLRenderCommandEncoder, scene _: Object, camera: Camera) {
+    private func encode(renderEncoder: MTLRenderCommandEncoder, scene: Object, camera: Camera) {
         renderEncoder.pushDebugGroup(label + " Pass")
         preDraw?(renderEncoder)
 

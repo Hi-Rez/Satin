@@ -38,36 +38,47 @@ open class Scene: Object {
 
             let device = environment.device
 
+            var _brdfTexture: MTLTexture? = nil
+            var _reflectionTexture: MTLTexture? = nil
+            var _irradianceTexture: MTLTexture? = nil
+
             progress?.completedUnitCount = 0
             progress?.totalUnitCount = 4
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupCubemapTexture(device: device, commandBuffer: commandBuffer)
+                self.cubemapTexture = self.setupCubemapTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                _irradianceTexture = self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                _reflectionTexture = self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
 
             if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                _brdfTexture = self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
+
+            if self.brdfTexture == nil {
+                self.brdfTexture = _brdfTexture
+            }
+            
+            self.irradianceTexture = _irradianceTexture
+            self.reflectionTexture = _reflectionTexture
         }
     }
 
@@ -83,33 +94,43 @@ open class Scene: Object {
 
             let device = environment.device
 
+            var _brdfTexture: MTLTexture? = nil
+            var _reflectionTexture: MTLTexture? = nil
+            var _irradianceTexture: MTLTexture? = nil
+
             progress?.completedUnitCount = 0
             progress?.totalUnitCount = 3
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                _irradianceTexture = self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                _reflectionTexture = self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
 
             if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
-                self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                _brdfTexture = self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
             }
             progress?.completedUnitCount += 1
+
+            if self.brdfTexture == nil {
+                self.brdfTexture = _brdfTexture
+            }
+            self.irradianceTexture = _irradianceTexture
+            self.reflectionTexture = _reflectionTexture
         }
     }
 
-    private func setupCubemapTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
+    private func setupCubemapTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) -> MTLTexture? {
         if let hdriTexture = environment,
            let texture = createCubemapTexture(
                device: device,
@@ -124,12 +145,13 @@ open class Scene: Object {
                     sourceTexture: hdriTexture,
                     destinationTexture: texture
                 )
-            cubemapTexture = texture
-            cubemapTexture?.label = "Environment Cubemap"
+            texture.label = "Environment Cubemap"
+            return texture
         }
+        return nil
     }
 
-    private func setupIrradianceTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
+    private func setupIrradianceTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) -> MTLTexture? {
         if let cubemapTexture = cubemapTexture,
            let texture = createCubemapTexture(
                device: device,
@@ -144,13 +166,13 @@ open class Scene: Object {
                     sourceTexture: cubemapTexture,
                     destinationTexture: texture
                 )
-
-            irradianceTexture = texture
-            texture.label = "Diffuse IBL"
+            texture.label = "Irradiance IBL"
+            return texture
         }
+        return nil
     }
 
-    private func setupReflectionTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
+    private func setupReflectionTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) -> MTLTexture? {
         if let cubemapTexture = cubemapTexture,
             let texture = createCubemapTexture(
                 device: device,
@@ -164,15 +186,14 @@ open class Scene: Object {
                     sourceTexture: cubemapTexture,
                     destinationTexture: texture
                 )
-
-            reflectionTexture = texture
-            texture.label = "Specular IBL"
+            texture.label = "Reflection IBL"
+            return texture
         }
+        return nil
     }
 
-    private func setupBrdfTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) {
-        brdfTexture = BrdfGenerator(device: device, size: brdfSize)
-            .encode(commandBuffer: commandBuffer)
+    private func setupBrdfTexture(device: MTLDevice, commandBuffer: MTLCommandBuffer) -> MTLTexture? {
+        return BrdfGenerator(device: device, size: brdfSize).encode(commandBuffer: commandBuffer)
     }
 
     private func createCubemapTexture(device: MTLDevice, pixelFormat: MTLPixelFormat, size: Int, mipmapped: Bool) -> MTLTexture?

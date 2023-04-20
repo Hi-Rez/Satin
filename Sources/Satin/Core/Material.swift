@@ -26,7 +26,7 @@ public struct DepthBias: Codable {
     }
 }
 
-open class Material: Codable, ParameterGroupDelegate {
+open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
         if let bundleName = Bundle(for: type(of: self)).displayName, bundleName != result {
@@ -131,7 +131,7 @@ open class Material: Codable, ParameterGroupDelegate {
         return shader?.shadowPipeline
     }
 
-    public weak var context: Context? {
+    public var context: Context? {
         didSet {
             if context != nil, context !== oldValue {
                 setup()
@@ -150,6 +150,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public var castShadow = false {
         didSet {
             if oldValue != castShadow {
+                print("setting receiveShadow count: \(castShadow) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -158,6 +159,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public var receiveShadow = false {
         didSet {
             if oldValue != receiveShadow {
+                print("setting receiveShadow count: \(receiveShadow) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -166,6 +168,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public var lighting = false {
         didSet {
             if oldValue != lighting {
+                print("setting lighting count: \(lighting) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -174,6 +177,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public var shadowCount = 0 {
         didSet {
             if oldValue != shadowCount {
+                print("setting shadowCount count: \(shadowCount) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -182,6 +186,7 @@ open class Material: Codable, ParameterGroupDelegate {
     public var maxLights = 0 {
         didSet {
             if oldValue != maxLights {
+                print("setting light count: \(maxLights) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -360,7 +365,7 @@ open class Material: Codable, ParameterGroupDelegate {
             self.shader = cloneShader(shader)
             isClone = false
         }
-
+        
         if let shader = shader {
             updateShader(shader)
             shader.context = context
@@ -697,7 +702,9 @@ public extension Material {
         uniformsNeedsUpdate = true
     }
 
-    func update(parameter _: Parameter, from _: ParameterGroup) {}
+    func update(parameter: Parameter, from: ParameterGroup) {
+        objectWillChange.send()
+    }
 }
 
 public extension Material {

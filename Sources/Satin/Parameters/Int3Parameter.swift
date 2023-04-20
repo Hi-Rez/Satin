@@ -14,6 +14,14 @@ public class Int3Parameter: GenericParameterWithMinMax<simd_int3> {
     override public var string: String { "int3" }
     override public var count: Int { 3 }
 
+    override public var value: GenericParameter<simd_int3>.ValueType {
+        didSet {
+            if value != oldValue {
+                delegate?.updated(parameter: self)
+            }
+        }
+    }
+
     override public func dataType<Int32>() -> Int32.Type {
         return Int32.self
     }
