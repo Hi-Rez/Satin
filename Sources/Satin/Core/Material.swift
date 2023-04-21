@@ -150,7 +150,6 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     public var castShadow = false {
         didSet {
             if oldValue != castShadow {
-                print("setting receiveShadow count: \(castShadow) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -159,7 +158,6 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     public var receiveShadow = false {
         didSet {
             if oldValue != receiveShadow {
-                print("setting receiveShadow count: \(receiveShadow) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -168,7 +166,6 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     public var lighting = false {
         didSet {
             if oldValue != lighting {
-                print("setting lighting count: \(lighting) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -177,7 +174,6 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     public var shadowCount = 0 {
         didSet {
             if oldValue != shadowCount {
-                print("setting shadowCount count: \(shadowCount) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -186,7 +182,6 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     public var maxLights = 0 {
         didSet {
             if oldValue != maxLights {
-                print("setting light count: \(maxLights) from: \(oldValue)")
                 shaderDefinesNeedsUpdate = true
             }
         }
@@ -712,6 +707,7 @@ public extension Material {
         parameters.setFrom(newParameters)
         parameters.label = newParameters.label
         uniformsNeedsUpdate = true
+        objectWillChange.send()
         delegate?.updated(material: self)
     }
 }

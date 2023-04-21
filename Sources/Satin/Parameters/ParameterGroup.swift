@@ -30,8 +30,8 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
         return dsc
     }
 
-    public var label = ""
-    public private(set) var params: [Parameter] = [] {
+    @Published public var label = ""
+    @Published public private(set) var params: [Parameter] = [] {
         didSet {
             _updateSize = true
             _updateStride = true
@@ -41,7 +41,7 @@ open class ParameterGroup: Codable, CustomStringConvertible, ParameterDelegate, 
         }
     }
 
-    public var paramsMap: [String: Parameter] = [:]
+    @Published public var paramsMap: [String: Parameter] = [:]
     public weak var delegate: ParameterGroupDelegate? = nil
 
     deinit {
