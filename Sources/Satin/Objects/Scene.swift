@@ -46,39 +46,39 @@ open class Scene: Object {
             progress?.totalUnitCount = 4
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
+                commandBuffer.addCompletedHandler { _ in
+                    progress?.completedUnitCount += 1
+                }
                 self.cubemapTexture = self.setupCubemapTexture(device: device, commandBuffer: commandBuffer)
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
                 _irradianceTexture = self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.irradianceTexture = _irradianceTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
                 _reflectionTexture = self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.reflectionTexture = _reflectionTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
 
             if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
                 _brdfTexture = self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.brdfTexture = _brdfTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
-
-            if self.brdfTexture == nil {
-                self.brdfTexture = _brdfTexture
-            }
-            
-            self.irradianceTexture = _irradianceTexture
-            self.reflectionTexture = _reflectionTexture
         }
     }
 
@@ -103,30 +103,30 @@ open class Scene: Object {
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
                 _irradianceTexture = self.setupIrradianceTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.irradianceTexture = _irradianceTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
 
             if let commandBuffer = commandQueue.makeCommandBuffer() {
                 _reflectionTexture = self.setupReflectionTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.reflectionTexture = _reflectionTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
 
             if self.brdfTexture == nil, let commandBuffer = commandQueue.makeCommandBuffer() {
                 _brdfTexture = self.setupBrdfTexture(device: device, commandBuffer: commandBuffer)
+                commandBuffer.addCompletedHandler { [weak self] _ in
+                    progress?.completedUnitCount += 1
+                    self?.brdfTexture = _brdfTexture
+                }
                 commandBuffer.commit()
-                commandBuffer.waitUntilCompleted()
             }
-            progress?.completedUnitCount += 1
-
-            if self.brdfTexture == nil {
-                self.brdfTexture = _brdfTexture
-            }
-            self.irradianceTexture = _irradianceTexture
-            self.reflectionTexture = _reflectionTexture
         }
     }
 
