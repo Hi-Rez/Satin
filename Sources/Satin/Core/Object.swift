@@ -606,7 +606,7 @@ open class Object: Codable, ObservableObject {
     ///   - position: The position given in the local space of the Object.
     ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
     /// - Returns: The position specified relative to referenceObject.
-    public func convertPosition(position: simd_float3, to referenceObject: Object?) -> simd_float3 {
+    public func convert(position: simd_float3, to referenceObject: Object?) -> simd_float3 {
         let worldSpacePosition = simd_make_float3((worldMatrix * translationMatrix3f(position)).columns.3)
         if let referenceObject = referenceObject {
             return simd_make_float3((referenceObject.worldMatrix.inverse * translationMatrix3f(worldSpacePosition)).columns.3)
@@ -620,7 +620,7 @@ open class Object: Codable, ObservableObject {
     ///   - position: The position specified relative to referenceObject.
     ///   - referenceObject: The Object that defines a frame of reference. Set this to nil to indicate world space.
     /// - Returns: The position given in the local space of the Object.
-    public func convertPosition(_ position: simd_float3, from referenceObject: Object?) -> simd_float3 {
+    public func convert(position: simd_float3, from referenceObject: Object?) -> simd_float3 {
         var worldSpacePosition = position
         if let referenceObject = referenceObject {
             worldSpacePosition = simd_make_float3((referenceObject.worldMatrix * translationMatrix3f(position)).columns.3)
