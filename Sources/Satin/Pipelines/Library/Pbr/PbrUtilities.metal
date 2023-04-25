@@ -3,7 +3,7 @@
 #if defined(HAS_SHEEN)
 float3 getMaterialSheenColor(Material material)
 {
-    float lum = luminance2(material.baseColor);
+    float lum = luminance3(material.baseColor);
     float3 ctint = lum > 0.0 ? material.baseColor / lum : 1.0;
     return mix(1.0, ctint, material.sheenTint);
 }
@@ -21,8 +21,8 @@ float2 getMaterialAxAy(Material material)
 float3 getMaterialSpecularColor(Material material)
 {
     float3 F0 = 0.16 * material.specular * material.specular;
-#if defined(HAS_SPECULAR)
-    float lum = luminance(material.baseColor);
+#if defined(HAS_SPECULAR_TINT)
+    float lum = luminance3(material.baseColor);
     float3 ctint = lum > 0.0 ? material.baseColor / lum : 1.0;
     return mix(F0 * mix(1.0, ctint, material.specularTint), material.baseColor, material.metallic);
 #else

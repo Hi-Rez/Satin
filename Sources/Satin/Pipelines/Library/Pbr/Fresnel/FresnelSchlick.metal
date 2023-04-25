@@ -1,6 +1,6 @@
 float schlickWeight(float cosTheta)
 {
-    const float w = saturate(1.0 - abs(cosTheta));
+    const float w = saturate(1.0 - saturate(cosTheta));
     const float w2 = w * w;
     return w * w2 * w2;
 }

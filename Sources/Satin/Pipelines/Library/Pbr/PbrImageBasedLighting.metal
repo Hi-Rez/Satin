@@ -24,13 +24,13 @@ void pbrIndirectLighting(
 
     float3 F0 = getMaterialSpecularColor(pixel.material);
     float3 Ks = fresnelSchlickRoughness(NdotV, F0, roughness);
-    float3 Kd = (baseColor * INV_PI) * (1.0 - Ks) * (1.0 - metallic);
+    float3 Kd = (1.0 - Ks) * (1.0 - metallic);
     
     float2 ggxLut = brdfMap.sample(brdfSampler, saturate(float2(NdotV, roughness))).rg;
     float3 Fs = (Ks * ggxLut.x + ggxLut.y);
     
     // Diffuse
-    radiance_d += Kd * pixel.material.environmentIntensity * irradianceMap.sample(irradianceSampler, N).rgb;
+    radiance_d += Kd * baseColor * pixel.material.environmentIntensity * irradianceMap.sample(irradianceSampler, N).rgb;
 
     float3 R = reflect(-V, N);
 

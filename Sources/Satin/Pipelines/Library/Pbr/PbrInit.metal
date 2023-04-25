@@ -8,4 +8,5 @@ void pbrInit(thread PixelInfo &pixel)
 #endif
 
     pixel.radiance = pixel.material.emissiveColor;
+    pixel.material.baseColor = pow(pixel.material.baseColor, 2.2);
 }
