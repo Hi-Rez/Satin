@@ -36,6 +36,11 @@
 		E1707F7629BBB01D00A934A0 /* SubmeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */; };
 		E172B49229720A1C00341985 /* OcclusionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49129720A1C00341985 /* OcclusionRenderer.swift */; };
 		E172B49429720A6A00341985 /* OcclusionRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49329720A6A00341985 /* OcclusionRendererView.swift */; };
+		E175243629F86F8D00AD1A8F /* ARPBRRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */; };
+		E175243829F8734D00AD1A8F /* ARPBRRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E175243729F8734D00AD1A8F /* ARPBRRendererView.swift */; };
+		E175243B29F8A9D900AD1A8F /* Youi in Frameworks */ = {isa = PBXBuildFile; productRef = E175243A29F8A9D900AD1A8F /* Youi */; };
+		E175243D29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E175243C29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift */; };
+		E175243F29F8B9EC00AD1A8F /* Metal+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E175243E29F8B9EC00AD1A8F /* Metal+Extensions.swift */; };
 		E1772A962981D2A9005FE7B2 /* ProjectedShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */; };
 		E1772A982981D320005FE7B2 /* MeshShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1772A972981D320005FE7B2 /* MeshShadowRenderer.swift */; };
 		E1772A9A2981D35F005FE7B2 /* ProjectedShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */; };
@@ -168,6 +173,10 @@
 		E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmeshRendererView.swift; sourceTree = "<group>"; };
 		E172B49129720A1C00341985 /* OcclusionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRenderer.swift; sourceTree = "<group>"; };
 		E172B49329720A6A00341985 /* OcclusionRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRendererView.swift; sourceTree = "<group>"; };
+		E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPBRRenderer.swift; sourceTree = "<group>"; };
+		E175243729F8734D00AD1A8F /* ARPBRRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPBRRendererView.swift; sourceTree = "<group>"; };
+		E175243C29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARPBRRenderer+Inspector.swift"; sourceTree = "<group>"; };
+		E175243E29F8B9EC00AD1A8F /* Metal+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metal+Extensions.swift"; sourceTree = "<group>"; };
 		E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectedShadowRenderer.swift; sourceTree = "<group>"; };
 		E1772A972981D320005FE7B2 /* MeshShadowRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshShadowRenderer.swift; sourceTree = "<group>"; };
 		E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectedShadowRendererView.swift; sourceTree = "<group>"; };
@@ -261,6 +270,7 @@
 			files = (
 				E1E7681528A736D0005D75AB /* Spectra in Frameworks */,
 				E17A55AC28A6C159008F1DDB /* Satin in Frameworks */,
+				E175243B29F8A9D900AD1A8F /* Youi in Frameworks */,
 				E17A55AA28A6C13F008F1DDB /* Forge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +300,7 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
+				E152372029CBA8DA00D96D46 /* AR */,
 				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
 				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
@@ -321,7 +332,6 @@
 				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
 				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
 				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
-				E152372029CBA8DA00D96D46 /* AR */,
 				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E1BCF34129DA3E910076C163 /* Tessellated */,
@@ -376,6 +386,8 @@
 				E129CCB5252009CC009B237A /* ARRenderer.swift */,
 				E152372229CBD07400D96D46 /* ARContactShadowRenderer.swift */,
 				E1BBE46229E4D17D00A21F3A /* ARLidarMeshRenderer.swift */,
+				E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */,
+				E175243C29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -390,6 +402,7 @@
 				E152372429CBD0A700D96D46 /* ARContactShadowRendererView.swift */,
 				E1BBE46429E4D1AB00A21F3A /* ARLidarMeshRendererView.swift */,
 				E14C122C29E5D618009D3C8C /* ARPeopleOcclusionRendererView.swift */,
+				E175243729F8734D00AD1A8F /* ARPBRRendererView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -410,6 +423,7 @@
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E175243E29F8B9EC00AD1A8F /* Metal+Extensions.swift */,
 				E17D2C1126BBB7DF005A136A /* AudioInput.swift */,
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
 				E1F22D1C29BD71FA0011CEAB /* Timing.swift */,
@@ -553,6 +567,7 @@
 				E17A55A928A6C13F008F1DDB /* Forge */,
 				E17A55AB28A6C159008F1DDB /* Satin */,
 				E1E7681428A736D0005D75AB /* Spectra */,
+				E175243A29F8A9D900AD1A8F /* Youi */,
 			);
 			productName = Example;
 			productReference = E1D714D128A6BAD900B517B6 /* Example.app */;
@@ -585,6 +600,7 @@
 			packageReferences = (
 				E10CC11527F105DE00E04B2B /* XCRemoteSwiftPackageReference "Forge" */,
 				E1385EE127F219C5005EB579 /* XCRemoteSwiftPackageReference "Spectra" */,
+				E175243929F8A9D900AD1A8F /* XCRemoteSwiftPackageReference "Youi" */,
 			);
 			productRefGroup = 66E6788A243EC73A0070B294 /* Products */;
 			projectDirPath = "";
@@ -653,6 +669,7 @@
 				E136872A2900BEEC00FFF43F /* InstancedMeshRendererView.swift in Sources */,
 				E17A55B428A6C44A008F1DDB /* ShippingShadersRenderer.swift in Sources */,
 				E1F4315529C260D100200E72 /* ARDrawingRendererView.swift in Sources */,
+				E175243629F86F8D00AD1A8F /* ARPBRRenderer.swift in Sources */,
 				E1E7680328A72E50005D75AB /* PBRRendererView.swift in Sources */,
 				E1FC980D29D501D600A70BB5 /* PBRStandardMaterialRenderer.swift in Sources */,
 				E1BCF33E29DA3C030076C163 /* TessellationRenderer.swift in Sources */,
@@ -664,6 +681,7 @@
 				E1BCF34A29DA3EB60076C163 /* TessellatedMesh.swift in Sources */,
 				E152372329CBD07400D96D46 /* ARContactShadowRenderer.swift in Sources */,
 				E1E767EE28A6EC44005D75AB /* LoadObjRendererView.swift in Sources */,
+				E175243F29F8B9EC00AD1A8F /* Metal+Extensions.swift in Sources */,
 				E1E767F228A6F43C005D75AB /* PostProcessingRendererView.swift in Sources */,
 				E1E7680D28A73258005D75AB /* ARSatinSceneKitRenderer.swift in Sources */,
 				E1E767FE28A6FCBC005D75AB /* FXAARendererView.swift in Sources */,
@@ -680,6 +698,7 @@
 				E17A55BA28A6C891008F1DDB /* CameraControllerRenderer.swift in Sources */,
 				E1BBE46729E4D5B000A21F3A /* ARMesh.swift in Sources */,
 				E1E767F928A6FAE1005D75AB /* SatinSceneKitRenderer.swift in Sources */,
+				E175243D29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift in Sources */,
 				E1E7680A28A73086005D75AB /* VertexAttributesRendererView.swift in Sources */,
 				E1E767C228A6D341005D75AB /* Renderer2DView.swift in Sources */,
 				E1F4315A29C3ABCA00200E72 /* ARPerspectiveCamera.swift in Sources */,
@@ -697,6 +716,7 @@
 				E11325CD28AEADAA0049CACC /* SuperShapesRenderer.swift in Sources */,
 				E1E767D028A6D41B005D75AB /* TextRendererView.swift in Sources */,
 				E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */,
+				E175243829F8734D00AD1A8F /* ARPBRRendererView.swift in Sources */,
 				E1E767FC28A6FCA9005D75AB /* FXAARenderer.swift in Sources */,
 				E1CB1F2029E656A6006FBDE8 /* ARBackgroundDepthRenderer.swift in Sources */,
 				E1E767CB28A6D41B005D75AB /* ExtrudedTextRendererView.swift in Sources */,
@@ -977,9 +997,22 @@
 				kind = branch;
 			};
 		};
+		E175243929F8A9D900AD1A8F /* XCRemoteSwiftPackageReference "Youi" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Hi-Rez/Youi";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E175243A29F8A9D900AD1A8F /* Youi */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E175243929F8A9D900AD1A8F /* XCRemoteSwiftPackageReference "Youi" */;
+			productName = Youi;
+		};
 		E17A55A928A6C13F008F1DDB /* Forge */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E10CC11527F105DE00E04B2B /* XCRemoteSwiftPackageReference "Forge" */;

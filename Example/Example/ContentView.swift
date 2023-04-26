@@ -32,6 +32,10 @@ struct ContentView: View {
                             Label("AR Lidar Mesh", systemImage: "point.3.filled.connected.trianglepath.dotted")
                         }
 
+                        NavigationLink(destination: ARPBRRendererView()) {
+                            Label("AR PBR", systemImage: "party.popper")
+                        }
+
                         NavigationLink(destination: ARPeopleOcclusionRendererView()) {
                             Label("AR People Occlusion", systemImage: "person.2.fill")
                         }

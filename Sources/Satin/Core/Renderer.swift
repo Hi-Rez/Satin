@@ -341,14 +341,21 @@ open class Renderer {
         var reflectionTexture: MTLTexture? = nil
         var irradianceTexture: MTLTexture? = nil
         var brdfTexture: MTLTexture? = nil
+        var reflectionTexcoordTransform = matrix_identity_float3x3
+        var irradianceTexcoordTransform = matrix_identity_float3x3
 
         for object in objectList {
-            if let scene = object as? Scene {
-                environmentIntensity = scene.environmentIntensity
-                cubemapTexture = scene.cubemapTexture
-                reflectionTexture = scene.reflectionTexture
-                irradianceTexture = scene.irradianceTexture
-                brdfTexture = scene.brdfTexture
+            if let environment = object as? Environment {
+                environmentIntensity = environment.environmentIntensity
+                cubemapTexture = environment.cubemapTexture
+
+                reflectionTexture = environment.reflectionTexture
+                reflectionTexcoordTransform = environment.reflectionTexcoordTransform
+
+                irradianceTexture = environment.irradianceTexture
+                irradianceTexcoordTransform = environment.irradianceTexcoordTransform
+                
+                brdfTexture = environment.brdfTexture
             }
 
             if let renderable = object as? Renderable {
@@ -366,9 +373,11 @@ open class Renderer {
                         pbrMaterial.environmentIntensity = environmentIntensity
                         if let reflectionTexture = reflectionTexture {
                             pbrMaterial.setTexture(reflectionTexture, type: .reflection)
+                            pbrMaterial.setTexcoordTransform(reflectionTexcoordTransform, type: .reflection)
                         }
                         if let irradianceTexture = irradianceTexture {
                             pbrMaterial.setTexture(irradianceTexture, type: .irradiance)
+                            pbrMaterial.setTexcoordTransform(irradianceTexcoordTransform, type: .irradiance)
                         }
                         if let brdfTexture = brdfTexture {
                             pbrMaterial.setTexture(brdfTexture, type: .brdf)

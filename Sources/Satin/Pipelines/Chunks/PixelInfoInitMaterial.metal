@@ -153,3 +153,6 @@
     #endif
 
 #endif
+
+    pixel.material.reflectionTexcoordTransform = uniforms.reflectionTexcoordTransform;
+    pixel.material.irradianceTexcoordTransform = uniforms.irradianceTexcoordTransform;

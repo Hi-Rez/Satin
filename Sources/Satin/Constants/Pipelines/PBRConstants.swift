@@ -62,8 +62,8 @@ public enum PBRTextureIndex: Int {
         switch self {
             case .clearcoatGloss:
                 return PBRTextureIndex.clearcoatRoughness.texcoordName
-        default:
-            return description + "TexcoordTransform"
+            default:
+                return description + "TexcoordTransform"
         }
     }
 
@@ -92,7 +92,9 @@ public enum PBRTextureIndex: Int {
             .alpha,
             .ior,
             .transmission,
-            .ambientOcclusion
+            .ambientOcclusion,
+            .reflection,
+            .irradiance
         ]
     }
 }

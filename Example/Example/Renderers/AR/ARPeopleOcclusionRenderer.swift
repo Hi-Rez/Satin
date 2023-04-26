@@ -101,7 +101,7 @@ class ARPeopleOcclusionRenderer: BaseRenderer, ARSessionDelegate {
             scene: scene,
             camera: camera
         )
-        
+
         compositor.backgroundTexture = backgroundTexture
         compositor.contentTexture = renderer.colorTexture
         compositor.depthTexture = renderer.depthTexture

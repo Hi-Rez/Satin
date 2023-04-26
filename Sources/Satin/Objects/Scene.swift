@@ -11,13 +11,18 @@ import Metal
 import ModelIO
 import simd
 
-open class Scene: Object {
+open class Scene: Object, Environment {
     public var environmentIntensity: Float = 1.0
 
     public internal(set) var environment: MTLTexture?
     public internal(set) var cubemapTexture: MTLTexture?
+
     public internal(set) var irradianceTexture: MTLTexture?
+    public var irradianceTexcoordTransform = matrix_identity_float3x3
+
     public internal(set) var reflectionTexture: MTLTexture?
+    public var reflectionTexcoordTransform = matrix_identity_float3x3
+
     public internal(set) var brdfTexture: MTLTexture?
 
     private var qos: DispatchQoS.QoSClass = .background
@@ -32,12 +37,13 @@ open class Scene: Object {
         self.reflectionSize = reflectionSize
         irradianceSize = irrandianceSize
         self.brdfSize = brdfSize
+
         DispatchQueue.global(qos: qos).async {
             guard let environment = self.environment,
                   let commandQueue = environment.device.makeCommandQueue() else { return }
 
             let device = environment.device
-
+            
             var _brdfTexture: MTLTexture? = nil
             var _reflectionTexture: MTLTexture? = nil
             var _irradianceTexture: MTLTexture? = nil

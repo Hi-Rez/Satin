@@ -28,9 +28,10 @@ void pbrIndirectLighting(
     
     float2 ggxLut = brdfMap.sample(brdfSampler, saturate(float2(NdotV, roughness))).rg;
     float3 Fs = (Ks * ggxLut.x + ggxLut.y);
-    
+
+    const float3 irradianceSampleDirection = pixel.material.irradianceTexcoordTransform * N;
     // Diffuse
-    radiance_d += Kd * baseColor * pixel.material.environmentIntensity * irradianceMap.sample(irradianceSampler, N).rgb;
+    radiance_d += Kd * baseColor * pixel.material.environmentIntensity * irradianceMap.sample(irradianceSampler, irradianceSampleDirection).rgb;
 
     float3 R = reflect(-V, N);
 
@@ -46,8 +47,11 @@ void pbrIndirectLighting(
     }
 #endif
 
+
+    const float3 reflectionSampleDirection = pixel.material.reflectionTexcoordTransform * R;
+
     // Specular
-    float3 specularLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, R, roughness);
+    float3 specularLight = pixel.material.environmentIntensity * getIBLRadiance(reflectionMap, reflectionSampleDirection, roughness);
     radiance_s = Fs * specularLight;
 
 #if defined(HAS_TRANSMISSION)

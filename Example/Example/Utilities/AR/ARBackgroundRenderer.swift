@@ -17,6 +17,11 @@ class ARBackgroundRenderer: PostProcessor {
     class BackgroundMaterial: SourceMaterial {
         public var capturedImageTextureY: CVMetalTexture?
         public var capturedImageTextureCbCr: CVMetalTexture?
+        public var srgb: Bool = false {
+            didSet {
+                set("Srgb", srgb)
+            }
+        }
 
         public required init() {
             super.init(pipelinesURL: Bundle.main.resourceURL!
@@ -50,7 +55,10 @@ class ARBackgroundRenderer: PostProcessor {
     public init(context: Context, session: ARSession) {
         self.session = session
 
-        super.init(context: context, material: BackgroundMaterial())
+        let material = BackgroundMaterial()
+        material.srgb = context.colorPixelFormat.srgb
+
+        super.init(context: context, material: material)
         mesh.visible = false
         renderer.setClearColor(.zero)
         setupTextureCache()

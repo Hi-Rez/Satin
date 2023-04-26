@@ -58,6 +58,8 @@ fragment float4 customFragment( CustomVertexData in [[stage_in]],
     pixel.material.environmentIntensity = uniforms.environmentIntensity;
     pixel.material.gammaCorrection = uniforms.gammaCorrection;
     pixel.material.alpha = uniforms.baseColor.a;
+    pixel.material.reflectionTexcoordTransform = uniforms.reflectionTexcoordTransform;
+    pixel.material.irradianceTexcoordTransform = uniforms.irradianceTexcoordTransform;
 
     float4 outColor;
 

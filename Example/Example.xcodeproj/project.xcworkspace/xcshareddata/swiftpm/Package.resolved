@@ -18,6 +18,15 @@
           "revision": "43a24736252863edfbde73e1d3754d7ecdcf46fe",
           "version": null
         }
+      },
+      {
+        "package": "Youi",
+        "repositoryURL": "https://github.com/Hi-Rez/Youi",
+        "state": {
+          "branch": "master",
+          "revision": "d1efe3424d2b8399101ce656828835f05ef43427",
+          "version": null
+        }
       }
     ]
   },

@@ -175,11 +175,11 @@ open class StandardMaterial: Material {
     func initalizeParameters() {
         set("Base Color", baseColor)
         set("Emissive Color", emissiveColor)
-        set("Environment Intensity", environmentIntensity)
-        set("Gamma Correction", gammaCorrection)
         set("Roughness", roughness)
         set("Metallic", metallic)
         set("Specular", specular)
+        set("Environment Intensity", environmentIntensity)
+        set("Gamma Correction", gammaCorrection)
     }
 
     public required init(from decoder: Decoder) throws {

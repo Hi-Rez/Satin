@@ -98,6 +98,10 @@ class ObjectShadowRenderer {
     private var blurFilter: MPSImageGaussianBlur?
     private var _updateBlur = true
 
+    var materialCache: [Object: Material] = [:]
+
+    var material = BasicColorMaterial(.one, .disabled)
+
     init(context: Context,
          object: Object,
          container: Object,
@@ -142,18 +146,14 @@ class ObjectShadowRenderer {
         update()
 
         let finalScene = Object("Shadow Scene")
-
-        let lights = getLights(scene, true, true)
         let renderables = getRenderables(object, true, false)
+        materialCache.removeAll(keepingCapacity: true)
 
-        for light in lights {
-            if let object = light as? Object {
-                finalScene.attach(object)
-            }
-        }
 
-        for renderable in renderables {
+        for var renderable in renderables {
             if let object = renderable as? Object {
+                materialCache[object] = renderable.material
+                renderable.material = material
                 finalScene.attach(object)
             }
         }
@@ -185,6 +185,12 @@ class ObjectShadowRenderer {
 
             if let material = catcher.material as? BasicTextureMaterial {
                 material.texture = texture
+            }
+        }
+
+        for var renderable in renderables {
+            if let object = renderable as? Object {
+                renderable.material = materialCache[object]
             }
         }
     }

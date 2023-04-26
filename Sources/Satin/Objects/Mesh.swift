@@ -141,6 +141,8 @@ open class Mesh: Object, Renderable {
         cleanupGeometrySubscriber()
     }
 
+    // MARK: - Setup
+
     override open func setup() {
         setupGeometry()
         setupSubmeshes()
@@ -171,27 +173,11 @@ open class Mesh: Object, Renderable {
     }
 
     open func setupUniforms() {
-        guard let context = context else { return }
+        guard let context = context, uniforms == nil else { return }
         uniforms = VertexUniformBuffer(device: context.device)
     }
 
-    override open func update(_ commandBuffer: MTLCommandBuffer) {
-        geometry.update(commandBuffer)
-        material?.update(commandBuffer)
-        for submesh in submeshes {
-            submesh.update(commandBuffer)
-        }
-        super.update(commandBuffer)
-    }
-
-    override open func update(camera: Camera, viewport: simd_float4) {
-        material?.update(camera: camera)
-        uniforms?.update(object: self, camera: camera, viewport: viewport)
-    }
-
-    open func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool = false) {
-        draw(renderEncoder: renderEncoder, instanceCount: instanceCount, shadow: shadow)
-    }
+    // MARK: - Binding
 
     open func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
         bindDrawingStates(renderEncoder, shadow: shadow)
@@ -218,6 +204,28 @@ open class Mesh: Object, Renderable {
         renderEncoder.setFrontFacing(geometry.windingOrder)
         renderEncoder.setCullMode(cullMode)
         renderEncoder.setTriangleFillMode(triangleFillMode)
+    }
+
+    // MARK: - Update
+
+    override open func update(_ commandBuffer: MTLCommandBuffer) {
+        geometry.update(commandBuffer)
+        material?.update(commandBuffer)
+        for submesh in submeshes {
+            submesh.update(commandBuffer)
+        }
+        super.update(commandBuffer)
+    }
+
+    override open func update(camera: Camera, viewport: simd_float4) {
+        material?.update(camera: camera)
+        uniforms?.update(object: self, camera: camera, viewport: viewport)
+    }
+
+    // MARK: - Draw
+
+    open func draw(renderEncoder: MTLRenderCommandEncoder, shadow: Bool = false) {
+        draw(renderEncoder: renderEncoder, instanceCount: instanceCount, shadow: shadow)
     }
 
     open func draw(renderEncoder: MTLRenderCommandEncoder, instanceCount: Int, shadow: Bool) {
