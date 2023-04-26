@@ -9,6 +9,8 @@ import Combine
 import Foundation
 
 public class GenericParameter<T: Codable>: ValueParameter, ObservableObject {
+    public var id: String = UUID().uuidString
+    
     public typealias ValueType = T
 
     // Delegate

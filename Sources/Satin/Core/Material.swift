@@ -681,20 +681,24 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
 public extension Material {
     func added(parameter _: Parameter, from _: ParameterGroup) {
         uniformsNeedsUpdate = true
+        objectWillChange.send()
     }
 
     func removed(parameter _: Parameter, from _: ParameterGroup) {
         uniformsNeedsUpdate = true
+        objectWillChange.send()
     }
 
     func loaded(group _: ParameterGroup) {
         uniformsNeedsUpdate = true
+        objectWillChange.send()
     }
 
     func saved(group _: ParameterGroup) {}
 
     func cleared(group _: ParameterGroup) {
         uniformsNeedsUpdate = true
+        objectWillChange.send()
     }
 
     func update(parameter: Parameter, from: ParameterGroup) {

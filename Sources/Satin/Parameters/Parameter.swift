@@ -14,6 +14,8 @@ public protocol ParameterDelegate: AnyObject {
 }
 
 public protocol Parameter: Codable, CustomStringConvertible, AnyObject {
+    var id: String { get }
+    
     var type: ParameterType { get }
     var string: String { get }
 
