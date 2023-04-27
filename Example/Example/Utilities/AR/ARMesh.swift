@@ -8,9 +8,9 @@
 
 #if os(iOS)
 
-import Satin
-import Metal
 import ARKit
+import Metal
+import Satin
 
 func ARMeshVertexDescriptor() -> MTLVertexDescriptor {
     // position

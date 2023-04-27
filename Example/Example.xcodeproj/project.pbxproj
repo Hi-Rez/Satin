@@ -33,7 +33,7 @@
 		E1707F6F29BAB0A000A934A0 /* DirectionalShadowRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */; };
 		E1707F7129BAB0B100A934A0 /* DirectionalShadowRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */; };
 		E1707F7429BBAFE100A934A0 /* PBRSubmeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7329BBAFE100A934A0 /* PBRSubmeshRenderer.swift */; };
-		E1707F7629BBB01D00A934A0 /* SubmeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */; };
+		E1707F7629BBB01D00A934A0 /* PBRSubmeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1707F7529BBB01D00A934A0 /* PBRSubmeshRendererView.swift */; };
 		E172B49229720A1C00341985 /* OcclusionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49129720A1C00341985 /* OcclusionRenderer.swift */; };
 		E172B49429720A6A00341985 /* OcclusionRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E172B49329720A6A00341985 /* OcclusionRendererView.swift */; };
 		E175243629F86F8D00AD1A8F /* ARPBRRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */; };
@@ -59,6 +59,10 @@
 		E17A55BC28A6C9C3008F1DDB /* CustomGeometryRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */; };
 		E17A55BD28A6C9C6008F1DDB /* IcosahedronGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CC099F2489797300B92285 /* IcosahedronGenerator.c */; };
 		E18A1EDB291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */; };
+		E19D4C3429F9C00500DF993D /* ARBloomRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C3329F9C00500DF993D /* ARBloomRenderer.swift */; };
+		E19D4C3629F9C02A00DF993D /* ARBloomRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C3529F9C02A00DF993D /* ARBloomRendererView.swift */; };
+		E19D4C4929F9CA3F00DF993D /* ARSessionPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C4829F9CA3F00DF993D /* ARSessionPublisher.swift */; };
+		E19D4C4B29F9CF3100DF993D /* ARPlaneMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C4A29F9CF3100DF993D /* ARPlaneMesh.swift */; };
 		E1BBE46329E4D17D00A21F3A /* ARLidarMeshRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BBE46229E4D17D00A21F3A /* ARLidarMeshRenderer.swift */; };
 		E1BBE46529E4D1AB00A21F3A /* ARLidarMeshRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BBE46429E4D1AB00A21F3A /* ARLidarMeshRendererView.swift */; };
 		E1BBE46729E4D5B000A21F3A /* ARMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BBE46629E4D5B000A21F3A /* ARMesh.swift */; };
@@ -170,7 +174,7 @@
 		E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionalShadowRendererView.swift; sourceTree = "<group>"; };
 		E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionalShadowRenderer.swift; sourceTree = "<group>"; };
 		E1707F7329BBAFE100A934A0 /* PBRSubmeshRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRSubmeshRenderer.swift; sourceTree = "<group>"; };
-		E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmeshRendererView.swift; sourceTree = "<group>"; };
+		E1707F7529BBB01D00A934A0 /* PBRSubmeshRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRSubmeshRendererView.swift; sourceTree = "<group>"; };
 		E172B49129720A1C00341985 /* OcclusionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRenderer.swift; sourceTree = "<group>"; };
 		E172B49329720A6A00341985 /* OcclusionRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcclusionRendererView.swift; sourceTree = "<group>"; };
 		E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPBRRenderer.swift; sourceTree = "<group>"; };
@@ -192,6 +196,10 @@
 		E192F05C24874CE700C7EE74 /* TorusKnotGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TorusKnotGenerator.h; sourceTree = "<group>"; };
 		E192F05D24874CE700C7EE74 /* TorusKnotGenerator.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TorusKnotGenerator.c; sourceTree = "<group>"; };
 		E19B058F26BB704100D91376 /* AudioInputRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputRenderer.swift; sourceTree = "<group>"; };
+		E19D4C3329F9C00500DF993D /* ARBloomRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBloomRenderer.swift; sourceTree = "<group>"; };
+		E19D4C3529F9C02A00DF993D /* ARBloomRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBloomRendererView.swift; sourceTree = "<group>"; };
+		E19D4C4829F9CA3F00DF993D /* ARSessionPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionPublisher.swift; sourceTree = "<group>"; };
+		E19D4C4A29F9CF3100DF993D /* ARPlaneMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneMesh.swift; sourceTree = "<group>"; };
 		E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureComputeRenderer.swift; sourceTree = "<group>"; };
 		E1BBE46229E4D17D00A21F3A /* ARLidarMeshRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARLidarMeshRenderer.swift; sourceTree = "<group>"; };
 		E1BBE46429E4D1AB00A21F3A /* ARLidarMeshRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARLidarMeshRendererView.swift; sourceTree = "<group>"; };
@@ -300,39 +308,16 @@
 		66E678CD243EE2190070B294 /* Renderers */ = {
 			isa = PBXGroup;
 			children = (
+				E19D4C4029F9C23900DF993D /* Advanced */,
 				E152372029CBA8DA00D96D46 /* AR */,
-				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
-				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
-				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
-				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
-				E152372929CC21FF00D96D46 /* ContactShadowRenderer.swift */,
-				E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */,
-				E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */,
-				E11325C828ADC4520049CACC /* CustomInstancingRenderer.swift */,
-				E1E69D1624A4711E00EDA686 /* DepthMaterialRenderer.swift */,
-				E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */,
-				E1FABFFC2527E698008569F7 /* ExportGeometryRenderer.swift */,
-				E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */,
-				E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */,
-				E105CC36252BDE7F009EE563 /* FXAARenderer.swift */,
-				E13687272900BBEC00FFF43F /* InstancedMeshRenderer.swift */,
-				E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */,
-				E17B2FD7247A4E8900BD2BF9 /* LoadObjRenderer.swift */,
-				E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */,
-				E10E2FD529C508EC00C4EAFF /* MeshShaderRenderer.swift */,
-				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
-				E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */,
-				E1D62565269D21C8000094C1 /* PostProcessingRenderer.swift */,
-				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
-				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,
-				E17B986E2451488100216411 /* Renderer2D.swift */,
-				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
-				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
-				E11325CC28AEADAA0049CACC /* SuperShapesRenderer.swift */,
-				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
-				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
-				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
+				E19D4C4129F9C23F00DF993D /* Basics */,
+				E19D4C4429F9C26600DF993D /* Compute */,
+				E19D4C4729F9C2F200DF993D /* Customization */,
+				E19D4C4529F9C27800DF993D /* Geometry */,
+				E19D4C4329F9C25900DF993D /* Materials */,
 				E1BEFC4729EDBE5A00F9CE60 /* PBR */,
+				E19D4C4229F9C24500DF993D /* PostProcessing */,
+				E19D4C4629F9C28700DF993D /* Shadows */,
 				E1DED19627B4D7D2008C9F1F /* ShippingShaders */,
 				E1BCF34129DA3E910076C163 /* Tessellated */,
 			);
@@ -388,6 +373,7 @@
 				E1BBE46229E4D17D00A21F3A /* ARLidarMeshRenderer.swift */,
 				E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */,
 				E175243C29F8AAC200AD1A8F /* ARPBRRenderer+Inspector.swift */,
+				E19D4C3329F9C00500DF993D /* ARBloomRenderer.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -403,6 +389,7 @@
 				E1BBE46429E4D1AB00A21F3A /* ARLidarMeshRendererView.swift */,
 				E14C122C29E5D618009D3C8C /* ARPeopleOcclusionRendererView.swift */,
 				E175243729F8734D00AD1A8F /* ARPBRRendererView.swift */,
+				E19D4C3529F9C02A00DF993D /* ARBloomRendererView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -423,6 +410,7 @@
 		E192F05F24875D6E00C7EE74 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				E152371E29CBA22B00D96D46 /* BaseRenderer.swift */,
 				E175243E29F8B9EC00AD1A8F /* Metal+Extensions.swift */,
 				E17D2C1126BBB7DF005A136A /* AudioInput.swift */,
 				E144281D28120C1B006D9CD1 /* LoadedMesh.swift */,
@@ -432,6 +420,192 @@
 				E14198C629D10A9100E486EE /* Shadows */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E19D4C3729F9C0F100DF993D /* PBR */ = {
+			isa = PBXGroup;
+			children = (
+				E1707F7529BBB01D00A934A0 /* PBRSubmeshRendererView.swift */,
+				E10DC32329DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift */,
+				E1EB6DE929690DD90029E4FC /* PBREnhancedRendererView.swift */,
+				E1E7680228A72E50005D75AB /* PBRRendererView.swift */,
+				E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */,
+			);
+			path = PBR;
+			sourceTree = "<group>";
+		};
+		E19D4C3829F9C10400DF993D /* Basics */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767C128A6D341005D75AB /* Renderer2DView.swift */,
+				E1E767BE28A6D2A2005D75AB /* Renderer3DView.swift */,
+				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
+				E1E767C528A6D41B005D75AB /* CameraControllerRendererView.swift */,
+				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
+			);
+			path = Basics;
+			sourceTree = "<group>";
+		};
+		E19D4C3929F9C10A00DF993D /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767EA28A6EA0B005D75AB /* MatcapRendererView.swift */,
+				E1E767C628A6D41B005D75AB /* DepthRendererView.swift */,
+				E1E767F628A6FA4C005D75AB /* LiveCodeRendererView.swift */,
+				E1E767DF28A6E7DD005D75AB /* CubemapRendererView.swift */,
+			);
+			path = Materials;
+			sourceTree = "<group>";
+		};
+		E19D4C3A29F9C16E00DF993D /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767C728A6D41B005D75AB /* ExportGeometryRendererView.swift */,
+				E1E767ED28A6EC44005D75AB /* LoadObjRendererView.swift */,
+				E11325D128AEB0770049CACC /* SuperShapesRendererView.swift */,
+				E1E767C328A6D41B005D75AB /* ExtrudedTextRendererView.swift */,
+				E1E767C828A6D41B005D75AB /* TextRendererView.swift */,
+				E1E767C928A6D41B005D75AB /* OctasphereRendererView.swift */,
+			);
+			path = Geometry;
+			sourceTree = "<group>";
+		};
+		E19D4C3B29F9C19300DF993D /* Customization */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767C428A6D41B005D75AB /* CustomGeometryRendererView.swift */,
+				E11325CA28ADC5730049CACC /* InstancingRendererView.swift */,
+				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
+			);
+			path = Customization;
+			sourceTree = "<group>";
+		};
+		E19D4C3C29F9C1B800DF993D /* Compute */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767D528A6D7D9005D75AB /* BufferComputeRendererView.swift */,
+				E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */,
+				E1E7680028A70000005D75AB /* TextureComputeRendererView.swift */,
+			);
+			path = Compute;
+			sourceTree = "<group>";
+		};
+		E19D4C3D29F9C1C500DF993D /* Shadows */ = {
+			isa = PBXGroup;
+			children = (
+				E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */,
+				E152372B29CC223600D96D46 /* ContactShadowRendererView.swift */,
+				E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */,
+			);
+			path = Shadows;
+			sourceTree = "<group>";
+		};
+		E19D4C3E29F9C1D800DF993D /* Advanced */ = {
+			isa = PBXGroup;
+			children = (
+				E1E7681028A73661005D75AB /* AudioInputRendererView.swift */,
+				E1E767CA28A6D41B005D75AB /* ShippingRendererView.swift */,
+				E1E767FA28A6FB83005D75AB /* SatinSceneKitRendererView.swift */,
+				E1E767F428A6F805005D75AB /* RayMarchingRendererView.swift */,
+				E10E2FD729C5092700C4EAFF /* MeshShaderRendererView.swift */,
+				E1BCF33F29DA3C210076C163 /* TessellationRendererView.swift */,
+			);
+			path = Advanced;
+			sourceTree = "<group>";
+		};
+		E19D4C3F29F9C20D00DF993D /* PostProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				E1E767FD28A6FCBC005D75AB /* FXAARendererView.swift */,
+				E1E767F128A6F43C005D75AB /* PostProcessingRendererView.swift */,
+			);
+			path = PostProcessing;
+			sourceTree = "<group>";
+		};
+		E19D4C4029F9C23900DF993D /* Advanced */ = {
+			isa = PBXGroup;
+			children = (
+				E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */,
+				E11CCFFE2683EAD5005BEA88 /* SatinSceneKitRenderer.swift */,
+				E10E2FD529C508EC00C4EAFF /* MeshShaderRenderer.swift */,
+				E19B058F26BB704100D91376 /* AudioInputRenderer.swift */,
+			);
+			path = Advanced;
+			sourceTree = "<group>";
+		};
+		E19D4C4129F9C23F00DF993D /* Basics */ = {
+			isa = PBXGroup;
+			children = (
+				E13687272900BBEC00FFF43F /* InstancedMeshRenderer.swift */,
+				E17B986E2451488100216411 /* Renderer2D.swift */,
+				E1F1B32724BAA93300563923 /* Renderer3D.swift */,
+				E144FA2D24D0D5550072D456 /* CameraControllerRenderer.swift */,
+			);
+			path = Basics;
+			sourceTree = "<group>";
+		};
+		E19D4C4229F9C24500DF993D /* PostProcessing */ = {
+			isa = PBXGroup;
+			children = (
+				E1D62565269D21C8000094C1 /* PostProcessingRenderer.swift */,
+				E105CC36252BDE7F009EE563 /* FXAARenderer.swift */,
+			);
+			path = PostProcessing;
+			sourceTree = "<group>";
+		};
+		E19D4C4329F9C25900DF993D /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */,
+				E1E69D1624A4711E00EDA686 /* DepthMaterialRenderer.swift */,
+				E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */,
+				E172B49129720A1C00341985 /* OcclusionRenderer.swift */,
+				E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */,
+			);
+			path = Materials;
+			sourceTree = "<group>";
+		};
+		E19D4C4429F9C26600DF993D /* Compute */ = {
+			isa = PBXGroup;
+			children = (
+				E1FA708224A5D394001BFE4B /* BufferComputeRenderer.swift */,
+				E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */,
+				E1B625BE2492C03400C774D1 /* TextureComputeRenderer.swift */,
+			);
+			path = Compute;
+			sourceTree = "<group>";
+		};
+		E19D4C4529F9C27800DF993D /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				E11325CC28AEADAA0049CACC /* SuperShapesRenderer.swift */,
+				E17B2FD7247A4E8900BD2BF9 /* LoadObjRenderer.swift */,
+				E1F1B32324BAA91F00563923 /* TextRenderer.swift */,
+				E180FD7127E13A85002D6DF5 /* OctasphereRenderer.swift */,
+				E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */,
+				E1FABFFC2527E698008569F7 /* ExportGeometryRenderer.swift */,
+			);
+			path = Geometry;
+			sourceTree = "<group>";
+		};
+		E19D4C4629F9C28700DF993D /* Shadows */ = {
+			isa = PBXGroup;
+			children = (
+				E152372929CC21FF00D96D46 /* ContactShadowRenderer.swift */,
+				E1707F7029BAB0B100A934A0 /* DirectionalShadowRenderer.swift */,
+				E1772A952981D2A9005FE7B2 /* ProjectedShadowRenderer.swift */,
+			);
+			path = Shadows;
+			sourceTree = "<group>";
+		};
+		E19D4C4729F9C2F200DF993D /* Customization */ = {
+			isa = PBXGroup;
+			children = (
+				E11325C828ADC4520049CACC /* CustomInstancingRenderer.swift */,
+				E1624947280DC45B00DAE5F7 /* VertexAttributesRenderer.swift */,
+				E1CC09892489751A00B92285 /* CustomGeometryRenderer.swift */,
+			);
+			path = Customization;
 			sourceTree = "<group>";
 		};
 		E1BCF34129DA3E910076C163 /* Tessellated */ = {
@@ -491,44 +665,16 @@
 		E1E767C028A6D313005D75AB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E19D4C3E29F9C1D800DF993D /* Advanced */,
 				E152372129CBBA4600D96D46 /* AR */,
-				E1E7681028A73661005D75AB /* AudioInputRendererView.swift */,
-				E1E767D528A6D7D9005D75AB /* BufferComputeRendererView.swift */,
-				E1E767C528A6D41B005D75AB /* CameraControllerRendererView.swift */,
-				E152372B29CC223600D96D46 /* ContactShadowRendererView.swift */,
-				E1E767DF28A6E7DD005D75AB /* CubemapRendererView.swift */,
-				E1E767C428A6D41B005D75AB /* CustomGeometryRendererView.swift */,
-				E1E767C628A6D41B005D75AB /* DepthRendererView.swift */,
-				E1707F6E29BAB0A000A934A0 /* DirectionalShadowRendererView.swift */,
-				E1E767C728A6D41B005D75AB /* ExportGeometryRendererView.swift */,
-				E1E767C328A6D41B005D75AB /* ExtrudedTextRendererView.swift */,
-				E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */,
-				E1E767FD28A6FCBC005D75AB /* FXAARendererView.swift */,
-				E13687292900BEEC00FFF43F /* InstancedMeshRendererView.swift */,
-				E11325CA28ADC5730049CACC /* InstancingRendererView.swift */,
-				E1E767F628A6FA4C005D75AB /* LiveCodeRendererView.swift */,
-				E1E767ED28A6EC44005D75AB /* LoadObjRendererView.swift */,
-				E1E767EA28A6EA0B005D75AB /* MatcapRendererView.swift */,
-				E10E2FD729C5092700C4EAFF /* MeshShaderRendererView.swift */,
-				E172B49329720A6A00341985 /* OcclusionRendererView.swift */,
-				E1E767C928A6D41B005D75AB /* OctasphereRendererView.swift */,
-				E10DC32329DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift */,
-				E1EB6DE929690DD90029E4FC /* PBREnhancedRendererView.swift */,
-				E1E7680228A72E50005D75AB /* PBRRendererView.swift */,
-				E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */,
-				E1E767F128A6F43C005D75AB /* PostProcessingRendererView.swift */,
-				E1772A992981D35F005FE7B2 /* ProjectedShadowRendererView.swift */,
-				E1E767F428A6F805005D75AB /* RayMarchingRendererView.swift */,
-				E1E767C128A6D341005D75AB /* Renderer2DView.swift */,
-				E1E767BE28A6D2A2005D75AB /* Renderer3DView.swift */,
-				E1E767FA28A6FB83005D75AB /* SatinSceneKitRendererView.swift */,
-				E1E767CA28A6D41B005D75AB /* ShippingRendererView.swift */,
-				E1707F7529BBB01D00A934A0 /* SubmeshRendererView.swift */,
-				E11325D128AEB0770049CACC /* SuperShapesRendererView.swift */,
-				E1BCF33F29DA3C210076C163 /* TessellationRendererView.swift */,
-				E1E767C828A6D41B005D75AB /* TextRendererView.swift */,
-				E1E7680028A70000005D75AB /* TextureComputeRendererView.swift */,
-				E1E7680928A73086005D75AB /* VertexAttributesRendererView.swift */,
+				E19D4C3829F9C10400DF993D /* Basics */,
+				E19D4C3C29F9C1B800DF993D /* Compute */,
+				E19D4C3B29F9C19300DF993D /* Customization */,
+				E19D4C3A29F9C16E00DF993D /* Geometry */,
+				E19D4C3929F9C10A00DF993D /* Materials */,
+				E19D4C3729F9C0F100DF993D /* PBR */,
+				E19D4C3F29F9C20D00DF993D /* PostProcessing */,
+				E19D4C3D29F9C1C500DF993D /* Shadows */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -543,6 +689,8 @@
 				E1BBE46629E4D5B000A21F3A /* ARMesh.swift */,
 				E135B12A29E6100F00073A85 /* ARCompositor.swift */,
 				E135B12C29E61D5000073A85 /* ARMatteRenderer.swift */,
+				E19D4C4829F9CA3F00DF993D /* ARSessionPublisher.swift */,
+				E19D4C4A29F9CF3100DF993D /* ARPlaneMesh.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -630,12 +778,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1E767F328A6F7F7005D75AB /* RayMarchingRenderer.swift in Sources */,
+				E19D4C3629F9C02A00DF993D /* ARBloomRendererView.swift in Sources */,
 				E1E767FB28A6FB83005D75AB /* SatinSceneKitRendererView.swift in Sources */,
 				E172B49229720A1C00341985 /* OcclusionRenderer.swift in Sources */,
 				E1E767D128A6D41B005D75AB /* OctasphereRendererView.swift in Sources */,
 				E1E767DC28A6DA70005D75AB /* ARRenderer.swift in Sources */,
 				E1D714D628A6BADA00B517B6 /* ContentView.swift in Sources */,
 				E11325D028AEAEB50049CACC /* SuperShapeGenerator.c in Sources */,
+				E19D4C4929F9CA3F00DF993D /* ARSessionPublisher.swift in Sources */,
 				E1E767FF28A6FD6A005D75AB /* TextureComputeRenderer.swift in Sources */,
 				E11325D228AEB0770049CACC /* SuperShapesRendererView.swift in Sources */,
 				E10DC32429DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift in Sources */,
@@ -675,6 +825,7 @@
 				E1BCF33E29DA3C030076C163 /* TessellationRenderer.swift in Sources */,
 				E17A55A828A6C11E008F1DDB /* Renderer2D.swift in Sources */,
 				E18A1EDB291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift in Sources */,
+				E19D4C3429F9C00500DF993D /* ARBloomRenderer.swift in Sources */,
 				E10E2FD829C5092700C4EAFF /* MeshShaderRendererView.swift in Sources */,
 				E152372A29CC21FF00D96D46 /* ContactShadowRenderer.swift in Sources */,
 				E1BCF34029DA3C210076C163 /* TessellationRendererView.swift in Sources */,
@@ -687,6 +838,7 @@
 				E1E767FE28A6FCBC005D75AB /* FXAARendererView.swift in Sources */,
 				E1772A962981D2A9005FE7B2 /* ProjectedShadowRenderer.swift in Sources */,
 				E10E2FD629C508EC00C4EAFF /* MeshShaderRenderer.swift in Sources */,
+				E19D4C4B29F9CF3100DF993D /* ARPlaneMesh.swift in Sources */,
 				E10DC32229DCC4C100FF2A98 /* PBRCustomizationRenderer.swift in Sources */,
 				E1E767CC28A6D41B005D75AB /* CustomGeometryRendererView.swift in Sources */,
 				E1E7680828A73032005D75AB /* LoadedMesh.swift in Sources */,
@@ -733,7 +885,7 @@
 				E1772A9A2981D35F005FE7B2 /* ProjectedShadowRendererView.swift in Sources */,
 				E14C122F29E5D67A009D3C8C /* ARPeopleOcclusionRenderer.swift in Sources */,
 				E1707F7429BBAFE100A934A0 /* PBRSubmeshRenderer.swift in Sources */,
-				E1707F7629BBB01D00A934A0 /* SubmeshRendererView.swift in Sources */,
+				E1707F7629BBB01D00A934A0 /* PBRSubmeshRendererView.swift in Sources */,
 				E17A55B328A6C394008F1DDB /* ExtrudedTextRenderer.swift in Sources */,
 				E135B12D29E61D5000073A85 /* ARMatteRenderer.swift in Sources */,
 				E1E767CF28A6D41B005D75AB /* ExportGeometryRendererView.swift in Sources */,

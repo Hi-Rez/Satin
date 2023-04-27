@@ -8,7 +8,7 @@
 import Metal
 
 open class DepthMaterial: Material {
-    public init(_ color: Bool = true, _ invert: Bool = false, _ camera: Camera? = nil) {
+    public init(color: Bool = true, invert: Bool = false, camera: Camera? = nil) {
         super.init()
         set("Color", color)
         set("Invert", invert)

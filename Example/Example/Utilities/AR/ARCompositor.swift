@@ -61,7 +61,7 @@ class ARCompositor: ARPostProcessor {
         }
     }
 
-    required override init(
+    override required init(
         context: Context,
         session: ARSession
     ) {

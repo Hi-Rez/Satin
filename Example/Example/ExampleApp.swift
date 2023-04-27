@@ -18,5 +18,6 @@ struct ExampleApp: App {
         .commands {
             SidebarCommands()
         }
+
     }
 }

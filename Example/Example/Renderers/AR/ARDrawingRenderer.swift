@@ -15,7 +15,7 @@ import Forge
 import Satin
 import SwiftUI
 
-class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
+class ARDrawingRenderer: BaseRenderer {
     class RainbowMaterial: SourceMaterial {}
 
     // MARK: - Post Processor
@@ -24,7 +24,7 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     // MARK: - AR
 
-    var session: ARSession!
+    var session = ARSession()
 
     // MARK: - 3D
 
@@ -70,7 +70,10 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
     init(clear: Binding<Bool>) {
         self.clear = clear
         super.init()
-        setupARSession()
+
+        let config = ARWorldTrackingConfiguration()
+        config.frameSemantics = [.smoothedSceneDepth]
+        session.run(config)
     }
 
     // MARK: - Deinit
@@ -86,6 +89,8 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
         backgroundRenderer = ARBackgroundDepthRenderer(
             context: context,
             session: session,
+            sessionPublisher: ARSessionPublisher(session: session),
+            mtkView: mtkView,
             near: camera.near,
             far: camera.far
         )
@@ -142,16 +147,6 @@ class ARDrawingRenderer: BaseRenderer, ARSessionDelegate {
 
     override func touchesEnded(_: Set<UITouch>, with _: UIEvent?) {
         touchDown = false
-    }
-
-    // MARK: - Setups
-
-    func setupARSession() {
-        session = ARSession()
-
-        let config = ARWorldTrackingConfiguration()
-        config.frameSemantics = [.smoothedSceneDepth]
-        session.run(config)
     }
 
     // MARK: - Updates

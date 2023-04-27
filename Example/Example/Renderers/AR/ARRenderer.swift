@@ -14,7 +14,7 @@ import MetalKit
 import Forge
 import Satin
 
-class ARRenderer: BaseRenderer {
+class ARRenderer: BaseRenderer, ARSessionDelegate {
     var session = ARSession()
 
     let boxGeometry = BoxGeometry(size: (0.1, 0.1, 0.1))
@@ -37,6 +37,7 @@ class ARRenderer: BaseRenderer {
 
     override init() {
         super.init()
+        session.delegate = self
         session.run(ARWorldTrackingConfiguration())
     }
 

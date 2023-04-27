@@ -15,7 +15,7 @@ import Forge
 import Satin
 import SwiftUI
 
-fileprivate class ARPlaneContainer: Object {
+class ARPlaneContainer: Object {
     var anchor: ARPlaneAnchor {
         didSet {
             updateAnchor()

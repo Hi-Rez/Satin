@@ -23,17 +23,22 @@ class ARBackgroundRenderer: PostProcessor {
             }
         }
 
-        public required init() {
+        public required init(srgb: Bool) {
             super.init(pipelinesURL: Bundle.main.resourceURL!
                 .appendingPathComponent("Assets")
                 .appendingPathComponent("Shared")
                 .appendingPathComponent("Pipelines")
             )
+            set("Srgb", srgb)
             depthWriteEnabled = false
         }
 
         required init(from _: Decoder) throws {
             fatalError("init(from:) has not been implemented")
+        }
+
+        required init() {
+            fatalError("init() has not been implemented")
         }
 
         override func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
@@ -54,18 +59,17 @@ class ARBackgroundRenderer: PostProcessor {
 
     public init(context: Context, session: ARSession) {
         self.session = session
+        super.init(context: context, material: nil)
 
-        let material = BackgroundMaterial()
-        material.srgb = context.colorPixelFormat.srgb
-
-        super.init(context: context, material: material)
+        mesh.material = BackgroundMaterial(srgb: context.colorPixelFormat.srgb)
         mesh.visible = false
+        
         renderer.setClearColor(.zero)
         setupTextureCache()
 
         NotificationCenter.default.addObserver(self, selector: #selector(ARBackgroundRenderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
 
-        self.label = "AR Background Renderer"
+        self.label = "AR Background"
     }
 
     deinit {
@@ -97,7 +101,15 @@ class ARBackgroundRenderer: PostProcessor {
         super.draw(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, renderTarget: renderTarget)
     }
 
-    private func updateGeometry(_ frame: ARFrame) {
+    override func resize(_ size: (width: Float, height: Float)) {
+        super.resize(size)
+        _updateGeometry = true
+        viewportSize = CGSize(width: Int(size.width), height: Int(size.height))
+    }
+
+    // MARK: - Internal Methods
+
+    internal func updateGeometry(_ frame: ARFrame) {
         guard let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else { return }
 
         // Update the texture coordinates of our image plane to aspect fill the viewport
@@ -114,13 +126,7 @@ class ARBackgroundRenderer: PostProcessor {
         mesh.geometry = geo
     }
 
-    override func resize(_ size: (width: Float, height: Float)) {
-        super.resize(size)
-        _updateGeometry = true
-        viewportSize = CGSize(width: Int(size.width), height: Int(size.height))
-    }
-
-    func updateTextures(_ frame: ARFrame) {
+    internal func updateTextures(_ frame: ARFrame) {
         if let material = mesh.material as? BackgroundMaterial, CVPixelBufferGetPlaneCount(frame.capturedImage) == 2 {
             material.capturedImageTextureY = createTexture(
                 fromPixelBuffer: frame.capturedImage,
@@ -140,7 +146,7 @@ class ARBackgroundRenderer: PostProcessor {
         }
     }
 
-    private func setupTextureCache() {
+    internal func setupTextureCache() {
         // Create captured image texture cache
         var textureCache: CVMetalTextureCache?
         CVMetalTextureCacheCreate(nil, nil, context.device, nil, &textureCache)

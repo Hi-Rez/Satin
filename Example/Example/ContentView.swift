@@ -28,6 +28,10 @@ struct ContentView: View {
                             Label("AR Drawing", systemImage: "scribble.variable")
                         }
 
+                        NavigationLink(destination: ARBloomRendererView()) {
+                            Label("AR Bloom", systemImage: "sun.max.circle")
+                        }
+
                         NavigationLink(destination: ARLidarMeshRendererView()) {
                             Label("AR Lidar Mesh", systemImage: "point.3.filled.connected.trianglepath.dotted")
                         }
@@ -70,10 +74,6 @@ struct ContentView: View {
                         NavigationLink(destination: OcclusionRendererView()) {
                             Label("Occlusion", systemImage: "moonphase.first.quarter.inverse")
                         }
-
-                        NavigationLink(destination: OctasphereRendererView()) {
-                            Label("Octasphere", systemImage: "globe")
-                        }
                     }
 
                     Section(header: Text("Materials")) {
@@ -109,6 +109,10 @@ struct ContentView: View {
 
                         NavigationLink(destination: LoadObjRendererView()) {
                             Label("Obj Loading", systemImage: "arrow.down.doc")
+                        }
+
+                        NavigationLink(destination: OctasphereRendererView()) {
+                            Label("Octasphere", systemImage: "globe")
                         }
 
                         NavigationLink(destination: ExportGeometryRendererView()) {
