@@ -1,7 +1,7 @@
 #include "Library/Pbr/Pbr.metal"
 
 typedef struct {
-#include "Chunks/PbrUniforms.metal"
+#include "Chunks/PbrStandardUniforms.metal"
 } CustomUniforms;
 
 typedef struct {

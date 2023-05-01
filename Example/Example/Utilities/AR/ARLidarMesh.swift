@@ -1,5 +1,5 @@
 //
-//  LidarMesh.swift
+//  ARLidarMesh.swift
 //  Example
 //
 //  Created by Reza Ali on 4/10/23.
@@ -12,7 +12,7 @@ import ARKit
 import Metal
 import Satin
 
-func ARMeshVertexDescriptor() -> MTLVertexDescriptor {
+func ARLidarMeshVertexDescriptor() -> MTLVertexDescriptor {
     // position
     let vertexDescriptor = MTLVertexDescriptor()
 
@@ -27,7 +27,7 @@ func ARMeshVertexDescriptor() -> MTLVertexDescriptor {
     return vertexDescriptor
 }
 
-class ARMesh: Object, Renderable {
+class ARLidarMesh: Object, Renderable {
     var opaque: Bool {
         material?.blending == .disabled
     }
@@ -79,6 +79,7 @@ class ARMesh: Object, Renderable {
     init(meshAnchor: ARMeshAnchor, material: Material) {
         self.meshAnchor = meshAnchor
         self.material = material
+        material.vertexDescriptor = ARLidarMeshVertexDescriptor()
         super.init("Lidar Mesh \(meshAnchor.identifier)")
     }
 

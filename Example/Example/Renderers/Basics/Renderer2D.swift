@@ -24,7 +24,7 @@ class Renderer2D: BaseRenderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .invalid
-        metalKitView.preferredFramesPerSecond = 60
+        metalKitView.preferredFramesPerSecond = 120
     }
 
     override func setup() {

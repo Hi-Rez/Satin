@@ -32,7 +32,7 @@ class FlockingRenderer: BaseRenderer {
     var resetParam = BoolParameter("Reset", false)
     var pauseParam = BoolParameter("Pause", false)
 
-    lazy var params = ParameterGroup("Controls", [pauseParam, resetParam, particleCountParam])
+//    lazy var params = ParameterGroup("Controls", [pauseParam, resetParam, particleCountParam])
 
     lazy var scene = Object("Scene", [sprite])
     var camera = OrthographicCamera()

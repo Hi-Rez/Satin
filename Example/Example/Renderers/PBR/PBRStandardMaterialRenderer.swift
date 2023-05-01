@@ -18,6 +18,19 @@ class PBRStandardMaterialRenderer: BaseRenderer {
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
 
+
+    // MARK: - UI
+
+    override var paramKeys: [String] {
+        return ["Material"]
+    }
+
+    override var params: [String: ParameterGroup?] {
+        return [
+            "Material": standardMaterial.parameters,
+        ]
+    }
+
     lazy var skybox: Mesh = {
         let mesh = Mesh(geometry: SkyboxGeometry(size: 250), material: SkyboxMaterial())
         mesh.label = "Skybox"

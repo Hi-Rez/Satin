@@ -31,7 +31,7 @@ class Renderer3D: BaseRenderer {
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
         metalKitView.depthStencilPixelFormat = .depth32Float
-        metalKitView.preferredFramesPerSecond = 60
+        metalKitView.preferredFramesPerSecond = 120
     }
 
     override func setup() {

@@ -52,12 +52,22 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
     private var sessionSubscriptions = Set<AnyCancellable>()
 
     private lazy var background = Object("AR Background", [depthMesh, mesh])
+
     private var depthRenderer: Satin.Renderer
-    private var depthAnchorMeshMap: [UUID: ARPlaneMesh] = [:]
+    private var depthAnchorPlaneMeshMap: [UUID: ARPlaneMesh] = [:]
+    private var depthAnchorLidarMeshMap: [UUID: ARLidarMesh] = [:]
+
     private var depthScene = Object("Depth Scene")
     private var depthMesh: Mesh
     private var depthCamera: ARPerspectiveCamera
+
     private var depthMaterial = {
+        let material = BasicColorMaterial([1, 1, 1, 0], .alpha)
+        material.depthBias = DepthBias(bias: 5, slope: 5, clamp: 5)
+        return material
+    }()
+
+    private var depthLidarMaterial = {
         let material = BasicColorMaterial([1, 1, 1, 0], .alpha)
         material.depthBias = DepthBias(bias: 5, slope: 5, clamp: 5)
         return material
@@ -190,31 +200,48 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
     internal func addedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
             if let planeAnchor = anchor as? ARPlaneAnchor {
-                let mesh = ARPlaneMesh(
+                let planeMesh = ARPlaneMesh(
                     label: anchor.identifier.uuidString,
                     anchor: planeAnchor,
                     material: depthMaterial
                 )
-                depthAnchorMeshMap[anchor.identifier] = mesh
-                depthScene.add(mesh)
+                depthAnchorPlaneMeshMap[anchor.identifier] = planeMesh
+                depthScene.add(planeMesh)
+            }
+            else if let meshAnchor = anchor as? ARMeshAnchor {
+                let lidarMesh = ARLidarMesh(meshAnchor: meshAnchor, material: depthLidarMaterial)
+                depthAnchorLidarMeshMap[anchor.identifier] = lidarMesh
+                depthScene.add(lidarMesh)
             }
         }
     }
 
     internal func updatedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let planeAnchor = anchor as? ARPlaneAnchor,
-               let planeMesh = depthAnchorMeshMap[anchor.identifier]
-            {
-                planeMesh.anchor = planeAnchor
+            if let planeAnchor = anchor as? ARPlaneAnchor {
+                if let planeMesh = depthAnchorPlaneMeshMap[anchor.identifier] {
+                    planeMesh.anchor = planeAnchor
+                }
+            }
+            else if let meshAnchor = anchor as? ARMeshAnchor {
+                if let lidarMesh = depthAnchorLidarMeshMap[anchor.identifier] {
+                    lidarMesh.meshAnchor = meshAnchor
+                }
             }
         }
     }
 
     internal func removedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let mesh = depthAnchorMeshMap.removeValue(forKey: anchor.identifier) {
-                depthScene.remove(mesh)
+            if let planeAnchor = anchor as? ARPlaneAnchor {
+                if let mesh = depthAnchorPlaneMeshMap.removeValue(forKey: anchor.identifier) {
+                    depthScene.remove(mesh)
+                }
+            }
+            else if let meshAnchor = anchor as? ARMeshAnchor {
+                if let mesh = depthAnchorLidarMeshMap.removeValue(forKey: anchor.identifier) {
+                    depthScene.remove(mesh)
+                }
             }
         }
     }

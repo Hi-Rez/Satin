@@ -22,11 +22,11 @@ class ARLidarMeshRenderer: BaseRenderer {
         let material = LidarMeshMaterial(pipelinesURL: pipelinesURL)
         material.blending = .alpha
         material.set("Color", [1.0, 1.0, 1.0, 0.25])
-        material.vertexDescriptor = ARMeshVertexDescriptor()
+        material.vertexDescriptor = ARLidarMeshVertexDescriptor()
         return material
     }()
 
-    var lidarMeshes: [UUID: ARMesh] = [:]
+    var lidarMeshes: [UUID: ARLidarMesh] = [:]
 
     var session = ARSession()
 
@@ -106,7 +106,7 @@ extension ARLidarMeshRenderer: ARSessionDelegate {
         for anchor in anchors {
             if let meshAnchor = anchor as? ARMeshAnchor {
                 let id = anchor.identifier
-                let mesh = ARMesh(meshAnchor: meshAnchor, material: material)
+                let mesh = ARLidarMesh(meshAnchor: meshAnchor, material: material)
                 mesh.triangleFillMode = .lines
                 lidarMeshes[id] = mesh
                 scene.add(mesh)

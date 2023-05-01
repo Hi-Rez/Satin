@@ -33,7 +33,7 @@ class InstancedMeshRenderer: BaseRenderer {
         metalKitView.sampleCount = 1
         metalKitView.colorPixelFormat = .bgra8Unorm_srgb
         metalKitView.depthStencilPixelFormat = .depth32Float
-        metalKitView.preferredFramesPerSecond = 60
+        metalKitView.preferredFramesPerSecond = 120
     }
 
     override func setup() {

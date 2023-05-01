@@ -237,6 +237,7 @@ open class Shader {
 
     deinit {
         pipeline = nil
+        shadowPipeline = nil
         library = nil
         pipelineReflection = nil
     }

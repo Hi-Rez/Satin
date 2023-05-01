@@ -246,7 +246,10 @@ open class SourceShader: Shader {
             source += compiledShaderSource
 
             injectPassThroughVertex(label: label, source: &source)
-            injectPassThroughShadowVertex(label: label, source: &source)
+
+            if castShadow {
+                injectPassThroughShadowVertex(label: label, source: &source)
+            }
 
             injectInstancingArgs(source: &source, instancing: instancing)
 

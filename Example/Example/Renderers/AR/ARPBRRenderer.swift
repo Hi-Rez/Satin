@@ -260,20 +260,15 @@ class Model: Object {
 }
 
 class ARPBRRenderer: BaseRenderer, MaterialDelegate {
-    var paramKeys: [String] {
+    override var paramKeys: [String] {
         return ["Material"]
     }
 
-    var params: [String: ParameterGroup?] {
+    override var params: [String: ParameterGroup?] {
         return [
             "Material": model.material.parameters,
         ]
     }
-
-    // MARK: - UI
-
-    var inspectorWindow: InspectorWindow?
-    var _updateInspector: Bool = true
 
     var session = ARSession()
 
@@ -346,7 +341,6 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     override func update() {
         let time = getTime() - startTime
         model.orientation = simd_quatf(angle: Float(time), axis: Satin.worldUpDirection)
-        updateInspector()
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

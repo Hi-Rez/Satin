@@ -9,13 +9,24 @@ vertex VertexData satinVertex
     VertexData out;
     
 #if INSTANCING
-    out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * in.position;
+    out.position = vertexUniforms.viewProjectionMatrix * instanceUniforms[instanceID].modelMatrix * float4(in.position.xyz, 1.0);
+
+#if HAS_NORMAL
     out.normal = instanceUniforms[instanceID].normalMatrix * in.normal;
+#endif
+
 #else
-    out.position = vertexUniforms.modelViewProjectionMatrix * in.position;
+    out.position = vertexUniforms.modelViewProjectionMatrix * float4(in.position.xyz, 1.0);
+
+#if HAS_NORMAL
     out.normal = vertexUniforms.normalMatrix * in.normal;
 #endif
+
+#endif
+
+#if HAS_UV
     out.uv = in.uv;
+#endif
 
     // inject shadow vertex calc
     return out;

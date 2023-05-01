@@ -19,6 +19,45 @@ import Forge
 import Satin
 
 class ARBloomRenderer: BaseRenderer {
+    class BloomMaterial: SourceMaterial {
+        public var grainIntensity: Float = 0.0 {
+            didSet {
+                set("Grain Intensity", grainIntensity)
+            }
+        }
+
+        public var time: Float = 0.0 {
+            didSet {
+                set("Time", time)
+            }
+        }
+
+        public var grainTexture: MTLTexture?
+        public var backgroundTexture: MTLTexture?
+        public var contentTexture: MTLTexture?
+        public var bloomTexture: MTLTexture?
+
+        override func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
+            super.bind(renderEncoder, shadow: shadow)
+            renderEncoder.setFragmentTexture(backgroundTexture, index: FragmentTextureIndex.Custom0.rawValue)
+            renderEncoder.setFragmentTexture(contentTexture, index: FragmentTextureIndex.Custom1.rawValue)
+            renderEncoder.setFragmentTexture(bloomTexture, index: FragmentTextureIndex.Custom2.rawValue)
+            renderEncoder.setFragmentTexture(grainTexture, index: FragmentTextureIndex.Custom3.rawValue)
+        }
+    }
+
+    // MARK: - UI
+
+    override var paramKeys: [String] {
+        return ["Post Material"]
+    }
+
+    override var params: [String: ParameterGroup?] {
+        return [
+            "Post Material": postMaterial.parameters,
+        ]
+    }
+
     // MARK: - Glow Blur
 
     var blurFilter: MPSImageGaussianBlur!
@@ -45,42 +84,46 @@ class ARBloomRenderer: BaseRenderer {
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = Satin.Renderer(context: context)
 
-    // handles depth (lidar depth map & horizontal & vertical planes)
-
+    // handles depth (lidar depth map, lidar mesh & horizontal & vertical planes)
     var backgroundRenderer: ARBackgroundDepthRenderer!
 
     lazy var bloomRenderer = Satin.Renderer(context: context)
     var bloomedScene = Object("Bloomed Objects")
 
-    var bloomMaterial = {
-        let material = BasicTextureMaterial()
+    var contentTexture: MTLTexture?
+    var bloomTexture: MTLTexture?
+    var backgroundTexture: MTLTexture?
+    var _updateTextures = true
+    var bloomTextureScale: Int = 3
+
+    lazy var startTime = getTime()
+
+    lazy var postMaterial: BloomMaterial = {
+        let material = BloomMaterial(pipelinesURL: pipelinesURL)
         material.depthWriteEnabled = false
-        material.blending = .additive
-        // this is a simple way of achieving bloom
-        // a better way would be to use a post processor to composite the results
-        // this way you can control the strenght of the bloom, add ar grain, etc
+        material.blending = .alpha
         return material
     }()
 
-    lazy var bloomMesh = Mesh(geometry: QuadGeometry(), material: bloomMaterial)
-
-    var bloomTexture: MTLTexture?
-    var _updateTexture = true
-    var textureScale: Int = 3
+    lazy var postProcessor = PostProcessor(context: Context(device, 1, colorPixelFormat), material: postMaterial)
 
     override func setupMtkView(_ mtkView: MTKView) {
         mtkView.sampleCount = 1
         mtkView.depthStencilPixelFormat = .depth32Float
         mtkView.colorPixelFormat = .bgra8Unorm
-        mtkView.preferredFramesPerSecond = 60
+        mtkView.preferredFramesPerSecond = 120
     }
 
     override init() {
         super.init()
 
         let configuration = ARWorldTrackingConfiguration()
+        // ARBackgroundDepthRenderer supports:
         configuration.frameSemantics = .smoothedSceneDepth
+        // and/or
         configuration.planeDetection = [.horizontal, .vertical]
+        // and/or
+//        configuration.sceneReconstruction = .mesh
         session.run(configuration)
     }
 
@@ -90,9 +133,13 @@ class ARBloomRenderer: BaseRenderer {
         setupSessionObservers()
 
         renderer.label = "Renderer"
+        renderer.depthLoadAction = .load
+        renderer.setClearColor([1, 1, 1, 0.0])
 
-        bloomRenderer.setClearColor([1, 1, 1, 0.0])
         bloomRenderer.label = "Bloom Renderer"
+        bloomRenderer.depthLoadAction = .load
+        bloomRenderer.depthStoreAction = .store
+        bloomRenderer.setClearColor([1, 1, 1, 0.0])
 
         geometry.context = context
 
@@ -105,32 +152,36 @@ class ARBloomRenderer: BaseRenderer {
             far: camera.far
         )
 
-        camera.add(bloomMesh)
+        postProcessor.renderer.setClearColor(.one)
     }
 
     override func update() {
-        if _updateTexture {
-            bloomTexture = createTexture("Bloom Texture", colorPixelFormat)
-            _updateTexture = false
+        if _updateTextures {
+            bloomTexture = createTexture("Bloom Texture", colorPixelFormat, bloomTextureScale)
+            backgroundTexture = createTexture("Background Texture", colorPixelFormat, 1)
+            contentTexture = createTexture("Content Texture", colorPixelFormat, 1)
+            _updateTextures = false
         }
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
-        guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
+        guard let renderPassDescriptor = view.currentRenderPassDescriptor,
+              let contentTexture,
+              let backgroundTexture,
+              var bloomTexture else { return }
 
         backgroundRenderer.draw(
             renderPassDescriptor: renderPassDescriptor,
-            commandBuffer: commandBuffer
+            commandBuffer: commandBuffer,
+            renderTarget: backgroundTexture
         )
-
-        renderer.colorLoadAction = .load
-        renderer.depthLoadAction = .load
 
         renderer.draw(
             renderPassDescriptor: renderPassDescriptor,
             commandBuffer: commandBuffer,
             scene: scene,
-            camera: camera
+            camera: camera,
+            renderTarget: contentTexture
         )
 
         // cache materials for meshes that are not bloomed
@@ -146,13 +197,6 @@ class ARBloomRenderer: BaseRenderer {
 
         let brpd = MTLRenderPassDescriptor()
         brpd.depthAttachment.texture = renderPassDescriptor.depthAttachment.texture
-
-        bloomRenderer.colorLoadAction = .clear
-        bloomRenderer.colorStoreAction = .store
-
-        bloomRenderer.depthLoadAction = .load
-        bloomRenderer.depthStoreAction = .store
-
         bloomRenderer.draw(
             renderPassDescriptor: brpd,
             commandBuffer: commandBuffer,
@@ -160,9 +204,7 @@ class ARBloomRenderer: BaseRenderer {
             camera: camera
         )
 
-        if var bloomTexture = bloomTexture,
-           let colorTexture = bloomRenderer.colorTexture
-        {
+        if let colorTexture = bloomRenderer.colorTexture {
             // save some gpu compute cycles by scaling to 1/4
             scaleEffect.encode(
                 commandBuffer: commandBuffer,
@@ -175,8 +217,6 @@ class ARBloomRenderer: BaseRenderer {
                 commandBuffer: commandBuffer,
                 inPlaceTexture: &bloomTexture
             )
-
-            bloomMaterial.texture = bloomTexture
         }
 
         scene.traverse { child in
@@ -188,20 +228,16 @@ class ARBloomRenderer: BaseRenderer {
             }
         }
 
-        bloomMesh.scale = [camera.aspect, 1.0, 1.0]
-        bloomMesh.position = [0, 0, -1.0 / tan(degToRad(camera.fov * 0.5))]
+        postMaterial.backgroundTexture = backgroundTexture
+        postMaterial.contentTexture = contentTexture
+        postMaterial.bloomTexture = bloomTexture
+        postMaterial.grainTexture = session.currentFrame?.cameraGrainTexture
+        postMaterial.grainIntensity = session.currentFrame?.cameraGrainIntensity ?? 0
+        postMaterial.time = Float(getTime() - startTime)
 
-        bloomRenderer.colorLoadAction = .load
-        bloomRenderer.colorStoreAction = .store
-
-        bloomRenderer.depthLoadAction = .clear
-        bloomRenderer.depthStoreAction = .store
-
-        bloomRenderer.draw(
+        postProcessor.draw(
             renderPassDescriptor: renderPassDescriptor,
-            commandBuffer: commandBuffer,
-            scene: bloomMesh,
-            camera: camera
+            commandBuffer: commandBuffer
         )
     }
 
@@ -209,7 +245,8 @@ class ARBloomRenderer: BaseRenderer {
         renderer.resize(size)
         backgroundRenderer.resize(size)
         bloomRenderer.resize(size)
-        _updateTexture = true
+        postProcessor.resize(size)
+        _updateTextures = true
     }
 
     override func cleanup() {
@@ -275,7 +312,7 @@ class ARBloomRenderer: BaseRenderer {
 #endif
     }
 
-    internal func createTexture(_ label: String, _ pixelFormat: MTLPixelFormat) -> MTLTexture? {
+    internal func createTexture(_ label: String, _ pixelFormat: MTLPixelFormat, _ textureScale: Int) -> MTLTexture? {
         if mtkView.drawableSize.width > 0, mtkView.drawableSize.height > 0 {
             let descriptor = MTLTextureDescriptor()
             descriptor.pixelFormat = pixelFormat
@@ -283,7 +320,7 @@ class ARBloomRenderer: BaseRenderer {
             descriptor.height = Int(mtkView.drawableSize.height) / textureScale
             descriptor.sampleCount = 1
             descriptor.textureType = .type2D
-            descriptor.usage = [.shaderRead, .shaderWrite]
+            descriptor.usage = [.renderTarget, .shaderRead, .shaderWrite]
             descriptor.storageMode = .private
             descriptor.resourceOptions = .storageModePrivate
             guard let texture = device.makeTexture(descriptor: descriptor) else { return nil }
