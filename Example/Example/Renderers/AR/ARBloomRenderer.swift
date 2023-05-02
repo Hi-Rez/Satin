@@ -121,7 +121,7 @@ class ARBloomRenderer: BaseRenderer {
         // ARBackgroundDepthRenderer supports:
         configuration.frameSemantics = .smoothedSceneDepth
         // and/or
-        configuration.planeDetection = [.horizontal, .vertical]
+//        configuration.planeDetection = [.horizontal, .vertical]
         // and/or
 //        configuration.sceneReconstruction = .mesh
         session.run(configuration)

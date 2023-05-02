@@ -55,15 +55,28 @@ class ARBackgroundRenderer: PostProcessor {
     private var viewportSize = CGSize(width: 0, height: 0)
     private var _updateGeometry = true
 
+    public private(set) var capturedImageTextureY: CVMetalTexture? {
+        didSet {
+            backgroundMaterial.capturedImageTextureY = capturedImageTextureY
+        }
+    }
+
+    public private(set) var capturedImageTextureCbCr: CVMetalTexture? {
+        didSet {
+            backgroundMaterial.capturedImageTextureCbCr = capturedImageTextureCbCr
+        }
+    }
+
     unowned var session: ARSession
+
+    private var backgroundMaterial: BackgroundMaterial
 
     public init(context: Context, session: ARSession) {
         self.session = session
-        super.init(context: context, material: nil)
+        backgroundMaterial = BackgroundMaterial(srgb: context.colorPixelFormat.srgb)
+        super.init(context: context, material: backgroundMaterial)
 
-        mesh.material = BackgroundMaterial(srgb: context.colorPixelFormat.srgb)
         mesh.visible = false
-        
         renderer.setClearColor(.zero)
         setupTextureCache()
 
@@ -127,14 +140,14 @@ class ARBackgroundRenderer: PostProcessor {
     }
 
     internal func updateTextures(_ frame: ARFrame) {
-        if let material = mesh.material as? BackgroundMaterial, CVPixelBufferGetPlaneCount(frame.capturedImage) == 2 {
-            material.capturedImageTextureY = createTexture(
+        if CVPixelBufferGetPlaneCount(frame.capturedImage) == 2 {
+            capturedImageTextureY = createTexture(
                 fromPixelBuffer: frame.capturedImage,
                 pixelFormat: .r8Unorm,
                 planeIndex: 0
             )
 
-            material.capturedImageTextureCbCr = createTexture(
+            capturedImageTextureCbCr = createTexture(
                 fromPixelBuffer: frame.capturedImage,
                 pixelFormat: .rg8Unorm,
                 planeIndex: 1

@@ -8,9 +8,12 @@ struct FragOut {
 
 static constexpr sampler s(mag_filter::linear, min_filter::linear);
 
-fragment FragOut backgroundDepthFragment( VertexData in [[stage_in]],
+fragment FragOut backgroundDepthFragment
+(
+    VertexData in [[stage_in]],
     constant BackgroundDepthUniforms &uniforms [[buffer( FragmentBufferMaterialUniforms )]],
-    depth2d<float, access::sample> capturedDepthTexture [[ texture(FragmentTextureCustom0) ]])
+    depth2d<float, access::sample> capturedDepthTexture [[ texture( FragmentTextureCustom0 ) ]]
+)
 {
     FragOut out;
 
@@ -23,5 +26,6 @@ fragment FragOut backgroundDepthFragment( VertexData in [[stage_in]],
     z = sz + sw / z;
 
     out.depth = z;
+
     return out;
 }

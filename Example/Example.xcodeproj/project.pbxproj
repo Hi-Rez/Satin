@@ -127,6 +127,7 @@
 		E1E7685328ADB23B005D75AB /* FlockingRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */; };
 		E1EB6DE829690C5B0029E4FC /* PBREnhancedRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE729690C5B0029E4FC /* PBREnhancedRenderer.swift */; };
 		E1EB6DEA29690DD90029E4FC /* PBREnhancedRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB6DE929690DD90029E4FC /* PBREnhancedRendererView.swift */; };
+		E1ED89B22A017E3400DC085F /* ARDepthUpscaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1ED89B12A017E3400DC085F /* ARDepthUpscaler.swift */; };
 		E1F22D1D29BD71FA0011CEAB /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F22D1C29BD71FA0011CEAB /* Timing.swift */; };
 		E1F4314F29C2592A00200E72 /* ARDrawingRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F4314E29C2592A00200E72 /* ARDrawingRenderer.swift */; };
 		E1F4315129C259D500200E72 /* ARBackgroundRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F4315029C259D500200E72 /* ARBackgroundRenderer.swift */; };
@@ -256,6 +257,7 @@
 		E1EB6DE729690C5B0029E4FC /* PBREnhancedRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBREnhancedRenderer.swift; sourceTree = "<group>"; };
 		E1EB6DE929690DD90029E4FC /* PBREnhancedRendererView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBREnhancedRendererView.swift; sourceTree = "<group>"; };
 		E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchingRenderer.swift; sourceTree = "<group>"; };
+		E1ED89B12A017E3400DC085F /* ARDepthUpscaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDepthUpscaler.swift; sourceTree = "<group>"; };
 		E1F1B32324BAA91F00563923 /* TextRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextRenderer.swift; sourceTree = "<group>"; };
 		E1F1B32724BAA93300563923 /* Renderer3D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer3D.swift; sourceTree = "<group>"; };
 		E1F22D1C29BD71FA0011CEAB /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
@@ -688,6 +690,7 @@
 				E135B12C29E61D5000073A85 /* ARMatteRenderer.swift */,
 				E19D4C4829F9CA3F00DF993D /* ARSessionPublisher.swift */,
 				E19D4C4A29F9CF3100DF993D /* ARPlaneMesh.swift */,
+				E1ED89B12A017E3400DC085F /* ARDepthUpscaler.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -853,6 +856,7 @@
 				E1E767F528A6F805005D75AB /* RayMarchingRendererView.swift in Sources */,
 				E1E767CE28A6D41B005D75AB /* DepthRendererView.swift in Sources */,
 				E17A55B128A6C2B2008F1DDB /* TextRenderer.swift in Sources */,
+				E1ED89B22A017E3400DC085F /* ARDepthUpscaler.swift in Sources */,
 				E1E767EC28A6EA5C005D75AB /* MatcapRenderer.swift in Sources */,
 				E17A55B728A6C587008F1DDB /* DepthMaterialRenderer.swift in Sources */,
 				E152371B29CBA0F700D96D46 /* ARPlanesRenderer.swift in Sources */,
