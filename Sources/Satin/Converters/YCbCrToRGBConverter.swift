@@ -9,7 +9,7 @@ import Foundation
 import Metal
 
 public class YCbCrToRGBConverter {
-    class YCbCrToRGBConverter: LiveTextureComputeSystem {
+    class YCbCrToRGBComputeSystem: LiveTextureComputeSystem {
         var yTexture: MTLTexture?
         var cbcrTexture: MTLTexture?
 
@@ -29,7 +29,7 @@ public class YCbCrToRGBConverter {
         }
     }
 
-    private var compute: YCbCrToRGBConverter
+    private var compute: YCbCrToRGBComputeSystem
 
     public init(device: MTLDevice, width: Int, height: Int) {
         let textureDescriptor: MTLTextureDescriptor = .texture2DDescriptor(
@@ -38,7 +38,7 @@ public class YCbCrToRGBConverter {
             height: height,
             mipmapped: false
         )
-        compute = YCbCrToRGBConverter(device: device, textureDescriptor: textureDescriptor)
+        compute = YCbCrToRGBComputeSystem(device: device, textureDescriptor: textureDescriptor)
     }
 
     public func encode(commandBuffer: MTLCommandBuffer, yTexture: MTLTexture, cbcrTexture: MTLTexture) -> MTLTexture? {
