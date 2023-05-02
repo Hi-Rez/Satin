@@ -35,7 +35,6 @@ fileprivate class ARObject: Object {
 
     override func update(camera: Camera, viewport: simd_float4) {
         guard let anchor = anchor else { return }
-        self.worldMatrix = anchor.transform
         super.update(camera: camera, viewport: viewport)
     }
 }
@@ -96,8 +95,8 @@ fileprivate class Invader: Object {
     }
 }
 
-class ARContactShadowRenderer: BaseRenderer {
-    var session: ARSession!
+class ARContactShadowRenderer: BaseRenderer, ARSessionDelegate {
+    var session = ARSession()
 
     var shadowPlaneMesh = Mesh(
         geometry: PlaneGeometry(size: 1.0, plane: .zx),
@@ -135,11 +134,11 @@ class ARContactShadowRenderer: BaseRenderer {
 
     override init() {
         super.init()
-        session = ARSession()
+
+        session.delegate = self
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal]
-
         session.run(configuration)
     }
 
@@ -238,6 +237,17 @@ class ARContactShadowRenderer: BaseRenderer {
 #else
         return 2.0 * simd_make_float2(Float(point.x / size.width), 1.0 - Float(point.y / size.height)) - 1.0
 #endif
+    }
+
+    // MARK: - ARSession Delegate
+
+    func session(_: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            if invaderContainer.anchor?.identifier == anchor.identifier {
+                invaderContainer.anchor = anchor
+                break
+            }
+        }
     }
 }
 
