@@ -42,7 +42,7 @@ open class Mesh: Object, Renderable {
     public var triangleFillMode: MTLTriangleFillMode = .fill
     public var cullMode: MTLCullMode = .back
 
-    public var drawable: Bool {
+    open var drawable: Bool {
         guard instanceCount > 0, !geometry.vertexBuffers.isEmpty, uniforms != nil else { return false }
 
         if submeshes.isEmpty, let material = material, material.pipeline != nil {

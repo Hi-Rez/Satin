@@ -12,6 +12,7 @@
 #import "Geometry.h"
 #import "Generators.h"
 #import "Bezier.h"
+#import "Hermite.h"
 #import "Bounds.h"
 #import "Rectangle.h"
 #import "Triangulator.h"

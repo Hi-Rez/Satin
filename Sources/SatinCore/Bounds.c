@@ -58,6 +58,11 @@ Bounds transformBounds(Bounds a, simd_float4x4 transform) {
     return result;
 }
 
+simd_float4 boundsCorner(Bounds a, int index) {
+    return simd_make_float4(index & 1 ? a.min.x : a.max.x, index & 2 ? a.min.y : a.max.y,
+                            index & 4 ? a.min.z : a.max.z, 1.0);
+}
+
 void mergeBoundsInPlace(Bounds *a, const Bounds *b) {
     for (int i = 0; i < 3; i++) {
         if (b->min[i] != INFINITY) { a->min[i] = simd_min(a->min[i], b->min[i]); }
