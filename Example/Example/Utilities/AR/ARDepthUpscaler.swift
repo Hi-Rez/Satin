@@ -31,11 +31,12 @@ class ARDepthUpscaler {
     private var coefficientsTexture: MTLTexture?
     private var upscaledDepthTexture: MTLTexture?
 
-    init(device: MTLDevice,
-         upscaledWidth: Int = 960,
-         upscaledHeight: Int = 760,
-         kernelDiameter: Int = 5,
-         epsilon: Float = 0.004
+    init(
+        device: MTLDevice,
+        upscaledWidth: Int = 960,
+        upscaledHeight: Int = 760,
+        kernelDiameter: Int = 5,
+        epsilon: Float = 0.004
     ) {
         colorConverter = YCbCrToRGBConverter(device: device, width: origColorWidth, height: origColorHeight)
 
@@ -84,19 +85,19 @@ class ARDepthUpscaler {
         depthTexture: MTLTexture
     ) -> MTLTexture? {
         commandBuffer.pushDebugGroup("Depth Upscaler")
-        defer {
-            commandBuffer.popDebugGroup()
-        }
+        defer { commandBuffer.popDebugGroup() }
 
         guard
-            let rgbColorTexture = colorConverter.encode(commandBuffer: commandBuffer, yTexture: yTexture, cbcrTexture: cbcrTexture),
+            let rgbColorTexture = colorConverter.encode(
+                commandBuffer: commandBuffer,
+                yTexture: yTexture,
+                cbcrTexture: cbcrTexture
+            ),
             let rgbColorDownscaledTexture = rgbColorDownscaledTexture,
             let rgbColorDownscaledLowResTexture = rgbColorDownscaledLowResTexture,
             let coefficientsTexture = coefficientsTexture,
             let upscaledDepthTexture = upscaledDepthTexture
         else { return nil }
-
-
 
         // Downscale the RGB data. Pass in the target resoultion.
         scaleFilter.encode(
@@ -138,7 +139,6 @@ class ARDepthUpscaler {
         height: Int,
         usage: MTLTextureUsage = [.shaderRead, .shaderWrite]
     ) -> MTLTexture? {
-
         let descriptor = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: pixelFormat, width: width, height: height, mipmapped: false)
         descriptor.usage = usage
         descriptor.storageMode = .private

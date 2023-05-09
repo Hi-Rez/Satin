@@ -169,6 +169,22 @@ class Model: Object {
     private func setupModel() {
         guard let device = MTLCreateSystemDefaultDevice() else { return }
 
+        // we do this to make sure we don't recompile the material multiple times
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .r32Float, size: 1, mipmapped: false)
+        let cubeTexture = device.makeTexture(descriptor: cubeDesc)
+        material.setTexture(cubeTexture, type: .reflection)
+        material.setTexture(cubeTexture, type: .irradiance)
+
+        // we do this to make sure we don't recompile the material multiple times
+        let tmpDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: 1, height: 1, mipmapped: false)
+        let tmpTexture = device.makeTexture(descriptor: tmpDesc)
+        material.setTexture(tmpTexture, type: .brdf)
+        material.setTexture(tmpTexture, type: .baseColor)
+        material.setTexture(tmpTexture, type: .ambientOcclusion)
+        material.setTexture(tmpTexture, type: .metallic)
+        material.setTexture(tmpTexture, type: .normal)
+        material.setTexture(tmpTexture, type: .roughness)
+
         let customVertexDescriptor = CustomModelIOVertexDescriptor()
 
         let asset = MDLAsset(
@@ -322,9 +338,9 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
         let config = ARWorldTrackingConfiguration()
         config.environmentTexturing = .manual
         config.wantsHDREnvironmentTextures = true
-//        config.planeDetection = [.horizontal]
+        config.planeDetection = [.horizontal]
         config.frameSemantics = [.sceneDepth]
-
+        config.sceneReconstruction = .mesh
         session.run(config)
     }
 
@@ -333,7 +349,6 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
 
         renderer.colorLoadAction = .load
         renderer.depthLoadAction = .load
-        renderer.compile(scene: scene, camera: camera)
 
         backgroundRenderer = ARBackgroundDepthRenderer(
             context: context,

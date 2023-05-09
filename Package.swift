@@ -9,6 +9,10 @@ let package = Package(
         .library(
             name: "Satin",
             targets: ["Satin"]
+        ),
+        .library(
+            name: "SatinCore",
+            targets: ["SatinCore"]
         )
     ],
     dependencies: [],

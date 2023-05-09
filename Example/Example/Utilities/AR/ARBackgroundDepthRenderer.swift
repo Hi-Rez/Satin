@@ -48,7 +48,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         }
     }
 
-    unowned var sessionPublisher: ARSessionPublisher
+    private var sessionPublisher: ARSessionPublisher
     private var sessionSubscriptions = Set<AnyCancellable>()
 
     private lazy var background = Object("AR Background", [depthMesh, mesh])
@@ -94,8 +94,8 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         session: ARSession,
         sessionPublisher: ARSessionPublisher,
         mtkView: MTKView,
-        near: Float = 0.01,
-        far: Float = 10.0
+        near: Float,
+        far: Float
     ) {
         depthRenderer = Satin.Renderer(context: context)
         depthRenderer.label = "AR Background"
@@ -120,9 +120,6 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         depthUpscaler = ARDepthUpscaler(device: context.device)
 
         super.init(context: context, session: session)
-
-        mesh.label = "AR Color Mesh"
-        mesh.material!.depthCompareFunction = .always
 
         depthCamera.add(background)
         depthScene.attach(background)
@@ -156,7 +153,10 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         background.position = [0, 0, -1.0 / tan(degToRad(depthCamera.fov * 0.5))]
     }
 
-    override func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer) {
+    override func draw(
+        renderPassDescriptor: MTLRenderPassDescriptor,
+        commandBuffer: MTLCommandBuffer
+    ) {
         update(commandBuffer)
 
         depthRenderer.draw(
@@ -167,7 +167,11 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         )
     }
 
-    override func draw(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, renderTarget: MTLTexture) {
+    override func draw(
+        renderPassDescriptor: MTLRenderPassDescriptor,
+        commandBuffer: MTLCommandBuffer,
+        renderTarget: MTLTexture
+    ) {
         update(commandBuffer)
 
         depthRenderer.draw(

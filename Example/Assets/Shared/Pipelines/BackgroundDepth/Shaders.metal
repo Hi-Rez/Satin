@@ -3,7 +3,7 @@ typedef struct {
 } BackgroundDepthUniforms;
 
 struct FragOut {
-    float depth [[depth( any )]];
+    float depth [[ depth( any ) ]];
 };
 
 static constexpr sampler s(mag_filter::linear, min_filter::linear);
@@ -18,7 +18,6 @@ fragment FragOut backgroundDepthFragment
     FragOut out;
 
     float z = capturedDepthTexture.sample(s, in.uv) + 0.01;
-
 //    const float4x4 proj = uniforms.projection;
 //    float sz = proj[2][2];
 //    float sw = proj[3][2];

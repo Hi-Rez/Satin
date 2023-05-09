@@ -31,6 +31,7 @@ class ARBackgroundRenderer: PostProcessor {
             )
             set("Srgb", srgb)
             depthWriteEnabled = false
+            depthCompareFunction = .always
         }
 
         required init(from _: Decoder) throws {
@@ -73,16 +74,20 @@ class ARBackgroundRenderer: PostProcessor {
 
     public init(context: Context, session: ARSession) {
         self.session = session
+
         backgroundMaterial = BackgroundMaterial(srgb: context.colorPixelFormat.srgb)
+
         super.init(context: context, material: backgroundMaterial)
 
-        mesh.visible = false
         renderer.setClearColor(.zero)
         setupTextureCache()
 
         NotificationCenter.default.addObserver(self, selector: #selector(ARBackgroundRenderer.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
 
         self.label = "AR Background"
+
+        mesh.label = "AR Background Color Mesh"
+        mesh.visible = false
     }
 
     deinit {
