@@ -10,6 +10,10 @@
 
 #include "Types.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 Bounds createBounds(void);
 
 Bounds computeBoundsFromVertices(const Vertex *vertices, int count);
@@ -24,5 +28,9 @@ simd_float4 boundsCorner(Bounds a, int index);
 
 void mergeBoundsInPlace(Bounds *a, const Bounds *b);
 void expandBoundsInPlace(Bounds *bounds, const simd_float3 *pt);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Bounds_h */

@@ -10,6 +10,10 @@
 
 #include "Types.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 Rectangle createRectangle(void);
 
 Rectangle expandRectangle(Rectangle rect, simd_float2 pt);
@@ -27,5 +31,9 @@ static simd_float2 rectangleCorner(const Rectangle *a, int index) {
 }
 
 Rectangle projectBoundsToRectangle(Bounds a, simd_float4x4 transform);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Rectangle_h */

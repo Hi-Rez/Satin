@@ -11,6 +11,10 @@
 #include <stdio.h>
 #include "Types.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 GeometryData generateBoxGeometryData(float width, float height, float depth, float centerX,
                                      float centerY, float centerZ, int widthResolution,
                                      int heightResolution, int depthResolution);
@@ -65,5 +69,9 @@ GeometryData generateTubeGeometryData(float radius, float height, float startAng
 
 GeometryData generateRoundedBoxGeometryData(float width, float height, float depth, float radius,
                                             int res);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Generators_h */

@@ -10,6 +10,10 @@
 
 #include "Types.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 void freePolyline2D(Polyline2D *line);
 
 void addPointToPolyline2D(simd_float2 p, Polyline2D *line);
@@ -46,5 +50,9 @@ simd_float3 cubicBezier3(simd_float3 a, simd_float3 b, simd_float3 c, simd_float
 
 void freePolyline3D(Polyline3D *line);
 Polyline3D convertPolyline2DToPolyline3D(Polyline2D *line);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Bezier_h */

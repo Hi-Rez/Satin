@@ -14,6 +14,11 @@
 
 #include "Types.h"
 
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 bool greaterThanZero(float a);
 bool isZero(float a);
 
@@ -81,5 +86,9 @@ float angle2(simd_float2 a);
 float angle(float x, float y);
 
 simd_float3 getBarycentricCoordinates(simd_float3 p, simd_float3 a, simd_float3 b, simd_float3 c);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* Geometry_h */

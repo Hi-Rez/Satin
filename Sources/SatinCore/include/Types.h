@@ -81,7 +81,6 @@ typedef struct {
     bool useSAH;
 } BVH;
 
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
