@@ -98,6 +98,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         far: Float = 10.0
     ) {
         depthRenderer = Satin.Renderer(context: context)
+        depthRenderer.label = "AR Background"
 
         depthRenderer.colorLoadAction = .clear
         depthRenderer.colorStoreAction = .store
@@ -110,6 +111,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         self.sessionPublisher = sessionPublisher
 
         backgroundDepthMaterial = BackgroundDepthMaterial()
+        backgroundDepthMaterial.set("Near Far Delta", [near, far, far - near])
 
         depthMesh = Mesh(geometry: Geometry(), material: backgroundDepthMaterial)
         depthMesh.label = "AR Depth Mesh"
@@ -121,8 +123,6 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
         mesh.label = "AR Color Mesh"
         mesh.material!.depthCompareFunction = .always
-
-        depthMesh.material!.set("Near Far Delta", [near, far, far - near])
 
         depthCamera.add(background)
         depthScene.attach(background)

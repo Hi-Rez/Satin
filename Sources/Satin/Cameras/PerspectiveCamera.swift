@@ -58,10 +58,10 @@ open class PerspectiveCamera: Camera {
             let col3 = newValue.columns.3
             fov = radToDeg(2.0 * atan(1.0 / col1.y))
             aspect = col1.y / col0.x
-            let c = col2.z
-            let d = col3.z
-            near = d / c
-            far = d / (1.0 + c)
+            let sz = col2.z
+            let sw = col3.z
+            near = sw / sz
+            far = sw / (1.0 + sz)
         }
     }
 
@@ -125,5 +125,23 @@ open class PerspectiveCamera: Camera {
             fov = camera.fov
             aspect = camera.aspect
         }
+    }
+
+    public func setProjectionMatrixFromARKit(_ newValue: matrix_float4x4 ) {
+        _projectionMatrix = newValue
+
+        let col0 = newValue.columns.0
+        let col1 = newValue.columns.1
+        fov = radToDeg(2.0 * atan(1.0 / col1.y))
+        aspect = col1.y / col0.x
+
+        let farMinusNear = far - near;
+        let sz = near / farMinusNear;
+        let sw = (far * near) / farMinusNear;
+
+        _projectionMatrix.columns.2.x = 0.0
+        _projectionMatrix.columns.2.y = 0.0
+        _projectionMatrix.columns.2.z = sz
+        _projectionMatrix.columns.3.z = sw
     }
 }

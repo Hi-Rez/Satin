@@ -1,8 +1,8 @@
 //
-//  ARDrawingRenderer.swift
+//  ARPointCloudRenderer.swift
 //  Example
 //
-//  Created by Reza Ali on 3/15/23.
+//  Created by Reza Ali on 5/8/23.
 //  Copyright © 2023 Hi-Rez. All rights reserved.
 //
 
@@ -16,8 +16,38 @@ import Forge
 import Satin
 import SwiftUI
 
-class ARDrawingRenderer: BaseRenderer {
-    class RainbowMaterial: SourceMaterial {}
+class ARPointCloudRenderer: BaseRenderer {
+    class PointMaterial: SourceMaterial {}
+    class PointComputeSystem: LiveBufferComputeSystem {}
+
+    lazy var pointCloud: PointComputeSystem = {
+        let pcs = PointComputeSystem(
+            device: device,
+            pipelineURL: pipelinesURL.appendingPathComponent("Point/Compute.metal"),
+            count: 256 * 192
+        )
+
+        pcs.preCompute = { (ce: MTLComputeCommandEncoder, offset: Int) in
+            if let depthTexture = self.backgroundRenderer.depthTexture {
+                ce.setTexture(CVMetalTextureGetTexture(depthTexture), index: ComputeTextureIndex.Custom0.rawValue)
+            }
+        }
+
+        return pcs
+    }()
+
+    // MARK: - UI
+
+    var updateComputeParam = BoolParameter("Update", true, .toggle)
+    lazy var controls = ParameterGroup("Controls", [updateComputeParam])
+
+    override var params: [String: ParameterGroup?] {
+        [controls.label: controls]
+    }
+
+    override var paramKeys: [String] {
+        [controls.label]
+    }
 
     // MARK: - AR
 
@@ -25,8 +55,8 @@ class ARDrawingRenderer: BaseRenderer {
 
     // MARK: - 3D
 
-    lazy var material = RainbowMaterial(pipelinesURL: pipelinesURL)
-    lazy var mesh = InstancedMesh(geometry: IcoSphereGeometry(radius: 0.03, res: 3), material: material, count: 20000)
+    lazy var mesh = Mesh(geometry: IcoSphereGeometry(radius: 0.001, res: 2), material: PointMaterial(pipelinesURL: pipelinesURL))
+
     lazy var scene = Object("Scene", [mesh])
     lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat)
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
@@ -41,10 +71,6 @@ class ARDrawingRenderer: BaseRenderer {
 
     private lazy var startTime: CFAbsoluteTime = getTime()
     private lazy var time: CFAbsoluteTime = getTime()
-
-    // MARK: - Interaction
-
-    var touchDown = false
 
     // MARK: - Background
 
@@ -62,14 +88,11 @@ class ARDrawingRenderer: BaseRenderer {
 
     // MARK: - Init
 
-    var clear: Binding<Bool>
-
-    init(clear: Binding<Bool>) {
-        self.clear = clear
+    override init() {
         super.init()
 
         let config = ARWorldTrackingConfiguration()
-        config.frameSemantics = [.smoothedSceneDepth]
+        config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         session.run(config)
     }
 
@@ -82,7 +105,15 @@ class ARDrawingRenderer: BaseRenderer {
     // MARK: - Setup
 
     override func setup() {
-        mesh.drawCount = 0
+        mesh.instanceCount = 256 * 192
+        mesh.material?.onBind = { [weak self] re in
+            re.setVertexBuffer(
+                self?.pointCloud.getBuffer("Point"),
+                offset: 0,
+                index: VertexBufferIndex.Custom0.rawValue
+            )
+        }
+
         backgroundRenderer = ARBackgroundDepthRenderer(
             context: context,
             session: session,
@@ -95,13 +126,6 @@ class ARDrawingRenderer: BaseRenderer {
         renderer.compile(scene: scene, camera: camera)
     }
 
-    // MARK: - Update
-
-    override func update() {
-        updateDrawing()
-        updateMaterial()
-    }
-
     // MARK: - Draw
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
@@ -111,6 +135,18 @@ class ARDrawingRenderer: BaseRenderer {
             renderPassDescriptor: renderPassDescriptor,
             commandBuffer: commandBuffer
         )
+
+        if updateComputeParam.value {
+            if let currentFrame = session.currentFrame {
+                pointCloud.set("Local To World", camera.localToWorld)
+                pointCloud.set("Intrinsics Inversed", camera.intrinsics.inverse)
+                pointCloud.set("Resolution", simd_make_float2(
+                    Float(Int(currentFrame.camera.imageResolution.width)),
+                    Float(currentFrame.camera.imageResolution.height)))
+            }
+
+            pointCloud.update(commandBuffer)
+        }
 
         renderer.draw(
             renderPassDescriptor: renderPassDescriptor,
@@ -127,37 +163,8 @@ class ARDrawingRenderer: BaseRenderer {
         backgroundRenderer.resize(size)
     }
 
-    // MARK: - Interactions
-
-    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
-        touchDown = true
-    }
-
-    override func touchesEnded(_: Set<UITouch>, with _: UIEvent?) {
-        touchDown = false
-    }
-
-    // MARK: - Updates
-
-    func updateDrawing() {
-        if clear.wrappedValue {
-            mesh.drawCount = 0
-            clear.wrappedValue = false
-        } else if touchDown, let currentFrame = session.currentFrame {
-            add(simd_mul(currentFrame.camera.transform, translationMatrixf(0, 0, -0.2)))
-        }
-    }
-
-    func add(_ transform: simd_float4x4) {
-        if let index = mesh.drawCount {
-            mesh.drawCount = index + 1
-            mesh.setMatrixAt(index: index, matrix: transform)
-        }
-    }
-
-    func updateMaterial() {
-        time = getTime() - startTime
-        material.set("Time", Float(time))
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        updateComputeParam.value.toggle()
     }
 }
 

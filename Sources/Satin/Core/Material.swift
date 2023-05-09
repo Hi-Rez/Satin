@@ -439,10 +439,15 @@ open class Material: Codable, ObservableObject, ParameterGroupDelegate {
     }
 
     open func bindDepthStencilState(_ renderEncoder: MTLRenderCommandEncoder) {
-        guard let depthStencilState = depthStencilState else { return }
-        renderEncoder.setDepthStencilState(depthStencilState)
+        if let depthStencilState = depthStencilState {
+            renderEncoder.setDepthStencilState(depthStencilState)
+        }
+
         if let depthBias = depthBias {
             renderEncoder.setDepthBias(depthBias.bias, slopeScale: depthBias.slope, clamp: depthBias.clamp)
+        }
+        else {
+            renderEncoder.setDepthBias(0.0, slopeScale: 0.0, clamp: 0.0)
         }
     }
 

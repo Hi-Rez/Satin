@@ -83,6 +83,11 @@ class ARDepthUpscaler {
         cbcrTexture: MTLTexture,
         depthTexture: MTLTexture
     ) -> MTLTexture? {
+        commandBuffer.pushDebugGroup("Depth Upscaler")
+        defer {
+            commandBuffer.popDebugGroup()
+        }
+
         guard
             let rgbColorTexture = colorConverter.encode(commandBuffer: commandBuffer, yTexture: yTexture, cbcrTexture: cbcrTexture),
             let rgbColorDownscaledTexture = rgbColorDownscaledTexture,
@@ -90,6 +95,8 @@ class ARDepthUpscaler {
             let coefficientsTexture = coefficientsTexture,
             let upscaledDepthTexture = upscaledDepthTexture
         else { return nil }
+
+
 
         // Downscale the RGB data. Pass in the target resoultion.
         scaleFilter.encode(

@@ -32,11 +32,6 @@ fileprivate class ARObject: Object {
     required init(from decoder: Decoder) throws {
         fatalError("init(from:) has not been implemented")
     }
-
-    override func update(camera: Camera, viewport: simd_float4) {
-        guard let anchor = anchor else { return }
-        super.update(camera: camera, viewport: viewport)
-    }
 }
 
 fileprivate class Invader: Object {

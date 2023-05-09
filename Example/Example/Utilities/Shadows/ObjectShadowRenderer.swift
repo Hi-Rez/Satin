@@ -55,7 +55,7 @@ class ShadowPostProcessor: PostProcessor {
 
     public init(context: Context) {
         super.init(context: context, material: ShadowPostMaterial())
-        renderer.setClearColor([0, 0, 0, 0])
+        renderer.setClearColor(.zero)
         label = "Shadow Post Processor"
     }
 }

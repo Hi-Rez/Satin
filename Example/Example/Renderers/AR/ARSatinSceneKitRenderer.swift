@@ -93,7 +93,6 @@ class ARSatinSceneKitRenderer: BaseRenderer, ARSessionDelegate {
         boxMaterial.context = context
     }
 
-
     // MARK: - Draw
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {

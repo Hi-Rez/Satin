@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E1077F4D2A096ABD00C2FB89 /* ARPointCloudRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1077F4C2A096ABD00C2FB89 /* ARPointCloudRenderer.swift */; };
+		E1077F4F2A096B0900C2FB89 /* ARPointCloudRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1077F4E2A096B0900C2FB89 /* ARPointCloudRendererView.swift */; };
 		E10DC32229DCC4C100FF2A98 /* PBRCustomizationRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10DC32129DCC4C100FF2A98 /* PBRCustomizationRenderer.swift */; };
 		E10DC32429DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10DC32329DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift */; };
 		E10E2FD629C508EC00C4EAFF /* MeshShaderRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E2FD529C508EC00C4EAFF /* MeshShaderRenderer.swift */; };
@@ -139,6 +141,8 @@
 
 /* Begin PBXFileReference section */
 		E105CC36252BDE7F009EE563 /* FXAARenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXAARenderer.swift; sourceTree = "<group>"; };
+		E1077F4C2A096ABD00C2FB89 /* ARPointCloudRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPointCloudRenderer.swift; sourceTree = "<group>"; };
+		E1077F4E2A096B0900C2FB89 /* ARPointCloudRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPointCloudRendererView.swift; sourceTree = "<group>"; };
 		E10CC20327F128ED00E04B2B /* Satin */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Satin; path = ..; sourceTree = "<group>"; };
 		E10DC32129DCC4C100FF2A98 /* PBRCustomizationRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRCustomizationRenderer.swift; sourceTree = "<group>"; };
 		E10DC32329DCC5DE00FF2A98 /* PBRCustomizationRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRCustomizationRendererView.swift; sourceTree = "<group>"; };
@@ -373,6 +377,7 @@
 				E1BBE46229E4D17D00A21F3A /* ARLidarMeshRenderer.swift */,
 				E175243529F86F8D00AD1A8F /* ARPBRRenderer.swift */,
 				E19D4C3329F9C00500DF993D /* ARBloomRenderer.swift */,
+				E1077F4C2A096ABD00C2FB89 /* ARPointCloudRenderer.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -389,6 +394,7 @@
 				E14C122C29E5D618009D3C8C /* ARPeopleOcclusionRendererView.swift */,
 				E175243729F8734D00AD1A8F /* ARPBRRendererView.swift */,
 				E19D4C3529F9C02A00DF993D /* ARBloomRendererView.swift */,
+				E1077F4E2A096B0900C2FB89 /* ARPointCloudRendererView.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -808,6 +814,7 @@
 				E1707F6F29BAB0A000A934A0 /* DirectionalShadowRendererView.swift in Sources */,
 				E1BBE46529E4D1AB00A21F3A /* ARLidarMeshRendererView.swift in Sources */,
 				E172B49429720A6A00341985 /* OcclusionRendererView.swift in Sources */,
+				E1077F4F2A096B0900C2FB89 /* ARPointCloudRendererView.swift in Sources */,
 				E1EB6DEA29690DD90029E4FC /* PBREnhancedRendererView.swift in Sources */,
 				E17A55AF28A6C201008F1DDB /* Renderer3D.swift in Sources */,
 				E1BCF34929DA3EB60076C163 /* TessellatedMaterial.swift in Sources */,
@@ -865,6 +872,7 @@
 				E1E7681328A736BB005D75AB /* AudioInput.swift in Sources */,
 				E17A55B528A6C44A008F1DDB /* Shaders.metal in Sources */,
 				E1E7681228A73683005D75AB /* AudioInputRenderer.swift in Sources */,
+				E1077F4D2A096ABD00C2FB89 /* ARPointCloudRenderer.swift in Sources */,
 				E11325CD28AEADAA0049CACC /* SuperShapesRenderer.swift in Sources */,
 				E1E767D028A6D41B005D75AB /* TextRendererView.swift in Sources */,
 				E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */,
@@ -1045,6 +1053,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1089,6 +1098,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

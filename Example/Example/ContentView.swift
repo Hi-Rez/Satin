@@ -48,6 +48,10 @@ struct ContentView: View {
                             Label("AR Planes", systemImage: "squareshape")
                         }
 
+                        NavigationLink(destination: ARPointCloudRendererView()) {
+                            Label("AR Point Cloud", systemImage: "cloud")
+                        }
+
                         NavigationLink(destination: ARSatinSceneKitRendererView()) {
                             Label("AR + Satin + SceneKit", systemImage: "arkit")
                         }

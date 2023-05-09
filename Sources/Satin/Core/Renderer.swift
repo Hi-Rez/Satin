@@ -492,15 +492,6 @@ open class Renderer {
             znear: invertViewportNearFar ? 1.0 : 0.0,
             zfar: invertViewportNearFar ? 0.0 : 1.0
         )
-
-        viewport = MTLViewport(
-            originX: 0.0,
-            originY: 0.0,
-            width: Double(size.width),
-            height: Double(size.height),
-            znear: invertViewportNearFar ? 1.0 : 0.0,
-            zfar: invertViewportNearFar ? 0.0 : 1.0
-        )
     }
 
     // MARK: - Textures

@@ -214,7 +214,7 @@ class Model: Object {
 
         let model = Mesh(geometry: geo, material: material)
         model.label = "Suzanne Mesh"
-        model.scale = .init(repeating: 0.175)
+        model.scale = .init(repeating: 0.25)
 
         let modelBounds = model.localBounds
         model.position.y += modelBounds.size.y * 0.5 + 0.05
@@ -273,15 +273,16 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     var session = ARSession()
 
     var shadowPlaneMesh = {
-        let mesh = Mesh(geometry: PlaneGeometry(size: 1.0, plane: .zx),
-                        material: BasicTextureMaterial(texture: nil, flipped: false))
+        let material = BasicTextureMaterial(texture: nil, flipped: false)
+        material.depthBias = DepthBias(bias: 100.0, slope: 100.0, clamp: 100.0)
+        let mesh = Mesh(geometry: PlaneGeometry(size: 1.0, plane: .zx), material: material)
         mesh.label = "Shadow Catcher"
         return mesh
     }()
 
     fileprivate lazy var modelContainer = ARObject(
         label: "Model Container",
-        children: [model, shadowPlaneMesh],
+        children: [shadowPlaneMesh, model],
         session: session
     )
 
@@ -300,17 +301,17 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     )
 
     fileprivate lazy var scene = ARScene("Scene", [modelContainer], session: session)
-    lazy var context = Context(device, sampleCount, colorPixelFormat, .depth32Float)
+    lazy var context = Context(device, sampleCount, colorPixelFormat, depthPixelFormat)
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = Satin.Renderer(context: context)
 
-    var backgroundRenderer: ARBackgroundRenderer!
+    var backgroundRenderer: ARBackgroundDepthRenderer!
 
     lazy var startTime = getTime()
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
-        metalKitView.depthStencilPixelFormat = .invalid
+        metalKitView.depthStencilPixelFormat = .depth32Float
         metalKitView.preferredFramesPerSecond = 60
         metalKitView.colorPixelFormat = .bgra8Unorm_srgb
     }
@@ -318,23 +319,29 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     override init() {
         super.init()
 
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.environmentTexturing = .manual
-        configuration.wantsHDREnvironmentTextures = true
-        configuration.planeDetection = [.horizontal]
+        let config = ARWorldTrackingConfiguration()
+        config.environmentTexturing = .manual
+        config.wantsHDREnvironmentTextures = true
+//        config.planeDetection = [.horizontal]
+        config.frameSemantics = [.sceneDepth]
 
-        session.run(configuration)
+        session.run(config)
     }
 
     override func setup() {
         model.material.delegate = self
 
         renderer.colorLoadAction = .load
+        renderer.depthLoadAction = .load
         renderer.compile(scene: scene, camera: camera)
 
-        backgroundRenderer = ARBackgroundRenderer(
-            context: Context(device, 1, colorPixelFormat),
-            session: session
+        backgroundRenderer = ARBackgroundDepthRenderer(
+            context: context,
+            session: session,
+            sessionPublisher: ARSessionPublisher(session: session),
+            mtkView: mtkView,
+            near: camera.near,
+            far: camera.far
         )
     }
 
@@ -346,14 +353,14 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
         guard let renderPassDescriptor = view.currentRenderPassDescriptor else { return }
 
-        if modelContainer.visible {
-            shadowRenderer.update(commandBuffer: commandBuffer)
-        }
-
         backgroundRenderer.draw(
             renderPassDescriptor: renderPassDescriptor,
             commandBuffer: commandBuffer
         )
+
+        if modelContainer.visible {
+            shadowRenderer.update(commandBuffer: commandBuffer)
+        }
 
         renderer.draw(
             renderPassDescriptor: renderPassDescriptor,

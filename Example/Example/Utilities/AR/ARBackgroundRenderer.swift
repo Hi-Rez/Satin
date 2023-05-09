@@ -52,7 +52,7 @@ class ARBackgroundRenderer: PostProcessor {
 
     // Captured image texture cache
     private var capturedImageTextureCache: CVMetalTextureCache!
-    private var viewportSize = CGSize(width: 0, height: 0)
+    internal var viewportSize = CGSize(width: 0, height: 0)
     private var _updateGeometry = true
 
     public private(set) var capturedImageTextureY: CVMetalTexture? {
@@ -123,7 +123,7 @@ class ARBackgroundRenderer: PostProcessor {
     // MARK: - Internal Methods
 
     internal func updateGeometry(_ frame: ARFrame) {
-        guard let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation else { return }
+        guard let interfaceOrientation = getOrientation() else { return }
 
         // Update the texture coordinates of our image plane to aspect fill the viewport
         let displayToCameraTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewportSize).inverted()
@@ -178,6 +178,10 @@ class ARBackgroundRenderer: PostProcessor {
         }
 
         return texture
+    }
+
+    internal func getOrientation() -> UIInterfaceOrientation? {
+        return UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation
     }
 }
 
