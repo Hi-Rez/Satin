@@ -24,7 +24,8 @@ Bin createBin() { return (Bin) { .aabb = createBounds(), .triCount = 0 }; }
 
 bool isLeaf(BVHNode node) { return node.triCount > 0; }
 
-float surfaceAreaBounds(Bounds *b) {
+float surfaceAreaBounds(Bounds *b)
+{
     for (int i = 0; i < 3; i++) {
         if (b->min[i] == INFINITY || b->max[i] == -INFINITY) { return 0.0; }
     }
@@ -40,7 +41,8 @@ float calculateNodeCost(BVHNode *node) { return node->triCount * surfaceAreaBoun
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-float findBestSplitPlane(BVH *bvh, BVHNode *node, int *axis, float *splitPos) {
+float findBestSplitPlane(BVH *bvh, BVHNode *node, int *axis, float *splitPos)
+{
     // split along longest axis to optimize generation speed
     const simd_float3 extent = node->aabb.max - node->aabb.min;
     int a = 0;
@@ -51,7 +53,7 @@ float findBestSplitPlane(BVH *bvh, BVHNode *node, int *axis, float *splitPos) {
     float bestCost = FLT_MAX;
     float boundsMin = INFINITY, boundsMax = -INFINITY;
     for (int i = 0; i < node->triCount; i++) {
-        const uint triID = bvh->triIDs[node->leftFirst + i];
+        const uint32_t triID = bvh->triIDs[node->leftFirst + i];
         const float center = bvh->centroids[triID][a];
         boundsMin = simd_min(boundsMin, center);
         boundsMax = simd_max(boundsMax, center);
@@ -62,8 +64,8 @@ float findBestSplitPlane(BVH *bvh, BVHNode *node, int *axis, float *splitPos) {
                       createBin(), createBin(), createBin(), createBin() };
 
     float scale = (float)BINS / (boundsMax - boundsMin);
-    for (uint i = 0; i < node->triCount; i++) {
-        const uint triID = bvh->triIDs[node->leftFirst + i];
+    for (uint32_t i = 0; i < node->triCount; i++) {
+        const uint32_t triID = bvh->triIDs[node->leftFirst + i];
         const TriangleIndices tri = bvh->triangles[triID];
         const int binID = MIN((bvh->centroids[triID][a] - boundsMin) * scale, BINSMINUSONE);
 
@@ -104,12 +106,13 @@ float findBestSplitPlane(BVH *bvh, BVHNode *node, int *axis, float *splitPos) {
     return bestCost;
 }
 
-void updateBVHNodeBounds(BVH *bvh, uint nodeIndex) {
+void updateBVHNodeBounds(BVH *bvh, uint32_t nodeIndex)
+{
     BVHNode *node = &bvh->nodes[nodeIndex];
     node->aabb = createBounds();
 
-    for (uint first = node->leftFirst, i = 0; i < node->triCount; i++) {
-        const uint triID = bvh->triIDs[first + i];
+    for (uint32_t first = node->leftFirst, i = 0; i < node->triCount; i++) {
+        const uint32_t triID = bvh->triIDs[first + i];
         const TriangleIndices tri = bvh->triangles[triID];
         expandBoundsInPlace(&node->aabb, &bvh->positions[tri.i0]);
         expandBoundsInPlace(&node->aabb, &bvh->positions[tri.i1]);
@@ -117,7 +120,8 @@ void updateBVHNodeBounds(BVH *bvh, uint nodeIndex) {
     }
 }
 
-void subdivideBVHNode(BVH *bvh, uint nodeIndex) {
+void subdivideBVHNode(BVH *bvh, uint32_t nodeIndex)
+{
     BVHNode *node = &bvh->nodes[nodeIndex];
 
     int axis = 0;
@@ -128,7 +132,8 @@ void subdivideBVHNode(BVH *bvh, uint nodeIndex) {
         const float splitCost = findBestSplitPlane(bvh, node, &axis, &splitPos);
         const float noSplitCost = calculateNodeCost(node);
         if (splitCost >= noSplitCost) return;
-    } else {
+    }
+    else {
         // Midpoint Split
         if (node->triCount <= 2) return;
         const simd_float3 extent = node->aabb.max - node->aabb.min;
@@ -140,11 +145,10 @@ void subdivideBVHNode(BVH *bvh, uint nodeIndex) {
     int start = node->leftFirst;
     int end = start + node->triCount - 1;
     while (start <= end) {
-        const uint triID = bvh->triIDs[start];
-        if (bvh->centroids[triID][axis] < splitPos) {
-            start++;
-        } else {
-            const uint first = bvh->triIDs[start];
+        const uint32_t triID = bvh->triIDs[start];
+        if (bvh->centroids[triID][axis] < splitPos) { start++; }
+        else {
+            const uint32_t first = bvh->triIDs[start];
             bvh->triIDs[start] = bvh->triIDs[end];
             bvh->triIDs[end] = first;
             end--;
@@ -173,19 +177,20 @@ void subdivideBVHNode(BVH *bvh, uint nodeIndex) {
     subdivideBVHNode(bvh, rightNodeIndex);
 }
 
-BVH createBVH(GeometryData geometry, bool useSAH) {
+BVH createBVH(GeometryData geometry, bool useSAH)
+{
     const bool hasTriangles = geometry.indexCount > 0;
-    const uint N = hasTriangles ? geometry.indexCount : (geometry.vertexCount / 3);
+    const uint32_t N = hasTriangles ? geometry.indexCount : (geometry.vertexCount / 3);
 
     BVHNode *nodes = (BVHNode *)malloc(sizeof(BVHNode) * N * 2 - 1);
     simd_float3 *centroids = (simd_float3 *)malloc(sizeof(simd_float3) * N);
     simd_float3 *positions = (simd_float3 *)malloc(sizeof(simd_float3) * geometry.vertexCount);
-    uint *triIDs = (uint *)malloc(sizeof(uint) * N);
+    uint32_t *triIDs = (uint32_t *)malloc(sizeof(uint32_t) * N);
     TriangleIndices *triangles = (TriangleIndices *)malloc(sizeof(TriangleIndices) * N);
     Bounds aabb = createBounds();
 
     if (hasTriangles) {
-        for (uint i = 0; i < N; i++) {
+        for (uint32_t i = 0; i < N; i++) {
             triIDs[i] = i;
             const TriangleIndices tri = geometry.indexData[i];
             triangles[i] = tri;
@@ -200,8 +205,9 @@ BVH createBVH(GeometryData geometry, bool useSAH) {
 
             centroids[i] = (positions[tri.i0] + positions[tri.i1] + positions[tri.i2]) / 3.0;
         }
-    } else {
-        for (uint i = 0; i < N; i++) {
+    }
+    else {
+        for (uint32_t i = 0; i < N; i++) {
             triIDs[i] = i;
             const TriangleIndices tri = (TriangleIndices) { i * 3, i * 3 + 1, i * 3 + 2 };
             triangles[i] = tri;
@@ -239,7 +245,8 @@ BVH createBVH(GeometryData geometry, bool useSAH) {
     return bvh;
 }
 
-void freeBVH(BVH bvh) {
+void freeBVH(BVH bvh)
+{
     free(bvh.triIDs);
     free(bvh.nodes);
     free(bvh.centroids);

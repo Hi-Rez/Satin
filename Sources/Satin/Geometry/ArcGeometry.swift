@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class ArcGeometry: Geometry {
     public init(radius: (inner: Float, outer: Float), angle: (start: Float, end: Float), res: (angular: Int, radial: Int)) {

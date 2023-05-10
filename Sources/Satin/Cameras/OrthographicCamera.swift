@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class OrthographicCamera: Camera {
     override public var scale: simd_float3 {

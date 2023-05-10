@@ -8,6 +8,7 @@
 import Combine
 import MetalKit
 import simd
+import SatinCore
 
 public final class PerspectiveCameraController: CameraController, Codable {
     public internal(set) var isEnabled = false

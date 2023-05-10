@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import Metal
 import simd
+import SatinCore
 
 open class SpotLight: Object, Light {
     public var type: LightType { .spot }

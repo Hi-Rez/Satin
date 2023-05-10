@@ -7,6 +7,7 @@
 
 import Foundation
 import Metal
+import simd
 
 public protocol Environment {
     var environmentIntensity: Float { get }

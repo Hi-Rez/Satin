@@ -1,6 +1,6 @@
 //
 //  Hermite.h
-//  
+//
 //
 //  Created by Reza Ali on 5/4/23.
 //
@@ -8,7 +8,7 @@
 #ifndef Hermite_h
 #define Hermite_h
 
-#include "Types.h"
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

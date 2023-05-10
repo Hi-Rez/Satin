@@ -5,7 +5,7 @@
 //  Created by Reza Ali on 3/15/22.
 //
 
-import Foundation
+import SatinCore
 
 open class TubeGeometry: Geometry {
     override public init() {

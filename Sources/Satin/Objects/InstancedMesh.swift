@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import Metal
 import simd
+import SatinCore
 
 public class InstancedMesh: Mesh {
 

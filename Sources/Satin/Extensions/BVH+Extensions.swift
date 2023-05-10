@@ -6,6 +6,7 @@
 //
 
 import simd
+import SatinCore
 
 public struct IntersectionResult {
     public let barycentricCoordinates: simd_float3

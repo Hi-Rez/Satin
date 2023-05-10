@@ -8,12 +8,11 @@
 #ifndef Geometry_h
 #define Geometry_h
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <simd/simd.h>
+#import <stdio.h>
+#import <stdbool.h>
+#import <simd/simd.h>
 
-#include "Types.h"
-
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

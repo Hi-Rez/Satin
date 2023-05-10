@@ -9,6 +9,7 @@
 import Combine
 import Metal
 import simd
+import SatinCore
 
 open class Mesh: Object, Renderable {
     public var opaque: Bool {

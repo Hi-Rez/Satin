@@ -6,6 +6,7 @@
 //
 
 import simd
+import SatinCore
 
 public extension Ray {
     init() {

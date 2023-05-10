@@ -7,6 +7,7 @@
 
 import Metal
 import ModelIO
+import SatinCore
 
 public func SatinVertexDescriptor() -> MTLVertexDescriptor {
     // position

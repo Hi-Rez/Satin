@@ -9,6 +9,7 @@ import Foundation
 import Metal
 import MetalKit
 import ModelIO
+import SatinCore
 
 func loadAsset(
     device: MTLDevice? = MTLCreateSystemDefaultDevice(),

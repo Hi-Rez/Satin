@@ -8,8 +8,7 @@
 #ifndef Bvh_h
 #define Bvh_h
 
-#include "Types.h"
-
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

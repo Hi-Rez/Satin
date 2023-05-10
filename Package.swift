@@ -7,36 +7,37 @@ let package = Package(
     platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13)],
     products: [
         .library(
-            name: "Satin",
-            targets: ["Satin"]
-        ),
-        .library(
             name: "SatinCore",
             targets: ["SatinCore"]
+        ),
+        .library(
+            name: "Satin",
+            targets: ["Satin"]
         )
     ],
     dependencies: [],
     targets: [
+        .target(
+            name: "SatinCore",
+            path: "Sources/SatinCore",
+            publicHeadersPath: "include",
+            cSettings: [.headerSearchPath("include")],
+            cxxSettings: [.headerSearchPath("include")]
+        ),
+        .testTarget(
+            name: "SatinCoreTests",
+            dependencies: ["SatinCore"]
+        ),
         .target(
             name: "Satin",
             dependencies: ["SatinCore"],
             path: "Sources/Satin",
             resources: [.copy("Pipelines")]
         ),
-        .target(
-            name: "SatinCore",
-            path: "Sources/SatinCore",
-            publicHeadersPath: "include",
-            cSettings: [.headerSearchPath("include")]
-        ),
         .testTarget(
             name: "SatinTests",
             dependencies: ["Satin"]
-        ),
-        .testTarget(
-            name: "SatinCoreTests",
-            dependencies: ["SatinCore"]
-        ),
+        )
     ],
     swiftLanguageVersions: [.v5]
 )

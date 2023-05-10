@@ -6,7 +6,7 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
-import simd
+import SatinCore
 
 open class TriangleGeometry: Geometry {
     public init(size: Float = 1) {

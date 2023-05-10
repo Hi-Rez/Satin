@@ -9,6 +9,7 @@
 import Combine
 import Foundation
 import Metal
+import simd
 
 public class DirectionalLightShadow: Shadow {
     public var label: String

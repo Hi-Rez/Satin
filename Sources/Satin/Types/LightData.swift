@@ -6,7 +6,7 @@
 //  Copyright © 2022 Reza Ali. All rights reserved.
 //
 
-import Foundation
+import simd
 
 public struct LightData {
     var color: simd_float4 // (rgb, intensity)

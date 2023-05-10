@@ -8,7 +8,7 @@
 #ifndef Bounds_h
 #define Bounds_h
 
-#include "Types.h"
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

@@ -8,7 +8,7 @@
 #ifndef Triangulator_h
 #define Triangulator_h
 
-#include "Types.h"
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

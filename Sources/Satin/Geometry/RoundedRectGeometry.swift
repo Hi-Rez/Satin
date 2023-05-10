@@ -5,7 +5,7 @@
 //  Created by Reza Ali on 8/3/20.
 //
 
-import Foundation
+import SatinCore
 
 open class RoundedRectGeometry: Geometry {
     public init(size: (width: Float, height: Float), radius: Float = 0.5, res: (angular: Int, radial: Int) = (32, 32)) {

@@ -8,7 +8,7 @@
 #ifndef Rectangle_h
 #define Rectangle_h
 
-#include "Types.h"
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -26,7 +26,8 @@ bool rectangleContainsPoint(Rectangle rect, simd_float2 pt);
 bool rectangleContainsRectangle(Rectangle a, Rectangle b);
 bool rectangleIntersectsRectangle(Rectangle a, Rectangle b);
 
-static simd_float2 rectangleCorner(const Rectangle *a, int index) {
+static simd_float2 rectangleCorner(const Rectangle *a, int index)
+{
     return simd_make_float2(index & 1 ? a->min.x : a->max.x, index & 2 ? a->min.y : a->max.y);
 }
 

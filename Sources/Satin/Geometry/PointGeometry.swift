@@ -5,7 +5,7 @@
 //  Created by Reza Ali on 10/9/19.
 //
 
-import simd
+import SatinCore
 
 open class PointGeometry: Geometry {
     override public init() {
@@ -20,7 +20,11 @@ open class PointGeometry: Geometry {
     func setupData() {
         primitiveType = .point
         vertexData.append(
-            Vertex(position: [0.0, 0.0, 0.0, 1.0], normal: [0.0, 0.0, 1.0], uv: [0.0, 0.0])
+            Vertex(
+                position: [0.0, 0.0, 0.0, 1.0],
+                normal: [0.0, 0.0, 1.0],
+                uv: [0.0, 0.0]
+            )
         )
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class PerspectiveCamera: Camera {
     public var fov: Float = 45 {

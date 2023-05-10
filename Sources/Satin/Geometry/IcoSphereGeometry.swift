@@ -6,6 +6,8 @@
 //  Copyright © 2019 Reza Ali. All rights reserved.
 //
 
+import SatinCore
+
 open class IcoSphereGeometry: Geometry {
     override public init() {
         super.init()

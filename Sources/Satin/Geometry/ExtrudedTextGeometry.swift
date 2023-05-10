@@ -8,6 +8,7 @@
 import CoreGraphics
 import CoreText
 import simd
+import SatinCore
 
 open class ExtrudedTextGeometry: TextGeometry {
     public var distance: Float {

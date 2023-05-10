@@ -8,8 +8,8 @@
 #ifndef Generators_h
 #define Generators_h
 
-#include <stdio.h>
-#include "Types.h"
+#import <stdio.h>
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

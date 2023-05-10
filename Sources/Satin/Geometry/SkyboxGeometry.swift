@@ -4,7 +4,7 @@
 //
 //  Created by Reza Ali on 4/16/20.
 
-import simd
+import SatinCore
 
 open class SkyboxGeometry: Geometry {
     public init(size: Float = 2) {

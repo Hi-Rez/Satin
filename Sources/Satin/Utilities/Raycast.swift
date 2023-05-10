@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import simd
+import SatinCore
 
 public func raycast(ray: Ray, objects: [Object], recursive: Bool = true, invisible: Bool = false) -> [RaycastResult] {
     var intersections = [RaycastResult]()

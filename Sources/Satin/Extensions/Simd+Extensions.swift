@@ -6,6 +6,7 @@
 //
 
 import simd
+import SatinCore
 
 extension simd_quatf: Codable {
     public init(from decoder: Decoder) throws {

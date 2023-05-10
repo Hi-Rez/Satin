@@ -13,7 +13,8 @@
 #include <malloc/_malloc.h>
 #include <simd/simd.h>
 
-float superShape(float theta, float a, float b, float m, float n1, float n2, float n3) {
+float superShape(float theta, float a, float b, float m, float n1, float n2, float n3)
+{
     const float aInv = 1.0 / a;
     const float bInv = 1.0 / b;
     const float thetaOverFour = theta / 4.0;
@@ -24,9 +25,10 @@ float superShape(float theta, float a, float b, float m, float n1, float n2, flo
 }
 
 GeometryData generateSuperShapeGeometryData(float r1, float a1, float b1, float m1, float n11,
-                                            float n21, float n31, float r2, float a2, float b2, float m2,
-                                            float n12, float n22, float n32, int resTheta,
-                                            int resPhi) {
+                                            float n21, float n31, float r2, float a2, float b2,
+                                            float m2, float n12, float n22, float n32, int resTheta,
+                                            int resPhi)
+{
 
     int vertices = (resTheta + 1) * (resPhi + 1);
     int triangles = (resTheta * resPhi) * 2;
@@ -75,13 +77,13 @@ GeometryData generateSuperShapeGeometryData(float r1, float a1, float b1, float 
                 uint32_t c = (uint32_t)a + 1;
                 uint32_t d = (uint32_t)b + 1;
 
-                ind[triIndex++] = (TriangleIndices){ a, b, c };
-                ind[triIndex++] = (TriangleIndices){ b, d, c };
+                ind[triIndex++] = (TriangleIndices) { a, b, c };
+                ind[triIndex++] = (TriangleIndices) { b, d, c };
             }
         }
     }
 
-    GeometryData data = (GeometryData){
+    GeometryData data = (GeometryData) {
         .vertexCount = vertices, .vertexData = vtx, .indexCount = triangles, .indexData = ind
     };
 

@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import Metal
 import simd
+import SatinCore
 
 open class Object: Codable, ObservableObject {
     @Published open var id: String = UUID().uuidString

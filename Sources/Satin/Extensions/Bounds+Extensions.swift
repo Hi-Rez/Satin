@@ -7,6 +7,7 @@
 
 import Foundation
 import simd
+import SatinCore
 
 public extension Bounds {
     init() {

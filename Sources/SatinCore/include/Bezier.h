@@ -8,7 +8,7 @@
 #ifndef Bezier_h
 #define Bezier_h
 
-#include "Types.h"
+#import "Types.h"
 
 #if defined(__cplusplus)
 extern "C" {

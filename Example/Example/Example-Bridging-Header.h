@@ -3,5 +3,5 @@
 //
 
 #import "IcosahedronGenerator.h"
-#include "TorusKnotGenerator.h"
-#include "SuperShapeGenerator.h"
+#import "TorusKnotGenerator.h"
+#import "SuperShapeGenerator.h"

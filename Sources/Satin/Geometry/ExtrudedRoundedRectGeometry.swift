@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SatinCore
 
 open class ExtrudedRoundedRectGeometry: Geometry {
     public init(size: (width: Float, height: Float, depth: Float), radius: Float = 0.5, res: (angular: Int, radial: Int, depth: Int) = (32, 32, 1)) {

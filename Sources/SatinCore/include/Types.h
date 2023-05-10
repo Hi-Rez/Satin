@@ -5,72 +5,73 @@
 //  Created by Reza Ali on 6/4/20.
 //
 
-#ifndef SatinTypes_h
-#define SatinTypes_h
+#ifndef Types_h
+#define Types_h
 
-#include <stdbool.h>
-#include <simd/simd.h>
+#import <stdbool.h>
+#import <simd/simd.h>
 
-typedef struct {
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+typedef struct Vertex {
     simd_float4 position;
     simd_float3 normal;
     simd_float2 uv;
 } Vertex;
 
-typedef struct {
+typedef struct Bounds {
     simd_float3 min;
     simd_float3 max;
 } Bounds;
 
-typedef struct {
+typedef struct Rectangle {
     simd_float2 min;
     simd_float2 max;
 } Rectangle;
 
-typedef struct {
+typedef struct Ray {
     simd_float3 origin;
     simd_float3 direction;
 } Ray;
 
-typedef struct {
+typedef struct Polyline2D {
     int count;
     int capacity;
     simd_float2 *data;
 } Polyline2D;
 
-typedef struct {
+typedef struct Polyline3D {
     int count;
     simd_float3 *data;
 } Polyline3D;
 
-typedef struct {
+typedef struct TriangleIndices {
     uint32_t i0;
     uint32_t i1;
     uint32_t i2;
 } TriangleIndices;
 
-typedef struct {
+typedef struct TriangleFaceMap {
     int count;
     uint32_t *data;
 } TriangleFaceMap;
 
-TriangleFaceMap createTriangleFaceMap(void);
-void freeTriangleFaceMap(TriangleFaceMap *map);
-
-typedef struct {
+typedef struct GeometryData {
     int vertexCount;
     Vertex *vertexData;
     int indexCount;
     TriangleIndices *indexData;
 } GeometryData;
 
-typedef struct {
+typedef struct BVHNode {
     Bounds aabb;
     uint32_t leftFirst;
     uint32_t triCount;
 } BVHNode;
 
-typedef struct {
+typedef struct BVH {
     GeometryData geometry;
     BVHNode *nodes;
     simd_float3 *centroids;
@@ -81,9 +82,8 @@ typedef struct {
     bool useSAH;
 } BVH;
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+TriangleFaceMap createTriangleFaceMap(void);
+void freeTriangleFaceMap(TriangleFaceMap *map);
 
 GeometryData createGeometryData(void);
 void freeGeometryData(GeometryData *data);

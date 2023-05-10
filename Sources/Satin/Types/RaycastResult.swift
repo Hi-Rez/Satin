@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 public struct RaycastResult {
     public let barycentricCoordinates: simd_float3

@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class BoxGeometry: Geometry {
     override public init() {

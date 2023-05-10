@@ -5,7 +5,7 @@
 //  Created by Reza Ali on 1/31/22.
 //
 
-import Foundation
+import SatinCore
 
 extension Vertex: Codable {
     private enum CodingKeys: String, CodingKey {

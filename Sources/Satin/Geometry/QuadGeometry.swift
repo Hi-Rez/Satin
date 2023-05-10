@@ -6,7 +6,7 @@
 //  Copyright © 2020 Reza Ali. All rights reserved.
 //
 
-import simd
+import SatinCore
 
 open class QuadGeometry: Geometry {
     public init(size: Float = 2) {

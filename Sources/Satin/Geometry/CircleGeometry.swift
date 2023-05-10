@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class CircleGeometry: Geometry {
     override public init() {

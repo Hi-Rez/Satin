@@ -5,7 +5,7 @@
 //  Created by Reza Ali on 8/3/20.
 //
 
-import simd
+import SatinCore
 
 open class SquircleGeometry: Geometry {
     public init(size: Float = 2.0, p: Float = 4.0, res: (angular: Int, radial: Int) = (90, 20)) {

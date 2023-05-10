@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class ParametricGeometry: Geometry {
     public init(u: (min: Float, max: Float), v: (min: Float, max: Float), res: (u: Int, v: Int), generator: (_ u: Float, _ v: Float) -> simd_float3) {

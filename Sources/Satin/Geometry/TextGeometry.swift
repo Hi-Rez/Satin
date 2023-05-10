@@ -9,6 +9,7 @@ import Metal
 import CoreText
 import Foundation
 import simd
+import SatinCore
 
 extension CTTextAlignment: Codable {}
 

@@ -7,6 +7,7 @@
 //
 
 import simd
+import SatinCore
 
 open class CapsuleGeometry: Geometry {
     public enum Axis: Int32 {
