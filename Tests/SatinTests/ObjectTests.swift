@@ -6,6 +6,8 @@
 //
 
 import Satin
+import SatinCore
+import simd
 import XCTest
 
 extension Bounds: Equatable {
