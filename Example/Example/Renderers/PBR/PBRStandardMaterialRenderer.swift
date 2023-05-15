@@ -12,12 +12,12 @@ import Metal
 import MetalKit
 
 import Forge
+import SatinCore
 import Satin
 
-class PBRStandardMaterialRenderer: BaseRenderer {
+class PBRStandardMaterialRenderer: BaseRenderer, MaterialDelegate {
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
     override var modelsURL: URL { sharedAssetsURL.appendingPathComponent("Models") }
-
 
     // MARK: - UI
 
@@ -27,7 +27,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
 
     override var params: [String: ParameterGroup?] {
         return [
-            "Material": standardMaterial.parameters,
+            "Material": material.parameters,
         ]
     }
 
@@ -43,7 +43,11 @@ class PBRStandardMaterialRenderer: BaseRenderer {
     lazy var cameraController = PerspectiveCameraController(camera: camera, view: mtkView)
     lazy var renderer: Satin.Renderer = .init(context: context)
 
-    lazy var standardMaterial = StandardMaterial()
+    lazy var material = {
+        let mat = StandardMaterial()
+        mat.delegate = self
+        return mat
+    }()
 
     override func setupMtkView(_ metalKitView: MTKView) {
         metalKitView.sampleCount = 1
@@ -150,10 +154,10 @@ class PBRStandardMaterialRenderer: BaseRenderer {
         }
 
         if let descriptor = MTKMetalVertexDescriptorFromModelIO(customVertexDescriptor) {
-            standardMaterial.vertexDescriptor = descriptor
+            material.vertexDescriptor = descriptor
         }
 
-        let model = Mesh(geometry: geo, material: standardMaterial)
+        let model = Mesh(geometry: geo, material: material)
         model.label = "Suzanne"
 
         scene.add(model)
@@ -162,6 +166,23 @@ class PBRStandardMaterialRenderer: BaseRenderer {
     // MARK: - Textures
 
     func setupTextures() {
+        // we do this to make sure we don't recompile the material multiple times
+        let cubeDesc = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .r32Float, size: 1, mipmapped: false)
+        let cubeTexture = device.makeTexture(descriptor: cubeDesc)
+        material.setTexture(cubeTexture, type: .reflection)
+        material.setTexture(cubeTexture, type: .irradiance)
+
+        // we do this to make sure we don't recompile the material multiple times
+        let tmpDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: 1, height: 1, mipmapped: false)
+        let tmpTexture = device.makeTexture(descriptor: tmpDesc)
+        material.setTexture(tmpTexture, type: .brdf)
+        material.setTexture(tmpTexture, type: .baseColor)
+        material.setTexture(tmpTexture, type: .ambientOcclusion)
+        material.setTexture(tmpTexture, type: .metallic)
+        material.setTexture(tmpTexture, type: .normal)
+        material.setTexture(tmpTexture, type: .roughness)
+
+
         let baseURL = modelsURL.appendingPathComponent("Suzanne")
         let maps: [PBRTextureIndex: URL] = [
             .baseColor: baseURL.appendingPathComponent("albedo.png"),
@@ -179,7 +200,7 @@ class PBRStandardMaterialRenderer: BaseRenderer {
                     MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically,
                     MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue),
                 ])
-                standardMaterial.setTexture(texture, type: type)
+                material.setTexture(texture, type: type)
             }
         } catch {
             print(error.localizedDescription)
@@ -254,5 +275,9 @@ class PBRStandardMaterialRenderer: BaseRenderer {
         descriptor.layouts[VertexBufferIndex.Generics.rawValue] = MDLVertexBufferLayout(stride: MemoryLayout<VertexGenerics>.stride)
 
         return descriptor
+    }
+
+    func updated(material: Material) {
+        print("Material Updated: \(material.label)")
     }
 }
