@@ -26,7 +26,6 @@ open class PostProcessor {
     public init(context: Context, material: Material?) {
         self.context = context
         renderer = Renderer(context: context)
-        renderer.setClearColor([1, 1, 1, 0])
         renderer.label = label + " Processor"
 
         mesh = Mesh(geometry: QuadGeometry(), material: material)

@@ -17,6 +17,7 @@ import Combine
 
 import Forge
 import Satin
+import SatinCore
 
 class ARBloomRenderer: BaseRenderer {
     class BloomMaterial: SourceMaterial {

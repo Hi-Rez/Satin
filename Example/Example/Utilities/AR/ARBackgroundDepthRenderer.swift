@@ -17,11 +17,12 @@ import MetalKit
 import MetalPerformanceShaders
 
 import Satin
+import SatinCore
 
 class ARBackgroundDepthRenderer: ARBackgroundRenderer {
     class BackgroundDepthMaterial: SourceMaterial {
-        public var upscaledDepthTexture: MTLTexture?
-        public var depthTexture: CVMetalTexture?
+        public var upscaledSceneDepthTexture: MTLTexture?
+        public var sceneDepthTexture: CVMetalTexture?
 
         required init() {
             super.init(pipelinesURL: Bundle.main.resourceURL!
@@ -39,11 +40,11 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
         override func bind(_ renderEncoder: MTLRenderCommandEncoder, shadow: Bool) {
             super.bind(renderEncoder, shadow: shadow)
-            if let upscaledDepthTexture = upscaledDepthTexture {
-                renderEncoder.setFragmentTexture(upscaledDepthTexture, index: FragmentTextureIndex.Custom0.rawValue)
+            if let upscaledSceneDepthTexture = upscaledSceneDepthTexture {
+                renderEncoder.setFragmentTexture(upscaledSceneDepthTexture, index: FragmentTextureIndex.Custom0.rawValue)
             }
-            else if let depthTexture = depthTexture {
-                renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(depthTexture), index: FragmentTextureIndex.Custom0.rawValue)
+            else if let sceneDepthTexture = sceneDepthTexture {
+                renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(sceneDepthTexture), index: FragmentTextureIndex.Custom0.rawValue)
             }
         }
     }
@@ -77,17 +78,29 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
     private var backgroundDepthMaterial: BackgroundDepthMaterial
 
-    public private(set) var depthTexture: CVMetalTexture? {
+    public private(set) var sceneDepthTexture: CVMetalTexture? {
         didSet {
-            backgroundDepthMaterial.depthTexture = depthTexture
+            backgroundDepthMaterial.sceneDepthTexture = sceneDepthTexture
         }
     }
 
-    public private(set) var upscaledDepthTexture: MTLTexture? {
+    public private(set) var upscaledSceneDepthTexture: MTLTexture? {
         didSet {
-            backgroundDepthMaterial.upscaledDepthTexture = upscaledDepthTexture
+            backgroundDepthMaterial.upscaledSceneDepthTexture = upscaledSceneDepthTexture
         }
     }
+
+    override public var colorTexture: MTLTexture? {
+        depthRenderer.colorTexture
+    }
+
+    public var depthTexture: MTLTexture? {
+        depthRenderer.depthTexture
+    }
+
+    public var upscaleDepth: Bool
+    public var usePlaneDepth: Bool
+    public var useMeshDepth: Bool
 
     public init(
         context: Context,
@@ -95,8 +108,15 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         sessionPublisher: ARSessionPublisher,
         mtkView: MTKView,
         near: Float,
-        far: Float
+        far: Float,
+        upscaleDepth: Bool = true,
+        usePlaneDepth: Bool = true,
+        useMeshDepth: Bool = true
     ) {
+        self.upscaleDepth = upscaleDepth
+        self.usePlaneDepth = usePlaneDepth
+        self.useMeshDepth = useMeshDepth
+
         depthRenderer = Satin.Renderer(context: context)
         depthRenderer.label = "AR Background"
 
@@ -134,19 +154,23 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
     func update(_ commandBuffer: MTLCommandBuffer) {
         super.update()
 
-        if let capturedImageTextureY = capturedImageTextureY,
+        if upscaleDepth,
+           let capturedImageTextureY = capturedImageTextureY,
            let yTexture = CVMetalTextureGetTexture(capturedImageTextureY),
            let capturedImageTextureCbCr = capturedImageTextureCbCr,
            let cbcrTexture = CVMetalTextureGetTexture(capturedImageTextureCbCr),
-           let depthTexture = depthTexture,
+           let depthTexture = sceneDepthTexture,
            let depthTexture = CVMetalTextureGetTexture(depthTexture)
         {
-            upscaledDepthTexture = depthUpscaler.update(
+            upscaledSceneDepthTexture = depthUpscaler.update(
                 commandBuffer: commandBuffer,
                 yTexture: yTexture,
                 cbcrTexture: cbcrTexture,
                 depthTexture: depthTexture
             )
+        }
+        else {
+            upscaledSceneDepthTexture = nil
         }
 
         background.scale = [depthCamera.aspect, 1.0, 1.0]
@@ -199,7 +223,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
         if let sceneDepth = frame.smoothedSceneDepth ?? frame.sceneDepth {
             let depthPixelBuffer = sceneDepth.depthMap
             if let depthTexturePixelFormat = getMTLPixelFormat(for: depthPixelBuffer) {
-                depthTexture = createTexture(
+                sceneDepthTexture = createTexture(
                     fromPixelBuffer: depthPixelBuffer,
                     pixelFormat: depthTexturePixelFormat,
                     planeIndex: 0
@@ -245,7 +269,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
     internal func addedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
+            if usePlaneDepth, let planeAnchor = anchor as? ARPlaneAnchor {
                 let planeMesh = ARPlaneMesh(
                     label: anchor.identifier.uuidString,
                     anchor: planeAnchor,
@@ -254,7 +278,7 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
                 depthAnchorPlaneMeshMap[anchor.identifier] = planeMesh
                 depthScene.add(planeMesh)
             }
-            else if let meshAnchor = anchor as? ARMeshAnchor {
+            else if useMeshDepth, let meshAnchor = anchor as? ARMeshAnchor {
                 let lidarMesh = ARLidarMesh(meshAnchor: meshAnchor, material: depthLidarMaterial)
                 depthAnchorLidarMeshMap[anchor.identifier] = lidarMesh
                 depthScene.add(lidarMesh)
@@ -264,12 +288,12 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
     internal func updatedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
+            if usePlaneDepth, let planeAnchor = anchor as? ARPlaneAnchor {
                 if let planeMesh = depthAnchorPlaneMeshMap[anchor.identifier] {
                     planeMesh.anchor = planeAnchor
                 }
             }
-            else if let meshAnchor = anchor as? ARMeshAnchor {
+            else if useMeshDepth, let meshAnchor = anchor as? ARMeshAnchor {
                 if let lidarMesh = depthAnchorLidarMeshMap[anchor.identifier] {
                     lidarMesh.meshAnchor = meshAnchor
                 }
@@ -279,12 +303,12 @@ class ARBackgroundDepthRenderer: ARBackgroundRenderer {
 
     internal func removedAnchors(_ anchors: [ARAnchor]) {
         for anchor in anchors {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
+            if usePlaneDepth, let planeAnchor = anchor as? ARPlaneAnchor {
                 if let mesh = depthAnchorPlaneMeshMap.removeValue(forKey: planeAnchor.identifier) {
                     depthScene.remove(mesh)
                 }
             }
-            else if let meshAnchor = anchor as? ARMeshAnchor {
+            else if useMeshDepth, let meshAnchor = anchor as? ARMeshAnchor {
                 if let mesh = depthAnchorLidarMeshMap.removeValue(forKey: meshAnchor.identifier) {
                     depthScene.remove(mesh)
                 }

@@ -28,7 +28,7 @@ class ARPointCloudRenderer: BaseRenderer {
         )
 
         pcs.preCompute = { (ce: MTLComputeCommandEncoder, offset: Int) in
-            if let depthTexture = self.backgroundRenderer.depthTexture {
+            if let depthTexture = self.backgroundRenderer.sceneDepthTexture {
                 ce.setTexture(CVMetalTextureGetTexture(depthTexture), index: ComputeTextureIndex.Custom0.rawValue)
             }
         }

@@ -72,6 +72,11 @@ class ARBackgroundRenderer: PostProcessor {
 
     private var backgroundMaterial: BackgroundMaterial
 
+
+    public var colorTexture: MTLTexture? {
+        renderer.colorTexture
+    }
+
     public init(context: Context, session: ARSession) {
         self.session = session
 

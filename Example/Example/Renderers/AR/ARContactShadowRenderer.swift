@@ -12,6 +12,7 @@ import Metal
 import MetalKit
 
 import Forge
+import SatinCore
 import Satin
 
 fileprivate class ARObject: Object {

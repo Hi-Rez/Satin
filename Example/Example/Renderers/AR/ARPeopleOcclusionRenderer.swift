@@ -13,6 +13,7 @@ import Metal
 import MetalKit
 
 import Forge
+import SatinCore
 import Satin
 
 class ARPeopleOcclusionRenderer: BaseRenderer, ARSessionDelegate {

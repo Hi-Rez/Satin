@@ -13,7 +13,9 @@ import Metal
 import MetalKit
 
 import Forge
+import SatinCore
 import Satin
+
 import SwiftUI
 
 class ARDrawingRenderer: BaseRenderer {
