@@ -38,10 +38,12 @@ public class ARDepthMaskGenerator {
     }
 
     private var compute: DepthMaskComputeSystem
+    private var pixelFormat: MTLPixelFormat
 
-    public init(device: MTLDevice, width: Int, height: Int) {
+    public init(device: MTLDevice, width: Int, height: Int, pixelFormat: MTLPixelFormat = .r16Float) {
+        self.pixelFormat = pixelFormat
         let textureDescriptor: MTLTextureDescriptor = .texture2DDescriptor(
-            pixelFormat: .r16Float,
+            pixelFormat: pixelFormat,
             width: width,
             height: height,
             mipmapped: false
@@ -61,7 +63,7 @@ public class ARDepthMaskGenerator {
 
     public func resize(_ size: (width: Float, height: Float)) {
         let textureDescriptor: MTLTextureDescriptor = .texture2DDescriptor(
-            pixelFormat: .r16Float,
+            pixelFormat: pixelFormat,
             width: Int(size.width),
             height: Int(size.height),
             mipmapped: false

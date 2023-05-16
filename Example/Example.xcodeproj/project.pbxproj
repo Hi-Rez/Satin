@@ -61,6 +61,7 @@
 		E17A55BD28A6C9C6008F1DDB /* IcosahedronGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CC099F2489797300B92285 /* IcosahedronGenerator.c */; };
 		E18A1EDB291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */; };
 		E18FD5962A12B00F001376D8 /* ARDepthMaskGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18FD5952A12B00F001376D8 /* ARDepthMaskGenerator.swift */; };
+		E18FD5982A12FE16001376D8 /* ARFeatheredDepthMaskGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18FD5972A12FE16001376D8 /* ARFeatheredDepthMaskGenerator.swift */; };
 		E19D4C3429F9C00500DF993D /* ARBloomRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C3329F9C00500DF993D /* ARBloomRenderer.swift */; };
 		E19D4C3629F9C02A00DF993D /* ARBloomRendererView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C3529F9C02A00DF993D /* ARBloomRendererView.swift */; };
 		E19D4C4929F9CA3F00DF993D /* ARSessionPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19D4C4829F9CA3F00DF993D /* ARSessionPublisher.swift */; };
@@ -195,6 +196,7 @@
 		E182809B24C52061000810D1 /* ExtrudedTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtrudedTextRenderer.swift; sourceTree = "<group>"; };
 		E18A1EDA291EFB1D00A71453 /* PBRStandardMaterialRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBRStandardMaterialRendererView.swift; sourceTree = "<group>"; };
 		E18FD5952A12B00F001376D8 /* ARDepthMaskGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDepthMaskGenerator.swift; sourceTree = "<group>"; };
+		E18FD5972A12FE16001376D8 /* ARFeatheredDepthMaskGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARFeatheredDepthMaskGenerator.swift; sourceTree = "<group>"; };
 		E1919A32248D9BC3008FD392 /* CubemapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubemapRenderer.swift; sourceTree = "<group>"; };
 		E192EFCD24857EB600C7EE74 /* LiveCodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCodeRenderer.swift; sourceTree = "<group>"; };
 		E192F01F2485B16C00C7EE74 /* MatcapRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatcapRenderer.swift; sourceTree = "<group>"; };
@@ -700,6 +702,7 @@
 				E19D4C4A29F9CF3100DF993D /* ARPlaneMesh.swift */,
 				E1ED89B12A017E3400DC085F /* ARDepthUpscaler.swift */,
 				E18FD5952A12B00F001376D8 /* ARDepthMaskGenerator.swift */,
+				E18FD5972A12FE16001376D8 /* ARFeatheredDepthMaskGenerator.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -880,6 +883,7 @@
 				E11325CD28AEADAA0049CACC /* SuperShapesRenderer.swift in Sources */,
 				E1E767D028A6D41B005D75AB /* TextRendererView.swift in Sources */,
 				E1E7680128A70000005D75AB /* TextureComputeRendererView.swift in Sources */,
+				E18FD5982A12FE16001376D8 /* ARFeatheredDepthMaskGenerator.swift in Sources */,
 				E175243829F8734D00AD1A8F /* ARPBRRendererView.swift in Sources */,
 				E1E767FC28A6FCA9005D75AB /* FXAARenderer.swift in Sources */,
 				E1CB1F2029E656A6006FBDE8 /* ARBackgroundDepthRenderer.swift in Sources */,

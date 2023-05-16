@@ -39,13 +39,5 @@ fragment float4 postFragment
     float4 virtualSample = virtualTex.sample(s, in.uv);
     virtualSample.rgb += mix(0.0, grainSample.rgb * grainSample.a, virtualSample.a * uniforms.grainAmount);
 
-    float4 finalColor = mix(realSample, virtualSample, virtualSample.a * depthMask);
-    return finalColor;
-
-//    return float4(depthMask, realSample.g, virtualSample.b, 1.0);
+    return mix(realSample, virtualSample, virtualSample.a * (1.0 - depthMask));
 }
-
-
-
-
-

@@ -93,6 +93,7 @@ class ObjectShadowRenderer {
     private var processor: ShadowPostProcessor
 
     public private(set) var texture: MTLTexture?
+    public private(set) var renderTexture: MTLTexture?
     private var _updateTexture = true
 
     private var blurFilter: MPSImageGaussianBlur?
@@ -129,7 +130,7 @@ class ObjectShadowRenderer {
         renderer = Satin.Renderer(context: context)
         renderer.label = "Object Shadow Renderer"
 
-        processor = ShadowPostProcessor(context: Context(context.device, 1, .rgba32Float))
+        processor = ShadowPostProcessor(context: Context(context.device, 1, .rgba16Float))
         camera = OrthographicCamera()
 
         renderer.setClearColor(.zero)
@@ -149,7 +150,6 @@ class ObjectShadowRenderer {
         let renderables = getRenderables(object, true, false)
         materialCache.removeAll(keepingCapacity: true)
 
-
         for var renderable in renderables {
             if let object = renderable as? Object {
                 materialCache[object] = renderable.material
@@ -168,11 +168,13 @@ class ObjectShadowRenderer {
             camera: camera
         )
 
-        if var texture = texture {
+        if let renderTexture = renderTexture,
+           var texture = texture
+        {
             let srpd = MTLRenderPassDescriptor()
             srpd.renderTargetWidth = resolution
             srpd.renderTargetHeight = resolution
-            srpd.colorAttachments[0].texture = texture
+            srpd.colorAttachments[0].texture = renderTexture
             processor.colorTexture = renderer.colorTexture
             processor.depthTexture = renderer.depthTexture
             processor.mesh.material?.set("Near Far", [camera.near, camera.far])
@@ -180,7 +182,11 @@ class ObjectShadowRenderer {
             processor.draw(renderPassDescriptor: srpd, commandBuffer: commandBuffer)
 
             if let blurFilter = blurFilter {
-                blurFilter.encode(commandBuffer: commandBuffer, inPlaceTexture: &texture)
+                blurFilter.encode(
+                    commandBuffer: commandBuffer,
+                    sourceTexture: renderTexture,
+                    destinationTexture: texture
+                )
             }
 
             if let material = catcher.material as? BasicTextureMaterial {
@@ -231,7 +237,14 @@ class ObjectShadowRenderer {
             device: context.device,
             width: resolution,
             height: resolution,
-            pixelFormat: .rgba32Float
+            pixelFormat: .rgba16Float
+        )
+
+        renderTexture = createTexture(
+            device: context.device,
+            width: resolution,
+            height: resolution,
+            pixelFormat: .rgba16Float
         )
 
         _updateTexture = false

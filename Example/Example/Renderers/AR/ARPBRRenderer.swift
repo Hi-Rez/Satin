@@ -9,8 +9,8 @@
 #if os(iOS)
 import ARKit
 import Metal
-import MetalPerformanceShaders
 import MetalKit
+import MetalPerformanceShaders
 
 import Forge
 import Satin
@@ -350,13 +350,8 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     lazy var camera = ARPerspectiveCamera(session: session, mtkView: mtkView, near: 0.01, far: 100.0)
     lazy var renderer = Satin.Renderer(context: context)
 
-    var _updateTextures = true
-    var depthMaskTexture: MTLTexture?
-    var scaledDepthMaskTexture: MTLTexture?
-
-    var blurFilter: MPSImageGaussianBlur!
-    var scaleFilter: MPSImageBilinearScale!
     var backgroundRenderer: ARBackgroundDepthRenderer!
+    var featheredDepthMaskGenerator: ARFeatheredDepthMaskGenerator!
 
     lazy var postMaterial: PostMaterial = {
         let material = PostMaterial(pipelinesURL: pipelinesURL)
@@ -365,7 +360,6 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
         return material
     }()
 
-    lazy var depthMaskGenerator = ARDepthMaskGenerator(device: device, width: Int(mtkView.drawableSize.width), height: Int(mtkView.drawableSize.height))
     lazy var postProcessor = PostProcessor(context: Context(device, 1, colorPixelFormat), material: postMaterial)
 
     lazy var startTime = getTime()
@@ -392,10 +386,6 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
     override func setup() {
         model.material.delegate = self
 
-        scaleFilter = MPSImageBilinearScale(device: device)
-        blurFilter = MPSImageGaussianBlur(device: device, sigma: 8)
-        blurFilter.edgeMode = .clamp
-
         renderer.setClearColor(.zero)
         renderer.depthStoreAction = .store
 
@@ -406,20 +396,22 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
             mtkView: mtkView,
             near: camera.near,
             far: camera.far,
-            upscaleDepth: false,
+            upscaleDepth: true,
             usePlaneDepth: false,
             useMeshDepth: false
+        )
+
+        featheredDepthMaskGenerator = ARFeatheredDepthMaskGenerator(
+            device: device,
+            pixelFormat: .r8Unorm,
+            textureScale: 3,
+            blurSigma: 4
         )
     }
 
     override func update() {
         let time = getTime() - startTime
         model.orientation = simd_quatf(angle: Float(time), axis: Satin.worldUpDirection)
-
-        if _updateTextures {
-            scaledDepthMaskTexture = createTexture("Scaled Depth Mask Texture", .r16Float, 3)
-            _updateTextures = false
-        }
     }
 
     override func draw(_ view: MTKView, _ commandBuffer: MTLCommandBuffer) {
@@ -443,33 +435,21 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
 
         // Compare depth
 
+        var featheredDepthMaskTexture: MTLTexture?
         if let realDepthTexture = backgroundRenderer.depthTexture,
            let virtualDepthTexture = renderer.depthTexture
         {
-            depthMaskTexture = depthMaskGenerator.encode(
+            featheredDepthMaskTexture = featheredDepthMaskGenerator.encode(
                 commandBuffer: commandBuffer,
                 realDepthTexture: realDepthTexture,
                 virtualDepthTexture: virtualDepthTexture
             )
-
-            if let depthMaskTexture = depthMaskTexture, var scaledDepthMaskTexture = scaledDepthMaskTexture {
-                scaleFilter.encode(
-                    commandBuffer: commandBuffer,
-                    sourceTexture: depthMaskTexture,
-                    destinationTexture: scaledDepthMaskTexture
-                )
-
-                blurFilter.encode(
-                    commandBuffer: commandBuffer,
-                    inPlaceTexture: &scaledDepthMaskTexture
-                )
-            }
         }
 
         // Post
         postMaterial.backgroundTexture = backgroundRenderer.colorTexture
         postMaterial.contentTexture = renderer.colorTexture
-        postMaterial.depthMaskTexture = scaledDepthMaskTexture
+        postMaterial.depthMaskTexture = featheredDepthMaskTexture
         postMaterial.grainTexture = session.currentFrame?.cameraGrainTexture
         postMaterial.grainIntensity = session.currentFrame?.cameraGrainIntensity ?? 0
         postMaterial.time = Float(getTime() - startTime)
@@ -484,7 +464,7 @@ class ARPBRRenderer: BaseRenderer, MaterialDelegate {
         renderer.resize(size)
         backgroundRenderer.resize(size)
         postProcessor.resize(size)
-        depthMaskGenerator.resize(size)
+        featheredDepthMaskGenerator.resize(size)
     }
 
     override func cleanup() {

@@ -8,5 +8,5 @@ kernel void depthMaskUpdate
 {
     const float realDepth = realDepthTexture.read(gid);
     const float virtualDepth = virtualDepthTexture.read(gid);
-    depthMaskTexture.write(step(realDepth, virtualDepth), gid);
+    depthMaskTexture.write(step(virtualDepth, realDepth), gid);
 }
