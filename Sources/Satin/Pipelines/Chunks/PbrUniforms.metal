@@ -14,8 +14,8 @@
     float transmission;         // slider,0.0,1.0,0.0
     float thickness;            // slider,0.0,5.0,0.0
     float ior;                  // slider,1.0,3.0,1.5
-    float environmentIntensity; // slider,0,1,1
-    float gammaCorrection;      // slider,0,1,1
+    float environmentIntensity;
+    float gammaCorrection;
     float3x3 baseColorTexcoordTransform;
     float3x3 emissiveTexcoordTransform;
     float3x3 roughnessTexcoordTransform;

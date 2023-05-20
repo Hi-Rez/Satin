@@ -12,8 +12,12 @@ import Metal
 import MetalKit
 
 import Forge
-import SatinCore
 import Satin
+import SatinCore
+
+import CoreImage
+import ModelIO
+import UniformTypeIdentifiers
 
 class PBRStandardMaterialRenderer: BaseRenderer, MaterialDelegate {
     override var texturesURL: URL { sharedAssetsURL.appendingPathComponent("Textures") }
@@ -181,7 +185,6 @@ class PBRStandardMaterialRenderer: BaseRenderer, MaterialDelegate {
         material.setTexture(tmpTexture, type: .metallic)
         material.setTexture(tmpTexture, type: .normal)
         material.setTexture(tmpTexture, type: .roughness)
-
 
         let baseURL = modelsURL.appendingPathComponent("Suzanne")
         let maps: [PBRTextureIndex: URL] = [

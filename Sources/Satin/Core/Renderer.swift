@@ -384,8 +384,11 @@ open class Renderer {
                         }
                     }
 
-                    if let cubemapTexture = cubemapTexture, let skyboxMaterial = material as? SkyboxMaterial {
+                    if let cubemapTexture = cubemapTexture,
+                        let skyboxMaterial = material as? SkyboxMaterial {
                         skyboxMaterial.texture = cubemapTexture
+                        skyboxMaterial.texcoordTransform = reflectionTexcoordTransform
+                        skyboxMaterial.environmentIntensity = environmentIntensity
                     }
                 }
             } else {

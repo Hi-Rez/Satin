@@ -6,6 +6,7 @@
 //
 
 import Metal
+import simd
 
 open class SkyboxMaterial: BasicTextureMaterial {
     override public var texture: MTLTexture? {
@@ -13,6 +14,18 @@ open class SkyboxMaterial: BasicTextureMaterial {
             if let newTexture = newValue, newTexture.textureType != .typeCube {
                 fatalError("SkyboxMaterial expects a Cube Texture")
             }
+        }
+    }
+
+    public var texcoordTransform: simd_float3x3 = matrix_identity_float3x3 {
+        didSet {
+            set("Texcoord Transform", texcoordTransform)
+        }
+    }
+
+    public var environmentIntensity: Float = 1.0 {
+        didSet {
+            set("Environment Intensity", environmentIntensity)
         }
     }
 
@@ -47,9 +60,16 @@ open class SkyboxMaterial: BasicTextureMaterial {
         initalizeParameters(tonemapping: tonemapping, gammaCorrection: gammaCorrection)
     }
 
-    private func initalizeParameters(tonemapping: Tonemapping = .aces, gammaCorrection: Float = 1.0) {
+    private func initalizeParameters(
+        tonemapping: Tonemapping = .aces,
+        gammaCorrection: Float = 1.0,
+        environmentIntensity: Float = 1.0,
+        texcoordTransform: simd_float3x3 = matrix_identity_float3x3
+    ) {
         self.tonemapping = tonemapping
         self.gammaCorrection = gammaCorrection
+        self.environmentIntensity = environmentIntensity
+        self.texcoordTransform = texcoordTransform
     }
 
     public required init() {

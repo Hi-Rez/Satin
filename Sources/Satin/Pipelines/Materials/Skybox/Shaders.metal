@@ -4,6 +4,8 @@
 typedef struct {
     float4 color; // color
     float gammaCorrection; //slider,0.0,1.0,1.0
+    float environmentIntensity; //slider,0,1,1
+    float3x3 texcoordTransform;
 } SkyboxUniforms;
 
 typedef struct {
@@ -33,8 +35,9 @@ fragment float4 skyboxFragment(SkyVertexData in [[stage_in]],
     texturecube<float> cubeTex [[texture(FragmentTextureCustom0)]],
     sampler cubeTexSampler [[sampler(FragmentSamplerCustom0)]])
 {
-    float4 color = cubeTex.sample(cubeTexSampler, in.uv);
-
+    float4 color = cubeTex.sample(cubeTexSampler, uniforms.texcoordTransform * in.uv);
+    color.rgb *= uniforms.environmentIntensity;
+    
     color.rgb = tonemap(color.rgb);
 
 #ifndef TONEMAPPING_UNREAL

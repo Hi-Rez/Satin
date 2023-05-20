@@ -89,16 +89,17 @@ open class Scene: Object, Environment {
     }
 
     public func setEnvironmentCubemap(texture: MTLTexture,  qos: DispatchQoS.QoSClass = .background, reflectionSize: Int = 512, irrandianceSize: Int = 64, brdfSize: Int = 512, progress: Progress? = nil) {
+
         cubemapTexture = texture
         self.cubemapSize = texture.width
         self.reflectionSize = reflectionSize
         irradianceSize = irrandianceSize
         self.brdfSize = brdfSize
-        DispatchQueue.global(qos: qos).async {
-            guard let environment = self.environment,
-                  let commandQueue = environment.device.makeCommandQueue() else { return }
 
-            let device = environment.device
+        let device = texture.device
+
+        DispatchQueue.global(qos: qos).async {
+            guard let commandQueue = texture.device.makeCommandQueue() else { return }
 
             var _brdfTexture: MTLTexture? = nil
             var _reflectionTexture: MTLTexture? = nil

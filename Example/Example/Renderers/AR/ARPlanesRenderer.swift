@@ -13,6 +13,7 @@ import MetalKit
 
 import Forge
 import Satin
+import SatinCore
 import SwiftUI
 
 class ARPlaneContainer: Object {

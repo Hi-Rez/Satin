@@ -262,6 +262,7 @@
 		E1E7681028A73661005D75AB /* AudioInputRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputRendererView.swift; sourceTree = "<group>"; };
 		E1E7685028ADAF6F005D75AB /* FlockingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRenderer.swift; sourceTree = "<group>"; };
 		E1E7685228ADB23B005D75AB /* FlockingRendererView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlockingRendererView.swift; sourceTree = "<group>"; };
+		E1E7ADCA2A14349700180894 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E1EB6DE729690C5B0029E4FC /* PBREnhancedRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBREnhancedRenderer.swift; sourceTree = "<group>"; };
 		E1EB6DE929690DD90029E4FC /* PBREnhancedRendererView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBREnhancedRendererView.swift; sourceTree = "<group>"; };
 		E1EC55D8268785630097C140 /* RayMarchingRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RayMarchingRenderer.swift; sourceTree = "<group>"; };
@@ -641,6 +642,7 @@
 		E1D714D228A6BADA00B517B6 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				E1E7ADCA2A14349700180894 /* Info.plist */,
 				E192F05F24875D6E00C7EE74 /* Utilities */,
 				66E678CD243EE2190070B294 /* Renderers */,
 				E1E767C028A6D313005D75AB /* Views */,
@@ -1053,6 +1055,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Example/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Augments your reality";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio Input Example";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -1098,6 +1101,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Example/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Augments your reality";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio Input Example";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
